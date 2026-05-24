@@ -1,0 +1,66 @@
+
+ReactJs
+=======
+
+node -v
+
+
+
+Create React App with Vite
+
+
+npm create vite
+
+ok to process    y
+
+project name
+
+vite-project
+
+
+select framework:
+react
+
+
+cd vite-project
+
+npm run dev
+
+
+
+
+
+import './App.css'
+
+function App() {
+
+  return (
+    <>
+     <h1> Code step by step</h1>
+     <h3>Hello React App</h3>
+
+    </>
+  )
+}
+
+export default App
+
+
+===========================================================
+https://vite.dev/guide/
+
+
+
+function Apple()
+{
+
+return (
+ <h1>Hello </h1>
+)
+
+export default Apple
+
+
+
+
+

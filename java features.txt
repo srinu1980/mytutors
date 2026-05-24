@@ -1,0 +1,1448 @@
+
+
+Optional class examples
+
+In Java, the Java Optional class is used to avoid NullPointerException and handle nullable values in a clean way.
+
+Basic Syntax
+
+Optional<String> name = Optional.of("Srinivas");
+1. Creating Optional Objects
+a) Optional.of()
+Used when value is NOT null.
+
+Optional<String> name = Optional.of("Java");
+
+System.out.println(name.get());
+Output:
+
+Java
+b) Optional.ofNullable()
+Used when value may be null.
+
+String value = null;
+
+Optional<String> data = Optional.ofNullable(value);
+
+System.out.println(data.isPresent());
+Output:
+
+false
+c) Optional.empty()
+Creates empty Optional.
+
+Optional<String> emptyObj = Optional.empty();
+
+System.out.println(emptyObj.isPresent());
+Output:
+
+false
+
+2. Checking Value
+isPresent()
+Optional<String> name = Optional.of("Spring Boot");
+
+if(name.isPresent()) {
+    System.out.println("Value exists");
+}
+3. Getting Value
+get()
+Optional<String> name = Optional.of("Microservices");
+
+System.out.println(name.get());
+Avoid get() without checking because it throws exception if empty.
+
+4. Using orElse()
+Returns default value if Optional is empty.
+
+Optional<String> name = Optional.empty();
+
+String result = name.orElse("Default Value");
+
+System.out.println(result);
+Output:
+
+Default Value
+5. Using orElseGet()
+Optional<String> name = Optional.empty();
+
+String result = name.orElseGet(() -> "Generated Value");
+
+System.out.println(result);
+6. Using orElseThrow()
+Optional<String> name = Optional.empty();
+
+String result = name.orElseThrow(() ->
+        new RuntimeException("Value not found"));
+7. Using ifPresent()
+Executes code only if value exists.
+
+Optional<String> name = Optional.of("Docker");
+
+name.ifPresent(value -> System.out.println(value));
+8. map() Example
+Transforms value inside Optional.
+
+Optional<String> name = Optional.of("java");
+
+Optional<String> upper = name.map(String::toUpperCase);
+
+System.out.println(upper.get());
+Output:
+
+JAVA
+9. filter() Example
+Optional<String> name = Optional.of("Spring");
+
+Optional<String> result =
+        name.filter(n -> n.startsWith("S"));
+
+System.out.println(result.isPresent());
+Output:
+
+true
+10. Real-Time Example
+class User {
+    private String email;
+
+    public User(String email) {
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+
+        User user = new User(null);
+
+        Optional<String> email =
+                Optional.ofNullable(user.getEmail());
+
+        String result =
+                email.orElse("Email not available");
+
+        System.out.println(result);
+    }
+}
+Common Optional Methods
+Method	Purpose
+of()	Non-null value
+ofNullable()	Nullable value
+empty()	Empty Optional
+isPresent()	Check value exists
+get()	Get value
+orElse()	Default value
+orElseGet()	Supplier default
+orElseThrow()	Throw exception
+ifPresent()	Execute if value exists
+map()	Transform value
+filter()	Apply condition
+Best Practices
+✅ Use Optional for return types
+✅ Avoid using Optional in fields/entities
+✅ Prefer orElse() or orElseGet() over get()
+✅ Use map() and filter() for clean functional style
+
+
+Optional class with method example
+
+Optional Class with Method Example in Java
+Here is a simple real-time example using methods with Optional.
+
+Example 1: Returning Optional from Method
+import java.util.Optional;
+
+class EmployeeService {
+
+    // Method returning Optional
+    public Optional<String> getEmployeeName(int id) {
+
+        if (id == 101) {
+            return Optional.of("Srinivas");
+        }
+
+        return Optional.empty();
+    }
+}
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        EmployeeService service = new EmployeeService();
+
+        Optional<String> result =
+                service.getEmployeeName(101);
+
+        result.ifPresent(System.out::println);
+    }
+}
+Output:
+
+Srinivas
+Example 2: Using orElse()
+import java.util.Optional;
+
+class StudentService {
+
+    public Optional<String> getStudentName(int id) {
+
+        if (id == 1) {
+            return Optional.of("Ravi");
+        }
+
+        return Optional.empty();
+    }
+}
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        StudentService service =
+                new StudentService();
+
+        String name =
+                service.getStudentName(2)
+                       .orElse("Student Not Found");
+
+        System.out.println(name);
+    }
+}
+Output:
+
+Student Not Found
+Example 3: Using map() with Method
+import java.util.Optional;
+
+class UserService {
+
+    public Optional<String> getEmail() {
+        return Optional.of("java@gmail.com");
+    }
+}
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        UserService service = new UserService();
+
+        String email =
+                service.getEmail()
+                       .map(String::toUpperCase)
+                       .orElse("No Email");
+
+        System.out.println(email);
+    }
+}
+Output:
+
+JAVA@GMAIL.COM
+Example 4: Using filter()
+import java.util.Optional;
+
+class ProductService {
+
+    public Optional<String> getProduct() {
+        return Optional.of("Laptop");
+    }
+}
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        ProductService service =
+                new ProductService();
+
+        Optional<String> result =
+                service.getProduct()
+                       .filter(p -> p.startsWith("L"));
+
+        System.out.println(result.isPresent());
+    }
+}
+Output:
+
+true
+Real-Time Use Case
+Optional is commonly used in:
+
+Spring Boot Repository methods
+
+Service layer methods
+
+Database lookup operations
+
+API response handling
+
+Example:
+
+Optional<User> findById(Long id);
+Used in Spring Boot applications to safely handle missing database records.
+
+
+method reference in java 8 
+
+Method Reference in Java 8
+Method Reference is a short and clean way to call methods using :: operator.
+
+It is mainly used with:
+
+Lambda Expressions
+
+Functional Interfaces
+
+Streams API
+
+Syntax
+ClassName::methodName
+Types of Method References
+Type	Example
+Static Method Reference	ClassName::staticMethod
+Instance Method Reference	object::instanceMethod
+Arbitrary Object Method Reference	ClassName::instanceMethod
+Constructor Reference	ClassName::new
+1. Static Method Reference
+Without Method Reference
+import java.util.function.Consumer;
+
+public class Test {
+
+    public static void print(String msg) {
+        System.out.println(msg);
+    }
+
+    public static void main(String[] args) {
+
+        Consumer<String> c =
+                s -> Test.print(s);
+
+        c.accept("Java 8");
+    }
+}
+Using Method Reference
+import java.util.function.Consumer;
+
+public class Test {
+
+    public static void print(String msg) {
+        System.out.println(msg);
+    }
+
+    public static void main(String[] args) {
+
+        Consumer<String> c = Test::print;
+
+        c.accept("Java 8");
+    }
+}
+Output:
+
+Java 8
+2. Instance Method Reference
+public class Demo {
+
+    public void show(String msg) {
+        System.out.println(msg);
+    }
+
+    public static void main(String[] args) {
+
+        Demo d = new Demo();
+
+        java.util.function.Consumer<String> c =
+                d::show;
+
+        c.accept("Spring Boot");
+    }
+}
+Output:
+
+Spring Boot
+3. Arbitrary Object Method Reference
+Used for existing object methods.
+
+import java.util.Arrays;
+import java.util.List;
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        List<String> names =
+                Arrays.asList("java", "spring", "docker");
+
+        names.forEach(System.out::println);
+    }
+}
+Output:
+
+java
+spring
+docker
+4. Constructor Reference
+interface Message {
+    Test getMessage(String msg);
+}
+
+public class Test {
+
+    Test(String msg) {
+        System.out.println(msg);
+    }
+
+    public static void main(String[] args) {
+
+        Message m = Test::new;
+
+        m.getMessage("Hello Java");
+    }
+}
+Output:
+
+Hello Java
+Method Reference with Streams
+import java.util.Arrays;
+import java.util.List;
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        List<String> list =
+                Arrays.asList("a", "b", "c");
+
+        list.stream()
+            .map(String::toUpperCase)
+            .forEach(System.out::println);
+    }
+}
+Output:
+
+A
+B
+C
+Lambda vs Method Reference
+Lambda
+x -> System.out.println(x)
+Method Reference
+System.out::println
+Method reference makes code:
+
+Cleaner
+
+Shorter
+
+More readable
+
+Common Functional Interfaces Used
+Functional Interface	Method Reference Example
+Consumer	System.out::println
+Supplier	String::new
+Function	String::toUpperCase
+Predicate	String::isEmpty
+Real-Time Usage in Spring Boot
+users.stream()
+     .map(User::getName)
+     .forEach(System.out::println);
+Used heavily in:
+
+Streams API
+
+Collections
+
+Optional class
+
+Reactive programming
+
+Spring Boot projects
+
+
+DateTime in
+
+Date and Time API in Java 8
+Java 8 introduced a new Date and Time API in the java.time package.
+
+It is:
+
+Thread-safe
+
+Immutable
+
+Easy to use
+
+Important Classes
+Class	Purpose
+LocalDate	Only date
+LocalTime	Only time
+LocalDateTime	Date + Time
+ZonedDateTime	Date + Time + Timezone
+Period	Difference between dates
+Duration	Difference between time
+DateTimeFormatter	Formatting dates
+1. LocalDate Example
+import java.time.LocalDate;
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        LocalDate today = LocalDate.now();
+
+        System.out.println(today);
+    }
+}
+Output:
+
+2026-05-24
+2. LocalTime Example
+import java.time.LocalTime;
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        LocalTime time = LocalTime.now();
+
+        System.out.println(time);
+    }
+}
+Output:
+
+14:30:20.123
+3. LocalDateTime Example
+import java.time.LocalDateTime;
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        LocalDateTime dt =
+                LocalDateTime.now();
+
+        System.out.println(dt);
+    }
+}
+Output:
+
+2026-05-24T14:30:20
+4. Creating Custom Date
+import java.time.LocalDate;
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        LocalDate date =
+                LocalDate.of(2026, 12, 25);
+
+        System.out.println(date);
+    }
+}
+Output:
+
+2026-12-25
+5. Adding and Subtracting Dates
+import java.time.LocalDate;
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        LocalDate today = LocalDate.now();
+
+        System.out.println(today.plusDays(5));
+
+        System.out.println(today.minusMonths(1));
+    }
+}
+6. Comparing Dates
+import java.time.LocalDate;
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        LocalDate d1 =
+                LocalDate.of(2026, 5, 1);
+
+        LocalDate d2 =
+                LocalDate.of(2026, 6, 1);
+
+        System.out.println(d1.isBefore(d2));
+
+        System.out.println(d1.isAfter(d2));
+    }
+}
+Output:
+
+true
+false
+7. Date Formatting
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        LocalDate date = LocalDate.now();
+
+        DateTimeFormatter format =
+                DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        String result = date.format(format);
+
+        System.out.println(result);
+    }
+}
+Output:
+
+24-05-2026
+8. Parsing Date
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        String date = "24-05-2026";
+
+        DateTimeFormatter format =
+                DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        LocalDate result =
+                LocalDate.parse(date, format);
+
+        System.out.println(result);
+    }
+}
+Output:
+
+2026-05-24
+9. Period Example
+Used to find difference between dates.
+
+import java.time.LocalDate;
+import java.time.Period;
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        LocalDate birth =
+                LocalDate.of(2000, 1, 1);
+
+        LocalDate today =
+                LocalDate.now();
+
+        Period age =
+                Period.between(birth, today);
+
+        System.out.println(age.getYears());
+    }
+}
+10. Duration Example
+Used for time difference.
+
+import java.time.Duration;
+import java.time.LocalTime;
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        LocalTime t1 = LocalTime.of(10, 0);
+
+        LocalTime t2 = LocalTime.of(12, 30);
+
+        Duration d =
+                Duration.between(t1, t2);
+
+        System.out.println(d.toHours());
+    }
+}
+
+
+
+
+
+
+Sealed Class in Java
+
+Sealed classes were introduced in Java 17.
+
+A sealed class restricts which classes can extend or implement it.
+
+It provides:
+
+Better control over inheritance
+More secure design
+Predictable class hierarchy
+Syntax
+sealed class Vehicle
+    permits Car, Bike {
+}
+
+Only Car and Bike can extend Vehicle.
+
+Example 1: Basic Sealed Class
+sealed class Animal
+        permits Dog, Cat {
+
+    public void sound() {
+        System.out.println("Animal sound");
+    }
+}
+
+final class Dog extends Animal {
+
+    public void bark() {
+        System.out.println("Dog barking");
+    }
+}
+
+final class Cat extends Animal {
+
+    public void meow() {
+        System.out.println("Cat meowing");
+    }
+}
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        Dog d = new Dog();
+
+        d.sound();
+        d.bark();
+    }
+}
+
+Output:
+
+Animal sound
+Dog barking
+Rules for Sealed Classes
+
+A permitted subclass must be one of these:
+
+Keyword	Meaning
+final	Cannot be extended further
+sealed	Can restrict subclasses again
+non-sealed	Opens inheritance normally
+Example 2: Using non-sealed
+sealed class Shape
+        permits Circle, Rectangle {
+}
+
+final class Circle extends Shape {
+}
+
+non-sealed class Rectangle extends Shape {
+}
+
+class Square extends Rectangle {
+}
+
+Here:
+
+Circle cannot be extended
+Rectangle allows further inheritance
+Square can extend Rectangle
+Example 3: Sealed Interface
+sealed interface Payment
+        permits CreditCard, UPI {
+}
+
+final class CreditCard
+        implements Payment {
+}
+
+final class UPI
+        implements Payment {
+}
+Real-Time Example
+sealed class Employee
+        permits Developer, Tester, Manager {
+}
+
+
+
+
+
+
+
+Record Class in Java 17
+
+Record is a special type of class introduced in Java 16 (fully stable in Java 17).
+
+It is used to create:
+
+Immutable data objects
+DTOs (Data Transfer Objects)
+Simple model classes
+
+Record automatically generates:
+
+Constructor
+Getters
+toString()
+equals()
+hashCode()
+Normal Class vs Record
+Normal Class
+class Employee {
+
+    private final int id;
+    private final String name;
+
+    public Employee(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+Record Class
+record Employee(int id, String name) {
+}
+
+Same functionality with very less code.
+
+Basic Example
+record Student(int id, String name) {
+}
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        Student s =
+                new Student(101, "Srinivas");
+
+        System.out.println(s.id());
+
+        System.out.println(s.name());
+
+        System.out.println(s);
+    }
+}
+
+Output:
+
+101
+Srinivas
+Student[id=101, name=Srinivas]
+Automatically Generated Methods
+
+For this record:
+
+record User(int id, String name) {
+}
+
+Java automatically creates:
+
+- Constructor
+- id()
+- name()
+- equals()
+- hashCode()
+- toString()
+Record with Custom Method
+record Product(int id, String name, double price) {
+
+    public void display() {
+        System.out.println(name + " : " + price);
+    }
+}
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        Product p =
+                new Product(1, "Laptop", 50000);
+
+        p.display();
+    }
+}
+
+Output:
+
+Laptop : 50000.0
+Compact Constructor
+
+Used for validation.
+
+record Employee(int id, String name) {
+
+    public Employee {
+
+        if(id <= 0) {
+            throw new IllegalArgumentException(
+                    "Invalid Id");
+        }
+    }
+}
+Immutable Nature
+
+Record fields are automatically:
+
+private
+final
+
+So values cannot be modified.
+
+record Person(String name) {
+}
+
+Person p = new Person("Java");
+
+// Not allowed
+// p.name = "Spring";
+
+
+
+
+
+Java 17 Features with Definitions
+
+Java 17 is an LTS (Long-Term Support) release with many powerful features and improvements.
+
+1. Sealed Classes
+
+Restricts which classes can inherit a class or interface.
+
+sealed class Vehicle
+permits Car, Bike {
+}
+Purpose
+Controlled inheritance
+Better security
+Predictable hierarchy
+2. Record Classes
+
+Used to create immutable data classes with less boilerplate code.
+
+record Employee(int id, String name) {
+}
+Automatically Generates
+Constructor
+Getters
+toString()
+equals()
+hashCode()
+3. Pattern Matching for switch (Preview)
+
+Allows cleaner switch statements.
+
+Object obj = "Java";
+
+switch(obj) {
+
+    case String s ->
+        System.out.println(s.toUpperCase());
+
+    default ->
+        System.out.println("Unknown");
+}
+Purpose
+Cleaner code
+Type checking inside switch
+4. Pattern Matching for instanceof
+
+Removes manual type casting.
+
+Before Java 17
+if(obj instanceof String) {
+
+    String s = (String) obj;
+
+    System.out.println(s);
+}
+Java 17
+if(obj instanceof String s) {
+
+    System.out.println(s);
+}
+Benefit
+Less boilerplate
+Cleaner syntax
+5. Text Blocks
+
+Used for multi-line strings.
+
+String text = """
+        Welcome
+        to
+        Java 17
+        """;
+Benefits
+Better readability
+Easy JSON/SQL writing
+6. Enhanced Random Number Generator
+
+New random generator interfaces and algorithms.
+
+RandomGenerator random =
+        RandomGenerator.getDefault();
+
+System.out.println(random.nextInt());
+Benefit
+Better random generation support
+7. Strong Encapsulation of JDK Internals
+
+Internal JDK APIs are strongly hidden.
+
+Benefit
+Improved security
+Better maintainability
+8. Foreign Function & Memory API (Incubator)
+
+Allows Java to interact with native memory and native libraries without JNI.
+
+Purpose
+High-performance applications
+Native integrations
+9. New macOS Rendering Pipeline
+
+Uses Apple Metal API instead of OpenGL.
+
+Benefit
+Better graphics performance on macOS
+10. Context-Specific Deserialization Filters
+
+Improves serialization security.
+
+Benefit
+Protects against malicious serialization attacks
+11. Deprecation and Removal Updates
+
+Removed old/unused APIs and features.
+
+Examples:
+
+Applet API deprecated
+Security Manager deprecated
+12. Improved Performance
+
+Java 17 includes:
+
+Better JVM optimizations
+Faster garbage collection
+Improved memory management
+Important LTS Release
+
+Java 17 is a Long-Term Support version.
+
+Popular enterprise frameworks like:
+
+Spring Boot
+Hibernate
+Oracle products
+
+widely support Java 17.
+
+Most Important Features Summary
+Feature	Purpose
+Sealed Classes	Controlled inheritance
+Records	Immutable data objects
+Pattern Matching	Cleaner type checking
+Text Blocks	Multi-line strings
+Switch Pattern Matching	Better switch syntax
+Enhanced RNG	Advanced random generation
+JVM Improvements	Better performance
+Real-Time Usage
+
+Java 17 is widely used in:
+
+Microservices
+Cloud applications
+Banking systems
+Enterprise applications
+Spring Boot projects
+REST APIs
+java 21 features with definitions
+Java 21 Features with Definitions
+
+Java 21 is an LTS (Long-Term Support) release released after Java 17 with many modern features focused on:
+
+Performance
+Concurrency
+Developer productivity
+Simpler coding
+1. Virtual Threads (Final Feature)
+
+Virtual Threads are lightweight threads managed by JVM.
+
+Thread.startVirtualThread(() -> {
+    System.out.println("Virtual Thread");
+});
+Benefits
+Handles millions of threads
+Better scalability
+Ideal for microservices
+Used In
+Web servers
+APIs
+Cloud applications
+2. Record Patterns
+
+Allows pattern matching directly with records.
+
+record Employee(int id, String name) {}
+
+Object obj = new Employee(101, "Java");
+
+if(obj instanceof Employee(int id, String name)) {
+    System.out.println(name);
+}
+Benefit
+Cleaner object extraction
+3. Pattern Matching for switch (Final)
+
+Enhanced switch with type patterns.
+
+Object obj = "Spring";
+
+switch(obj) {
+
+    case String s ->
+        System.out.println(s.toUpperCase());
+
+    case Integer i ->
+        System.out.println(i * 10);
+
+    default ->
+        System.out.println("Unknown");
+}
+Benefits
+Cleaner code
+No manual casting
+4. Sequenced Collections
+
+Introduces ordered collection interfaces.
+
+SequencedCollection<String> list =
+        new ArrayList<>();
+
+list.addFirst("Java");
+list.addLast("Spring");
+Benefit
+Easy first/last element operations
+5. String Templates (Preview)
+
+Simplifies string formatting.
+
+String name = "Java";
+
+String result = STR."Welcome \{name}";
+Benefit
+Cleaner string interpolation
+6. Scoped Values (Preview)
+
+Allows sharing immutable data between threads safely.
+
+ScopedValue<String> user =
+        ScopedValue.newInstance();
+Benefit
+Better thread-safe data sharing
+7. Structured Concurrency (Preview)
+
+Treats multiple threads as one unit.
+
+try (var scope =
+     new StructuredTaskScope.ShutdownOnFailure()) {
+
+}
+Benefits
+Simplified concurrent programming
+Better error handling
+8. Unnamed Patterns and Variables (Preview)
+
+Use _ for ignored variables.
+
+if(obj instanceof Employee(_, String name)) {
+    System.out.println(name);
+}
+Benefit
+Cleaner unused variable handling
+9. Foreign Function & Memory API (Third Preview)
+
+Allows Java to call native code without JNI.
+
+Benefits
+High performance
+Native library access
+10. Key Encapsulation Mechanism API
+
+Provides secure encryption key exchange support.
+
+Used In
+Security systems
+Banking applications
+11. Generational ZGC
+
+Improved Garbage Collector.
+
+Benefits
+Faster memory cleanup
+Low pause times
+Better performance
+12. Deprecations and Removals
+
+Removed outdated features and APIs.
+
+Examples:
+
+Old APIs cleanup
+Improved security
+Most Important Java 21 Features
+Feature	Purpose
+Virtual Threads	Lightweight concurrency
+Record Patterns	Easy data extraction
+Switch Pattern Matching	Smarter switch
+Sequenced Collections	Ordered collections
+Structured Concurrency	Simplified thread management
+String Templates	Easy string formatting
+Generational ZGC	Better garbage collection
+Real-Time Usage in Spring Boot
+
+Java 21 is highly useful for:
+
+Microservices
+High-concurrency APIs
+Reactive systems
+Cloud-native applications
+
+Example:
+
+Thread.startVirtualThread(() -> {
+    processRequest();
+});
+
+
+
+
+Java 25 Features with Definitions
+
+Java 25 is a Long-Term Support (LTS) release officially released in September 2025. It focuses on:
+
+Better developer productivity
+JVM performance improvements
+Modern concurrency
+Simpler Java syntax
+Advanced security APIs
+1. Scoped Values (Final)
+
+Scoped Values provide immutable shared data for threads and virtual threads.
+
+ScopedValue<String> USER =
+        ScopedValue.newInstance();
+Benefits
+Safer than ThreadLocal
+Better performance with Virtual Threads
+Thread-safe context sharing
+
+Used in:
+
+Microservices
+Request tracing
+Logging systems
+
+2. Structured Concurrency (Preview)
+
+Treats multiple concurrent tasks as one logical unit.
+
+try (var scope =
+     new StructuredTaskScope.ShutdownOnFailure()) {
+
+}
+Benefits
+Cleaner multithreading
+Better cancellation handling
+Easier error management
+
+3. Primitive Types in Pattern Matching (Preview)
+
+Pattern matching now supports primitive types.
+
+switch(value) {
+
+    case int i ->
+        System.out.println(i);
+
+    default ->
+        System.out.println("Unknown");
+}
+Benefits
+Cleaner switch expressions
+Avoids boxing/unboxing
+
+4. Compact Source Files and Instance Main Methods
+
+Simplifies beginner Java programs.
+
+void main() {
+    System.out.println("Hello Java 25");
+}
+Benefits
+No need for class declaration
+Easier learning
+Reduced boilerplate
+
+5. Module Import Declarations
+
+Allows importing complete Java modules.
+
+import module java.base;
+Benefits
+Cleaner modular applications
+Simplified imports
+
+6. Flexible Constructor Bodies
+
+Allows statements before super() call.
+
+class Employee extends Person {
+
+    Employee(String name) {
+
+        name = name.trim();
+
+        super(name);
+    }
+}
+Benefits
+Better validation
+Cleaner constructors
+More flexibility
+
+7. Stable Values (Preview)
+
+Provides immutable values optimized by JVM.
+
+StableValue<String> value =
+        StableValue.of();
+Benefits
+Better JVM optimizations
+Lazy initialization support
+Safer immutable data
+
+8. PEM Encodings of Cryptographic Objects (Preview)
+
+Supports PEM format for cryptographic keys and certificates.
+
+PEMEncoder encoder = ...
+Benefits
+Easier certificate handling
+Better security integrations
+
+Used in:
+
+Banking apps
+Security systems
+SSL/TLS applications
+
+9. Key Derivation Function (KDF) API
+
+Provides secure key generation APIs.
+
+Benefits
+Modern cryptography support
+Stronger password-based security
+
+10. Compact Object Headers
+
+Reduces JVM memory usage.
+
+Benefits
+Smaller heap consumption
+Better JVM efficiency
+Improved cloud performance
+
+11. Generational Shenandoah GC
+
+Enhanced garbage collector with generational support.
+
+Benefits
+Faster garbage collection
+Lower pause times
+Better application responsiveness
+
+12. Vector API (Incubator)
+
+Provides high-performance vector computations.
+
+Vector<Integer> vector = ...
+Benefits
+Faster mathematical processing
+Useful for AI/ML workloads
+
+13. Ahead-of-Time (AOT) Improvements
+
+Improves application startup performance.
+
+Benefits
+Faster JVM startup
+Better cloud-native deployments
+
+14. JFR Enhancements
+
+Improved Java Flight Recorder monitoring tools.
+
+Benefits
+Better profiling
+Improved performance analysis
+Advanced diagnostics
+
+15. Remove 32-bit x86 Support
+
+Old 32-bit x86 architecture support removed.
+
+Benefits
+Cleaner JVM maintenance
+Better modern hardware optimization
+
+Important Java 25 Features Summary
+Feature	Purpose
+Scoped Values	Safe thread data sharing
+Structured Concurrency	Better multithreading
+Primitive Pattern Matching	Cleaner switch handling
+Compact Source Files	Beginner-friendly Java
+Flexible Constructors	Better constructor control
+Stable Values	JVM-optimized immutable data
+Generational Shenandoah	Improved GC
+Compact Object Headers	Reduced memory usage
+Vector API	High-performance computing
+Real-Time Usage in Spring Boot
+
+Java 25 is useful for:
+
+High-concurrency APIs
+Cloud-native applications
+Microservices
+AI/ML systems
+Enterprise banking applications
+
+Example using Virtual Threads + Scoped Values:
+
+Thread.startVirtualThread(() -> {
+    processRequest();
+});
+

@@ -1,0 +1,618 @@
+
+1️⃣ What are the main features introduced in Java 8?
+
+
+
+	Lambda Expressions
+
+	Functional Interfaces
+
+	Stream API
+
+	Default & Static methods in Interface
+
+	Optional class
+
+	New Date & Time API
+
+	Method References
+
+	Released by Oracle Corporation in 2014.
+
+
+2️⃣ What is a Lambda Expression?
+
+A lambda expression is a short way to write anonymous functions.
+
+Example:
+(a, b) -> a + b;
+
+Used mainly with functional interfaces.
+
+3️⃣ What is a Functional Interface?
+
+An interface with only one abstract method.
+
+Example:
+@FunctionalInterface
+interface Test {
+    void show();
+}
+4️⃣ What is the use of @FunctionalInterface annotation?
+
+It ensures the interface contains only one abstract method.
+If more methods are added → compile-time error.
+
+5️⃣ What is Stream API?
+
+Stream API is used for processing collections in functional style.
+
+Example:
+List<String> list = List.of("Ram", "Ravi");
+
+list.stream()
+    .filter(name -> name.startsWith("R"))
+    .forEach(System.out::println);
+
+
+6️⃣ Difference between Collection and Stream?
+
+Collection				Stream
+========================================
+Stores data			Processes data
+
+Can be modified		Cannot modify original data
+
+Eager execution		Lazy execution
+
+
+7️⃣ What is Lazy Evaluation in Stream?
+
+Intermediate operations (like filter()) are not executed until a terminal operation (like forEach()) is called.
+
+8️⃣ What is the difference between map() and flatMap()?
+
+map()
+
+	Transforms each element.
+
+		list.stream().map(String::length);
+flatMap()
+
+	Flattens nested structures.
+
+Example:
+
+List<List<String>> list = ...
+list.stream().flatMap(Collection::stream);
+
+
+9️⃣ What is Optional?
+
+Optional is a container to avoid NullPointerException.
+
+Optional<String> name = Optional.ofNullable(null);
+System.out.println(name.orElse("Default"));
+
+🔟 What are Default Methods?
+
+Methods inside interface with body using default keyword.
+
+interface Test {
+    default void show() {
+        System.out.println("Hello");
+    }
+}
+1️⃣1️⃣ What are Method References?
+
+Shortcut of lambda.
+
+Instead of:
+
+x -> System.out.println(x)
+
+Use:
+
+System.out::println
+
+🟠 ADVANCED LEVEL
+
+1️⃣2️⃣ What is reduce() in Stream?
+
+Used to combine elements into single result.
+
+int sum = list.stream()
+              .reduce(0, (a,b) -> a+b);
+1️⃣3️⃣ What is the difference between findFirst() and findAny()?
+
+findFirst() → returns first element
+
+findAny() → may return any element (used in parallel stream)
+
+1️⃣4️⃣ What is Parallel Stream?
+
+Processes data using multiple threads.
+
+list.parallelStream()
+    .forEach(System.out::println);
+
+1️⃣5️⃣ What are Predicate, Function, Consumer, Supplier?
+
+They are built-in functional interfaces from java.util.function.
+
+Interface		Method			Purpose
+===================================
+Predicate		test()			Returns boolean
+Function		apply()		Transforms value
+Consumer		accept()		Consumes value
+Supplier		get()			Supplies value
+
+
+1️⃣6️⃣ Difference between map() and forEach()?
+
+map()							forEach()
+========================================================
+Intermediate operation			Terminal operation
+Returns Stream					Returns void
+
+
+1️⃣7️⃣ What is the new Date & Time API in Java 8?
+
+Located in java.time package.
+
+Important classes:
+
+LocalDate
+
+LocalTime
+
+LocalDateTime
+
+ZonedDateTime
+
+Example:
+
+LocalDate today = LocalDate.now();
+
+
+1️⃣8️⃣ What is Collectors in Stream?
+
+Used to collect results into List, Set, Map.
+
+list.stream()
+    .collect(Collectors.toList());
+
+
+1️⃣9️⃣ Can we modify external variable inside Lambda?
+
+No. Variable must be final or effectively final.
+
+2️⃣0️⃣ Why Java 8 is important in Spring Boot?
+
+Because:
+
+Spring uses Lambda heavily
+
+Stream API used in repository processing
+
+Functional programming improves readability
+
+Optional reduces null issues
+
+Frameworks like Spring Boot use Java 8 features widely.
+
+🔥 MOST ASKED INTERVIEW QUESTIONS
+
+Explain Lambda Expression with example.
+
+Difference between map and flatMap.
+
+What is Optional and why needed?
+
+What is functional interface?
+
+Explain Stream lifecycle.
+
+What is parallel stream?
+
+How reduce works?
+
+
+Difference between findFirst and findAny.
+
+🎯 Quick Revision (1 Minute)
+
+Lambda → Short function
+
+Functional Interface → One abstract method
+
+Stream → Process collections
+
+Optional → Avoid null
+
+Default Method → Interface method with body
+
+Method Reference → Shortcut lambda
+
+
+
+
+🔥 Stream API deep explanation with 20 examples
+
+
+
+Stream API was introduced in Java 8 by Oracle Corporation and is heavily used in frameworks like Spring Boot.
+
+🚀 1️⃣ What is Stream API?
+
+Stream API is used to process collections in functional style.
+
+It supports:
+
+Filtering
+
+Mapping
+
+Sorting
+
+Collecting
+
+Reducing
+
+Grouping
+
+Parallel processing
+
+🏗 Stream Lifecycle
+Source → Intermediate Operations → Terminal Operation
+
+Example:
+
+list.stream()         // Source
+    .filter(x -> x>5) // Intermediate
+    .forEach(System.out::println); // Terminal
+
+
+1️⃣ Filter Example
+List<Integer> nums = List.of(1,2,3,4,5);
+
+nums.stream()
+    .filter(n -> n % 2 == 0)
+    .forEach(System.out::println);
+
+✔ Output: 2, 4
+
+2️⃣ Map Example
+nums.stream()
+    .map(n -> n * 2)
+    .forEach(System.out::println);
+
+✔ Multiply each element
+
+3️⃣ Count Elements
+long count = nums.stream()
+                 .filter(n -> n > 3)
+                 .count();
+
+4️⃣ Sorted
+nums.stream()
+    .sorted()
+    .forEach(System.out::println);
+
+Reverse:
+
+.sorted(Comparator.reverseOrder())
+
+
+5️⃣ Distinct
+List<Integer> list = List.of(1,2,2,3,3);
+
+list.stream()
+    .distinct()
+    .forEach(System.out::println);
+
+
+
+6️⃣ Limit
+nums.stream()
+    .limit(3)
+    .forEach(System.out::println);
+7️⃣ Skip
+nums.stream()
+    .skip(2)
+    .forEach(System.out::println);
+8️⃣ allMatch
+boolean result = nums.stream()
+                     .allMatch(n -> n > 0);
+9️⃣ anyMatch
+boolean result = nums.stream()
+                     .anyMatch(n -> n > 4);
+🔟 noneMatch
+boolean result = nums.stream()
+                     .noneMatch(n -> n < 0);
+🟠 TERMINAL OPERATIONS
+1️⃣1️⃣ Collect to List
+List<Integer> even = nums.stream()
+                         .filter(n -> n % 2 == 0)
+                         .collect(Collectors.toList());
+1️⃣2️⃣ Reduce (Sum)
+int sum = nums.stream()
+              .reduce(0, Integer::sum);
+1️⃣3️⃣ Find First
+Optional<Integer> first = nums.stream()
+                              .findFirst();
+1️⃣4️⃣ Find Any
+Optional<Integer> any = nums.parallelStream()
+                            .findAny();
+1️⃣5️⃣ Max and Min
+int max = nums.stream()
+              .max(Integer::compare)
+              .get();
+🔵 ADVANCED STREAM OPERATIONS
+1️⃣6️⃣ Group By
+Map<Integer, List<Integer>> grouped =
+    nums.stream()
+        .collect(Collectors.groupingBy(n -> n % 2));
+
+✔ Group even & odd numbers
+
+1️⃣7️⃣ Partitioning
+Map<Boolean, List<Integer>> partition =
+    nums.stream()
+        .collect(Collectors.partitioningBy(n -> n > 3));
+1️⃣8️⃣ Joining Strings
+List<String> names = List.of("Ram","Ravi","Sita");
+
+String result = names.stream()
+                     .collect(Collectors.joining(", "));
+
+✔ Output: Ram, Ravi, Sita
+
+1️⃣9️⃣ flatMap Example
+List<List<String>> list = List.of(
+        List.of("A","B"),
+        List.of("C","D")
+);
+
+list.stream()
+    .flatMap(Collection::stream)
+    .forEach(System.out::println);
+
+✔ Output: A B C D
+
+2️⃣0️⃣ Convert List to Map
+Map<String, Integer> map =
+    names.stream()
+         .collect(Collectors.toMap(
+              name -> name,
+              name -> name.length()
+         ));
+🧠 Important Interview Concepts
+🔹 What is Lazy Evaluation?
+
+Intermediate operations execute only when terminal operation is called.
+
+🔹 Difference: map vs flatMap
+map	flatMap
+One-to-One	One-to-Many
+No flatten	Flatten nested data
+🔹 Parallel Stream
+nums.parallelStream()
+    .forEach(System.out::println);
+
+⚠ Use only for large data sets.
+
+🏆 Real-Time Example (Employee Filtering)
+List<Employee> employees = ...
+
+List<Employee> highSalary =
+        employees.stream()
+                 .filter(e -> e.getSalary() > 50000)
+                 .sorted(Comparator.comparing(Employee::getSalary))
+                 .collect(Collectors.toList());
+
+Used heavily in enterprise applications.
+
+🎯 Summary
+
+Stream Types:
+
+Operation Type	Examples
+Intermediate	filter, map, sorted, distinct
+Terminal	collect, forEach, reduce
+Short Circuit	findFirst, anyMatch
+
+
+
+
+Java 17 is an LTS (Long Term Support) version released by
+👉 Oracle Corporation in September 2021.
+
+Java 17 is heavily used in enterprise applications and frameworks like
+👉 Spring Boot 3.x requires Java 17+.
+
+🚀 Why Java 17 is Important?
+
+Long Term Support (LTS)
+
+Modern language features
+
+Better performance
+
+Improved security
+
+Used in Spring Boot 3, Microservices, Enterprise apps
+
+🔥 Java 17 Features (Step by Step)
+1️⃣ Sealed Classes
+✅ What is it?
+
+Sealed classes allow you to control which classes can extend or implement them.
+
+🔹 Why needed?
+
+To restrict inheritance.
+
+🔹 Example
+sealed class Vehicle permits Car, Bike {}
+
+final class Car extends Vehicle {}
+final class Bike extends Vehicle {}
+
+✔ Only Car and Bike can extend Vehicle.
+
+2️⃣ Pattern Matching for instanceof (Improved)
+✅ Before Java 17
+if (obj instanceof String) {
+    String s = (String) obj;
+    System.out.println(s.length());
+}
+✅ Java 17
+if (obj instanceof String s) {
+    System.out.println(s.length());
+}
+
+✔ No casting required
+✔ Cleaner code
+
+3️⃣ Records (Finalized in Java 16, widely used in 17)
+✅ What is Record?
+
+A special class used for data carrier (DTO).
+
+🔹 Normal Class
+class Employee {
+    private final String name;
+    private final int age;
+
+    // constructor, getters, equals, hashCode, toString
+}
+🔹 Record
+record Employee(String name, int age) {}
+
+✔ Automatically generates:
+
+Constructor
+
+Getters
+
+toString()
+
+equals()
+
+hashCode()
+
+Used heavily in Spring Boot DTOs.
+
+4️⃣ Switch Expressions (Improved)
+✅ Old Switch
+int day = 1;
+String result;
+
+switch(day) {
+    case 1:
+        result = "Monday";
+        break;
+    default:
+        result = "Invalid";
+}
+✅ Java 17 Switch Expression
+String result = switch(day) {
+    case 1 -> "Monday";
+    default -> "Invalid";
+};
+
+✔ No break needed
+✔ Cleaner
+✔ Returns value
+
+5️⃣ Text Blocks (Multiline String)
+✅ Before Java 17
+String json = "{\n" +
+              "  \"name\": \"Ram\"\n" +
+              "}";
+✅ Java 17
+String json = """
+{
+  "name": "Ram"
+}
+
+
+
+""";
+
+✔ Very useful for JSON, SQL, HTML
+
+6️⃣ Strong Encapsulation of JDK Internals
+
+Java 17 strongly restricts internal APIs.
+
+✔ More secure
+✔ Better modularity
+
+7️⃣ Enhanced Pseudo-Random Number Generators
+
+New API:
+
+RandomGenerator generator = RandomGenerator.of("L64X128MixRandom");
+System.out.println(generator.nextInt());
+
+More powerful random generation.
+
+8️⃣ New macOS Rendering Pipeline
+
+Improved graphics performance (Internal improvement).
+
+9️⃣ Deprecation & Removal
+
+Some old features removed:
+
+Security Manager deprecated
+
+Applet removed
+
+Improves system security.
+
+🔟 Foreign Function & Memory API (Incubator)
+
+Used for:
+
+Calling native code (C/C++)
+
+Accessing off-heap memory
+
+Advanced feature (used in high-performance systems).
+
+🧠 Most Important Features for Developers20744
+
+Feature	Real Usage
+Records	DTO in Spring Boot
+Sealed Classes	Domain restrictions
+Pattern Matching	Clean instanceof
+Switch Expression	Cleaner business logic
+Text Blocks	SQL/JSON
+💼 Real-Time Example (Spring Boot DTO)
+record ProductDTO(Long id, String name, double price) {}
+
+Instead of writing full class manually.
+
+🔥 Interview Questions on Java 17
+
+What are sealed classes?
+
+Difference between class and record?
+
+Explain switch expressions.
+
+What is pattern matching?
+
+Why Java 17 is important in Spring Boot 3?
+
+🚀 Java 17 vs Java 8
+Java 8	Java 17
+Lambda	Sealed Classes
+Stream API	Records
+Optional	Pattern Matching
+Date API	Switch Expressions
+
+

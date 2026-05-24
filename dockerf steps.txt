@@ -1,0 +1,99 @@
+How to Create a Docker Hub Repository?
+Its quite easy and simple to create a Docker Hub repository. Here's a basic guide −
+
+Step 1: Sign in to Docker Hub
+Visit https://hub.docker.com/ to create a Docker Hub account and sign in using your credentials.
+
+
+Step 2: Create a New Repository
+
+Step 3: Choose Repository Visibility and Details
+
+
+Step 4: Save and Create the Repository
+
+
+
+
+How to Push or Pull Images from Docker Hub?
+===================================
+
+
+
+Pushing Images to Docker Hub
+In this section, let's see how you can push images to Docker Hub −
+
+Step 1: Tag Your Image
+
+
+Here, we will use a "hello-world" image from the Docker Hub public repository for reference. You can tag an image using the following command −
+
+
+docker pull hello-world
+$ docker images
+$ docker tag <image_id> <username/repository_name:tag>
+
+
+
+Step 2: Log in to Docker Hub
+Before you can pull or push images from your private repository, you have to log in to Docker Hub using the command line. You can use the docker login command to authenticate with Docker Hub using your Docker Hub username and password.
+
+$ docker login
+
+
+Step 3: Push the Image
+Now that you have logged in, you can use the docker push command to push the tagged image to Docker Hub.
+
+$ docker push <username/repository_name:tag>
+
+
+docker images
+
+docker push username/myfirstrepository:v1
+
+
+Pulling Images from Docker Hub
+
+You can use the Docker pull command to pull the images from Docker Hub
+
+docker pull <username/repository_name:tag>
+
+ docker images
+
+
+
+
+Dockerfile
+Dockerfile is a text document with a set of instructions for creating a Docker image. These instructions describe how to create the basic image, add files and directories, install dependencies, adjust settings, and define the container's entry point.
+
+
+Dockerfile
+# Use a base image from Docker Hub
+FROM alpine:3.14
+
+# Set the Dockerfile
+working directory inside the container
+WORKDIR /app
+
+# Copy the application files from the host machine to the container
+COPY . .
+
+# Expose a port for the application (optional)
+EXPOSE 8080
+
+# Define the command to run when the container starts
+CMD ["./myapp"]
+
+
+
+
+For the above Dockerfile, you can build an image using the below command.
+
+$ docker build -t myapp:latest .
+
+
+
+Removing Docker Images
+
+docker rmi myapp:latest
+

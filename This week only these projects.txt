@@ -1,0 +1,8 @@
+https://github.com/phegondev/users-management-system
+
+
+https://github.com/adityasurya4103/employee-management-system-angular-spring-boot-mysql
+
+
+https://www.javaguides.net/2023/05/react-crud-application-with-spring-boot.html
+

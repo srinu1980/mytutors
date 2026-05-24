@@ -1,0 +1,130 @@
+#JDBC connection properties
+
+spring.datasource.driver-class-name = com.mysql.jdbc.Driver
+spring.datasource.url =  jdbc:mysql://localhost:3306/howtodoinjavadb 
+spring.datasource.username = #your database username
+spring.datasource.password = #your database password
+
+#Hibernate properties
+
+spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.MySQLDialect
+spring.jpa.hibernate.ddl-auto = update
+spring.jpa.properties.hibernate.enable_lazy_load_no_trans=true
+
+Let’s create User entity and add corresponding JPA annotations to map the class to a database table.
+
+
+
+@Entity
+@Table(name = "TBL_USERS")
+public class User {
+
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id private int id;
+
+	@Column private String firstName;
+	@Column private String lastName;
+	@Column private String username;
+	@Column private String password;
+        
+       //Getters, setters, constructors and toString() method
+}
+
+
+
+Let’s create JpaRepository implementation UserRepository which provides all defaults operations for performing the search, get, update and delete operations on user entities
+
+@Repository
+public interface UserRepository extends CrudRepository<User, Integer> { }
+
+
+
+
+The UserController class has URL mappings and handler methods to manage the CRUD operations for User information
+
+
+
+@RestController
+@RequestMapping(value = "user")
+@CrossOrigin(origins = "http://localhost:4200")
+public class UserController {
+
+	@Autowired
+	private UserService userService;
+
+	@PostMapping
+	@ResponseStatus(value = HttpStatus.CREATED)
+	public User registerUser(@RequestBody User user) {
+
+		return this.userService.insert(user);
+	}
+
+	@GetMapping
+	@ResponseStatus(value = HttpStatus.OK)
+	public List<User> findAllUser() {
+
+		return this.userService.findAll();
+	}
+
+	@GetMapping(value = "/{id}")
+	@ResponseStatus(value = HttpStatus.OK)
+	public User findById(@PathVariable int id) {
+		return this.userService.findById(id);
+	}
+
+	@PutMapping(value = "/{id}")
+	@ResponseStatus(value = HttpStatus.OK)
+	public User updateUser(@PathVariable int id, @RequestBody User user) {
+
+		return this.userService.updateUser(id, userVO);
+	}
+
+	@DeleteMapping(value = "/{id}")
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void deleteUser(@PathVariable int id) {
+
+		this.userService.delete(id);
+	}
+}
+registerUser() – This method handles the HTTP POST request used to create a new user
+findAllUser() – It returns the list of all available users
+findById() – It returns a user by its id
+updateUser() – This method handles the HTTP PUT request used to update the existing user information by its id
+deleteUser() – This method handles the HTTP DELETE request used to delete user information by its id
+
+
+
+
+
+Creating Client Views with Angular
+
+To create an Angular application make sure Node.js is installed on your system. Check if node.js is successfully installed or not by typing the following command.
+
+
+node -v 
+
+
+To install Angular we need to install Angular-CLI. Angular-CLI is a command-line interface used to initialize, develop and maintain Angular applications. Install or update Angular CLI by typing the following command:
+
+npm install -g @angular/cli
+
+
+
+ng version
+
+
+Angular Skeleton App Using Angular-CLI
+To build a simple angular app open the command prompt and navigate to your destination folder where you want to create a project. Type the following command to create a blank angular project.
+
+ng new angular-app4
+
+
+
+
+Mapping View Model to Java Model
+
+The model helps store the data on the UI side in the form of an object, similar to POJO in Java programming. In following example, we are creating the user.model.ts file for this purpose using the angular CLI.
+
+ng g class User --type=model
+
+

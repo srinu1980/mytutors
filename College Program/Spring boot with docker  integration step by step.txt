@@ -1,0 +1,119 @@
+To implement spring boot project with docker for deployment
+=============================================================
+
+1. create spring boot project
+	name  : SpringBootwithDocker
+	
+2. add dependency :
+                 spring web
+
+      --create one controller (WelcomeController  in com.cts.controller package)
+
+-------------------------------------
+package com.cts.controller;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class WelcomeController {
+
+	Logger logger=LoggerFactory.getLogger(WelcomeController.class);
+	
+	public WelcomeController()
+	{
+	
+		logger.info("WelcomeController  :: Constructor..");
+	}
+	
+	@GetMapping("/greeting")
+	public String greetingMsg()
+	{
+		logger.info("***********************  Logger Info *****************");
+		logger.info("Starting the greetingMsg().... ");
+		
+		String msg ="Good Morning to All @!  Happy New Year 2025";
+		
+		logger.info("ending the greetingMsg().... ");
+		
+		return msg;
+		
+	}
+	
+	@GetMapping
+	public String welcome()
+	{
+		logger.info("starts the  welcome logger.... ");
+		
+		String msg="Welcome to All ! Have a niceday !";
+		
+		logger.info("end the  welcome logger.... ");
+		
+		return msg;
+	}
+}
+
+
+
+After that runtime ( default port number 8080, if you want change it).
+
+
+
+---After that run your project
+
+---check endpoints at brower itself or postman
+
+Dockerfile:
+============
+https://docs.docker.com/reference/dockerfile/
+
+
+
+Next create Dockerfile  at project root folder itself, so right click on your project -> create new  -> file  ->name
+
+Dockerfile
+========
+
+FROM eclipse-temurin:17
+
+WORKDIR /app
+
+COPY target/SpringBootwithDocker-0.0.1-SNAPSHOT.jar /app/SpringBootwithDocker.jar
+
+ENTRYPOINT ["java", "-jar","SpringBootwithDocker.jar"]
+
+======================================================
+
+
+
+Next statt Docker-Desktop windows application
+
+
+And also open  hub.docker.com
+
+
+--------------------------------
+--To generate .jar file,  right click on your project-> run as -> maven install)
+
+ -- after that once check  the target folder in your project
+	
+ --> to build & run your project, goto  project at Dockerfile location in your project
+
+
+
+At project location :\> docker build -t springbootwithdocker .
+
+
+To run the docker image  as 
+
+At project location:\> docker run -p 8080:8080 springbootwithdocker
+
+
+Then goto brower, type the end points(apis)
+
+----localhost:8080/
+
+---localhost:8080/greeting
+

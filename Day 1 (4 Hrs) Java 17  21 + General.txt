@@ -1,0 +1,36 @@
+Day 1 (4 Hrs) Java 17 / 21 + General Engineering    
+
+Modern Java Evolution • Java 8 → 11 → 17 → 21 (LTS roadmap)  
+• Key features overview   Coding Enhancements 
+• Records vs POJOs  
+• Sealed Classes  
+• Pattern Matching (instanceof, switch)  
+• Text Blocks   Advanced Engineering 
+• Virtual Threads (Project Loom)  
+• Structured Concurrency  
+• Memory model & performance tuning SEs  General Engineering Practices 
+• Clean Code principles  
+• Code smells & refactoring strategies  
+• Logging & Observability basics   Hands-on 
+• Convert legacy POJO → Record  
+• Implement virtual thread-based API executor  
+• Refactor bad code (code smell exercise)         
+
+Day 2 (4 Hrs) OOPS + SOLID Principles    
+
+Advanced OOPS 
+• Composition vs Inheritance (real-world tradeoffs)  
+• Abstraction in large systems  
+• Polymorphism in frameworks   Design Thinking 
+• Identifying domain boundaries  
+• Anti-patterns in enterprise apps   SOLID Deep Dive 
+• S: Real violations in Spring apps  
+• O: Extensibility patterns  
+• L: Substitution pitfalls  
+• I: Interface explosion problem  
+• D: Dependency Injection 
+
+best practices   Refactoring to SOLID 
+
+• Converting monolithic service → modular design   Hands-on • Refactor a tightly coupled service into SOLID-compliant design  • Implement Strategy pattern for payment system            Day 3 (4 Hrs) CI/CD (Jenkins) + Docker    CI/CD Fundamentals • CI vs CD vs DevOps  • Pipeline design principles   Jenkins Deep Dive • Pipeline as Code (Jenkinsfile)  • Build → Test → Deploy stages  • Integration with Git   Docker Basics • Containers vs VMs  • Dockerfile best practices  • Multi-stage builds   CI/CD + Docker Integration • Build Spring Boot image  • Push to registry   Hands-on • Write Jenkinsfile for Spring Boot project  • Build & run Docker container           Day 4 (4 Hrs) Kubernetes Basics    K8s Architecture • Master, Node, API Server, etc  Core Objects • Pods, Deployments, Services   Configuration • ConfigMaps & Secrets  • Environment configs   Scaling & Deployment • Rolling updates  • Health checks   Hands-on • Deploy Spring Boot app on Kubernetes  • Scale replicas                 Day 5 (4 Hrs) Spring Boot (Backend Engineering)    Spring Boot Internals • Auto-configuration  • Starter dependencies   REST API Development • Controller → Service → Repository layers  • Exception handling   Production-grade Features • Logging (SLF4J)  • Validation  • Profiles   Performance & Best Practices • Thread pools  • Caching basics  • API versioning   Hands-on • Build production-ready REST API  • Global exception handler            Day 6 (4 Hrs) Spring Data JPA + API Design    JPA Deep Dive • Entity lifecycle  • Lazy vs Eager loading   Advanced JPA • JPQL, Criteria API  • Pagination & sorting   API Design Principles • REST maturity model  • Resource modeling   Enterprise API Standards • Idempotency  • Versioning strategies  • Error handling standards   Hands-on • Implement pagination API  • Design clean REST endpoints             Day 7 (4 Hrs) Microservices    Architecture Fundamentals • Monolith vs Microservices  • When NOT to use microservices   Service Design • Bounded context  • Database per service   Communication • REST vs Messaging  • Sync vs Async   Resilience • Circuit breaker  • Retry patterns   Hands-on • Split monolith into 2 services  • Implement REST communication              Day 8 (4 Hrs) Microservices Patterns + Caching    Core Patterns • API Gateway  • Service Registry  • Config Server   Data Management • Saga pattern  • Event sourcing (intro)   Caching Strategies • Cache-aside  • Write-through / write-back   Performance Optimization • Cache invalidation strategies   Hands-on • Implement caching in Spring Boot  • Add API Gateway (basic)   
+
