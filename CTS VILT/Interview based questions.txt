@@ -1,0 +1,240 @@
+			STAGE 1
+
+Agile Methodology /Unix Commands / Shell Scripting /Git
+--------------------------------------------------------
+
+1. What is SDLC?
+
+2. Diff between Waterfall Model and Agile Model
+
+3. What is Scrum and Sprint ?
+
+
+UNIX /Shell Scripting
+==========================
+
+4. File Management , Directories, File Permissions, PIPES , Processes and Basic Utilities commands
+
+5. Unix File system architecture or explain about Kernal and Shell
+
+6.File System Hierarchy:
+Describe the standard directory structure (e.g., /, /bin, /etc, /home, /usr, /var).
+
+7. Command-Line Proficiency:
+
+8. File and Directory Management: ls, cd, pwd, mkdir, rmdir, cp, mv, rm.
+
+9. File Content Viewing: cat, more, less, head, tail.
+
+10. Text Processing: grep (searching patterns), sed (stream editor), awk (pattern scanning and processing language).
+
+11. Process Management: ps, kill, top.
+
+12. System Information: df, du, uname, uptime.
+
+13. Archiving and Compression: tar, gzip, unzip.
+
+14. Networking: ping, ifconfig (or ip), ssh.
+
+15. What are the key features of Unix?
+
+--Multi-user system
+--Multitasking capabilities
+--Portability
+--Hierarchical file system
+--Shell for command-line interaction
+
+
+16. What is the Unix file system structure?
+
+A hierarchical structure starting with the root directory /. Key directories:
+
+/bin: Binary executables
+/etc: Configuration files
+/home: User directories
+/tmp: Temporary files
+/var: Variable data like logs
+
+
+
+17. What are the different types of files in Unix?
+
+Regular files (-)
+Directory files (d)
+Symbolic links (l)
+Device files (b, c for block and character devices)
+Pipes and sockets (p, s)
+
+
+
+GIT
+===========
+
+1. Diff between GIT & GitHub
+
+2. EXPLAIN basic commands with explanation
+
+HTML
+==========
+
+1. Explain Inline Elements and Block Level Elements
+
+2. HTML 5 New Features
+
+3. Explain Semantic tags
+
+4. Explain about Web Storages in HTML 5 (OR) Diff b/w session Storage & Local Storages 
+
+5. HTML 5 new input type tags and also attributes.
+
+CSS
+===
+1. Explain about CSS?
+
+2. How many ways to implements CSS Styles
+
+3. Explain about different selector types.
+
+
+JavaScript
+===========
+
+1. Explain about DOM and types?
+
+
+Bootstrap 
+=============
+
+1. Explain the Bootstrap grid system.
+
+2. What is the difference between a container and container-fluid? (or) How many layouts does Bootstrap have?
+
+3. What is a bootstrap card and how to create it?
+
+4. What are glyphicons? How to use them?
+
+Ans :   
+Icon fonts which can be used  in web application are called Glyphicons. Bootstrap includes 260 glyphicons.  These glyphicons are used for web projects from Bootstrap Glyphicons Halflings Set. Glyphicons Halflings are not available to free of cost, but their creator has made them available for Bootstrap free of cost.
+
+
+jQuery
+===========
+1. What is jQuery and why is it used?
+2. Explain the $ symbol in jQuery.
+3. What is the difference between onload() and $(document).ready()?
+4. Can you tell me the differences between jQuery And JavaScript?
+
+
+Java
+===========
+
+1. Explain about JVM, JRE, JDK?
+2. Explain Access Modifiers  and NON Access Modifiers?
+3. Diff between Constructor overloading and method overloading
+4. What is Constructor chaining?
+5. Diff between  String, String Buffer and String builder?
+6. Explain different data types in Java.(Primitive Data Type and Non-Primitive Data Type or Object Data type)
+7. What is the Wrapper class in Java?
+8. Explain about this, static, super and static keywords
+9. Explain about Finalize, finally and final keywords
+10. Explain about OOPS FEATURES(Explain Abstraction and Encapsulation)
+11. Explain about Polymorphism or what is static poly and dynamic polly?
+12. Why Java Multiple Inheritance not supports?
+13. Diff b/w abstract class and interface
+14. Explain about EXCEPTIN HANDLING Concept?
+15. diff b/w throw and throws keyword.
+16. How to create custom exception in java?
+17. Diff b/w Array & ArrayList   and also     ArrayList & LinkedList
+18. Explain about Comparable and Comparator interface
+19. Explain about HashSet & HashMap  and also what is HashCode & HashTable?(https://www.youtube.com/watch?v=FsfRsGFHuv4) or https://www.youtube.com/watch?v=4UrPTAsVo88
+
+
+20. Diff b/w List ,Set and Map interfaces
+21. Explain Thread Life cycle?
+22. What is Synchronization?
+23. Explain Interthread Communication?(wait(), notify() and notifyAll())
+24. How many ways to create Thread and explain.
+25. What is Serialization & Deserialization in java
+26. What is Marker interface
+27. Explain Checked Exception and Unchecked Exception 
+28. Explain Java 8 Features?
+29. What is Functional interface
+30. What is Stream API with some examples uing Intermediate and Terminal operators
+31. What is Lamba Expression and Method reference
+32. Explain about Statement,PreparedStatement and CallableStatement interfaces
+33. What are the step for implementing jdbc application
+34. Explain Java 17 & 21 Features (Sealed class, Record, Pattern Matching new features)
+35. What is Reactive Programming and Explain it.
+
+SQL
+===============
+
+1. Explain different types of Constraints.(NOT NULL, UNIQUE, PRIMARY KEY, CHECK AND FOREIGN KEY)
+1. What is Super key and Candidate and Composite Key
+2. Diff b/w delete , drop and truncate commands?
+3. Explain about Alter keyword
+4. Explain about  IN , ANY & All operators
+5. Explain about Aggregate & Scalar FUNCTIONS in Oracle.
+6. Explain about Sub queries ?
+7. Explain about Joins?
+8. Explain Group by and Having Classes
+
+
+PL/SQL
+==========
+
+1. Explain the basic structure followed in PL/SQL.
+2. Discuss the differences between Procedures, Functions, and Triggers, and when to use each.
+3. Explain the concept of Packages
+4. What is a PL/SQL cursor?
+5. What is the Difference between implicit cursor and explicit cursor?
+6. What is a PL/SQL Trigger? Give some examples of when "Triggers" might be useful.
+7. Tell the importance of %TYPE and %ROWTYPE data types in PL/SQL.
+8. What is purposes of COMMIT, ROLLBACK and SAVEPOINT statements in PL/SQL?
+9. How can we debug our PL/SQL code?
+       Ans :                  To debug our PL/SQL code, we can use the DBMS_OUTPUT and DBMS_DEBUG statements. 
+			The output is printed to the standard console via DBMS_OUTPUT. 
+			The output is printed to the log file by DBMS_DEBUG.
+
+
+
+
+
+Design Pattern
+==================
+
+1. Explain Solid Principles?
+2. What is use of Design patterns and Types of Design pattern?
+3. Learn about Singleton, prototype,Factory ,Façade and Proxy design pattern principles.
+
+
+
+
+Junit & Mockito
+=======================
+1.What is JUnit and why is it used? Explain its role as a unit testing framework for Java.
+2.
+3.Explain important JUnit annotations. Detail @Test, @Before, @After, @BeforeClass, @AfterClass, @Ignore, and @RunWith.
+4.What is a Test Suite in JUnit?
+
+5. Explain the purpose of @Mock and @InjectMocks annotations.
+6.How do you mock a method call and define its return value? Provide an example using when().thenReturn().
+7. What is the difference between a mock and a spy in Mockito?
+
+
+
+Maven
+=============
+1. What is Maven?
+2. Maven BUILD Life cycle
+3. what is POM?
+4. What are the different types of Maven Repositories?
+
+
+
+
+
+
+
+
+ 

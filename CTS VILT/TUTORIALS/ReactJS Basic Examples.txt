@@ -1,0 +1,487 @@
+
+
+
+https://react.dev/learn/setup
+
+
+Create react app using following command
+
+npx create-react-app appname
+
+
+to run the react app type the following command in the terminal
+npm start
+
+
+
+Write the following code by creating a file named Header.js
+
+const Header = () => {
+		return (
+			<div>
+			<h2> This is header component </h2>
+			</div>
+		)
+	}
+	
+	export default Header
+
+import Header from "./components/Header";
+	
+	
+	function App() {
+	  return (
+	    <div>
+	    	//calling Header Component 
+	    	<Header />
+	
+	   		<h1> Hello World </h1> 
+	    </div>
+	 );
+	}
+	
+	export default App;
+
+
+
+------------------------
+Using Click Events in React
+
+React events are written in camel case. To understand the button and click Event.
+
+
+function App() {
+
+const clickEvent = () => {
+console.log("You clicked the button");
+}
+  return (
+    <div>
+    	 <button onClick={ clickEvent }> Button  </button>
+    </div>
+ );
+}
+
+export default App;
+
+
+
+Using the State Hook
+Hooks were introduced in React 16.8.
+
+
+The useState hooks in react allows us to define some value at the beginning and we can update the value of the state after some operation is performed.
+
+
+import { useState } from "react
+function App() {
+  const [initialText, setText] = useState("I am about to get changed!");
+ 
+  const changeText = () => {
+    setText("I am changed");
+  }
+ 
+  return (
+    <div>
+      <h1>{ initialText }</h1>
+      <button onClick={ changeText }>Click Me </button>
+    </div>
+  );
+}
+ 
+export default App;
+
+
+
+Ways to Implement Conditional Rendering in React
+
+1. Using If/Else Statements
+
+import React, { useState } from 'react';
+
+function App() {
+    const [isLogged, setIsLogged] = useState(false);
+
+    if (isLogged) {
+        return <h1>Welcome back, User!</h1>;
+    } else {
+        return <button onClick={() => 
+            setIsLogged(true)}>Login</button>;
+    }
+}
+
+export default App;
+
+
+
+2. Using Ternary Operator
+
+import React, { useState } from 'react';
+
+function App() {
+    const [isLogged, setIsLogged] = useState(false);
+
+    return (
+        <div>
+            {isLogged ? (
+                <h1>Welcome back, User!</h1>
+            ) : (
+                <button onClick={() => setIsLogged(true)}>Login</button>
+            )}
+        </div>
+    );
+}
+
+export default App;
+
+
+
+
+
+3. Using Logical AND (&&) Operator
+import React, { useState } from 'react';
+
+function App() {
+    const [isLogged, setIsLogged] = useState(false);
+
+    return (
+        <div>
+            <button onClick={() => setIsLogged(!isLogged)}>
+                Toggle Login
+            </button>
+            {isLogged && <h1>Welcome back, User!</h1>}
+        </div>
+    );
+}
+
+export default App;
+
+
+4. Using Switch Case Statements
+
+import React, { useState } from 'react';
+
+function App() {
+    const [status, setStatus] = useState('guest');
+
+    const render = () => {
+        switch (status) {
+            case 'guest':
+                return <button onClick={() => 
+                    setStatus('user')}>Login</button>;
+            case 'user':
+                return <h1>Welcome, User!</h1>;
+            case 'admin':
+                return <h1>Admin Dashboard</h1>;
+            default:
+                return null;
+        }
+    };
+
+    return <div>{render()}</div>;
+}
+
+export default App;
+
+
+
+There are two primary types of React components:
+
+1. Functional Components
+
+Functional components are simpler and preferred for most use cases. They are JavaScript functions that return React elements. With the introduction of React Hooks, functional components can also manage state and lifecycle events.
+
+Stateless or Stateful: Can manage state using React Hooks.
+Simpler Syntax: Ideal for small and reusable components.
+Performance: Generally faster since they don’t require a ‘this’ keyword.
+
+function Greet(props) {
+    return <h1>Hello, {props.name}!</h1>;
+}
+
+
+
+
+2. Class Components
+Class components are ES6 classes that extend React.Component. They include additional features like state management and lifecycle methods.
+
+State Management: State is managed using the this.state property.
+Lifecycle Methods: Includes methods like componentDidMount, componentDidUpdate, etc.
+
+
+class Greet extends React.Component {
+    render() {
+        return <h1>Hello, {this.props.name}!</h1>;
+  }
+}
+
+
+
+
+
+Props in React Components
+=============================
+Props (short for properties) are read-only inputs passed from a parent component to a child component. 
+
+Props are immutable.
+
+They enable communication between components.
+
+
+function Greet(props) {
+    return <h2>Welcome, {props.username}!</h2>;
+}
+
+// Usage
+<Greet username="Anil" />;
+
+
+
+
+
+
+/*<h1>Welcome to Learn React Application</h1>
+      <h3>Have a NiceDay!</h3>
+     <Apple/>
+     <ButtonComponent></ButtonComponent>
+
+     <Greet username="Rahul" age="25"></Greet>
+     <Greet username="Shiva" age="30"></Greet>
+     <Greet username="Susma"></Greet>
+
+     <Counter></Counter>
+     */
+
+
+Hook components
+================
+
+State in React Components
+
+The state is a JavaScript object managed within a component, allowing it to maintain and update its own data over time. Unlike props, state is mutable and controlled entirely by the component.
+
+
+
+State updates trigger re-renders.
+==================================
+
+
+Functional components use the useState hook to manage state.
+
+function Counter() {
+    const [count, setCount] = React.useState(0);
+
+    return (
+        <div>
+            <p>Count: {count}</p>
+            <button onClick={() => 
+                setCount(count + 1)}>Increment</button>
+        </div>
+    );
+}
+
+
+
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+// Navbar Component
+const Navbar=()=>
+{
+	return <h1>This is Navbar.< /h1>
+}
+
+// Sidebar Component
+const Sidebar=()=> {
+	return <h1>This is Sidebar.</h1>
+}
+
+// Article list Component
+const ArticleList=()=>
+{
+	return <h1>This is Articles List.</h1>
+}
+
+// App Component
+const App=()=>
+{
+	return(
+			<div>
+				<Navbar />
+				<Sidebar />
+				<ArticleList />
+			</div>
+		);
+}
+
+ReactDOM.render(
+	<App />, 
+	document.getElementById("root")
+);
+
+
+
+
+
+React Hooks
+
+React Hooks are functions that enable functional components to use React state and lifecycle features. They eliminate the need for class components, making code cleaner and easier to maintain.
+
+Types of React Hooks
+1. State Hooks
+State Hooks like useState allows functional components to manage local state.
+
+
+import React, { useState } from "react";
+
+function Counter() {
+    const [count, setCount] = useState(0);
+    return (
+        <div>
+            <h1>Count: {count}</h1>
+            <button onClick={() => 
+                setCount(count + 1)}>Increment</button>
+        </div>
+    );
+}
+
+export default Counter;
+useState initializes the count variable with 0 and provides a method setCount to update it.
+Clicking the button updates the state using the setCount function.
+2. Context Hooks
+Context Hooks like useContext enable functional components to access the React Context API and share data across the component tree.
+
+
+import React, { createContext, useContext } from "react";
+
+const Contexts = createContext("light");
+
+function Theme() {
+    const theme = useContext(Contexts);
+    return <h1>Theme: {theme}</h1>;
+}
+
+export default function App() {
+    return (
+        <Contexts.Provider value="dark">
+            <Theme />
+        </Contexts.Provider>
+    );
+}
+The Theme Context provides a value (“dark”) accessible via useContext in DisplayTheme.
+This eliminates the need to pass props manually down the component tree.
+3. Ref Hooks
+Ref Hooks like useRef provide access to DOM nodes or persist values without causing re-renders.
+
+
+import React, { useRef } from "react";
+
+function Focus() {
+    const input = useRef();
+
+    const focus = () => input.current.focus();
+
+    return (
+        <div>
+            <input ref={input} type="text" />
+            <button onClick={focus}>Focus</button>
+        </div>
+    );
+}
+
+export default Focus;
+useRef stores a reference to the input element, allowing the focus function to programmatically set focus on it.
+Updating inputRef does not cause the component to re-render.
+4. Effect Hooks
+Effect Hooks like useEffect handle side effects like fetching data, subscriptions, and DOM manipulation.
+
+
+import React, { useEffect, useState } from "react";
+
+function Timer() {
+    const [seconds, setSeconds] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => 
+            setSeconds((s) => s + 1), 1000);
+        return () => clearInterval(interval); 
+    }, []);
+
+    return <h1>Time: {seconds}s</h1>;
+}
+
+export default Timer;
+The useEffect hook starts an interval to update the seconds state every second.
+The cleanup function ensures the interval is cleared when the component unmounts.
+5. Performance Hooks
+Performance Hooks like useMemo and useCallback optimize rendering by memoizing values or functions.
+
+useMemo: Returns a memoized value to avoid expensive calculations on every render.
+useCallback: Returns a memoized version of a callback function.
+
+import React, { useMemo } from "react";
+
+function ExpCal({ num }) {
+    const compute = useMemo(() => num * 2, [num]);
+    return <h1>Result: {compute}</h1>;
+}
+useMemo caches the computed value (num * 2), recalculating it only when num changes.
+This prevents unnecessary calculations on every render.
+6. Resource Hooks
+These include useFetch or custom hooks for fetching and managing external resources.
+
+
+function useFetch(url) {
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+        fetch(url)
+            .then((response) => response.json())
+            .then((data) => setData(data));
+    }, [url]);
+
+    return data;
+}
+useFetch is a custom hook for fetching data from a given URL.
+It uses useEffect to fetch data when the URL changes and updates the data state.
+7. Other Hooks
+React offers additional hooks for specific use cases
+
+useReducer: For complex state management.
+useImperativeHandle: Customizes the instance value exposed by useRef.
+useLayoutEffect: Like useEffect but fires synchronously after DOM updates.
+
+
+
+
+
+
+
+
+//HookCounterOne.js
+
+// useEffect is defined here
+
+import { useState, useEffect } from "react";
+
+function HookCounterOne() {
+    const [count, setCount] = useState(0);
+
+    useEffect(() => {
+        document.title = `You clicked ${count} times`;
+    }, [count]);
+
+    return (
+        <div>
+            <button onClick={() => setCount((prevCount) => prevCount + 1)}>
+                Click {count} times{" "}
+            </button>
+        </div>
+    );
+}
+export default HookCounterOne;
+
+
+
+

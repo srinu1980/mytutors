@@ -1,0 +1,463 @@
+
+What is a DTO?
+
+
+A Data Transfer Object (DTO) is a simple Java object used to transfer data between layers (Controller ↔ Service ↔ Repository) without exposing the internal entity structure.
+
+
+ DTOs are mainly used to:
+============================
+
+=>Hide entity details from API clients.
+
+=>Avoid exposing sensitive fields (like passwords, tokens).
+
+=>Reduce payload size (only send required fields).
+
+=>Help with validation at the API level.
+
+=>Decouple persistence layer (JPA entities) from presentation layer (REST API).
+
+
+
+
+=> Example Without DTO
+============================
+
+
+@Entity
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String username;
+    private String email;
+    private String password;  // 🔒 Should not be exposed in API
+
+    // getters & setters
+}
+
+
+
+
+If we directly return User from the controller, the API will also expose password, which is a security risk.
+
+
+
+
+=> Introducing DTO
+=========================
+
+We create a DTO that only exposes required fields:
+
+public class UserDTO {
+
+    private Long id;
+    private String username;
+    private String email;
+
+    // getters & setters
+}
+
+
+
+
+
+ Service Layer (Conversion Between Entity and DTO)
+======================================================
+
+=>We convert User ↔ UserDTO in the service layer.
+
+
+
+@Service
+public class UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    // Convert Entity -> DTO
+    private UserDTO convertToDTO(User user) {
+        UserDTO dto = new UserDTO();
+        dto.setId(user.getId());
+        dto.setUsername(user.getUsername());
+        dto.setEmail(user.getEmail());
+        return dto;
+    }
+
+    // Convert DTO -> Entity
+    private User convertToEntity(UserDTO dto) {
+        User user = new User();
+        user.setId(dto.getId());
+        user.setUsername(dto.getUsername());
+        user.setEmail(dto.getEmail());
+        return user;
+    }
+
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    public UserDTO getUserById(Long id) {
+        return userRepository.findById(id)
+                .map(this::convertToDTO)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    public UserDTO createUser(UserDTO dto) {
+        User user = convertToEntity(dto);
+        user.setPassword("default"); // handle separately
+        User saved = userRepository.save(user);
+        return convertToDTO(saved);
+    }
+}
+
+
+
+
+ Controller Layer (Using DTOs)
+===================================
+
+
+=>Now we only expose UserDTO to API clients.
+
+
+
+@RestController
+@RequestMapping("/users")
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @GetMapping
+    public List<UserDTO> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
+    @GetMapping("/{id}")
+    public UserDTO getUser(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
+
+    @PostMapping
+    public UserDTO createUser(@RequestBody UserDTO userDTO) {
+        return userService.createUser(userDTO);
+    }
+}
+
+
+
+
+ Using DTO + Validation
+===========================
+
+
+You can validate DTOs at API level:
+
+public class UserDTO {
+
+    private Long id;
+
+    @NotBlank(message = "Username is required")
+    private String username;
+
+    @Email(message = "Invalid email format")
+    private String email;
+}
+
+
+=>And in controller:
+
+
+
+@PostMapping
+public UserDTO createUser(@Valid @RequestBody UserDTO userDTO) {
+    return userService.createUser(userDTO);
+}
+
+
+
+ Tools for DTO Mapping
+=========================
+
+=>Instead of writing manual convertToDTO methods, you can use mapping libraries:
+
+=>MapStruct (compile-time, fast, recommended)
+
+=>ModelMapper (runtime, flexible)
+
+
+
+
+
+
+
+
+=>DTOs prevent exposing internal entities.
+
+=>Used to separate API models from database models.
+
+=>Improves security, maintainability, and flexibility.
+
+=>Can be mapped manually or using libraries like ModelMapper.
+
+
+
+
+
+
+
+
+==============================================
+
+User (Entity / Model)
+
+UserDTO (Data Transfer Object)
+
+UserRepository (JPA Repository)
+
+UserService (Business Logic, using ModelMapper)
+
+UserController (REST Controller)
+
+AppConfig (to register ModelMapper bean)
+
+Custom exception (UserNotFoundException)
+
+
+
+
+
+Step 1: Add ModelMapper Dependency
+--------------------------------------
+pom.xml
+
+<dependency>
+    <groupId>org.modelmapper</groupId>
+    <artifactId>modelmapper</artifactId>
+    <version>3.2.0</version>
+</dependency>
+
+---------------------------------
+
+
+
+@Entity
+@Table(name = "users")
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String username;
+    private String email;
+    private String password;
+
+    // Getters & Setters
+}
+
+
+
+DTO (Data Transfer Object)
+=============================
+
+public class UserDTO {
+    private Long id;
+    private String username;
+    private String email;
+    private String password; // optional, you may skip this in response
+
+    // Getters & Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+}
+
+
+  Repository
+=================
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+}
+
+
+
+ Custom Exception
+===================
+
+public class UserNotFoundException extends RuntimeException {
+    public UserNotFoundException(Long id) {
+        super("User not found with id: " + id);
+    }
+}
+
+Service (with ModelMapper)
+============================
+
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    // Convert Entity -> DTO
+    private UserDTO convertToDTO(User user) {
+        return modelMapper.map(user, UserDTO.class);
+    }
+
+    // Convert DTO -> Entity
+    private User convertToEntity(UserDTO dto) {
+        return modelMapper.map(dto, User.class);
+    }
+
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    public UserDTO getUserById(Long id) {
+        return userRepository.findById(id)
+                .map(this::convertToDTO)
+                .orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    public UserDTO createUser(UserDTO dto) {
+        User user = convertToEntity(dto);
+        User saved = userRepository.save(user);
+        return convertToDTO(saved);
+    }
+
+    public UserDTO updateUser(Long id, UserDTO dto) {
+        User existing = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        existing.setUsername(dto.getUsername());
+        existing.setEmail(dto.getEmail());
+        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+            existing.setPassword(dto.getPassword());
+        }
+
+        return convertToDTO(userRepository.save(existing));
+    }
+
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new UserNotFoundException(id);
+        }
+        userRepository.deleteById(id);
+    }
+}
+
+
+
+ Controller
+===================
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @GetMapping
+    public List<UserDTO> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.createUser(userDTO));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.updateUser(id, userDTO));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+}
+
+ AppConfig (ModelMapper Bean)
+==================================
+
+
+import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class AppConfig {
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
+}
+
+
+
+
+GET /api/users → Get all users
+
+GET /api/users/{id} → Get user by ID
+
+
+POST /api/users → Create user
+
+{
+  "username": "Mike",
+  "email": "mike@outlook.com",
+  "password": "secret"
+}
+
+
+
+
+PUT /api/users/{id} → Update user
+
+DELETE /api/users/{id} → Delete user
+

@@ -1,0 +1,504 @@
+	
+Packages
+Abstract class
+Interface
+Exception handling
+Collection framework
+
+
+	
+		private  no modifier 	protected	public
+_______________________________________________________________________
+Same class 	Yes 		Yes 		Yes 	Yes
+_______________________________________________________________________
+
+Same
+package
+subclass	No 		Yes 		Yes 	Yes
+_______________________________________________________________________
+Same
+package
+non-subclass	No 		Yes 		Yes 	Yes
+_______________________________________________________________________
+Different
+package
+subclass	No 		No 		Yes 	Yes
+_______________________________________________________________________
+Different
+package
+non-subclass	No 		No 		No 	Yes
+________________________________________________________________________
+
+
+
+Protection.java:
+
+package p1;
+public class Protection {
+int n = 1;
+private int n_pri = 2;
+protected int n_pro = 3;
+public int n_pub = 4;
+
+public Protection() 
+{
+System.out.println("base constructor");
+System.out.println("n = " + n);
+System.out.println("n_pri = " + n_pri);
+System.out.println("n_pro = " + n_pro);
+System.out.println("n_pub = " + n_pub);
+}
+}
+
+
+
+
+This is file Derived.java:
+
+package p1;
+
+class Derived extends Protection
+ {
+Derived() 
+{
+System.out.println("derived constructor");
+System.out.println("n = " + n);
+// class only
+// System.out.println("n_pri = " + n_pri);
+System.out.println("n_pro = " + n_pro);
+System.out.println("n_pub = " + n_pub);
+}
+}
+
+
+This is file SamePackage.java:
+
+package p1;
+
+class SamePackage 
+{
+
+SamePackage() 
+{
+Protection p = new Protection();
+
+System.out.println("same package constructor");
+System.out.println("n = " + p.n);
+// class only
+// System.out.println("n_pri = " + p.n_pri);
+System.out.println("n_pro = " + p.n_pro);
+System.out.println("n_pub = " + p.n_pub);
+}
+}
+
+
+
+
+
+package p2;
+
+class Protection2 extends p1.Protection {
+
+Protection2() {
+System.out.println("derived other package constructor");
+// class or package only
+// System.out.println("n = " + n);
+// class only
+// System.out.println("n_pri = " + n_pri);
+System.out.println("n_pro = " + n_pro);
+System.out.println("n_pub = " + n_pub);
+}
+}
+
+
+
+This is file OtherPackage.java:
+
+package p2;
+
+class OtherPackage
+{
+OtherPackage() {
+p1.Protection p = new p1.Protection();
+System.out.println("other package constructor");
+// class or package only
+// System.out.println("n = " + p.n);
+// class only
+// System.out.println("n_pri = " + p.n_pri);
+// class, subclass or package only
+// System.out.println("n_pro = " + p.n_pro);
+System.out.println("n_pub = " + p.n_pub);
+}
+}
+
+
+
+
+
+
+// Demo package p1.
+package p1;
+// Instantiate the various classes in p1.
+public class Demo {
+public static void main(String args[]) {
+Protection ob1 = new Protection();
+Derived ob2 = new Derived();
+SamePackage ob3 = new SamePackage();
+}
+}
+
+
+The test file for p2 is shown next:
+
+// Demo package p2.
+package p2;
+// Instantiate the various classes in p2.
+public class Demo {
+public static void main(String args[]) {
+Protection2 ob1 = new Protection2();
+OtherPackage ob2 = new OtherPackage();
+}
+}
+
+
+
+
+
+
+
+
+
+
+class InsufficientFundsException extends Exception {
+   private double amount;
+   
+   public InsufficientFundsException(double amount) {
+      this.amount = amount;
+   }
+   
+   public double getAmount() {
+      return amount;
+   }
+}
+
+
+
+
+public class BankDemo {
+
+   public static void main(String [] args) {
+      CheckingAccount c = new CheckingAccount(101);
+      System.out.println("Depositing $500...");
+      c.deposit(500.00);
+      
+      try {
+         System.out.println("\nWithdrawing $100...");
+         c.withdraw(100.00);
+         System.out.println("\nWithdrawing $600...");
+         c.withdraw(600.00);
+      } catch (InsufficientFundsException e) {
+         System.out.println("Sorry, but you are short $" + e.getAmount());
+         e.printStackTrace();
+      }
+   }
+}
+
+class CheckingAccount {
+   private double balance;
+   private int number;
+   
+   public CheckingAccount(int number) {
+      this.number = number;
+   }
+   
+   public void deposit(double amount) {
+      balance += amount;
+   }
+   
+   public void withdraw(double amount) throws InsufficientFundsException {
+      if(amount <= balance) {
+         balance -= amount;
+      }else {
+         double needs = amount - balance;
+         throw new InsufficientFundsException(needs);
+      }
+   }
+   
+   public double getBalance() {
+      return balance;
+   }
+   
+   public int getNumber() {
+      return number;
+   }
+}
+
+
+
+
+
+
+
+
+
+
+
+class InsufficientFundsException extends Exception {
+   private double amount;
+   
+   public InsufficientFundsException(double amount) {
+      this.amount = amount;
+   }
+   
+   public double getAmount() {
+      return amount;
+   }
+}
+
+
+Collection Framework using DAO Design pattern
+==================================================
+
+
+First we need to create a new project
+
+
+
+com.cts.model
+	BankAccount
+
+com.cts.dao
+	BankAccountDAO
+
+com.cts.dao.impl
+	BankAccountDAOImpl
+
+com.cts.services
+	BankAccountService
+
+com.cts.services.impl
+	BankAccountServiceImpl
+
+com.cts.client
+	MainClass
+
+
+
+
+
+
+
+public interface BankAccountDAO
+{
+
+	public abstract void addBankAccount(BankAccount bankAccount);
+	public abstract void removeBankAccount(BankAccount bankAccount);
+	public abstract void updateBankAccount(BankAccount bankAccount);
+	public abstract List<BankAccount> showAllAccounts();
+}
+
+
+
+
+
+
+import java.util.LinkedList;
+import java.util.List;
+
+public class BankAccountImpl implements BankAccountDAO {
+
+	List<BankAccount>accountList=new LinkedList<>();
+	
+	@Override
+	public void addBankAccount(BankAccount bankAccount) {
+		// TODO Auto-generated method stub
+		accountList.add(bankAccount);
+	}
+
+	@Override
+	public void removeBankAccount(BankAccount bankAccount) {
+		// TODO Auto-generated method stub
+
+		try
+		{
+		if(!accountList.contains(bankAccount))
+			throw new AccountNotFoundException(bankAccount.getAccountNumber());
+		
+		}
+		catch(AccountNotFoundException ae)
+		{
+			System.out.println(ae);
+		}
+		accountList.remove(bankAccount);
+	}
+
+	@Override
+	public void updateBankAccount(BankAccount bankAccount) {
+		// TODO Auto-generated method stub
+
+		try
+		{
+		if(!accountList.contains(bankAccount))
+			throw new AccountNotFoundException(bankAccount.getAccountNumber());
+		
+		}
+		catch(AccountNotFoundException ae)
+		{
+			System.out.println(ae);
+		}
+
+		int index=accountList.indexOf(bankAccount);
+		accountList.set(index, bankAccount);
+		
+
+	}
+
+	@Override
+	public List<BankAccount> showAllAccounts() {
+		// TODO Auto-generated method stub
+
+		return accountList;
+	}
+
+}
+
+
+
+
+
+
+public interface BankAccountService {
+
+	public abstract void addBankAccount(BankAccount bankAccount);
+	public abstract void removeBankAccount(BankAccount bankAccount);
+	public abstract void updateBankAccount(BankAccount bankAccount);
+	public abstract List<BankAccount> showAllAccounts();
+}
+
+
+
+
+
+
+
+public class BankAccountServiceImpl implements BankAccountService {
+
+	
+	BankAccountDAO bdao=new BankAccountImpl();
+	@Override
+	public void addBankAccount(BankAccount bankAccount) {
+		// TODO Auto-generated method stub
+
+		bdao.addBankAccount(bankAccount);
+	}
+
+	@Override
+	public void removeBankAccount(BankAccount bankAccount) {
+		// TODO Auto-generated method stub
+
+		bdao.removeBankAccount(bankAccount);
+	}
+
+	@Override
+	public void updateBankAccount(BankAccount bankAccount) {
+		// TODO Auto-generated method stub
+
+		bdao.updateBankAccount(bankAccount);
+	}
+
+	@Override
+	public List<BankAccount> showAllAccounts() {
+		// TODO Auto-generated method stub
+		
+		return bdao.showAllAccounts();
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+public class MainClass {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		BankAccountService bservice = new BankAccountServiceImpl();
+
+		bservice.addBankAccount(new BankAccount(1, "A", 10000));
+		bservice.addBankAccount(new BankAccount(2, "B", 50000));
+		bservice.addBankAccount(new BankAccount(3, "C", 80000));
+		bservice.addBankAccount(new BankAccount(4, "D", 40000));
+		bservice.addBankAccount(new BankAccount(5, "E", 90000));
+
+		List<BankAccount> list = bservice.showAllAccounts();
+
+		for (BankAccount acc : list)
+			System.out
+					.println(acc.getAccountNumber() + "    " + acc.getCustomerName() + "  " + acc.getAccountBalance());
+
+		BankAccount temp = new BankAccount(1, "xxxxx", 230000);
+
+		bservice.updateBankAccount(temp);
+
+		System.out.println("After updated Bank Account details are ");
+
+		list = bservice.showAllAccounts();
+		for (BankAccount acc : list)
+			System.out
+					.println(acc.getAccountNumber() + "    " + acc.getCustomerName() + "  " + acc.getAccountBalance());
+
+		BankAccount temp1 = new BankAccount(1, "Rohit", 222222);
+		bservice.removeBankAccount(temp1);
+
+		System.out.println("After Remove Bank Account details are ");
+
+		list = bservice.showAllAccounts();
+
+		for (BankAccount acc : list)
+			System.out
+					.println(acc.getAccountNumber() + "    " + acc.getCustomerName() + "  " + acc.getAccountBalance());
+
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

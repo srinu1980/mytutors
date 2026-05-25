@@ -1,0 +1,620 @@
+
+Introduction to Shell Scripting
+Basic Shell Scripting Concepts
+Control Structures
+Command-Line Arguments
+
+
+https://www.coursera.org/articles/what-is-shell-scripting
+
+What is shell scripting used for?
+
+Shell scripting is primarily used to automate repetitive system tasks, such as backing up files, monitoring system resources, and managing user accounts. By turning a series of commands into a script, system administrators can save time, increase accuracy, and simplify complex tasks. 
+
+Who uses shell scripting? 
+
+Shell scripting is a valuable tool across several professions and fields due to its flexibility, power, and widespread support of operating systems. The following are some roles that use shell scripting: 
+
+System administrators: System administrators often use shell scripts for automating administrative tasks like backups, system monitoring, user account creation and management, and many more routine activities. This allows for efficiency, consistency, and accuracy.
+
+Developers: Developers often use shell scripting to automate development tasks, like automating file manipulation, deploying software to servers, running test suites, and more.
+
+DevOps professionals: In the world of DevOps, shell scripting can benefit tasks such as automation, configuration management, troubleshooting, and rapid iteration. Shell scripts can run across operating platforms, which can be beneficial for those who work in several environments.
+
+
+Basic shell scripting terms
+
+Before we delve further into shell scripting, knowing a few definitions may come in handy when exploring this topic: 
+
+
+Terminal: A terminal is a program that establishes a connection with the server.
+
+Shell: This program interprets shell scripting commands from the terminal and runs on the server. This is the command-line user interface you choose and includes shells such as the Bourne shell, Korn shell, Bourne-Again shell, and C shell.
+
+Script: A script is a short program that performs a specific task.
+
+Command-line shell: A command-line shell (also known as a command prompt) allows you to instruct your computer through textual commands. 
+
+Shell script: A shell script is a script run through a command-line shell
+
+When you create a shell script, you might use text editors like Nano or Vim and save the file with a “.sh” extension. A shell interpreter interprets and executes these scripts; you can run them from the command line whenever necessary.
+
+r=$((a+b))
+
+
+
+
+
+
+
+
+Numeric Comparison logical operators
+Comparison is used to check if statements evaluate to true or false. We can use the below shown operators to compare two statements:
+
+Operation	Syntax				Explanation
+==================================================================
+Equality	num1 -eq num2			is num1 equal to num2
+
+Greater than equal to	num1 -ge num2		is num1 greater than equal to num2
+
+Greater than	num1 -gt num2			is num1 greater than num2
+
+Less than equal to	num1 -le num2		is num1 less than equal to num2
+
+Less than	num1 -lt num2			is num1 less than num2
+
+Not Equal to	num1 -ne num2			is num1 not equal to num2
+
+
+
+
+Syntax:
+
+if [ conditions ]
+    then
+         commands
+fi
+
+
+
+echo "Number of arguments: $#"
+echo "All arguments: $@"
+
+
+
+To access positional variables with more than one digit in a shell script, you can use the ${} notation. The ${} notation allows you to specify the variable name as a string, rather than as a variable.
+For example, to access the 10th positional variable, you can use the ${10} notation:
+
+
+
+
+
+Here is a list of some important environmental variables in Linux:
+============================================================
+HOME: The home directory of the current user.
+PATH: A list of directories where the system looks for executables.
+SHELL: The path to the current user’s default shell.
+USER: The name of the current user.
+HOSTNAME: The hostname of the system.
+PWD: The current working directory.
+LANG: The default system language.
+
+ echo "The value of HOME is: $HOME"
+
+
+
+for i in {1..5}
+do
+    echo $i
+done
+
+
+
+
+https://www.coursera.org/articles/what-is-shell-scripting
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+What is Shell Scripting in Unix Operating System?
+
+Shell scripting in Unix refers to writing a sequence of commands for the Unix shell to execute. A shell script is a text file containing these commands. Shell scripting allows users to automate repetitive tasks, simplify complex procedures, and manage system operations efficiently.
+
+
+
+
+ Why Use Shell Scripting?
+Automate repetitive tasks (e.g., backups, log analysis).
+
+Simplify complex tasks by combining multiple commands.
+
+Customize system behavior.
+
+Create custom utilities.
+
+
+
+
+
+# This is a basic shell script
+
+echo "Welcome, $USER!"
+echo "Today is $(date)"
+echo "Your current directory is $(pwd)"
+
+
+How to run it:
+
+Save the script as myscript.sh.
+
+
+
+
+name="Rao"
+echo "Hello $name"
+
+
+Loops: Repeat actions
+
+
+for i in 1 2 3; do
+
+  echo "Number $i"
+
+done
+
+
+
+Conditions:
+
+
+if [ $USER == "root" ]; then
+  echo "You are root"
+else
+  echo "You are not root"
+fi
+
+
+Functions:
+================
+
+greet() {
+  echo "Hello, $1"
+}
+
+greet "Rao"
+
+
+
+
+
+
+Common Arithmetic Operators
+
+Operator		Description		Example (a=10, b=5)	Result
+
++			Addition	a + b	15
+-			Subtraction	a - b	5
+*			Multiplication	a * b	50
+/			Division	a / b	2
+%			Modulus (remainder)	a % b	0
+**	Exponentiation (bash 4+)	a ** 2	100
+++	Increment	((a++))	10 (then becomes 11)
+--	Decrement	((b--))	5 (then becomes 4)
+
+
+
+
+a=10
+b=5
+let result=a+b
+echo "Sum: $result"
+
+
+2. expr command (Note: spaces are important)
+
+a=10
+b=5
+result=$(expr $a + $b)
+echo "Sum: $result"
+
+3. Double parentheses (( ))
+
+a=10
+b=5
+result=$((a + b))
+echo "Sum: $result"
+
+4. Using bc for floating point math
+
+a=5.5
+b=2.2
+result=$(echo "$a + $b" | bc)
+echo "Sum: $result"
+
+
+
+
+Example Script Using All Operators
+
+a=20
+b=6
+
+echo "Addition:        $((a + b))"
+echo "Subtraction:     $((a - b))"
+echo "Multiplication:  $((a * b))"
+echo "Division:        $((a / b))"
+echo "Modulus:         $((a % b))"
+echo "Exponentiation:  $((a ** 2))"
+
+
+
+
+Relational Operators (Used in [ ] or [[ ]])
+
+
+Operator	Description	Example
+
+-eq	Equal to	[ "$a" -eq "$b" ]
+-ne	Not equal to	[ "$a" -ne "$b" ]
+-gt	Greater than	[ "$a" -gt "$b" ]
+-lt	Less than	[ "$a" -lt "$b" ]
+-ge	Greater than or equal	[ "$a" -ge "$b" ]
+-le	Less than or equal	[ "$a" -le "$b" ]
+
+ Boolean / Logical Operators
+
+Operator	Description	Example
+!	NOT	[ ! "$a" -eq "$b" ]
+-o	OR	[ "$a" -eq 5 -o "$b" -eq 6 ]
+-a	AND	[ "$a" -eq 5 -a "$b" -eq 6 ]
+
+
+
+ Use && and || inside [[ ]] or (( )) as modern alternatives.
+
+
+ String Operators
+=================
+
+=	Equal to	[ "$a" = "$b" ]
+!=	Not equal to	[ "$a" != "$b" ]
+<	Less than (lexical)	[[ "$a" < "$b" ]]
+>	Greater than (lexical)	[[ "$a" > "$b" ]]
+-z	String is null (empty)	[ -z "$a" ]
+-n	String is not null	[ -n "$a" ]
+
+
+
+ File Test Operators
+=====================
+Operator	Description	Example
+
+-e	File exists	[ -e file.txt ]
+-f	Regular file	[ -f file.txt ]
+-d	Directory	[ -d mydir ]
+-r	Readable	[ -r file.txt ]
+-w	Writable	[ -w file.txt ]
+-x	Executable	[ -x script.sh ]
+-s	File is not empty	[ -s file.txt ]
+
+
+
+ Example Script Using All Types
+
+
+a=10
+b=20
+file="myfile.txt"
+
+
+
+# Arithmetic
+echo $((a + b))
+
+
+
+# Relational
+if [ "$a" -lt "$b" ]; then
+  echo "$a is less than $b"
+fi
+
+
+# String
+str="hello"
+if [ -n "$str" ]; then
+  echo "String is not empty"
+fi
+
+# File
+if [ -e "$file" ]; then
+  echo "$file exists"
+fi
+
+
+
+
+
+
+
+
+Conditional Statements Syntax in Unix Shell Scripting (Bash)
+Conditional statements are used to make decisions in scripts based on true/false evaluations.
+
+1️⃣ if Statement (Basic Syntax)
+
+
+if [ condition ]
+then
+  commands
+fi
+
+
+
+
+ Example:
+
+if [ $a -gt 10 ]
+then
+  echo "a is greater than 10"
+fi
+
+
+
+if...else Statement
+
+
+
+if [ condition ]
+then
+  commands_if_true
+else
+  commands_if_false
+fi
+
+
+Example:
+
+if [ $a -eq $b ]
+then
+  echo "a is equal to b"
+else
+  echo "a is not equal to b"
+fi
+
+
+
+3️⃣ if...elif...else Ladder
+
+
+if [ condition1 ]
+then
+  commands1
+elif [ condition2 ]
+then
+  commands2
+else
+  commands3
+fi
+
+
+
+ Example:
+
+if [ $a -gt $b ]
+then
+  echo "a is greater"
+elif [ $a -lt $b ]
+then
+  echo "b is greater"
+else
+  echo "Both are equal"
+fi
+
+
+4️⃣ Nested if Statement
+
+if [ condition1 ]
+then
+  if [ condition2 ]
+  then
+    commands
+  fi
+fi
+
+
+ Example:
+===============
+
+if [ $a -gt 0 ]
+then
+  if [ $a -lt 100 ]
+  then
+    echo "a is between 1 and 99"
+  fi
+fi
+
+
+5️⃣ case Statement (Switch Alternative)
+
+case $variable in
+  pattern1)
+    commands1
+    ;;
+  pattern2)
+    commands2
+    ;;
+  *)
+    default_commands
+    ;;
+esac
+
+
+
+ Example:
+===============
+
+day="Monday"
+
+case $day in
+  "Monday")
+    echo "Start of week"
+    ;;
+  "Friday")
+    echo "Weekend is near"
+    ;;
+  *)
+    echo "Some other day"
+    ;;
+esac
+
+
+
+
+Control statements change the flow of execution in a shell script — by looping, skipping, or exiting code blocks.
+
+🔸 1️⃣ Looping Statements
+
+✅ for Loop (Fixed List)
+
+
+
+for variable in list
+do
+  commands
+done
+
+
+
+Example:
+
+
+
+for i in 1 2 3
+do
+  echo "Number: $i"
+done
+
+
+
+
+
+
+✅ while Loop
+
+
+while [ condition ]
+do
+  commands
+done
+
+
+
+ Example:
+
+
+count=1
+while [ $count -le 3 ]
+do
+  echo "Count: $count"
+  count=$((count + 1))
+done
+
+
+ until Loop
+================
+
+until [ condition ]
+do
+  commands
+done
+
+
+ Example:
+
+count=1
+until [ $count -gt 3 ]
+do
+  echo "Count: $count"
+  count=$((count + 1))
+done
+
+
+
+ Jumping/Decision Control Statements
+
+ break
+
+Use: Exit from the current loop (for, while, until).
+
+
+
+for i in 1 2 3 4
+do
+  if [ $i -eq 3 ]; then
+    break
+  fi
+  echo "i = $i"
+done
+
+
+
+ continue
+=============
+
+Use: Skip the current iteration and go to the next one.
+
+
+
+
+for i in 1 2 3 4
+do
+  if [ $i -eq 2 ]; then
+    continue
+  fi
+  echo "i = $i"
+done
+
+
+
+ exit
+
+Use: Exit the script entirely with a status code.
+
+
+
+if [ ! -f "file.txt" ]; then
+  echo "File not found!"
+  exit 1
+fi
+
+
+
+
+ select (for simple menus)
+========================
+
+
+
+select var in Option1 Option2 Quit
+do
+  case $var in
+    Option1) echo "You selected Option1" ;;
+    Option2) echo "You selected Option2" ;;
+    Quit) break ;;
+    *) echo "Invalid option" ;;
+  esac
+done
+
+

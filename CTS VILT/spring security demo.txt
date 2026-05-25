@@ -1,0 +1,99 @@
+
+
+package com.cts.controller;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class HoneController {
+
+
+    @GetMapping("/")
+    public String home() {
+        return "Welcome to Home (Public)";
+    }
+
+    @GetMapping("/user/dashboard")
+    //@PreAuthorize("hasRole('USER')")
+    public String userDashboard() {
+        return "Welcome to  USER Dashboard!";
+    }
+
+    @GetMapping("/admin/dashboard")
+    //@PreAuthorize("hasRole('ADMIN')")
+    public String adminDashboard() {
+        return "Welcome to ADMIN Dashboard!";
+    }
+
+	
+	
+}
+
+
+===============
+package com.cts.config;
+
+import com.cts.controller.HoneController;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig
+{
+	// Define users in memory
+    @Bean
+    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
+        UserDetails user = User.withUsername("rahul")
+                .password(encoder.encode("rahul@123"))
+                .roles("USER")
+                .build();
+
+        UserDetails admin = User.withUsername("rajesh")
+                .password(encoder.encode("rajesh123"))
+                .roles("ADMIN")
+                .build();
+
+        return new InMemoryUserDetailsManager(user, admin);
+    }
+
+    // Password encoder
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    // Security filter chain (authorize http requests)
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable()) // disable CSRF for testing
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/admin/**").hasRole("ADMIN")
+                    //.requestMatchers("/admin/**").authenticated()
+                    .requestMatchers("/user/**").hasRole("USER")
+                  //.requestMatchers("/user/**").authenticated()
+                    .requestMatchers("/", "/public/**").permitAll()
+                    .anyRequest().authenticated()
+            )
+            .formLogin(form -> form.permitAll())   // default login form
+            
+            .httpBasic(httpBasic -> {})
+            .logout(logout -> logout.permitAll());
+
+        return http.build();
+    }
+
+}
+
+

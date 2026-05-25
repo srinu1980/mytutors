@@ -1,0 +1,68 @@
+
+
+Composition represents a strong “whole-part” relationship between two classes, where one class (the whole) is composed of one or more instances of another class (the part). 
+
+The part objects are tightly bound to the whole and have no independent existence outside it.
+
+Example: Car and Engine
+
+Consider a Car class that is composed of an Engine class. 
+The Engine is an integral part of the Car, and when the Car is destroyed, the Engine is also disposed of.
+
+
+
+interface Engine {
+    void start();
+}
+
+class PetrolEngine implements Engine {
+    @Override
+    public void start() {
+        System.out.println("Petrol engine started.");
+    }
+}
+
+class DieselEngine implements Engine {
+    @Override
+    public void start() {
+        System.out.println("Diesel engine started.");
+    }
+}
+
+class Car {
+
+    private Engine engine;
+
+    public Car(Engine engine) { // Injecting the Engine dependency
+        this.engine = engine;
+    }
+
+    public void startCar() {
+        engine.start();
+        System.out.println("Car is moving.");
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        PetrolEngine petrolEngine = new PetrolEngine();
+
+        DieselEngine dieselEngine = new DieselEngine();
+
+        Car petrolCar = new Car(petrolEngine);
+
+        petrolCar.startCar();
+        // Output: Petrol engine started.
+        //         Car is moving.
+
+        Car dieselCar = new Car(dieselEngine);
+        dieselCar.startCar();
+
+        // Output: Diesel engine started.
+        //         Car is moving.
+
+    }
+
+}

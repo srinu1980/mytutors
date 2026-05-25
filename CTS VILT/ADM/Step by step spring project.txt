@@ -1,0 +1,51 @@
+Step by step spring project
+============================
+
+1. Create a Maven project
+
+GroupId : com.cts
+ArtifactId : SpringCoreProject
+
+Select project type : maven quick-start project
+
+
+2.  After creation of project, goto pom.xml
+
+
+In Pom.xml		add 2 dependencies
+===========
+
+1. spring core
+
+2. spring context
+
+
+
+3.  Now create Pojo Class
+
+
+	ClassName : StudentBean
+
+
+	generate setter methods
+
+
+
+4. Create XML file
+
+
+	rigit click on src/main/java   ->  create new -> file ->  file name as
+
+	Filename  : myBean.xml
+
+	click on Finish
+
+5. Create Main Class
+
+
+
+6. Run the project
+
+
+
+	

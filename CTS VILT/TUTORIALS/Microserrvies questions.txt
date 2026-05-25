@@ -1,0 +1,206 @@
+
+
+
+1. What are Microservices?
+
+
+Microservices is an architectural style where an application is structured as a collection of small, loosely coupled services. Each service is independently deployable, runs in its own process, and communicates with others typically via HTTP/REST or messaging.
+
+=> Independent deployment
+
+=> Technology agnostic
+
+=> Scalability at service level
+
+
+
+2. What is Spring Cloud, and why is it used in microservices?
+
+Spring Cloud provides tools for building distributed systems with features like service discovery, configuration management, load balancing, circuit breakers, routing, and distributed tracing.
+
+
+It helps solve challenges such as:
+
+=>Service Discovery → Eureka/Consul
+
+=>Load Balancing → Spring Cloud LoadBalancer / Ribbon
+
+=>API Gateway → Spring Cloud Gateway / Zuul
+
+=>Config Management → Spring Cloud Config
+
+=>Fault Tolerance → Resilience4j / Hystrix
+
+
+
+
+3. What is Service Discovery, and how is it implemented in Spring Cloud?
+
+Service Discovery allows services to find and communicate with each other without hardcoding hostnames/IPs.
+
+=>Eureka Server (Netflix OSS) is often used.
+
+=>Services register themselves with Eureka.
+
+=>Clients fetch service details from Eureka to make requests.
+
+ Example:
+
+spring:
+  application:
+    name: order-service
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+
+
+4. What is Spring Cloud Config?
+
+=> A centralized configuration management system.
+
+=> Externalizes application properties (like DB URLs, credentials).
+
+=> Config Server pulls configurations from Git/Repo.
+
+=> Clients fetch updated configs dynamically.
+
+
+
+ Example:
+application.yml in repo:
+
+server:
+  port: 8081
+database:
+  url: jdbc:mysql://localhost:3306/orderdb
+
+
+6. How do microservices communicate with each other?
+
+
+Synchronous: REST (HTTP + JSON), gRPC
+
+Asynchronous: Messaging (RabbitMQ, Kafka)
+
+Spring Cloud provides OpenFeign for REST clients.
+
+
+
+
+
+
+
+
+7. What is Feign Client in Spring Cloud?
+
+A declarative REST client that allows service-to-service calls with minimal boilerplate.
+
+ Example:
+
+@FeignClient(name = "payment-service")
+public interface PaymentClient {
+    @GetMapping("/payments/{id}")
+    PaymentDTO getPayment(@PathVariable Long id);
+}
+
+
+
+8. What is a Circuit Breaker in Microservices?
+
+
+Circuit breakers prevent cascading failures when a service is down.
+
+In Spring Cloud → implemented with Resilience4j or older Hystrix.
+
+Provides fallbacks, retries, rate limiters.
+
+
+
+9. How is load balancing achieved in Spring Cloud?
+
+
+Spring Cloud LoadBalancer replaces Netflix Ribbon.
+
+Balances requests across multiple instances of a service registered in Eureka.
+
+
+
+10. What is Sleuth and Zipkin in Spring Cloud?
+
+
+Spring Cloud Sleuth → adds tracing IDs (traceId, spanId) to logs.
+
+Zipkin → visualization tool for tracing requests across microservices.
+
+ Helps in debugging distributed systems.
+
+11. What is the difference between Monolithic and Microservices architecture?
+
+
+Monolithic				-	Microservices
+==============================================================================================
+
+Single deployable unit			-	Multiple independent services
+Difficult to scale				Scale per service
+Tight coupling					Loose coupling
+Slow release cycle				Faster releases
+
+
+
+12. What are some challenges with Microservices?
+
+
+Distributed transactions (solved via Saga pattern)
+
+Data consistency
+
+Service communication overhead
+
+Deployment & monitoring complexity
+
+
+13. What are common patterns used in Microservices with Spring Cloud?
+
+
+API Gateway pattern
+
+Circuit Breaker pattern
+
+Service Discovery pattern
+
+Centralized Config pattern
+
+Saga / Event Sourcing pattern
+
+
+
+14. How do you secure microservices in Spring Cloud?
+
+-
+
+Use Spring Security + OAuth2/JWT
+
+API Gateway for authentication & authorization
+
+Propagate JWT tokens between services
+
+Role-based access at service endpoints
+
+
+
+15. How do you monitor microservices in Spring Cloud?
+
+
+
+Actuator → health, metrics
+
+Prometheus + Grafana → monitoring
+
+Zipkin + Sleuth → tracing
+
+ELK Stack → centralized logging
+
+
+

@@ -1,0 +1,676 @@
+
+
+class User   ->  user
+
+UserRepository
+
+UserService
+
+UserController
+
+
+
+
+Java coding standards are a set of guidelines and best practices that help developers write clean, consistent, and maintainable code. 
+
+Following these standards ensures better collaboration within teams, improves readability, and reduces bugs and technical debt.
+
+🔷 Why Follow Java Coding Standards?
+
+	Consistency across teams and projects
+
+	Readability and ease of maintenance
+
+	Helps in code reviews
+
+	Facilitates debugging and testing
+
+	Complies with industry best practices
+
+
+
+
+
+
+✅ Key Java Coding Standards 
+
+
+
+
+1. Class Naming Conventions
+
+	Use PascalCase (each word starts with a capital letter)
+
+	Class names should be nouns, e.g., Customer, InvoiceGenerator
+
+
+public class EmployeeDetails 
+{
+
+}
+
+
+
+
+
+2. Method Naming Conventions
+
+	Use camelCase and verbs to indicate action
+
+	Methods should be named clearly to indicate their purpose
+
+
+public void calculateSalary() {
+}
+
+
+
+3. Variable Naming Conventions
+
+	Use camelCase
+
+	Use meaningful names (avoid x, temp, data unless for short-lived variables)
+	
+		int employeeAge;
+	
+		String customerName;
+
+
+
+4. Constant Naming Conventions
+
+	Use UPPER_CASE with words separated by underscores
+
+	Declare with static final
+
+
+Ex:
+	public static final int MAX_USERS = 100;
+
+
+
+
+5. Indentation and Spacing
+
+	Use 4 spaces for indentation (do not use tabs)
+
+	Keep consistent spacing (especially inside loops, conditionals, and method calls)
+
+
+
+	if (salary > 50000) {
+		    System.out.println("High earner");
+	}
+
+
+6. Braces Usage
+
+	Always use curly braces, even for one-liners
+
+
+	if (condition)
+	 {
+		    doSomething();
+	}
+
+
+	 Bad:
+
+		if (condition) doSomething();
+
+
+7. Line Length
+
+	Limit each line to 100–120 characters
+
+	Break long statements into multiple lines
+
+
+
+	String message = "This is a long string that should be broken "
+        	       + "into multiple lines for better readability.";
+
+
+
+8. Blank Lines for Separation
+
+	Use blank lines to separate:
+
+			Different sections of a class
+
+			Logic blocks inside methods
+
+
+
+	public void processPayment() {
+
+		    validateCard();
+
+		    chargeCustomer();
+
+		    sendReceipt();
+	}
+
+
+
+9. JavaDoc Comments
+
+	Use /** ... */ to document classes, methods, and important variables.
+
+
+	/**
+		 * Calculates the annual salary based on monthly salary.
+		 *
+		 * @param monthlySalary The salary per month
+		 * @return Annual salary
+	 */
+
+
+public int calculateAnnualSalary(int monthlySalary) {
+    return monthlySalary * 12;
+}
+
+
+
+
+10. Exception Handling
+
+	Catch specific exceptions instead of generic ones
+
+	Add meaningful messages or logging
+
+
+	try {
+		    FileReader reader = new FileReader("file.txt");
+
+	} catch (FileNotFoundException e) {
+
+	    System.err.println("File not found: " + e.getMessage());
+	}
+
+
+
+11. Avoid Magic Numbers
+
+	Use constants instead of hard-coded values
+
+
+
+	// Bad
+	double piValue = 3.14159;
+
+	// Good
+	public static final double PI = 3.14159;
+	double piValue = PI;
+
+
+
+12. Access Modifiers
+
+	Use the least permissive access level necessary (private > protected > public)
+
+
+	private int employeeId;
+
+
+13. Package Naming
+
+	Use all lowercase and domain-based convention (e.g., com.companyname.projectname)
+
+
+package com.example.librarymanagement;
+
+
+14. File Naming
+
+	File name should match the public class name inside it
+
+
+
+// File: EmployeeManager.java
+
+public class EmployeeManager {
+}
+
+
+15. Logging
+
+	Use logging frameworks like SLF4J instead of System.out.println
+
+
+private static final Logger logger = LoggerFactory.getLogger(MyClass.class);
+
+logger.info("Application started");
+
+
+
+
+
+
+
+
+
+✨ Tools to Enforce Java Coding Standards
+
+	Checkstyle – static code analysis tool
+
+	PMD – finds programming flaws
+
+	SonarLint / SonarQube – continuous code quality analysis
+
+	IntelliJ / Eclipse formatters – built-in code style enforcement
+
+
+
+
+
+
+Concept		Standard
+================================================
+Class Name	PascalCase (StudentRecord)
+
+Method Name	camelCase (calculateMarks)
+
+Variable Name	camelCase (totalMarks)
+
+Constant Name	UPPER_CASE (MAX_SIZE)
+
+Indentation	4 spaces
+
+Braces		Always used
+
+Comments	JavaDoc for public APIs
+
+Package Name	all lowercase (com.myapp)
+
+
+
+
+
+
+
+
+
+What is SonarQube?
+
+SonarQube is an open-source platform for continuous inspection of code quality. It automatically reviews your code to detect bugs, code smells, vulnerabilities, security hotspots, and duplicate code.
+
+It supports many programming languages, including Java, and is widely used in DevOps pipelines, CI/CD, and Agile development.
+
+
+
+
+
+Using Debugger (MOST IMPORTANT 🔥)
+🔹 What is a Debugger?
+
+A tool that lets you:
+
+Pause execution
+
+Execute line by line
+
+Inspect variables
+
+Evaluate expressions
+
+Used in:
+
+IntelliJ IDEA
+
+Eclipse
+
+VS Code
+
+4️⃣ Breakpoints (Heart of Debugging ❤️)
+🔹 Line Breakpoint
+
+Stops execution at a specific line.
+
+int sum = a + b; // breakpoint here
+
+🔹 Conditional Breakpoint
+
+Stops only when condition is true.
+
+// Break when amount > 10000
+
+
+
+Exception Breakpoint
+
+Stops when an exception occurs.
+
+5️⃣ Debugging Controls (Must know)
+Action	Shortcut (IntelliJ)	Meaning
+Step Over	F8	Execute current line
+Step Into	F7	Go inside method
+Step Out	Shift + F8	Exit method
+Resume	F9	Continue execution
+6️⃣ Watching Variables 👀
+🔹 Watch Expressions
+
+Monitor variable values live.
+
+totalAmount
+
+🔹 Evaluate Expression
+
+Check result without changing code.
+
+order.getPrice() * order.getQty()
+
+7️⃣ Debugging Exceptions
+🔹 Read Stack Trace (VERY IMPORTANT)
+Exception in thread "main" java.lang.NullPointerException
+at com.app.service.UserService.save(UserService.java:25)
+
+
+👉 Read from bottom to top
+
+Class
+
+Method
+
+Line number
+
+8️⃣ Debugging NullPointerException (Common 😅)
+
+❌ Bug
+
+User user = null;
+user.getName();
+
+
+✅ Debug approach:
+
+Put breakpoint before crash
+
+Inspect variable
+
+Trace where it became null
+
+✅ Fix:
+
+if (user != null) {
+    user.getName();
+}
+
+
+(or use Optional)
+
+9️⃣ Logging vs Debugging
+Debugging	Logging
+Development time	Runtime monitoring
+Stops execution	Does not stop
+Local issue fixing	Production issue analysis
+
+👉 Best practice: Use both
+
+🔟 Debugging in Spring Boot (Real projects)
+🔹 Enable debug logs
+logging.level.root=DEBUG
+
+🔹 Debug REST APIs
+
+Put breakpoint in:
+
+Controller
+
+Service
+
+Repository
+
+Debug request → response flow
+
+
+
+Debugging in Java is the process of identifying and fixing issues using tools like breakpoints, stepping through code, inspecting variables, and analyzing stack traces. Effective debugging focuses on understanding program flow and root cause analysis rather than trial-and-error fixes
+
+
+What is SonarQube?
+SonarQube is a code quality and security analysis tool.
+It automatically scans your source code and tells you:
+
+
+🐞 Bugs
+
+
+🔐 Security vulnerabilities
+
+
+⚠️ Code smells (bad coding practices)
+
+
+📊 Code coverage
+
+
+🔁 Duplicated code
+
+
+📏 Maintainability & reliability issues
+
+
+👉 Widely used in Java / Spring Boot, .NET, JavaScript, Python, etc.
+
+🎯 Why SonarQube is used
+
+
+Improve code quality
+
+
+Enforce coding standards
+
+
+Detect security issues early
+
+
+Reduce technical debt
+
+
+Mandatory in many enterprise CI/CD pipelines
+
+
+
+🧩 Core Concepts (Very Important)
+1️⃣ Project
+A project represents your application/repository in SonarQube
+Example: library-management-system
+
+2️⃣ Rules
+Rules define what is good or bad code.
+Examples:
+
+
+Avoid empty catch blocks
+
+
+Close resources properly
+
+
+Don’t use hardcoded passwords
+
+
+Rules are language-specific.
+
+3️⃣ Issues
+When a rule is violated → Issue is raised
+Types of issues:
+
+
+🐞 Bug
+
+
+🔐 Vulnerability
+
+
+⚠️ Code Smell
+
+
+
+4️⃣ Quality Profile
+A collection of rules applied to a project.
+Example:
+
+
+Java Quality Profile
+
+
+Custom company profile
+
+
+
+5️⃣ Quality Gate 🚦
+A pass/fail checkpoint for code quality.
+Example conditions:
+
+
+Coverage ≥ 80%
+
+
+New bugs = 0
+
+
+New vulnerabilities = 0
+
+
+👉 If Quality Gate fails → build fails
+
+6️⃣ Technical Debt
+Time required to fix all code smells.
+Example:
+
+30 min to rename variable
+2 hrs to refactor method
+
+Shown in hours/days.
+
+📊 Metrics Explained
+MetricMeaningBugsCode errors that may breakVulnerabilitiesSecurity risksCode SmellsMaintainability issuesCoverage% of code testedDuplicationsRepeated codeReliabilityStability of codeSecuritySafety of code
+
+🏗️ How SonarQube Works (Flow)
+Code → Sonar Scanner → SonarQube Server → Dashboard Report
+
+Steps:
+
+
+Write code
+
+
+Run Sonar Scanner
+
+
+Scanner sends report to SonarQube
+
+
+View analysis in web UI
+
+
+
+🛠️ SonarQube Components
+1️⃣ SonarQube Server
+
+
+Web dashboard
+
+
+Stores results
+
+
+Manages rules & users
+
+
+2️⃣ Sonar Scanner
+
+
+CLI / Maven / Gradle plugin
+
+
+Analyzes source code
+
+
+3️⃣ Database
+
+
+Stores analysis data (PostgreSQL recommended)
+
+
+
+🚀 SonarQube with Java / Spring Boot (Basic Idea)
+Maven Example
+<plugin>
+  <groupId>org.sonarsource.scanner.maven</groupId>
+  <artifactId>sonar-maven-plugin</artifactId>
+  <version>3.10.0.2594</version>
+</plugin>
+
+Run:
+mvn clean verify sonar:sonar
+
+
+🔐 SonarQube Issue Severity Levels
+
+
+BLOCKER – Must fix immediately
+
+
+CRITICAL – High risk
+
+
+MAJOR – Needs attention
+
+
+MINOR – Low impact
+
+
+INFO – Suggestions
+
+
+
+📌 Example Code Smell
+❌ Bad code:
+public void test() {
+    try {
+        int a = 10 / 0;
+    } catch (Exception e) {
+    }
+}
+
+✅ SonarQube suggests:
+
+
+Don’t ignore exceptions
+
+
+Log or rethrow the exception
+
+
+
+🧪 New Code vs Overall Code
+SonarQube focuses more on New Code:
+
+
+Newly added or modified code
+
+
+Ensures new changes don’t reduce quality
+
+
+
+🏢 Where SonarQube is Used
+
+
+Spring Boot projects
+
+
+Microservices
+
+
+CI/CD (Jenkins, GitHub Actions, GitLab)
+
+
+Enterprise code reviews
+
+
+
+

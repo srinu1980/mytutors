@@ -1,0 +1,113 @@
+
+MongoDB aggregate pipeline syntax
+
+This is an example of how to build an aggregation query:
+
+db.collectionName.aggregate(pipeline, options),
+
+where 
+collectionName – is the name of a collection,
+
+pipeline – is an array that contains the aggregation stages,
+
+options – optional parameters for the aggregation 
+
+
+This is an example of the aggregation pipeline syntax:
+
+pipeline = [
+        { $match : { … } },
+        { $group : { … } },
+        { $sort : { … } }
+       ]
+
+
+
+
+
+use tdb
+
+db.universities.insertMany([
+{
+  country : 'Spain',
+  city : 'Salamanca',
+  name : 'USAL',
+  location : {
+    type : 'Point',
+    coordinates : [ -5.6722512,17, 40.9607792 ]
+  },
+  students : [
+    { year : 2014, number : 24774 },
+    { year : 2015, number : 23166 },
+    { year : 2016, number : 21913 },
+    { year : 2017, number : 21715 }
+  ]
+},
+{
+  country : 'Spain',
+  city : 'Salamanca',
+  name : 'UPSA',
+  location : {
+    type : 'Point',
+    coordinates : [ -5.6691191,17, 40.9631732 ]
+  },
+  students : [
+    { year : 2014, number : 4788 },
+    { year : 2015, number : 4821 },
+    { year : 2016, number : 6550 },
+    { year : 2017, number : 6125 }
+  ]
+}
+])
+
+
+
+
+
+The second and last collection is called 'courses' and looks like this:
+
+
+db.courses.insertMany([
+{
+  university : 'USAL',
+  name : 'Computer Science',
+  level : 'Excellent'
+},
+{
+  university : 'USAL',
+  name : 'Electronics',
+  level : 'Intermediate'
+},
+{
+  university : 'USAL',
+  name : 'Communication',
+  level : 'Excellent'
+}
+])
+
+======================================================================
+
+db.universities.aggregate([
+  { $match : { country : 'Spain', city : 'Salamanca' } }
+]).pretty()
+
+
+
+
+
+db.universities.aggregate([
+  { $project : { _id : 0, country : 1, city : 1, name : 1 } }
+]).pretty()
+
+
+
+
+
+db.universities.aggregate([
+  { $group : { _id : '$name', totaldocs : { $sum : 1 } } }
+]).pretty()
+
+
+
+
+

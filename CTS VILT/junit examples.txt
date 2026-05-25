@@ -1,0 +1,755 @@
+
+package com.cts.test1;
+
+public class MessageUtil {
+
+	private String message;
+
+	public String getMessage() {
+		return message;
+	}
+
+	public MessageUtil(String message) {
+		super();
+		this.message = message;
+	}
+
+}
+
+-----------
+package com.cts.test1;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.Test;
+
+public class TestDemo1 {
+
+	MessageUtil messageUtil = new MessageUtil("Hello World");
+
+	String message = "Hello World";
+
+	@Test
+	public void testmethod() {
+		assertEquals(message, messageUtil.getMessage());
+	}
+}
+
+
+
+
+package com.cts.test1;
+
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
+
+public class RunningTestDemo1 {
+
+	public static void main(String[] args) {
+		Result result = JUnitCore.runClasses(TestDemo1.class);
+		for (Failure failure : result.getFailures()) {
+			System.out.println("Error: " + failure.toString());
+		}
+		System.out.println("passed:" + result.wasSuccessful());
+
+	}
+
+}
+
+
+
+=========================================================================================
+
+
+package com.cts.test3;
+
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+//import org.junit.jupiter.api.Test;
+
+import org.junit.Test;
+
+public class TestAssertions {
+
+	@Test
+	public void testAssertions() {
+		// test data
+		String str1 = new String("abc");
+		String str2 = new String("abc");
+		String str3 = null;
+		String str4 = "abc";
+		String str5 = "abc";
+
+		int val1 = 5;
+		int val2 = 6;
+
+		String[] expectedArray = { "One", "two", "three" };
+		String[] resultArray = { "one", "two", "three" };
+
+		// Check that two objects are equal
+		assertEquals(str1, str2);
+
+		// Check that a condition is true
+		assertTrue(val1 < val2);
+
+		// Check that a condition is false
+		assertFalse(val1 > val2);
+
+		// Check that an object isn't null
+		assertNotNull(str1);
+
+		// Check that an object is null
+		assertNull(str3);
+
+		// Check if two object references point to the same object
+		assertSame(str4, str5);
+
+		// Check if two object references not point to the same object
+		assertNotSame(str1, str3);
+
+		// Check whether two arrays are equal to each other.
+		assertArrayEquals(expectedArray, resultArray);
+	}
+}
+
+
+----------------------
+package com.cts.test3;
+
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
+
+public class RunningTestDemo1 {
+
+	public static void main(String[] args) {
+		Result result = JUnitCore.runClasses(TestAssertions.class);
+
+		for (Failure failure : result.getFailures()) {
+			System.out.println("Error: " + failure.toString());
+		}
+
+		System.out.println("passed:" + result.wasSuccessful());
+
+	}
+
+}
+
+
+
+
+==================================================================================
+package com.cts.test2;
+
+public class EmployeeDetails {
+
+	private String name;
+	private double monthlySalary;
+	private int age;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public double getMonthlySalary() {
+		return monthlySalary;
+	}
+
+	public void setMonthlySalary(double monthlySalary) {
+		this.monthlySalary = monthlySalary;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+}
+
+
+
+-----------------
+package com.cts.test2;
+
+public class EmpBusinessLogic {
+	// Calculate the yearly salary of employee
+	public double calculateYearlySalary(EmployeeDetails employeeDetails) {
+		double yearlySalary = 0;
+		yearlySalary = employeeDetails.getMonthlySalary() * 12;
+		return yearlySalary;
+	}
+
+	// Calculate the appraisal amount of employee
+	public double calculateAppraisal(EmployeeDetails employeeDetails) {
+		double appraisal = 0;
+
+		if (employeeDetails.getMonthlySalary() < 10000) {
+			appraisal = 500;
+		} else {
+			appraisal = 1000;
+		}
+
+		return appraisal;
+	}
+}
+
+
+
+--------------
+package com.cts.test2;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+//import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
+
+public class TestEmployeeDetails {
+	EmpBusinessLogic empBusinessLogic = new EmpBusinessLogic();
+	EmployeeDetails employee = new EmployeeDetails();
+
+	// test to check appraisal
+	@Test
+	public void testCalculateAppriasal() {
+		employee.setName("Rajeev");
+		employee.setAge(25);
+		employee.setMonthlySalary(8000);
+
+		double appraisal = empBusinessLogic.calculateAppraisal(employee);
+		assertEquals(500, appraisal, 0.0);
+	}
+
+	// test to check yearly salary
+	@Test
+	public void testCalculateYearlySalary() {
+		employee.setName("Rajeev");
+		employee.setAge(25);
+		employee.setMonthlySalary(8000);
+
+		double salary = empBusinessLogic.calculateYearlySalary(employee);
+		assertEquals(96000, salary, 0.0);
+	}
+}
+
+
+-----------------------
+package com.cts.test2;
+
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+
+import java.util.List;
+
+import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+import org.junit.platform.launcher.core.LauncherFactory;
+import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+import org.junit.platform.launcher.listeners.TestExecutionSummary;
+import org.junit.platform.launcher.listeners.TestExecutionSummary.Failure;
+
+public class RunningTestDemo1 {
+
+	public static void main(String[] args) {
+		final LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
+				.selectors(selectClass(com.cts.test2.TestEmployeeDetails.class)).build();
+
+		final Launcher launcher = LauncherFactory.create();
+		final SummaryGeneratingListener listener = new SummaryGeneratingListener();
+
+		launcher.registerTestExecutionListeners(listener);
+		launcher.execute(request);
+
+		TestExecutionSummary summary = listener.getSummary();
+		long testFoundCount = summary.getTestsFoundCount();
+		List<Failure> failures = summary.getFailures();
+		if (summary.getTestsSucceededCount() == 2) {
+			System.out.println("getTestsSucceededCount() : " + summary.getTestsSucceededCount());
+			System.out.println("All Test cases Cleared");
+		} else {
+			int l = (int) summary.getTestsSucceededCount();
+			l = 2 - l;
+			System.out.println(l + " Testcase failed");
+			failures.forEach(
+					failure -> System.out.println("failure - " + failure.getTestIdentifier().getDisplayName()));
+			failures.forEach(failure -> System.out.println("failure - " + failure.getException()));
+			// failures.forEach(failure -> System.out.println("failure - " +
+			// failures.get(0).getTestIdentifier()));
+		}
+	}
+}
+
+
+=========================================================================================================
+
+
+
+package com.cts.test4;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+
+public class JunitAnnotation {
+
+	// execute before class
+	@BeforeClass
+	public static void beforeClass() {
+		System.out.println("in before class");
+	}
+
+	// execute after class
+	@AfterClass
+	public static void afterClass() {
+		System.out.println("in after class");
+	}
+
+	// execute before test
+	@Before
+	public void before() {
+		System.out.println("in before");
+	}
+
+	// execute after test
+	@After
+	public void after() {
+		System.out.println("in after");
+	}
+
+	// test case
+	@Test
+	public void test() {
+		System.out.println("in test");
+	}
+
+	// test case ignore and will not execute
+	@Ignore
+	public void ignoreTest() {
+		System.out.println("in ignore test");
+	}
+}
+
+
+
+package com.cts.test4;
+
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
+
+public class RunningTestDemo1 {
+
+	public static void main(String[] args) {
+		Result result = JUnitCore.runClasses(JunitAnnotation.class);
+		for (Failure failure : result.getFailures()) {
+			System.out.println("Error: " + failure.toString());
+		}
+		System.out.println("passed:" + result.wasSuccessful());
+
+	}
+
+}
+
+
+
+
+
+
+=====================================================================
+suite Class
+==============
+
+A JUnit test suite provides a mechanism to group and execute multiple test classes or even specific test methods as a single unit. 
+This is particularly useful for organizing and running a collection of related tests, improving efficiency and manageability of the testing process.
+
+
+
+
+ <!-- JUnit Platform Suite -->
+  <dependency>
+    <groupId>org.junit.platform</groupId>
+    <artifactId>junit-platform-suite</artifactId>
+    <version>1.10.0</version>
+    <scope>test</scope>
+  </dependency>
+
+
+
+
+=========================================================================
+
+Mockito 
+============
+
+
+Mockito is an open-source test automation framework that internally uses Java Reflection API to create mock objects. 
+
+Mock objects are dummy objects used for actual implementation. 
+
+The main purpose of using a dummy object is to simplify the development of a test by mocking external dependencies and using them in the code.
+
+Mockito provides a rich set of features to create mock objects, verify method calls, and test behavior-driven development (BDD) style tests.
+
+
+
+Add the following dependencies in your pom.xml:
+
+<dependency> 
+	<groupId>org.mockito</groupId> 
+	<artifactId>mockito-core</artifactId> 
+	<version>4.1.0</version> 
+	<scope>test</scope> 
+</dependency>
+
+
+
+Creating Mock Object in two ways :
+=====================================
+
+To create mock objects using either 
+	i.  the Mockito.mock() static method or
+	
+	ii.  the @Mock annotation.
+
+
+Mockito Annotations:
+====================
+
+@Mock, @InjectMocks, and 
+		 @RunWith(MockitoJUnitRunner.class) (for JUnit 4) or
+		 @ExtendWith(MockitoExtension.class) (for JUnit 5) 
+
+			to simplify test setup and dependency injection.
+
+
+
+Stubbing Behavior:
+=================
+
+Defining the behavior of mocked methods using when().thenReturn(). 
+
+This allows you to control what a mocked method returns when called during a test. 
+
+
+
+Verifying Behavior:
+====================
+
+Using Mockito.verify() to confirm that specific methods on a mock object were called, and potentially with specific arguments, during the execution of the code under test.
+
+
+
+@InjectMocks annotation in Mockito
+=================================
+
+InjectMocks annotation is used to mock a class with all its dependencies. 
+This is quite useful to test the behavior completely.
+
+
+========================================================================================
+
+
+package com.cts;
+
+import org.junit.jupiter.api.Test;
+
+import static org.mockito.ArgumentMatchers.anyString;
+
+import java.util.*;
+public class Moki {
+	  @Test
+	    public void testMethodCallVerification() {
+	        // create mock object
+	        List<String> mockedList = mock(List.class);
+
+	        // call methods on mock object
+	        mockedList.add("a");
+	        mockedList.add("b");
+	        mockedList.add("c");
+	        mockedList.add("c");
+
+	        // verify that the 'add' method was called with the correct arguments
+	        verify(mockedList).add("a");
+	        verify(mockedList).add("b");
+	        verify(mockedList, times(2)).add("c");
+
+	        // verify that the 'add' method was called 4 times in total
+	        verify(mockedList, times(4)).add(anyString());
+
+	        // verify that the 'clear' method was not called
+	        verify(mockedList, never()).clear();
+	    }
+	
+}
+====================================================
+
+explanation:
+
+mock(List.class) — creates a mock List.
+
+verify(mockedList).add("a") — verifies that "a" was added.
+
+verify(mockedList, times(2)).add("c") — ensures "c" was added exactly 2 times.
+
+verify(mockedList, times(4)).add(anyString()) — checks total 4 add() calls with any string.
+
+verify(mockedList, never()).clear() — confirms that clear() was not called.
+
+
+
+=========================================================================================
+
+
+To use the @Mock annotation in your test (instead of calling mock(List.class) manually),
+ you need to set up Mockito annotations properly using either:
+
+@ExtendWith(MockitoExtension.class) (JUnit 5 way), or
+
+MockitoAnnotations.openMocks(this) in a @BeforeEach method (manual way).
+
+Extension that initializes mocks and handles strict stubbings. 
+This extension is the JUnit Jupiter equivalent of our JUnit4 MockitoJUnitRunner. 
+
+
+
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
+
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+public class Moki {
+
+    @Mock
+    private List<String> mockedList;
+
+    @Test
+    public void testMethodCallVerification() {
+        // Call methods on mock object
+        mockedList.add("a");
+        mockedList.add("b");
+        mockedList.add("c");
+        mockedList.add("c");
+
+        // Verify specific method calls
+        verify(mockedList).add("a");
+        verify(mockedList).add("b");
+        verify(mockedList, times(2)).add("c");
+
+        // Verify total add calls
+        verify(mockedList, times(4)).add(anyString());
+
+        // Verify no call to clear
+        verify(mockedList, never()).clear();
+    }
+}
+
+
+
+
+======================================================================
+
+<!-- Mockito Core -->
+<dependency>
+    <groupId>org.mockito</groupId>
+    <artifactId>mockito-core</artifactId>
+    <version>5.12.0</version>
+    <scope>test</scope>
+</dependency>
+
+<!-- Mockito JUnit Jupiter Integration -->
+<dependency>
+    <groupId>org.mockito</groupId>
+    <artifactId>mockito-junit-jupiter</artifactId>
+    <version>5.12.0</version>
+    <scope>test</scope>
+</dependency>
+
+
+
+=============================================================================================
+
+
+
+
+mock(UserRepository.class) creates a mock instance of UserRepository.
+
+when(mockUserRepository.findById(1)).thenReturn(expectedUser) stubs the findById method to return expectedUser when called with argument 1.
+
+verify(mockUserRepository).findById(1) ensures that the findById method was indeed called on the mock with the specified argument during the test execution.
+
+assertEquals(expectedUser, actualUser) confirms that the UserService correctly returned the user provided by the mocked UserRepository.
+
+
+
+================================================================================
+
+in  src/main/java  itself create
+
+
+com.cts.pojo
+
+
+// User.java (Entity or POJO)
+
+
+
+public class User {
+    private Long id;
+    private String name;
+
+    // constructor
+    public User(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    // getters
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+
+
+com.cts.repository
+
+//2. UserRepository.java (Interface to mock)
+
+import java.util.Optional;
+
+public interface UserRepository {
+    Optional<User> findById(Long id);
+    void save(User user);
+    void deleteById(Long id);
+}
+
+
+
+com.cts.service
+
+//3. UserService.java (Service to test)
+
+public class UserService {
+
+    private final UserRepository userRepository;
+
+    // constructor injection
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public String getUserNameById(Long id) {
+        return userRepository.findById(id)
+                .map(User::getName)
+                .orElse("Unknown");
+    }
+
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
+}
+
+
+src/test/kava
+
+//4.  UserServiceTest.java (Unit Test using @Mock)
+
+com.cts
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+public class UserServiceTest {
+
+    @Mock
+    private UserRepository userRepository;
+
+    @InjectMocks
+    private UserService userService; // real service, with mock injected
+
+    @Test
+    public void testGetUserNameById_Found() {
+        // Arrange
+        when(userRepository.findById(1L)).thenReturn(Optional.of(new User(1L, "John")));
+
+        // Act
+        String result = userService.getUserNameById(1L);
+
+        // Assert
+        assertEquals("John", result);
+        verify(userRepository).findById(1L);
+    }
+
+    @Test
+    public void testGetUserNameById_NotFound() {
+        // Arrange
+        when(userRepository.findById(2L)).thenReturn(Optional.empty());
+
+        // Act
+        String result = userService.getUserNameById(2L);
+
+        // Assert
+        assertEquals("Unknown", result);
+        verify(userRepository).findById(2L);
+    }
+
+    @Test
+    public void testDeleteUser() {
+        // Act
+        userService.deleteUser(1L);
+
+        // Assert
+        verify(userRepository).deleteById(1L);
+    }
+}
+
+
+-------------
+
+@Mock: Used to mock UserRepository.
+
+@InjectMocks: Automatically injects the mock into UserService.
+
+verify(...): Used to ensure interactions happened.
+
+when(...).thenReturn(...): Used to simulate repository responses.
+
+=====================================================================
+
+
+

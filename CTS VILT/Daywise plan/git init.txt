@@ -1,0 +1,59 @@
+git init
+git add .
+git commit -m "first commit"
+git branch -M main
+git remote add origin https:xxxxxxxxxxxxxxxxxxxxxxxxTrainingDemo1.git
+git push -u origin main
+
+=========================================
+
+
+first we need to create a directory
+=======================================
+
+mkdir myDirectory
+
+cd myDirectory
+
+
+To create a file at CLI
+===========================
+
+C:\>copy con filename.txt
+
+	type some text here
+
+	to comeout press CTRL + Z
+
+
+ 
+C:\Users\srira\MyDirectory> dir
+
+
+To initialize git repository in local
+-------------------------------------
+
+C:\Users\srira\MyDirectory> git init
+
+
+C:\Users\srira\MyDirectory> dir /a
+
+
+
+To setup git configuration
+=========================
+
+C:\Users\srira\MyDirectory> git config --global user.name "user-name"
+
+C:\Users\srira\MyDirectory> git config --global user.email "your email"
+
+
+C:\Users\srira\MyDirectory> git status
+
+
+C:\Users\srira\MyDirectory> git add HeloWorld.txt
+
+
+
+
+

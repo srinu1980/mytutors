@@ -1,0 +1,92 @@
+package com.cts;
+
+class Demo implements Runnable {
+
+	@Override
+	public void run() {
+
+		for (int i = 0; i < 10; i++) {
+
+			try {
+				Thread.sleep(100);
+				System.out.println("Invoking run() method with i  value =" + i);
+
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+}
+
+public class LambdaExpressionDemo {
+
+	public static void main(String[] args) {
+		/*
+		 * Thread t = new Thread();
+		 * 
+		 * System.out.println(t); // [Thread-0,Norm_priority-thread-groupname]
+		 * 
+		 * System.out.println("Thread Name  is  :" + t.getName());
+		 * System.out.println("Thread priority  :" + t.getPriority());
+		 * 
+		 * System.out.println("MIN PRIORITY :" + t.MIN_PRIORITY);
+		 * System.out.println("MAX PRIORITY :" + t.MAX_PRIORITY);
+		 * System.out.println("NORM PRIORITY :" + t.NORM_PRIORITY);
+		 * 
+		 */
+		Demo ob = new Demo();
+		Thread t1 = new Thread(ob);
+		t1.start();
+
+		for (int i = 100; i < 110; i++) {
+
+			try {
+				Thread.sleep(100);
+				System.out.println("In main thread  i  value =" + i);
+
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+}
+
+
+
+--------------------------------------------------
+
+package com.cts;
+
+/*
+class Demo implements Runnable {
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		System.out.println("run method is invoked...");
+	}
+
+}
+*/
+public class LambdaExpressionDemo {
+
+	public static void main(String[] args) {
+
+		/*
+		 * Demo ob = new Demo(); Thread t = new Thread(ob); t.start();
+		 * 
+		 */
+
+		Runnable r = () -> System.out.println("run method is invoked....");
+
+		Thread t = new Thread(r);
+		t.start();
+	}
+
+}
+
+

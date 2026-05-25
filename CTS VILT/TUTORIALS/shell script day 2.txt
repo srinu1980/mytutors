@@ -1,0 +1,373 @@
+
+Unix shell program day 2 topics
+=================================
+Functions
+
+Text processing
+
+Error handdling and Debugging
+
+
+=================================================
+The grep command in Unix/Linux is used to search for a specific pattern in files or input. It stands for "Global Regular Expression Print" and is one of the most commonly used text-processing tools in shell scripting.
+
+
+
+
+
+grep [options] pattern [file...]
+
+Search for a word in a file
+grep "hello" myfile.txt
+
+Case-insensitive search
+grep -i "hello" myfile.txt
+
+Display line numbers with matches
+
+grep -n "error" logfile.txt
+→ Shows lines with error and their line numbers.
+
+
+Use regular expressions
+
+grep "^[a-zA-Z]" file.txt
+→ Finds lines that start with an alphabet character
+
+=
+Count number of matching lines
+
+grep -c "failed" log.txt
+
+
+ cat p3.sh
+echo "enter existing file"
+read f
+
+if [ -f $f ]
+then
+        echo "it is file"
+elif [ -d $f ]
+then
+        echo "it is directory"
+else
+        echo "none"
+fi
+
+
+===========================================
+
+ cat p6.sh
+for i in {1..5}
+do
+        echo $i
+done
+======================================
+
+
+cat p1.sh
+
+fruits=("apple","banana","Mango","finapple")
+
+for i in "${fruits[@]}";
+do
+        echo "current fruit :$i"
+done
+======================================================
+
+---------------------------------------------
+
+===============================
+cat p7.sh
+for (( i=1; i<=5; i++ ))
+do
+        echo "c style is :$i"
+done
+=============================================
+ cat names.txt
+rahul
+mahesh
+anil
+suresh
+varma
+kishore
+
+
+ cat forloop2.sh
+items="/home/admin123/names.txt"
+
+for i in $(cat $items)
+do
+        echo $i
+done
+
+=================================
+switch case
+==============
+case <variable> in
+    pattern1)
+        # commands
+        ;;
+    pattern2)
+        # commands
+        ;;
+    ...
+    *)
+        # default case
+        ;;
+esac
+
+
+
+=============
+ cat swit.sh
+echo "provide an option :"
+echo "a for print date"
+echo "b for print list"
+echo "c to check the current location"
+
+read ch
+
+case $ch in
+        a)
+                echo "Today date is "
+                date
+                echo "Ending......"
+                ;;
+        b)
+                echo "list of files"
+                ls
+                ;;
+        c)
+                pwd;;
+        *)
+                echo "Please provice the valid option :"
+esac
+
+===========================================================
+
+Shell Scripting (Bash), functions are used to group commands that can be reused multiple times in your script, similar to functions in other programming languages.
+
+syntax:
+
+function function_name {
+    # commands
+}
+
+🔹 Method 2:
+
+function_name() {
+    # commands
+}
+
+
+
+
+
+ cat fun1.sh
+
+ greeting()
+{
+        echo "Good Morning $1 $2"
+
+        fun2
+        return 100
+}
+
+fun2()
+{
+        echo "this is my another func"
+}
+
+
+greeting RahuL Dravid
+ret=$?
+echo "return value is $ret"
+
+
+
+==============================
+
+
+add() {
+    sum=$(( $1 + $2 ))
+    echo "Sum is: $sum"
+}
+
+add 10 20 
+
+----------------------------
+Returning String Value using echo
+
+
+get_name() {
+    echo "Srinivasa Rao"
+}
+
+name=$(get_name)
+echo "Name is: $name"
+
+------------------------------------------
+Check if a Number is Even or Odd
+
+check_even_odd() {
+    if [ $(( $1 % 2 )) -eq 0 ]; then
+        echo "$1 is Even"
+    else
+        echo "$1 is Odd"
+    fi
+}
+
+check_even_odd 7
+check_even_odd 12
+
+====================================
+Factorial of a Number (Recursive Function)
+
+
+factorial() {
+    if [ $1 -le 1 ]; then
+        echo 1
+    else
+        local prev=$(factorial $(( $1 - 1 )))
+        echo $(( $1 * prev ))
+
+    fi
+}
+
+result=$(factorial 5)
+echo "Factorial is: $result"
+
+===============================================
+Menu-Driven Program using Functions
+
+
+add() {
+    echo "Enter two numbers:"
+    read a b
+    echo "Sum is: $((a + b))"
+}
+
+sub() {
+    echo "Enter two numbers:"
+    read a b
+    echo "Difference is: $((a - b))"
+}
+
+mul() {
+    echo "Enter two numbers:"
+    read a b
+    echo "Product is: $((a * b))"
+}
+
+div() {
+    echo "Enter two numbers:"
+    read a b
+    echo "Quotient is: $((a / b))"
+}
+
+while true; 
+do
+    echo "Choose option: 1.Add 2.Subtract 3.Multiply 4.Divide 5.Exit"
+    read choice
+
+    case $choice in
+        1) add ;;
+        2) sub ;;
+        3) mul ;;
+        4) div ;;
+        5) echo "Exiting..."; break ;;
+        *) echo "Invalid choice" ;;
+    esac
+done
+
+=======================================
+
+Text processing in Unix/Linux shell scripting involves using powerful tools to search, extract, format, and transform text data. 
+These tools are essential for log analysis, report generation, automation, and scripting tasks.
+
+Common Text Processing Tools in Unix
+
+Tool		Purpose
+=========================================
+cat		Display contents of a file
+grep		Search text using patterns (regex)
+cut		Extract specific columns/fields
+awk		Pattern scanning and processing
+sed		Stream editor for substitution/editing
+sort		Sort lines of text files
+uniq		Remove duplicate lines
+tr		Translate or delete characters
+wc		Count words, lines, characters
+head/tail	Show beginning or end of files
+
+
+ Examples of Text Processing
+
+ 1. grep – Pattern Matching
+
+grep "error" logfile.txt
+grep -i "fail" report.txt     # Case-insensitive
+
+
+ 2. cut – Extract Columns
+cut -d ':' -f1 /etc/passwd     # Extract usernames
+cut -d ',' -f2 student.csv     # Get second column from CSV
+
+ 3. awk – Process Fields and Records
+
+awk '{print $1}' file.txt                # Print first column
+awk -F: '{print $1, $3}' /etc/passwd     # Username and UID
+awk '{sum += $2} END {print sum}' data.txt  # Sum second column
+
+ 4. sed – Search and Replace
+
+sed 's/foo/bar/' file.txt           # Replace first 'foo' with 'bar'
+sed 's/foo/bar/g' file.txt          # Replace all 'foo'
+sed -n '2,4p' file.txt              # Print lines 2 to 4
+
+ 5. tr – Translate Characters
+
+echo "HELLO" | tr 'A-Z' 'a-z'       # Convert to lowercase
+cat file.txt | tr -d '0-9'          # Remove digits
+
+
+ 6. sort and uniq
+
+sort names.txt                      # Alphabetical sort
+sort numbers.txt | uniq             # Sort and remove duplicates
+uniq -c names.txt                   # Count occurrences of each line
+
+ 7. wc – Word/Line/Character Count
+
+wc file.txt                         # Lines, words, characters
+wc -l file.txt                      # Line count only
+
+
+ 8. head / tail
+
+head -n 5 file.txt                  # First 5 lines
+tail -n 10 file.txt                 # Last 10 lines
+
+
+echo "Total errors today:"
+grep "ERROR" /var/log/syslog | wc -l
+
+echo "Top 5 IPs making requests:"
+cat access.log | awk '{print $1}' | sort | uniq -c | sort -nr | head -5
+
+
+=======================
+
+https://medium.com/@patilsiddharth0411/day-11-of-my-90daysofdevops-challenge-error-handling-in-shell-scripting-4e9c5b353031
+
+
+https://medium.com/@aiinstructor/bash-scripting-error-handling-and-debugging-techniques-739f5d6dbc2b
+
+https://dev.to/574n13y/mastering-error-handling-in-shell-scripts-a-guide-for-devops-engineers-3hdn
+
+
+https://www.geeksforgeeks.org/linux-unix/how-to-enable-shell-script-debugging-mode-in-linux/
+
+https://devcloudjourney.hashnode.dev/error-handling-in-shell-scripting
+

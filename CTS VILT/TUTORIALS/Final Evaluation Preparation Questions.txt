@@ -1,0 +1,63 @@
+https://javaconceptoftheday.com/spring-java-code-based-configuration/
+	Interim Syllabus  +
+
+
+1. What is Maven?
+2. Maven Build Life cycle stages.
+3. What is Use of POM.xml
+4. What is Spring Framework?
+5  What are the features of Spring Framework?
+6. What is Inversion of Control (IoC)?
+7. What are the ways to configure IOC ?
+8  What are the types of dependency injection in Spring? Explain it.
+9. What are the different Spring Bean Scopes?
+10. What are the advantages of Spring Boot?
+11. Explain about Bean Life cycle?
+12. How to handle Global Exception handler
+13. What is AOP? Advise Types and Point Cuts
+14. What is Spring Boot Starter?
+
+A predefined set of dependencies bundled together for specific functionality (e.g., spring-boot-starter-web includes Spring MVC + Jackson + Tomcat).
+
+15. What is Spring Boot Actuator?
+16. Explain Spring MVC Architecture.
+    What is Model, ModelAttribute?
+17. What is DispatcherServlet?
+18. Difference between @Controller and @RestController?
+19  What is @RequestMapping vs @GetMapping?
+20. What are Spring Data JPA repositories?
+21. How does Spring Data JPA create queries automatically?
+	By following method naming conventions (e.g., findByName, findByEmailAndStatus).
+
+22.    How to define Custom Query methods (JPQL)
+
+23. What is the difference between Authentication and Authorization?
+24. How to secure REST APIs in Spring Boot?
+
+25. What are microservices, and how are they different from monolithic applications?
+
+26. What are the advantages and challenges of microservices architecture?
+
+27. Explain how Spring Boot helps in developing microservices.
+
+28. What is the role of Spring Cloud in microservices?
+
+29. How do you create a simple microservice using Spring Boot?
+
+30 What is the difference between RESTful APIs and microservices?
+
+31. How do microservices communicate with each other?
+32. What is Spring Cloud Config Server? How does it work?
+33. What is Netflix Eureka in Spring Cloud? How does service discovery work?
+34. How do you implement load balancing between microservices?
+35. What is Hystrix, and how does it help in fault tolerance?
+36. How do you implement Circuit Breaker in Spring Boot microservices?
+37. What is Resilience4j? 
+38. Diff is b/w Thymleaf and JSP?
+39. Explain diff entity relationaship framework? (1 To 1, 1 To Many, Many To Many, etc.)
+40.Explain JWT & OAuth execution FLOW?
+41. What is Debugging? Explain it.
+42. Explin about JIRI tool?
+43. Explain different datatypes in PYTHON with syntax?
+
+ 

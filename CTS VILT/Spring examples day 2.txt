@@ -1,0 +1,396 @@
+
+package com.cts.collections;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+public class Emp {
+
+	private String name;
+	private List<String> phones;
+	private Set<String> address;
+	private Map<String, String> courses;
+
+
+
+
+
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns = "http://www.springframework.org/schema/beans"
+   xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation = "http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+
+<bean id="myBean"  class="com.cts.collections.Emp">
+
+<property name="name">
+<value>Sourav</value>
+</property>
+
+<property name="phones">
+
+	<list>
+	<value>9247660740</value>
+	<value>9647680720</value>
+	<value>9747660730</value>
+	<value>9847660790</value>
+	<value>9947660750</value>
+	<value>9747660730</value>
+	<value>9847660790</value>
+	<value>9947660750</value>
+	
+	
+	
+	</list>
+
+</property>
+
+<property name="address">
+
+	<set>
+	
+		<value>Hyderabad</value>
+		<value>Chennai</value>
+		<value>Pune</value>
+		<value>Kalkata</value>
+		<value>Chennai</value>
+		<value>Pune</value>
+		<value>Kalkata</value>
+		
+	</set>
+	
+	</property>
+	
+	
+	<property name="courses">
+	
+	<map>
+	
+	<entry key="Angular"  value="2 Months"/>
+	<entry key="React"  value="2 Months"/>
+	<entry key="Java"  value="1 Month"/>
+	<entry key="Oracle"  value="1 Month"/>
+	
+	</map>
+	</property>
+	
+</bean>
+
+
+
+
+   </beans>
+
+
+package com.cts.collections;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class MainClass {
+
+	public static void main(String[] args) {
+		ApplicationContext context = new ClassPathXmlApplicationContext("com/cts/collections/collectionBean.xml");
+
+		Emp emp = (Emp) context.getBean("myBean");
+
+		System.out.println(emp.getName());
+		System.out.println(emp.getPhones());
+		System.out.println(emp.getCourses());
+		System.out.println(emp.getAddress());
+
+	}
+
+}
+
+
+
+========================================================================================
+
+
+
+package com.cts.annotation;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component
+public class Student {
+
+	@Value("Rahul Dravid")
+	private String studentName;
+
+	@Value("Bangalore")
+	private String city;
+
+	public String getStudentName() {
+		return studentName;
+	}
+
+	public void setStudentName(String studentName) {
+		this.studentName = studentName;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	@Override
+	public String toString() {
+		return "Student [studentName=" + studentName + ", city=" + city + "]";
+	}
+
+}
+
+
+
+
+
+
+
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
+ 
+
+<context:component-scan base-package="com.cts.annotation"/>
+  
+</beans>
+
+
+
+
+
+
+
+package com.cts.annotation;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class MainClass {
+
+	public static void main(String args[]) {
+
+		ApplicationContext context = new ClassPathXmlApplicationContext("com/cts/annotation/Bean.xml");
+
+		Student student = context.getBean("student", Student.class);
+
+		System.out.println(student);
+	}
+}
+
+
+
+==========================================================================================
+
+package com.cts.autowired;
+
+public class Address {
+
+	private String street;
+	private String city;
+
+	public String getStreet() {
+		return street;
+	}
+
+	public void setStreet(String street) {
+		this.street = street;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public Address() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Address(String street, String city) {
+		super();
+		this.street = street;
+		this.city = city;
+	}
+
+	@Override
+	public String toString() {
+		return "Address [street=" + street + ", city=" + city + "]";
+	}
+
+}
+
+
+
+
+
+
+
+
+package com.cts.autowired;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+public class Emp {
+
+	private Address address;
+
+	public Address getAddress() {
+		return address;
+	}
+
+	@Autowired
+	@Qualifier("tt")
+	public void setAddress(Address address) {
+		System.out.println("setter method is autowrired...");
+		this.address = address;
+	}
+
+	public Emp(Address address) {
+		super();
+		this.address = address;
+		System.out.println("constructor method is autowired");
+	}
+
+	public Emp() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public String toString() {
+		return "Emp [address=" + address + "]";
+	}
+
+	public void init() {
+		System.out.println("init method is initialized the bean");
+	}
+
+	public void destroy() {
+		System.out.println("destroy method is destroy the object");
+	}
+}
+
+
+
+
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
+ 
+  
+  <context:annotation-config/> 
+  
+  
+ <bean id="tt" class="com.cts.autowired.Address">
+ <property name="street" value="First Street"/>
+ <property name="city" value="Hyderabad"/>
+  
+ </bean>
+ 
+ 
+ <bean id="temp2" class="com.cts.autowired.Address">
+ <property name="street" value="Second Street"/>
+ <property name="city" value="Pune"/>
+  
+ </bean>
+ 
+ 
+ <bean id="emp" class="com.cts.autowired.Emp"  init-method="init" destroy-method="destroy"/>
+ 
+  
+ </beans>
+
+
+
+
+==================================================================================
+Java Based Configuration
+
+
+package com.cts.javabased;
+
+public class HelloWorld {
+
+	private String message;
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public void getMessage() {
+		System.out.println("Your Message : " + message);
+	}
+
+}
+
+
+
+
+
+package com.cts.javabased;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class HelloWorldConfig {
+
+	@Bean
+	public HelloWorld helloWorld() {
+		return new HelloWorld();
+	}
+
+}
+
+
+
+
+
+
+package com.cts.javabased;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+public class MainClass {
+
+	public static void main(String[] args) {
+
+		ApplicationContext ctx = new AnnotationConfigApplicationContext(HelloWorldConfig.class);
+
+		HelloWorld helloWorld = ctx.getBean(HelloWorld.class);
+		helloWorld.setMessage("Hello World!");
+		helloWorld.getMessage();
+
+	}
+
+}
+
+
+

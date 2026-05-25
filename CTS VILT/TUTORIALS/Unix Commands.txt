@@ -1,0 +1,79 @@
+
+Introduction
+
+File Management
+====================
+
+ls
+cat
+touch
+cp
+mv
+rm  -> remove file
+
+
+Direction Management
+====================
+mkdir
+cd
+pwd
+rmdir  - remove directory
+
+
+
+
+File Permission / Access Modes
+===========================
+
+Basic Utilities
+========================
+date
+cal
+whoami
+uname
+echo
+clear
+man
+
+
+
+Pipe and Filters
+================
+
+wc
+cut
+
+|
+uniq
+sort
+
+
+
+
+
+
+Process Management
+
+ps
+
+Network Communiation Utilities
+
+ping
+igconfig
+ftp
+telnet
+netstat
+
+
+
+
+
+
+
+https://www.terminaltemple.com/
+
+https://edu.acceleratron.in/vm-linux-terminal
+
+https://www.onlinegdb.com/online_bash_shell
+
+

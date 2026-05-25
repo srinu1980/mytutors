@@ -1,0 +1,121 @@
+
+Calculator using Functions
+
+script.sh
+
+    1 add()
+    2 {
+    3     echo "The sum of $1 and $2 is `expr $1 + $2`"
+    4 }
+    5 sub()
+    6 {
+    7     echo "The difference of $1 and $2 is `expr $1 - $2`"
+    8 }
+    9 mul()
+   10 {
+   11     echo "The product of $1 and $2 is `expr $1 \* $2`"
+   12 }
+   13 div()
+   14 {
+   15     echo "The quotient of $1 and $2 is `expr $1 / $2`"
+   16 }
+   17 
+   18 read -p "Enter the first number for arithmetic calculations: " a
+   19 read -p "Enter the second number for arithmetic calculations: " b
+   20 read -p "Enter the choice for arithmetic calculations: " c
+   21 case $c in 
+   22     +) add $a $b ;;
+   23     -) sub $a $b ;;
+   24     \*) mul $a $b ;;
+   25     /) div $a $b ;;
+   26     *) echo "Enter a valid choice"
+   27 esac
+
+====================
+
+script.sh
+    1 # Static input for N
+    2 #N=6
+    3 read -p "Enter the Number to generate the Fibonacci Series: " N 
+    4 # First Number of the
+    5 # Fibonacci Series
+    6 a=0
+    7  
+    8 # Second Number of the
+    9 # Fibonacci Series
+   10 b=1
+   11   
+   12 echo "The Fibonacci series is : "
+   13   
+   14 for (( i=0; i<N; i++ ))
+   15 do
+   16     echo -n "$a "
+   17     fn=$((a + b))
+   18     a=$b
+   19     b=$fn
+   20 done
+
+===============================
+
+script.sh
+    1 read -p "Enter a number for the factorial: " a
+    2 prod=1
+    3 for((i=$a;i>=1;i--))
+    4 do
+    5     #b=`expr $a - 1`
+    6     prod=`expr $a \* $prod`
+    7     a=`expr $a - 1`
+    8 done
+    9 echo "$prod"
+
+
+or
+
+script.sh
+    1 
+    2 read p
+    3 
+    4 f=1
+    5 
+    6 for (( i=1; i<=p; i++ ))
+    7 do
+    8   f=$((f * i))
+    9 done
+   10 
+   11 echo $f
+   12 
+
+===========================
+
+script.sh
+    1 echo "Script for Positional Parameters
+The Name of the Script is $0
+The first argument is $1
+The third argument is $3
+The fifth argument is $5
+The second and four arguments are $2 and $4
+The arguments are $@" >> PositionalParameters.txt
+    2 cat PositionalParameters.txt
+
+
+or
+
+==================================
+
+ output_file="PositionalParameters.txt"
+    3 
+    4 
+    5 echo "Script for Positional Parameters" > "$output_file"
+    6 echo "The Name of the Script is $0" >> "$output_file"
+    7 echo "The number of arguments is $#" >> "$output_file"
+    8 echo "The first argument is $1" >> "$output_file"
+    9 echo "The third argument is $3" >> "$output_file"
+   10 echo "The fifth argument is $5" >> "$output_file"
+   11 echo "The second and four arguments are $2 and $4" >> "$output_file"
+   12 echo "The arguments are $@" >> "$output_file"
+   13 
+   14 
+   15 cat "$output_file"
+   16
+
+ 

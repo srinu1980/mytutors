@@ -1,0 +1,228 @@
+
+
+echo "Welcome to Learn Shell Scripting"
+
+
+---------------------
+
+echo "Enter your name :"
+read name;
+echo "Entered name is "$name
+
+--------------------
+
+echo "enter a , b values "
+read a
+read b
+
+c=$((a+b))
+echo "addition is $c";
+
+c=$((a-b))
+echo "subtraction is :"$c
+
+c=$((a*b))
+echo "Multiplication is :"$c
+
+~                                                                                                                     ~                                                                                                                     ~                                                                                                                     ~                                                                                                                     ~                                                                                                                     ~                                                                                                                     ~                                        
+------------------------------------
+
+
+echo "Enter a, b values "
+read a
+read b
+
+if [ $a -gt $b ]
+then
+        echo "a is Big"
+elif [ $b -gt $a ]
+then
+        echo "b is Big"
+else
+        echo "Both are equals"
+fi
+
+
+----------------------
+echo "Number of arguments :$#"
+
+echo "All arguments :$@"
+
+
+echo "First argument is :${1}"
+
+~                                                                                                                     ~                                                                                                                     ~                                                                                                                     ~                                    
+---------------------------
+echo "enter a,b c values"
+read a
+read b
+read c
+
+if [ $a -eq $b -a $b -eq $c -a $a -eq $c ]
+then
+        echo "All are equals"
+
+else
+        echo "Not equals"
+fi
+
+~                                                                                                                     ~                                                                                                                     ~                              
+==================================
+                                                                                                                     ~                                     
+
+
+=====================================================================
+hour=`date +%H`
+
+if [ $hour -lt 12 ] # if hour is less than 12
+then
+
+	echo "GOOD MORNING WORLD"
+elif [ $hour -le 16 ] # if hour is less than equal to 16
+then
+
+	echo "GOOD AFTERNOON WORLD"
+elif [ $hour -le 20 ] # if hour is less than equal to 20
+then
+
+	echo "GOOD EVENING WORLD"
+else
+
+	echo "GOOD NIGHT WORLD"
+fi
+
+
+
+=========================
+
+read num
+
+if [ "$num" -lt 0 ]; then
+    echo "Not a positive number"
+else
+    rev=0
+    n=$num
+
+    while [ $n -ne 0 ]
+    do
+        rem=$((n % 10))
+        rev=$((rev * 10 + rem))
+        n=$((n / 10))
+    done
+
+    echo "Reverse number is $rev"
+fi
+
+~                                                                                                                     ~                                                                                                                     ~                                   
+
+=================================
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 filename"
+    exit 1
+fi
+
+filename=$1
+
+# Check if file exists
+if [ ! -f "$filename" ]; then
+    echo "File '$filename' not found!"
+    exit 1
+fi
+
+# Count characters, words, and lines
+char_count=$(wc -m < "$filename")
+word_count=$(wc -w < "$filename")
+line_count=$(wc -l < "$filename")
+
+# Display the result
+echo "Number of characters in $filename is $char_count"
+echo "Number of words in $filename is $word_count"
+echo "Number of lines in $filename is $line_count"
+
+~                                                                                                                     ~                                              
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+==================================================
+
+mkdir mydir
+
+cd mydir
+mkdir colors
+mkdir shape
+mkdir animals
+
+cd animals
+mkdir mammals
+mkdir reptiles
+
+cd mammals
+touch bat
+touch dog
+touch platypus
+
+cd ..
+cd reptiles
+touch crocodile
+touch lizard
+touch snakes
+
+cd ..
+cd ..
+
+cd colors
+mkdir basic
+mkdir blended
+
+cd basic
+touch blue
+touch green
+touch red
+cd ..
+
+cd blended
+touch orange
+touch pink
+touch yellow
+cd ..
+cd ..
+
+
+cd shape
+touch circle
+touch cube
+touch square
+
+cd ..
+cd ..
+
+
+
+cp ./mydir/colors/basic/red ./mydir/colors/blended
+
+
+

@@ -1,0 +1,72 @@
+
+public static void main(String args[])
+{
+
+    HashMap<Integer, String> hmap = new HashMap<>();
+
+    //key and value pairs
+
+    hmap.put(101, "Chaitanya");
+    hmap.put(105, "Derick");
+    hmap.put(111, "Logan");
+    hmap.put(120, "Paul");
+
+    //print HashMap elements
+    Set set = hmap.entrySet();
+
+    Iterator iterator = set.iterator();
+    while(iterator.hasNext()) 
+    {
+      Map.Entry m = (Map.Entry)iterator.next();
+    
+  System.out.print("key is: "+ m.getKey() + " & Value is: ");
+
+      System.out.println(m.getValue());
+    }
+  }
+}
+
+
+
+==========================
+
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+public class HashMapExample {
+    public static void main(String[] args) {
+        Map<Integer, String> hashMap = new HashMap<>();
+        hashMap.put(1, "Apple");
+        hashMap.put(2, "Banana");
+        hashMap.put(3, "Cherry");
+
+        // Iterating using enhanced for loop
+        for (Map.Entry<Integer, String> entry : hashMap.entrySet()) {
+            System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
+        }
+
+        // Iterating using iterator
+        Iterator<Map.Entry<Integer, String>> iterator = hashMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Integer, String> entry = iterator.next();
+            System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

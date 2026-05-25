@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+PRODID:-//LRN CONSOLE//EN
+BEGIN:VEVENT
+UID:1733159357561
+DTSTART;TZID=Asia/Calcutta:20241206T223917
+DTEND;TZID=Asia/Calcutta:20241206T233917
+SUMMARY:Introduction to Responsible AI
+DESCRIPTION: \nLaunch: https://cognizant-console.lrn.com/learn/courselaunch?curriculumId=856273&systemId=12240600058&moduleId=155373\nVisit: https://cognizant-console.lrn.com/learn/queue
+X-ALT-DESC;FMTTYPE=text/html:<!DOCTYPE HTML PUBLIC -//W3C//DTD HTML 3.2//EN'><HTML><BODY><p> </p><br><br>Launch <a href='https://cognizant-console.lrn.com/learn/courselaunch?curriculumId=856273&systemId=12240600058&moduleId=155373' target='_blank'>Introduction to Responsible AI</a></BODY></HTML><br>Visit <a href='https://cognizant-console.lrn.com/learn/queue' target='_blank'>Pending Actions</a></BODY></HTML>
+LOCATION:cognizant-console.lrn.com
+END:VEVENT
+END:VCALENDAR

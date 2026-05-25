@@ -1,0 +1,30 @@
+
+Meeting session name should be in the below format:
+
+ 
+
+Java Standard (VILT)
+
+
+Session Name (Morning)- 9Am to 1PM
+<LP Name->_<Cohortcode1, Cohortcode2>_<Topic Name>
+JavaStandard_TTP2SPJS2538_AgileMethodology
+
+
+Session Name(Afternoon)- 2Pm to 6PM
+<LP Name->_<Cohortcode1, Cohortcode2>_DoubtClearingSession
+
+JavaStandard_TTP2SPJS2538_DoubtClearingSession
+
+
+
+JavaStandard_TTP2SPJS2538_CoreJava
+JavaStandard_TTP2SPJS2538_DoubtClearingSession
+
+
+
+JavaStandard_TTP2SPJS2538_ShellScripting
+
+
+
+https://www.oracle.com/in/database/technologies/xe-downloads.html

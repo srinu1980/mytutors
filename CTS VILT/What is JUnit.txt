@@ -1,0 +1,95 @@
+What is JUnit?
+
+JUnit is a popular Java testing framework used for unit testing. It provides annotations to identify test methods, asserts for verifying expected results, and integration with tools like Maven or Gradle.
+Why is JUnit important?
+
+JUnit automates testing, ensures code reliability, promotes TDD (Test-Driven Development), and integrates easily with CI/CD pipelines.
+Explain the lifecycle of a JUnit test.
+
+Lifecycle includes:
+@BeforeAll (setup for all tests, runs once).
+@BeforeEach (setup before each test).
+Test methods (@Test).
+@AfterEach (cleanup after each test).
+@AfterAll (cleanup for all tests, runs once).
+What are some key annotations in JUnit?
+
+Common annotations:
+@Test: Marks a test method.
+@BeforeAll / @BeforeEach: Setup methods.
+@AfterAll / @AfterEach: Teardown methods.
+@Disabled: Disables a test.
+How does JUnit assert equality?
+
+Using methods like:
+assertEquals(expected, actual).
+assertNotEquals(expected, actual).
+What is the difference between @BeforeEach and @BeforeAll?
+
+@BeforeEach runs before every test, while @BeforeAll runs once before all tests.
+What is assertThrows() in JUnit 5?
+
+Validates that a specific exception is thrown during test execution.
+assertThrows(IllegalArgumentException.class, () -> { throw new IllegalArgumentException("Invalid argument"); });
+
+How do you handle timeouts in JUnit tests?
+
+Use the @Test(timeout = ms) annotation in JUnit 4 or @Test with assertTimeout in JUnit 5.
+What is the difference between assertAll and individual asserts?
+
+assertAll allows multiple assertions to execute even if one fails, collecting all errors.
+How do you disable a test in JUnit?
+
+Annotate the method with @Disabled.
+How can you run tests in a specific order?
+
+Use @TestMethodOrder(OrderAnnotation.class) and @Order(n) annotations in JUnit 5.
+Explain parameterized tests in JUnit.
+
+Allows running the same test with different data inputs using @ParameterizedTest.
+What is the role of @ExtendWith?
+
+Used to integrate extensions like Mockito, Spring, or custom behaviors into JUnit tests.
+How does JUnit support dependency injection?
+
+Using @ParameterizedTest and @ValueSource or integration with external frameworks like Spring.
+What is JUnit’s role in TDD?
+
+TDD relies heavily on frameworks like JUnit to write failing tests before implementing functionality.
+How do you integrate JUnit with Maven?
+
+-   Add the JUnit dependency in the `pom.xml` file:
+    
+    xml
+    
+    
+    `<dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>5.x.x</version>
+        <scope>test</scope>
+    </dependency>` 
+What is the difference between JUnit 4 and JUnit 5?
+-   JUnit 5 uses a modular architecture with better extension support, Java 8+ features, and new annotations like `@BeforeAll`/`@AfterAll`. 18.  **How do you test private methods with JUnit?**
+
+-   Use reflection or redesign code to test through public interfaces. 19.  **How do you generate JUnit test reports?**
+
+-   Use plugins like Surefire or Gradle to generate HTML/XML reports. 20.  **What is the difference between `@Mock` and `@Spy` in JUnit with Mockito?**
+
+-   `@Mock`: Creates a mock object.
+-   `@Spy`: Partially mocks an object, retaining real behavior.
+What is the difference between assertArrayEquals and assertIterableEquals?
+assertArrayEquals compares arrays element by element to ensure they are equal.
+assertIterableEquals compares two iterable objects (e.g., lists) for equality.
+Example:
+
+assertArrayEquals(new int[]{1, 2}, new int[]{1, 2}); // Arrays assertIterableEquals(List.of(1, 2), List.of(1, 2)); // Lists
+
+What are assumptions in JUnit?
+Assumptions allow tests to execute conditionally. If an assumption fails, the test is skipped.
+Example:
+
+@Test void testOnSpecificOS() { assumeTrue(System.getProperty("os.name").contains("Windows")); // Test code that runs only on Windows }
+
+How do you disable tests conditionally in JUnit 5?
+Use annotations like @EnabledOnOs or @DisabledOnOs for OS-specific conditions, or @EnabledIf for custom conditions.

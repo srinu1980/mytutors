@@ -1,0 +1,374 @@
+
+File Manipulation Unix Command
+=========================
+
+
+
+
+cp
+
+Copies files or directories.
+cp file1.txt file2.txt
+
+mv
+Moves files or directories.
+
+mv file1.txt Documents
+
+rm
+Remove files or directories.
+
+rm old_file.txt
+
+chmod
+Changes the permissions of a file or directory.
+
+chmod 644 file.txt
+
+chown
+Changes the owner and group of a file or directory.
+
+chown user:group file.txt
+
+cat	Concatenates files and displays their contents.	
+
+cat file1.txt file2.txt
+
+head	Displays the first few lines of a file.	
+head file.txt
+
+tail	Displays the last few lines of a file.	
+tail file.txt
+
+more	Displays the contents of a file page by page.	
+
+more file.txt
+
+less	Displays the contents of a file with advanced navigation features.	
+less file.txt
+
+diff	Compares files line by line.	
+diff file1.txt file2.txt
+
+
+"I am accepting the NDA"
+
+181380187
+
+
+1. File Management Commands
+
+Command	Description	Example
+
+ls	List files	ls -l
+touch	Create an empty file	touch file.txt
+cat	View file content	cat file.txt
+cp	Copy files	cp file.txt backup.txt
+mv	Move or rename file	mv file.txt newfile.txt
+rm	Delete file	rm file.txt
+file	Show file type	file file.txt
+
+📂 2. Directory Management Commands
+
+
+Command	Description	Example
+
+mkdir	Create a directory	mkdir newdir
+rmdir	Remove empty directory	rmdir newdir
+cd	Change directory	cd /home/user
+pwd	Show current directory	pwd
+ls	List directory contents	ls -la /etc
+
+
+ 3. File Permissions / Access Modes
+
+Command	Description	Example
+
+chmod	Change file permissions	chmod 755 file.sh
+chown	Change file owner	chown user1 file.txt
+chgrp	Change group ownership	chgrp dev file.txt
+umask	Default permission mask	umask 022
+
+🔸 Permission Codes:
+
+r = read, w = write, x = execute
+
+Numeric: 7 = rwx, 6 = rw-, 5 = r-x, 4 = r--
+
+ 4. Basic Utilities
+
+Command	Description	Example
+
+date	Show current date/time	date
+cal	Calendar	cal 2025
+whoami	Current user	whoami
+uname	System info	uname -a
+echo	Display text	echo "Hello"
+clear	Clear terminal	clear
+man	Manual for a command	man ls
+
+ 5. Pipes and Filters
+
+Command	Description	Example	Pipe output to another command
+
+grep	Search text pattern	grep "error" logfile.txt
+sort	Sort lines	sort names.txt
+uniq	Remove duplicate lines	uniq names.txt
+cut	Extract columns	cut -d':' -f1 /etc/passwd
+wc	Word/line/char count	wc -l file.txt
+tr	Translate or delete characters	tr a-z A-Z < file.txt
+
+ 6. Process Management
+
+Command	Description	Example
+
+ps	Show running processes	ps aux
+top	Real-time system usage	top
+nice	Start with priority	nice -n 10 command
+bg	Resume background process	bg %1
+fg	Bring background job to foreground	fg %1
+
+
+7. Network Communication Utilities
+
+Command	Description	Example
+
+ping	Check connectivity	ping google.com
+ifconfig / ip a	Network interface info	ifconfig or ip a
+netstat	Show network status	netstat -tuln
+ftp	File transfer protocol	ftp ftp.example.com
+telnet	Connect to remote host	telnet hostname port
+
+
+
+
+
+
+1. File Management
+
+Command: ls
+Description: List files
+Example: ls -l
+
+
+Command: cat
+Description: Display file content
+Example: cat file.txt
+
+
+Command: cp
+Description: Copy file
+Example: cp file.txt backup.txt
+
+
+Command: mv
+Description: Move or rename file
+Example: mv old.txt new.txt
+
+Command: rm
+Description: Delete file
+Example: rm file.txt
+
+
+
+
+2. Directory Management
+
+Command: mkdir
+Description: Create directory
+Example: mkdir newdir
+
+
+Command: rmdir
+Description: Remove empty directory
+Example: rmdir olddir
+
+
+Command: cd
+Description: Change directory
+Example: cd /home/user
+
+Command: pwd
+Description: Print current directory
+
+Example: pwd
+3. File Permissions / Access Modes
+
+chmod o+wx testfile
+$ls -l testfile
+-rwxrwxrwx  1 amrood   users 1024  Nov 2 00:10  testfile
+
+$chmod u-x testfile
+$ls -l testfile
+-rw-rwxrwx  1 amrood   users 1024  Nov 2 00:10  testfile
+
+$chmod g = rx testfile
+
+$ls -l testfile
+-rw-r-xrwx  1 amrood   users 1024  Nov 2 00:10  testfile
+
+
+$chmod o+wx,u-x,g = rx testfileCommand: umask
+Description: Set default permission
+Example: umask 022
+
+
+4. Basic Utilities
+
+Command: date
+Description: Show date and time
+Example: date
+
+
+Command: cal
+Description: Display calendar
+Example: cal 2025
+
+Command: whoami
+Description: Show current user
+Example: whoami
+
+Command: uname
+Description: System info
+Example: uname -a
+
+Command: echo
+Description: Print text
+Example: echo "Hello"
+
+Command: clear
+Description: Clear screen
+Example: clear
+
+Command: man
+Description: Help manual
+Example: man ls
+
+
+5. Pipe and Filters
+
+Command: |
+Description: Pipe command output
+Example: ls -l | less
+
+Command: grep
+Description: Search text pattern
+Example: grep 'main' file.txt
+
+Command: sort
+Description: Sort lines
+Example: sort names.txt
+
+Command: uniq
+Description: Remove duplicate lines
+Example: uniq sorted.txt
+
+
+Command: cut
+Description: Cut sections from text
+
+echo "HelloWorld" | cut -c1-5
+
+
+
+Command: wc
+Description: Count words/lines
+Example: wc -l file.txt
+
+
+
+6. Process Management
+
+Command: ps
+Description: View processes
+Example: ps aux
+
+Command: top
+Description: System activity
+Example: top
+
+
+Command: nice
+Description: Start with priority
+Example: nice -n 10 command
+
+
+
+7. Network Communication Utilities
+
+Command: ping
+Description: Check connectivity
+UNIX Command Reference Guide
+Example: ping google.com
+
+
+
+
+
+
+Command: ssh
+Description: Remote login
+Example: ssh user@host
+
+
+
+Command: ftp
+Description: FTP client
+Example: ftp ftp.example.com
+
+
+
+
+
+
+mkdir mydir
+
+cd mydir
+mkdir colors
+mkdir shape
+mkdir animals
+
+cd animals
+mkdir mammals
+mkdir reptiles
+
+cd mammals
+touch bat
+touch dog
+touch platypus
+
+cd ..
+cd reptiles
+touch crocodile
+touch lizard
+touch snakes
+
+cd ..
+cd ..
+
+cd colors
+mkdir basic
+mkdir blended
+
+cd basic
+touch blue
+touch green
+touch red
+cd ..
+
+cd blended
+touch orange
+touch pink
+touch yellow
+cd ..
+cd ..
+
+
+cd shape
+touch circle
+touch cube
+touch square
+
+cd ..
+cd ..
+

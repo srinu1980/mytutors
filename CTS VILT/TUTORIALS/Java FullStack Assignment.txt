@@ -1,0 +1,329 @@
+
+1. Spring Boot is used for developing?
+
+a) Web applications
+b) Distributed applications (RESTful web services)
+c) Microservices
+d) All of the above
+
+Ans : d
+
+2. What feature of Spring Boot simplifies the configuration process?
+
+a) Auto-configuration (Automatic configuration of beans and dependencies).
+b) Annotations to configure beans and dependencies.
+c) XML-based configuration support.
+d) A command-line interface for configuring beans.
+
+
+Ans : a
+
+
+3.  Which annotation is used to create RESTful web services in Spring Boot?
+
+a) @RestController
+b) @Controller
+c) @Component
+d) @Service
+
+Ans : a
+
+
+4. Which Spring annotation is used to handle HTTP POST requests?
+
+a) @GetMapping
+b) @PutMapping
+c) @CreateMapping
+d) @PostMapping
+
+Ans : d
+
+5.  Which starter dependency is used for developing web applications or RESTful web services in Spring Boot?
+
+a) spring-boot-starter-data-jpa
+b) spring-boot-starter-web
+c) spring-boot-starter-rest
+d) spring-boot-starter-web-dependency
+
+Ans : b
+
+
+6. What is the purpose of Spring Boot DevTools?
+
+a) To run Spring Boot applications in a development environment.
+b) To provide hot-reloading of code changes and automatic application restart.
+c) To run Spring Boot applications as a service.
+d) To access the underlying database of a Spring Boot application.
+
+Ans : b
+
+
+7. . What is the main difference between Spring and Spring Boot?
+
+a) Spring is a Java framework, while Spring Boot is a Java library.
+b) Spring Boot provides pre-configured defaults, while Spring offers manual configurations.
+c) Spring Boot is a lightweight version of Spring, while Spring is a full-featured framework.
+d) Spring Boot is a front-end framework, while Spring is a back-end framework.
+
+Ans : b
+
+8. What is the purpose of the @SpringBootApplication annotation?
+
+a) To enable Spring Boot auto-configuration.
+b) To define a Spring Boot starter class.
+c) To define a Spring Boot controller.
+d) To define a Spring Boot service.
+
+Ans : a
+
+
+9. What is the minimum Java version required to use Spring Boot 3?
+
+a) Java 8
+b) Java 11
+c) Java 17
+d) Java 10
+
+
+Ans : c
+
+10. What is the purpose of the @PathVariable annotation in Spring Boot?
+
+a) To bind query parameters to method arguments
+b) To extract values from the URL path and bind them to method parameters
+c) To map form data to a model object
+d) To handle file uploads in web applications
+
+Ans : b
+
+
+11.  In MongoDB, a record is equivalent to a:
+
+a). Row
+b). Table
+c). Document
+d). Database
+
+Ans : c
+
+12. Which of the following is the default port for MongoDB?
+
+a). 27017
+b). 8080
+c). 3306
+d). 5432
+
+Ans : a
+
+13. o create or switch to a database in MongoDB, which command would you use?
+
+a). createDatabase(name)
+b). switchDatabase(name)
+c). use <database_name>
+d). db.<database_name>
+
+Ans : c
+
+14. How do you insert a new document into a collection in MongoDB?
+
+a). db.<collection_name>.insert()
+b). db.<collection_name>.newDocument()
+c). db.<collection_name>.add()
+d). db.<collection_name>.append()
+
+Ans : a
+
+
+15.  In which language is MongoDB written?
+
+a). Python
+b). Java
+c). C++
+d). Go
+
+Ans : c
+
+
+16. What type of index in MongoDB allows you to search text fields?
+
+a). Text index
+b). Compound index
+c). Unique index
+d). Sparse index
+
+Ans : a
+
+17. What is React.js?
+
+a) A JavaScript framework for building user interfaces.
+b) A server-side programming language.
+c) A database management system.
+d) A front-end CSS framework.
+
+
+Ans : a
+
+
+18. What does JSX stand for? 
+
+a) JavaScript XML 
+b) Java Syntax Extension 
+c) JSON Xchange Schema 
+d) JavaScript Xerography 
+
+Ans : a
+
+
+19. Which lifecycle method is invoked immediately after a component is rendered on the DOM?
+
+a) componentDidMount 
+b) componentDidUpdate 
+c) componentWillMount 
+d) componentWillRender 
+
+Ans : a
+
+20. What is the purpose of the "key" prop in React? 
+
+a) It uniquely identifies a component in an array of components. 
+b) It determines the visual styling of a component. 
+c) It specifies the route for navigation within a React application. 
+d) It defines the data type of a component's prop. 
+
+Ans : a
+
+
+21. What is the purpose of the React Router library? 
+
+a) To handle HTTP requests in React applications. 
+b) To manage and synchronize component states. 
+c) To manage navigation and routing in React applications. 
+d) To optimize the performance of React applications. 
+
+Ans : c
+
+
+22. What is the purpose of React Fragments? 
+
+a) To group multiple components within a single parent component. 
+b) To create reusable CSS styles for React components. 
+c) To optimize the rendering performance of React components. 
+d) To handle asynchronous operations in React applications. 
+
+Ans : a
+
+23. What is the significance of the virtual DOM in React? 
+
+a) It renders components on the server side. 
+b) It optimizes React components for mobile devices. 
+c) It provides an in-memory representation of the DOM for efficient updates. 
+d) It handles animations and transitions in React applications. 
+
+Ans : c
+
+
+
+24. What is the purpose of the useEffect hook in React? 
+
+a) To add state to functional components. 
+b) To handle component re-renders. 
+c) To perform side effects in functional components. 
+d) To handle form submissions in React applications. 
+
+Ans : c
+
+25. How can you access form input values in React.js? 
+
+a) By using the document.getElementById() method 
+b) By using the event.target.value property 
+c) By using the useState hook and setting the initial value 
+d) By using the useRef hook and the current property 
+
+Ans : b
+
+
+26. What does the Dockerfile contain?
+
+a) Compiled source code
+b) Docker images
+c) Binary data
+d) Instructions for building a Docker image
+
+Ans : d
+
+
+27. What is Docker Compose?
+
+a) A scripting language for Docker
+b) A continuous integration tool for Docker
+c) A tool for defining and running multi-container Docker applications
+d) A Docker CLI plugin
+
+Ans : c
+
+28. What is the primary purpose of the Docker Engine?
+
+a) To provide a graphical visualization of containers
+b) To build and run containers
+c) To manage databases inside containers
+d) To interface with Kubernetes
+
+Ans : b
+
+
+29. Which AWS service is used to launch and manage virtual servers in the cloud?
+
+a) Amazon S3
+b) AWS Lambda
+c) Amazon EC2
+d) Amazon RDS
+
+Ans: c
+
+30.  Which AWS service provides a fully managed, scalable, and serverless data warehouse?
+
+a) Amazon S3
+b) Amazon RDS
+c) AWS Redshift
+d) AWS Glue
+
+ 
+Ans: c
+
+31. Which AWS service can be used to host a static website?
+
+a) Amazon S3
+b) Amazon EC2
+c) AWS Lambda
+d) Amazon RDS
+
+Ans: a
+
+32. Which AWS service provides a scalable, fully managed NoSQL database?
+
+a) Amazon S3
+b) AWS Lambda
+c) Amazon DynamoDB
+d) Amazon Redshift
+
+Ans: c
+
+33. What does CI in CI/CD stand for?
+
+a) Continuous Input
+b) Continuous Integration
+c) Continuous Improvement
+d) Continuous Installation
+
+Ans: b
+
+
+34. What is Docker primarily used for?
+
+a) Version Control
+b) Continuous Integration
+c) Containerization
+d) Project Management
+
+Ans: c
+

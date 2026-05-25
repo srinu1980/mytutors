@@ -1,0 +1,115 @@
+
+Introduction to Shell Scripting
+Basic Shell Scripting Concepts
+Control Structures
+Command-Line Arguments
+
+
+https://www.coursera.org/articles/what-is-shell-scripting
+
+What is shell scripting used for?
+
+Shell scripting is primarily used to automate repetitive system tasks, such as backing up files, monitoring system resources, and managing user accounts. By turning a series of commands into a script, system administrators can save time, increase accuracy, and simplify complex tasks. 
+
+Who uses shell scripting? 
+
+Shell scripting is a valuable tool across several professions and fields due to its flexibility, power, and widespread support of operating systems. The following are some roles that use shell scripting: 
+
+System administrators: System administrators often use shell scripts for automating administrative tasks like backups, system monitoring, user account creation and management, and many more routine activities. This allows for efficiency, consistency, and accuracy.
+
+Developers: Developers often use shell scripting to automate development tasks, like automating file manipulation, deploying software to servers, running test suites, and more.
+
+DevOps professionals: In the world of DevOps, shell scripting can benefit tasks such as automation, configuration management, troubleshooting, and rapid iteration. Shell scripts can run across operating platforms, which can be beneficial for those who work in several environments.
+
+
+Basic shell scripting terms
+
+Before we delve further into shell scripting, knowing a few definitions may come in handy when exploring this topic: 
+
+
+Terminal: A terminal is a program that establishes a connection with the server.
+
+Shell: This program interprets shell scripting commands from the terminal and runs on the server. This is the command-line user interface you choose and includes shells such as the Bourne shell, Korn shell, Bourne-Again shell, and C shell.
+
+Script: A script is a short program that performs a specific task.
+
+Command-line shell: A command-line shell (also known as a command prompt) allows you to instruct your computer through textual commands. 
+
+Shell script: A shell script is a script run through a command-line shell
+
+When you create a shell script, you might use text editors like Nano or Vim and save the file with a “.sh” extension. A shell interpreter interprets and executes these scripts; you can run them from the command line whenever necessary.
+
+r=$((a+b))
+
+
+
+
+
+
+
+
+Numeric Comparison logical operators
+Comparison is used to check if statements evaluate to true or false. We can use the below shown operators to compare two statements:
+
+Operation	Syntax				Explanation
+==================================================================
+Equality	num1 -eq num2			is num1 equal to num2
+
+Greater than equal to	num1 -ge num2		is num1 greater than equal to num2
+
+Greater than	num1 -gt num2			is num1 greater than num2
+
+Less than equal to	num1 -le num2		is num1 less than equal to num2
+
+Less than	num1 -lt num2			is num1 less than num2
+
+Not Equal to	num1 -ne num2			is num1 not equal to num2
+
+
+
+
+Syntax:
+
+if [ conditions ]
+    then
+         commands
+fi
+
+
+
+echo "Number of arguments: $#"
+echo "All arguments: $@"
+
+
+
+To access positional variables with more than one digit in a shell script, you can use the ${} notation. The ${} notation allows you to specify the variable name as a string, rather than as a variable.
+For example, to access the 10th positional variable, you can use the ${10} notation:
+
+
+
+
+
+Here is a list of some important environmental variables in Linux:
+============================================================
+HOME: The home directory of the current user.
+PATH: A list of directories where the system looks for executables.
+SHELL: The path to the current user’s default shell.
+USER: The name of the current user.
+HOSTNAME: The hostname of the system.
+PWD: The current working directory.
+LANG: The default system language.
+
+ echo "The value of HOME is: $HOME"
+
+
+
+for i in {1..5}
+do
+    echo $i
+done
+
+
+
+
+https://www.coursera.org/articles/what-is-shell-scripting
+

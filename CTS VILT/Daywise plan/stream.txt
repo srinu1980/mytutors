@@ -1,0 +1,787 @@
+
+
+Java Lambda Expression Syntax
+
+
+To create a lambda expression, we specify input parameters (if there are any) on the left side of the lambda operator ->, and place the expression or block of statements on the right side of lambda operator. 
+
+For example, the lambda expression (x, y) -> x + y specifies that lambda expression takes two arguments x and y and returns the sum of these.
+
+
+
+//Syntax of lambda expression
+
+(parameter_list) -> {function_body}
+
+
+
+
+
+Lambda expression vs method in Java
+==================================================
+A method (or function) in Java has these main parts:
+
+1. Name
+2. Parameter list
+3. Body
+4. return type.
+
+
+
+A lambda expression in Java has these main parts:
+
+Lambda expression only has body and parameter list.
+
+1. No name – function is anonymous so we don’t care about the name
+
+2. Parameter list
+
+3. Body – This is the main part of the function.
+
+4. No return type – The java 8 compiler is able to infer the return type by 	checking the code. you need not to mention it explicitly.
+
+
+
+
+
+
+
+
+
+
+
+
+Where to use the Lambdas in Java
+
+To use lambda expression, you need to either create your own functional interface or use the pre defined functional interface provided by Java. 
+
+An interface with only single abstract method is called functional interface(or Single Abstract method interface), 
+
+for example: Runnable, callable, ActionListener etc.
+
+
+Demo 1:
+
+
+@FunctionalInterface
+interface MyFunctionalInterface
+ {
+
+	//A method with no parameter
+    public String sayHello();
+}
+public class Example {
+
+   public static void main(String args[]) {
+        // lambda expression
+    	MyFunctionalInterface msg = () -> {
+    		return "Hello";
+    	};
+        System.out.println(msg.sayHello());
+    }
+}
+
+
+
+
+
+Java Lambda Expression with single parameter
+
+
+@FunctionalInterface
+interface MyFunctionalInterface {
+
+	//A method with single parameter
+    public int incrementByFive(int a);
+}
+public class Example {
+
+   public static void main(String args[]) {
+        // lambda expression with single parameter num
+    	MyFunctionalInterface f = (num) -> num+5;
+        System.out.println(f.incrementByFive(22));
+    }
+}
+
+
+
+
+Java Lambda Expression with Multiple Parameters
+
+interface StringConcat {
+
+    public String sconcat(String a, String b);
+}
+
+public class Example {
+
+   public static void main(String args[]) {
+        // lambda expression with multiple arguments
+    	StringConcat s = (str1, str2) -> str1 + str2;
+        System.out.println("Result: "+s.sconcat("Hello ", "World"));
+    }
+}
+
+
+
+
+
+ Iterating collections using foreach loop
+import java.util.*;  
+public class Example{  
+    public static void main(String[] args) {       
+       List<String> list=new ArrayList<String>();  
+       list.add("Rick");         
+       list.add("Negan");       
+       list.add("Daryl");         
+       list.add("Glenn");         
+       list.add("Carl");                
+       list.forEach(          
+           // lambda expression        
+           (names)->System.out.println(names)         
+       );     
+    }  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+Lambda expression
+
+
+str -> System.out.println(str)
+
+
+then you can replace it with a method reference like this:
+
+System.out::println
+
+public class Example {  
+
+   public static void main(String[] args) {  
+	String[] stringArray = { "Steve", "Rick", "Aditya", "Negan", "Lucy", "Sansa", "Jon"};
+	/* Method reference to an instance method of an arbitrary 
+	 * object of a particular type
+	 */
+	Arrays.sort(stringArray, String::compareToIgnoreCase);
+	for(String str: stringArray){
+		System.out.println(str);
+	}
+   }  
+}
+
+
+
+
+
+
+
+
+
+Creating your own functional interface
+
+@FunctionalInterface
+interface MyFunctionalInterface {
+
+    public int addMethod(int a, int b);
+}
+public class Demo {
+
+   public static void main(String args[]) {
+        // lambda expression
+    	MyFunctionalInterface sum = (a, b) -> a + b;
+        System.out.println("Result: "+sum.addMethod(12, 100));
+    }
+}
+
+
+
+
+
+
+
+Finding certain strings without using Stream
+
+import java.util.ArrayList;
+import java.util.List;
+public class Example{ 
+   public static void main(String[] args) {    
+	List<String> names = new ArrayList<String>();
+	names.add("Ajeet");
+	names.add("Negan");
+	names.add("Aditya");
+	names.add("Steve");
+	int count = 0;
+	for (String str : names) {
+	   if (str.length() < 6) 
+		count++; 
+	}
+        System.out.println("There are "+count+" strings with length less than 6");
+   }  
+}
+
+
+
+
+ public static void main(String[] args) {    
+	List<String> names = new ArrayList<String>();
+	names.add("Ajeet");
+	names.add("Negan");
+	names.add("Aditya");
+	names.add("Steve");
+		
+	//Using Stream and Lambda expression
+	long count = names.stream().filter(str->str.length()<6).count();
+	System.out.println("There are "+count+" strings with length less than 6");
+
+   }  
+}
+
+
+
+
+
+
+public static void main(String[] args){  
+        Stream.iterate(1, count->count+1)  
+        .filter(number->number%3==0)  
+        .limit(6)  
+        .forEach(System.out::println)
+
+
+
+
+
+
+
+
+
+
+
+Creating an Employee class
+
+class Employee {
+    private int id;
+    private String name;
+    private int age;
+    private long salary;
+    private String gender;
+    private String deptName;
+    private String city;
+    private int yearOfJoining;
+
+    public Employee(int id, String name, int age, long salary, String gender, 
+                    String deptName, String city, int yearOfJoining) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.salary = salary;
+        this.gender = gender;
+        this.deptName = deptName;
+        this.city = city;
+        this.yearOfJoining = yearOfJoining;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", salary=" + salary +
+                ", gender='" + gender + '\'' +
+                ", deptName='" + deptName + '\'' +
+                ", city='" + city + '\'' +
+                ", yearOfJoining='" + yearOfJoining + '\'' +
+                '}';
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public long getSalary() {
+        return salary;
+    }
+
+    public void setSalary(long salary) {
+        this.salary = salary;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public int getYearOfJoining() {
+        return yearOfJoining;
+    }
+
+    public void setYearOfJoining(int yearOfJoining) {
+        this.yearOfJoining = yearOfJoining;
+    }
+}
+Creating list of Employee objects
+
+List<Employee> empList = new ArrayList<>();
+empList.add(new Employee(1, "Yanksha", 28, 123, "F", "HR", "Blore", 2020));
+empList.add(new Employee(2, "Francesca", 29, 120, "F", "HR", "Hyderabad", 2015));
+empList.add(new Employee(3, "Ramesh", 30, 115, "M", "HR", "Chennai", 2014));
+empList.add(new Employee(4, "Melanie", 32, 125, "F", "HR", "Chennai", 2013));
+
+empList.add(new Employee(5, "Padma", 22, 150, "F", "IT", "Noida", 2013));
+empList.add(new Employee(6, "Milad", 27, 140, "M", "IT", "Gurugram", 2017));
+empList.add(new Employee(7, "Uzma", 26, 130, "F", "IT", "Pune", 2016));
+empList.add(new Employee(8, "Ali", 23, 145, "M", "IT", "Trivandam", 2015));
+empList.add(new Employee(9, "Ram", 25, 160, "M", "IT", "Blore", 2010));
+
+
+Group the Employees by city.
+
+Map<String, List<Employee>> empByCity;
+
+empByCity = empList.stream().collect(Collectors.groupingBy(Employee::getCity));
+
+System.out.println("Employees grouped by city :: \n" + empByCity);
+
+
+
+2. Group the Employees by age.
+
+Map<Integer, List<Employee>> empByAge = empList.stream().collect(Collectors.
+                                        groupingBy(Employee::getAge));
+System.out.println("Employees grouped by age :: \n" + empByAge);
+
+
+
+3. Find the count of male and female employees present in the organization.
+
+Map<String, Long> noOfMaleAndFemaleEmployees = empList.stream()
+                                              .collect(Collectors.groupingBy
+                                              (Employee::getGender, Collectors.counting()));
+System.out.println("Count of male and female employees present in the 
+                    organization:: \n" + noOfMaleAndFemaleEmployees);
+
+
+
+4.Find the count of male and female present in each department
+
+Map<String,Map<String,Long>> genderMapInDept = empList.stream().collect(Collectors.groupingBy(Employee::getDep,Collectors.groupingBy(Employee::getGender,Collectors.counting())));
+
+System.out.println("male and female count in each dept::" + genderMapInDept);
+
+
+
+5. Print the names of all distinct departments in the organization.
+
+System.out.println("Names of all departments in the organization ");
+empList.stream().map(Employee::getDeptName).distinct().
+forEach(System.out::println);
+
+
+6. Print employee details whose age is greater than 28 in the organisation.
+
+System.out.println("Employee details whose age is greater than 28");
+empList.stream().filter(e -> e.getAge() > 28).collect(Collectors.toList()).
+forEach(System.out::println);
+
+
+
+7. Find maximum age/oldest of employee in the organisation.
+
+OptionalInt max = empList.stream().mapToInt(Employee::getAge).max();
+if (max.isPresent()) 
+System.out.println("Maximum age of Employee: " + max.getAsInt());
+
+or
+
+Optional<Employee> oldestEmp = empList.stream().max(Comparator.comparingInt(Employee::getAge));
+Employee oldestEmployee = oldestEmp.get();
+System.out.println("Oldest employee details:: \n" + oldestEmployee);
+
+
+8. Print Average age of Male and Female Employees in the organisation.
+
+Map<String, Double> avgAge = empList.stream().collect(Collectors.groupingBy
+                             (Employee::getGender,Collectors.averagingInt
+                              Employee::getAge)));
+System.out.println("Average age of Male and Female Employees:: " + avgAge);
+
+
+
+
+9. Print Average age of Male and Female Employees in each department.
+
+System.out.println("\n--- Average Age by Gender in Each Department (Simplified) ---");
+        empList.stream()
+                .collect(Collectors.groupingBy(Employee::getDep,
+                        Collectors.groupingBy(Employee::getGender,
+                                Collectors.averagingInt(Employee::getAge))))
+                .forEach((dept, genderMap) -> genderMap.forEach((gender, avgAge) ->
+                        System.out.println(dept + " - " + gender + ": " + avgAge)));
+
+
+
+10. Print the number of employees in each department.
+
+Map<String, Long> countByDept = empList.stream().collect(Collectors.groupingBy
+                        (Employee::getDeptName,Collectors.counting()));
+System.out.println("No of employees in each department");
+for(Map.Entry<String, Long> entry : countByDept.entrySet()) 
+{
+   System.out.println(entry.getKey() + " : " + entry.getValue());
+}
+
+
+
+
+11. Find longest serving employees in the organization.
+
+Optional<Employee> seniorEmp = empList.stream().sorted(Comparator
+                               .comparingInt(Employee::getYearOfJoining)).findFirst();
+System.out.println("Longest-serving employee:" + seniorEmp.get());
+
+
+
+12.Find longest serving employee in each department
+
+ System.out.println("\n--- Oldest Employee per Department ---");
+        empList.stream().collect(Collectors.groupingBy(Employee::getDeptName, 
+Collectors.minBy(Comparator.comparing(Employee::getYearOfJoining)))).
+forEach((dept, empOpt) -> empOpt.ifPresent(emp -> System.out.println(dept + " -> " + emp.getName() + " (DOJ: " + emp.getYearOfJoining() + ")")));
+
+
+13. Find average age of gender in each department.
+
+System.out.println("\n--- Average Age by Gender in Each Department ---");
+        empList.stream()
+                .collect(Collectors.groupingBy(Employee::getDeptName,
+                        Collectors.groupingBy(Employee::getGender,
+                                Collectors.averagingInt(Employee::getAge))))
+                .forEach((dept, genderMap) -> genderMap.forEach((gender, avgAge) ->
+                        System.out.println(dept + " - " + gender + ": " + avgAge)));
+
+
+14. Find youngest female employee in the organisation.
+
+//can use anyMatch also
+Optional<Employee> youngestEmp = empList.stream().filter(e -> e.getGender() == "F")
+                                  .min(Comparator.comparingInt(Employee::getAge));
+Employee youngestEmployee = youngestEmp.get();
+System.out.println("Youngest Female employee details:: \n" + youngestEmployee);
+
+
+
+15. Find the youngest employee in each department
+
+System.out.println("\n--- Youngest Employee per Department ---");
+        empList.stream().collect(Collectors.groupingBy(Employee::getDeptName, Collectors.maxBy(Comparator.comparing(Employee::getYearOfJoining)))).forEach((dept, empOpt) -> empOpt.ifPresent(emp -> System.out.println(dept + " -> " + emp.getName() + " (DOJ: " + emp.getYearOfJoining() + ")")));
+
+
+16. Find employees whose age is greater than 30 and less than 30.
+
+System.out.println("Employees whose age is greater than 25 and less than 25");
+Map<Boolean, List<Employee>> partitionEmployeesByAge =
+                empList.stream().collect(Collectors.partitioningBy(e -> e.getAge() > 30));
+
+Set<Map.Entry<Boolean, List<Employee>>> empSet = partitionEmployeesByAge.entrySet();
+
+for (Map.Entry<Boolean, List<Employee>> entry : empSet) {
+  if (Boolean.TRUE.equals(entry.getKey())) {
+                System.out.println("Employees greater than 30 years ::" + entry.getValue());
+            } else {
+                System.out.println("Employees less than 30 years ::" + entry.getValue());
+            }
+        }
+
+
+
+
+17. Find the department name which has the highest number of employees.
+
+Map.Entry<String, Long> maxNoOfEmployeesInDept = empList.stream().collect(Collectors.groupingBy(Employee::getDeptName, Collectors.counting())).
+                                                 entrySet().stream().max(Map.Entry.comparingByValue()).get();
+System.out.println("Max no of employees present in Dept :: " + maxNoOfEmployeesInDept.getKey());
+
+
+
+18. Find if there any employees from HR Department.
+
+Optional<Employee> emp = empList.stream().filter(e -> e.getDeptName().equalsIgnoreCase("HR"))
+                         .findAny();
+emp.ifPresent(employee -> System.out.println("Found employees from HR department " + employee));
+
+
+
+
+19. Find the department names that these employees work for, where the number of employees in the department is over 3.
+
+System.out.println("Department names where the number of employees in the department is over 3 :: ");
+empList.stream().collect(Collectors.groupingBy(Employee::getDeptName, Collectors.counting())).
+entrySet().stream().filter(entry -> entry.getValue() > 3).forEach(System.out::println);
+
+
+
+20. Find all employees who lives in ‘Blore’ city, sort them by their name and print the names of employees.
+
+empList.stream().filter(e -> e.getCity().equalsIgnoreCase("Blore"))
+.sorted(Comparator.comparing(Employee::getName))
+.forEach(e -> System.out.println("Employees staying in Blore:: " + e.getName()));
+
+
+
+
+21. No of employees in the organisation.
+
+System.out.println("No of employees in the organisation :: " + empList.stream().count());
+
+
+22. Find employee count in every department
+
+Map<String, Long> employeeCountInDepartmentMap = empList.stream().collect(Collectors.
+                                                 groupingBy(Employee::getDeptName, Collectors.counting()));
+ System.out.print("Employee department and its count :- \n"
+                + employeeCountInDepartmentMap);
+
+
+23. Find the department which has the highest number of employees.
+
+Optional<Map.Entry<String, Long>> deptNameWithHighestEmp = employeeCountInDepartmentMap.entrySet().stream().max(Map.Entry.comparingByValue());
+if (deptNameWithHighestEmp.isPresent()) {
+    System.out.println("Department which has the highest number of employees " + deptNameWithHighestEmp.get());
+}
+
+
+24. Sorting a Stream by age and name fields.
+
+System.out.println("Sorting based on name and age:: ");
+Comparator<Employee> comparator1 = Comparator.comparing(Employee::getName);
+Comparator<Employee> comparator2 = Comparator.comparingInt(Employee::getAge);
+empList.stream().sorted(comparator1.thenComparing(comparator2)).forEach(System.out::println);
+
+(or)
+System.out.println("Sorting a Stream by age and name fields");
+        empList.stream().sorted(Comparator.comparing(Employee::getAge)
+                .thenComparing(Employee::getName)).forEach(System.out::println);
+
+
+
+25. Print average and total salary of the organization.
+
+DoubleSummaryStatistics empSalary = empList.stream().collect(Collectors
+                                    .summarizingDouble(Employee::getSalary));
+
+System.out.println("Average Salary in the organisation = " + empSalary.getAverage());
+System.out.println("Total Salary in the organisation  = " + empSalary.getSum());
+
+26. Print Average salary of each department.
+
+System.out.println("Print Average salary of each department");
+Map<String, Double> avgSalary = empList.stream().collect(Collectors.groupingBy
+                               (Employee::getDeptName,
+                                Collectors.averagingDouble(Employee::getSalary)));
+ Set<Map.Entry<String, Double>> entrySet = avgSalary.entrySet();
+ for (Map.Entry<String, Double> entry : entrySet) {
+            System.out.println(entry.getKey() + " : " + entry.getValue());
+ }
+27. Print Average salary by gender in each department .
+
+System.out.println("\n--- Average Salary by Gender in Department ---");
+Map<String, Map<String, Double>> avgSalaryByGenderPerDept = empList.stream().collect(Collectors.groupingBy(Employee::getDeptName, Collectors.groupingBy(Employee::getGender, Collectors.averagingDouble(Employee::getSalary))));
+avgSalaryByGenderPerDept.forEach((dept, genderAvg) -> genderAvg.forEach((gender, avg) -> System.out.println(dept + " - " + gender + ": ₹" + avg)));
+28. To get a list of employees from each department whose salary is greater than the average salary of their department
+
+empList.stream()
+                .filter(e -> e.getSalary() > averageMap.get(e.getDeptName()))
+                .collect(Collectors.groupingBy(Employee::getDeptName))
+                .forEach((dept, empListAboveAvg) -> {
+                    System.out.println("Employees in Department who salary greater than average salary: " + dept);
+                    empListAboveAvg.forEach(e -> System.out.println("  " + e.getName() + " – >" + e.getSalary()));
+                });
+29. Find Highest salary in the organisation.
+
+Optional<Employee> empHighest = empList.stream().sorted(Comparator.comparingDouble(Employee::getSalary).reversed())
+                                .findFirst();
+
+System.out.println("Highest Salary in the organisation : " + empHighest.get().getSalary());
+
+(or)
+ System.out.println("Highest salary in the organisation: ");
+ empList.stream().max(Comparator.comparingDouble(Employee::getSalary)).ifPresent(System.out::println);
+30. Find Second Highest salary in the organisation.
+
+Optional<Employee> emp2 = empList.stream().sorted(Comparator.comparingDouble(Employee::getSalary)
+                         .reversed()).skip(1).findFirst();
+System.out.println("Second Highest Salary in the organisation : " + emp2.get().getSalary());
+31. Nth Highest salary.
+
+int n = 10;// this can be any nth number highest salary
+Optional<Employee> emp2 = empList.stream().sorted(Comparator.comparingDouble(Employee::getSalary)
+                         .reversed()).skip(n-1).findFirst();
+System.out.println("Second Highest Salary in the organisation : " + emp2.get().getSalary());
+32. Print the top 3 highest salary earned employees in the organisation
+
+empList.stream().sorted(Comparator.comparingDouble(Employee::getSalary).reversed()).limit(3).forEach(e -> System.out.println("Top earner: " + e.getName() + " – ₹" + e.getSalary()));
+33. Print the top 2 highest salary earned employees in each department
+
+//Print the top 3 highest salary earned employees in each department
+        System.out.println("Top 2 highest salary earned employees in each department: ");
+        empList.stream().collect(Collectors.groupingBy(Employee::getDept)).
+                forEach((dept, employees) -> {
+                    employees.stream().sorted(Comparator.comparing(Employee::getSalary).reversed()).limit(2).forEach(System.out::println);
+                });
+34. Find highest paid salary in the organisation based on gender.
+
+Map<String, Optional<Employee>> highestPaidMFEmployee = empList.stream().collect(Collectors.groupingBy(Employee::getGender, 
+                                                        Collectors.maxBy((t1, t2) -> (int) (t1.getSalary() - t2.getSalary()))));
+System.out.println("Highest paid male and female employee in the organisation: " + highestPaidMFEmployee);
+
+(or)
+System.out.println("highest paid salary in the organisation based on gender.");
+        empList.stream().collect(Collectors.groupingBy(Employee::getGender,Collectors.maxBy(Comparator.comparing(Employee::getSalary)))).
+                forEach((gender,saldetals)->
+                        System.out.println(gender + " " + saldetals));
+35. Find lowest paid salary in the organisation
+
+empList.stream().min(Comparator.comparingDouble(Employee::getSalary)).ifPresent(e -> System.out.println("Lowest paid employee in the organisation: " + e.getName()));
+36. Find lowest paid salary in each department based on the gender.
+
+//Find lowest paid salary in the organisation based on the gender.
+        System.out.println("Find lowest paid salary in each department based on the gender.");
+        empList.stream().collect(Collectors.groupingBy(Employee::getDept,Collectors.groupingBy(Employee::getGender,Collectors.minBy(Comparator.comparing(Employee::getSalary))))).
+                forEach((department,genderSalMap)->
+                        System.out.println(department + " " + genderSalMap));
+37. Sort the employees salary in the organisation in ascending order
+
+System.out.println("Sorting the organisation's employee salary in ascending order ");
+empList.stream().sorted(Comparator.comparingLong(Employee::getSalary)).toList().forEach(System.out::println);
+38. Sort the employees salary in the organisation in descending order.
+
+System.out.println("Sorting the organisation's employee salary in descending order ");
+empList.stream().sorted(Comparator.comparingLong(Employee::getSalary).reversed()).toList().
+forEach(System.out::println);
+39. Highest salary based on department.
+
+Map<String, Optional<Employee>> highestPaidByDept = empList.stream()
+    .collect(Collectors.groupingBy(
+        Employee::getDeptName,
+        Collectors.maxBy(Comparator.comparingDouble(Employee::getSalary))
+    ));
+
+System.out.println("Highest salary dept wise: ");
+highestPaidByDept.forEach((dept, empOpt) -> 
+    System.out.println(dept + ": " + empOpt.map(Employee::getName).orElse("No employee")));
+If there is a tie in salary in each department.
+
+Map<String, List<Employee>> highestPaidPerDept = employees.stream()
+    .collect(Collectors.groupingBy(
+        Employee::getDepartment,
+        Collectors.collectingAndThen(
+            Collectors.toList(),
+            list -> {
+                double maxSalary = list.stream()
+                    .mapToDouble(Employee::getSalary)
+                    .max()
+                    .orElse(0);
+                return list.stream()
+                           .filter(e -> e.getSalary() == maxSalary)
+                           .collect(Collectors.toList());
+            }
+        )
+    ));
+40. Lowest paid based in each department
+
+Map<String, Optional<Employee>> lowestEmployeeInDept = empList.stream().collect(Collectors.groupingBy(Employee::getDepName, Collectors.minBy(Comparator.comparing(Employee::getSalary))));
+        lowestEmployeeInDept.forEach((dept, emp) -> emp.ifPresent(e -> System.out.println("lowest paid dept wise "+dept + " -> " + e.getName() + "::" + e.getSalary())));
+41. List of employee’s second highest record based on department
+
+System.out.println("Highest second salary dept wise:: \n" + empList.stream().collect(Collectors.groupingBy(Employee::getDeptName,
+                   Collectors.collectingAndThen(Collectors.toList(),
+                   list -> list.stream().sorted(Comparator.comparingDouble(Employee::getSalary).reversed()).skip(1).findFirst()))));
+42. Sort the employees salary in each department in ascending order
+
+System.out.println("Sorting the department wise employee salary in ascending order:: ");
+Map<String, List<Employee>> sortedEmployeeAsc = empList.stream()
+    .collect(Collectors.groupingBy( // Group by department name
+        Employee::getDeptName,
+        Collectors.collectingAndThen(
+            Collectors.toList(), // Collect employees in a list for each department
+            list -> list.stream()
+                        .sorted(Comparator.comparingDouble(Employee::getSalary)) // Sort by salary
+                        .collect(Collectors.toList()) // Collect back into a list
+        )
+    ));
+
+sortedEmployeeAsc.forEach((dept, employees) -> {
+    System.out.println(dept);
+    employees.forEach(System.out::println);
+});
+43. Sort the employees salary in each department in descending order
+
+System.out.println("Sorting the department wise employee salary in descending order ");
+        Map<String, Stream<Employee>> sortedEmployeeDesc = empList.stream().collect(Collectors.groupingBy(Employee::getDeptName, 
+                                                            Collectors.collectingAndThen(Collectors.toList(),
+                                                            list -> list.stream().sorted(Comparator.comparingDouble(Employee::getSalary).reversed()))));
+
+sortedEmployeeDesc.forEach((k,v)->{
+            System.out.println(k);
+            System.out.println(v.collect(Collectors.toList()));
+        });
+44. Find list of employees whose age is less than 30 in Department HR
+
+ empList.stream().filter(e -> e.getAge() < 30 && e.getDeptName().equalsIgnoreCase("HR")).map(Employee::getName).forEach(name -> System.out.println("Young in Dev: " + name));
+45. Find the employees whose name start with J.
+
+empList.stream().filter(e -> e.getName().toLowerCase().startsWith("j")).map(Employee::\
+
+
+
+
+

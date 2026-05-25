@@ -1,0 +1,625 @@
+package com.cts.resthateoas;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class RestHateoasApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(RestHateoasApplication.class, args);
+	}
+
+}
+
+
+
+
+
+
+package com.cts.resthateoas;
+
+import org.springframework.hateoas.RepresentationModel;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class Greeting extends RepresentationModel<Greeting> {
+
+	private final String content;
+
+	@JsonCreator
+	public Greeting(@JsonProperty("content") String content) {
+		this.content = content;
+	}
+
+	public String getContent() {
+		return content;
+	}
+}
+
+
+
+
+
+
+
+package com.cts.resthateoas;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@RestController
+public class GreetingController {
+
+	private static final String TEMPLATE = "Hello, %s!";
+
+	@RequestMapping("/greeting")
+	public HttpEntity<Greeting> greeting(
+		@RequestParam(value = "name", defaultValue = "World") String name) {
+
+		Greeting greeting = new Greeting(String.format(TEMPLATE, name));
+		greeting.add(linkTo(methodOn(GreetingController.class).greeting(name)).withSelfRel());
+
+		return new ResponseEntity<>(greeting, HttpStatus.OK);
+	}
+}
+
+
+
+
+
+
+
+https://github.com/spring-guides/gs-rest-hateoas/blob/dependabot/maven/complete/main/guide-dependencies-maven-cae31e6f8a/complete/src/main/java/com/cts/resthateoas/GreetingController.java
+
+
+
+
+
+
+
+
+https://spring.io/guides/gs/rest-hateoas
+
+
+
+
+
+
+
+
+
+
+
+package com.cts.resthateoas;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.servlet.MockMvc;
+
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@AutoConfigureMockMvc
+public class GreetingMockMvcTests {
+
+	@Autowired
+	private MockMvc mockMvc;
+
+	@Test
+	public void envEndpointNotHidden() throws Exception {
+		mockMvc.perform(get("/greeting"))
+			.andExpect(jsonPath("$.content").value("Hello, World!"));
+	}
+}
+
+
+
+
+package com.cts.resthateoas;
+
+import static org.assertj.core.api.Assertions.*;
+
+import java.net.URI;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.client.Traverson;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.web.server.LocalServerPort;
+
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+public class GreetingTraversonIntegrationTests {
+
+	@LocalServerPort
+	private int port;
+
+	@Test
+	public void envEndpointNotHidden() throws Exception {
+		Traverson traverson = new Traverson(new URI("http://localhost:" + this.port + "/greeting"), MediaTypes.HAL_JSON);
+		String greeting = traverson.follow("self").toObject("$.content");
+		assertThat(greeting).isEqualTo("Hello, World!");
+	}
+}
+
+
+
+
+================================================================================================================
+
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class HateoasDemoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(HateoasDemoApplication.class, args);
+    }
+}
+
+
+
+
+
+public class User {
+    private Long id;
+    private String name;
+    private String email;
+
+    // Constructor
+    public User(Long id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+    }
+
+    // Getters
+    public Long getId() { return id; }
+    public String getName() { return name; }
+    public String getEmail() { return email; }
+
+    // Setters
+    public void setId(Long id) { this.id = id; }
+    public void setName(String name) { this.name = name; }
+    public void setEmail(String email) { this.email = email; }
+}
+
+
+
+
+OrderController.java
+==================
+
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/orders")
+public class OrderController {
+
+    @GetMapping("/user/{userId}")
+    public String getOrdersByUser(@PathVariable Long userId) {
+        return "Orders for user " + userId;
+    }
+}
+
+
+
+UserController.java
+================
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
+@RestController
+@RequestMapping("/users")
+public class UserController {
+
+    @GetMapping("/{id}")
+    public EntityModel<User> getUser(@PathVariable Long id) {
+
+        // Sample user
+        User user = new User(id, "John Doe", "john.doe@cts.com");
+
+        // Self link
+        Link selfLink = linkTo(methodOn(UserController.class).getUser(id)).withSelfRel();
+
+        // Related orders link
+        Link ordersLink = linkTo(methodOn(OrderController.class).getOrdersByUser(id)).withRel("orders");
+
+        // Return HATEOAS resource
+        return EntityModel.of(user, selfLink, ordersLink);
+    }
+}
+
+
+GET http://localhost:8080/users/1
+
+
+	{  "id": 1,  "name": "John Doe",  "email": "john.doe@cts.com",
+  "_links": {
+    "self": {      "href": "http://localhost:8080/users/1"    },
+    "orders": {   "href": "http://localhost:8080/orders/user/1"    }
+  }
+}
+
+
+===============================================================================================================================
+
+
+Create spring boot started project
+
+com.cts
+
+
+
+
+ Maven Dependencies (pom.xml)
+
+
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-hateoas</artifactId>
+    </dependency>
+</dependencies>
+
+
+
+
+
+Entity (Book)
+
+Repository (in-memory for demo)
+
+Exception (BookNotFoundException)
+
+Controller (HATEOAS links)
+
+
+
+ Project Structure
+==========================
+
+src/main/java/com/cts/model
+
+
+    Book.java
+
+src/main/java/com/cts/repository
+
+    BookRepository.java
+
+
+src/main/java/com/cts/exception
+
+    BookNotFoundException.java
+
+src/main/java/com/cts/controller
+    BookController.java
+
+---------------------------------------------------
+
+ Book.java
+
+package com.cts.model;
+
+public class Book {
+    private Long id;
+    private String title;
+    private String author;
+
+    public Book() {}
+
+    public Book(Long id, String title, String author) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+    }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+
+    public String getAuthor() { return author; }
+    public void setAuthor(String author) { this.author = author; }
+}
+
+
+
+ BookRepository.java
+
+package com.cts.repository;
+
+import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class BookRepository {
+    private final Map<Long, Book> store = new HashMap<>();
+    private final AtomicLong counter = new AtomicLong(2);
+
+    public BookRepository() {
+        store.put(1L, new Book(1L, "The Hobbit", "J.R.R. Tolkien"));
+        store.put(2L, new Book(2L, "1984", "George Orwell"));
+    }
+
+    public Optional<Book> findById(Long id) {
+        return Optional.ofNullable(store.get(id));
+    }
+
+    public List<Book> findAll() {
+        return new ArrayList<>(store.values());
+    }
+
+    public Book save(Book book) {
+        if (book.getId() == null) {
+            book.setId(counter.incrementAndGet());
+        }
+        store.put(book.getId(), book);
+        return book;
+    }
+}
+
+
+ BookNotFoundException.java
+
+
+package com.cts.exception;
+
+public class BookNotFoundException extends RuntimeException {
+    public BookNotFoundException(Long id) {
+        super("Book not found with id " + id);
+    }
+}
+
+ BookController.java
+
+package com.cts.controller;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+public class BookController {
+
+    private final BookRepository repository;
+
+    public BookController(BookRepository repository) {
+        this.repository = repository;
+    }
+
+    // GET single book
+    @GetMapping("/books/{id}")
+    public EntityModel<Book> one(@PathVariable Long id) {
+        Book book = repository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException(id));
+
+        return EntityModel.of(book,
+            linkTo(methodOn(BookController.class).one(id)).withSelfRel(),
+            linkTo(methodOn(BookController.class).all()).withRel("books"));
+    }
+
+    // GET all books
+    @GetMapping("/books")
+    public CollectionModel<EntityModel<Book>> all() {
+        List<EntityModel<Book>> books = repository.findAll().stream()
+            .map(book -> EntityModel.of(book,
+                    linkTo(methodOn(BookController.class).one(book.getId())).withSelfRel()))
+            .collect(Collectors.toList());
+
+        return CollectionModel.of(books,
+                linkTo(methodOn(BookController.class).all()).withSelfRel());
+    }
+
+    // POST new book (returns Location header)
+    @PostMapping("/books")
+    public ResponseEntity<?> createBook(@RequestBody Book book) {
+        Book savedBook = repository.save(book);
+
+        EntityModel<Book> entityModel = EntityModel.of(savedBook,
+                linkTo(methodOn(BookController.class).one(savedBook.getId())).withSelfRel());
+
+        return ResponseEntity
+                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
+                .body(entityModel);
+    }
+}
+
+ HateoasctsApplication.java
+
+package com.cts;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class HateoasctsApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(HateoasctsApplication.class, args);
+    }
+}
+
+
+==================================
+
+1. GET All Books
+
+GET http://localhost:8080/books
+
+
+Response:
+
+{
+    "_embedded": {
+        "bookList": [
+            {
+                "id": 1,
+                "title": "The Hobbit",
+                "author": "J.R.R. Tolkien",
+                "_links": {
+                    "self": { "href": "http://localhost:8080/books/1" }
+                }
+            },
+            {
+                "id": 2,
+                "title": "1984",
+                "author": "George Orwell",
+                "_links": {
+                    "self": { "href": "http://localhost:8080/books/2" }
+                }
+            }
+        ]
+    },
+    "_links": {
+        "self": { "href": "http://localhost:8080/books" }
+    }
+}
+
+
+
+2. POST New Book
+
+POST http://localhost:8080/books
+Content-Type: application/json
+
+{
+    "title": "Clean Code",
+    "author": "Robert C. Martin"
+}
+
+
+Response:
+
+{
+    "id": 3,
+    "title": "Clean Code",
+    "author": "Robert C. Martin",
+    "_links": {
+        "self": { "href": "http://localhost:8080/books/3" }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+Exception Handling in Spring boot
+===============================
+
+
+Create a class annotated with @ControllerAdvice or @RestControllerAdvice. 
+
+
+@RestControllerAdvice is typically used for RESTful APIs as it implicitly applies @ResponseBody to all handler methods, making them return data directly.
+
+
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+    @RestControllerAdvice
+    public class GlobalExceptionHandler {
+
+        // Exception handling methods will be defined here
+    }
+
+
+
+
+Define Exception Handling Methods.
+
+Inside the global exception handler class, define methods annotated with @ExceptionHandler for specific exception types you want to handle. These methods will be invoked when the specified exception is thrown from any controller or service. 
+
+    import org.springframework.http.HttpStatus;
+    import org.springframework.http.ResponseEntity;
+    import org.springframework.web.bind.annotation.ExceptionHandler;
+    import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+    @RestControllerAdvice
+    public class GlobalExceptionHandler {
+
+        @ExceptionHandler(ResourceNotFoundException.class)
+        public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+        @ExceptionHandler(MethodArgumentNotValidException.class)
+        public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+            // Extract validation errors and return a meaningful response
+            return new ResponseEntity<>("Validation failed: " + ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        @ExceptionHandler(Exception.class) // Catch-all for other exceptions
+        public ResponseEntity<String> handleGenericException(Exception ex) {
+            return new ResponseEntity<>("An unexpected error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
+
+
+Benefits:
+
+Centralized Error Management:
+
+All exception handling logic resides in one place, making it easier to manage and update.
+
+Consistent Error Responses:
+Ensures a uniform format for error messages returned to clients, improving API usability.
+
+Improved Code Readability:
+Removes repetitive try-catch blocks from individual controllers and services.
+
+
+Enhanced Maintainability:
+Changes to error handling strategies can be implemented in a single location.
+
+
+
+
+

@@ -1,0 +1,450 @@
+
+UML Basics (Unified Modeling Language)
+====================================
+
+UML (Unified Modeling Language) is a standardized modeling language used in software engineering to visualize, specify, construct, and document the structure and behavior of a system. 
+
+It helps developers, architects, and stakeholders understand and communicate the design of the system clearly.
+
+
+
+🔹 Why Use UML?
+
+	To visualize system architecture.
+
+	To document software design.
+
+	To improve communication among team members.
+
+	To aid in code generation and reverse engineering.
+
+🔹 Types of UML Diagrams
+
+	UML diagrams are broadly classified into two categories:
+
+
+1. Structural Diagrams (describe what a system is)
+============================================
+
+These diagrams show the static structure of the system and its components.
+
+Class Diagram: Shows classes, attributes, methods, and relationships.
+
+Object Diagram: Snapshot of objects and their relationships at a point in time.
+
+Component Diagram: Describes components (modules) and their dependencies.
+
+Deployment Diagram: Shows physical deployment of software on hardware.
+
+Package Diagram: Organizes classes into packages.
+
+Composite Structure Diagram: Shows internal structure of a class.
+
+Profile Diagram: Customizes UML models for specific domains.
+
+
+
+2. Behavioral Diagrams (describe how a system behaves)
+==========================================================
+
+These diagrams capture the dynamic aspects.
+
+Use Case Diagram: Interactions between users (actors) and the system.
+
+Sequence Diagram: Object interactions in a time sequence.
+
+Activity Diagram: Workflow or business processes.
+
+State Machine Diagram: State changes of an object based on events.
+
+Communication Diagram: Similar to sequence diagrams but focused on object links.
+
+Interaction Overview Diagram: Overview of control flow with interactions.
+
+Timing Diagram: Behavior of objects over time.
+
+
+=========================================================================
+🔹 Common UML Elements
+
+Symbol				Meaning
+===========================================================================
+Class			Rectangle with name, attributes, and methods.
+
+Actor			Stick figure; represents a user or system.
+
+Association		Line connecting classes/objects.
+
+Inheritance		Hollow arrow pointing to the superclass.
+
+Aggregation		Hollow diamond; "whole-part" relationship.
+
+Composition		Filled diamond; stronger form of aggregation.
+
+Dependency		Dotted arrow; one element uses another.
+
+
+
+🔹 Example: Class Diagram
+
+
++----------------------+
+|     Student          |
++----------------------+
+| - id: int            |
+| - name: String       |
++----------------------+
+| +register(): void    |
+| +login(): boolean    |
++----------------------+
+
+
+🔹 Example: Use Case Diagram
+
+Actor: Student
+
+Use Cases: Register, Login, Enroll Course
+
+Relationships: Associations between Student and each Use Case.
+
+
+
+🔹 UML Tools
+
+	Lucidchart
+
+	Draw.io
+
+	StarUML
+
+	Enterprise Architect
+
+	Visual Paradigm
+
+	ArgoUML
+
+
+
+
+Code Quality tools help developers maintain clean, readable, secure, and bug-free code by analyzing source code automatically and providing feedback. 
+
+ PMD, Checkstyle, SonarQube, JaCoCo, and SpotBugs — tools commonly used in Java projects:
+
+
+
+
+
+✅ 1. PMD (Programming Mistake Detector)
+
+🔹 Purpose:
+	Identifies bad coding practices, dead code, and potential bugs.
+
+🔹 What It Checks:
+
+	Unused variables
+
+	Empty catch blocks
+
+	Unnecessary object creation
+
+	Inefficient code patterns
+
+🔹 Usage:
+
+	Integrated into Maven/Gradle builds or IDEs (Eclipse, IntelliJ).
+
+
+	PMD uses XML rulesets, which can be customized.
+
+🔹 Output:
+
+	Reports in HTML, XML, or plain text listing violations.
+
+✅ 2. Checkstyle
+
+	🔹 Purpose:
+		Enforces coding standards and conventions.
+
+	🔹 What It Checks:
+
+		Indentation
+
+		Bracket placement
+
+		Naming conventions (camelCase, PascalCase, etc.)
+
+		Javadoc and class headers
+
+	🔹 Usage:
+
+		Easily configured using a checkstyle.xml file.
+
+		Common in CI pipelines and IDEs.
+
+	🔹 Output:
+
+		Reports style violations with line numbers and messages.
+
+
+✅ 3. SonarQube (Sonar)
+
+	🔹 Purpose:
+
+		Comprehensive platform for static code analysis.
+
+		Tracks code quality over time.
+
+	🔹 What It Checks:
+
+		Code smells
+
+		Bugs
+
+		Security vulnerabilities (OWASP rules)
+
+		Code duplication
+
+
+Test coverage (with JaCoCo integration)
+
+🔹 Usage:
+
+	Integrated with Maven/Gradle + CI/CD (Jenkins, GitHub Actions)
+
+	Runs as a web server; displays rich dashboards
+
+🔹 Output:
+	Graphical UI with dashboards, trend graphs, issue lists, and code suggestions.
+
+
+
+
+✅ 4. JaCoCo (Java Code Coverage)
+
+🔹 Purpose:
+	Measures how much of your code is executed by unit tests.
+
+🔹 Types of Coverage:
+
+	Line coverage
+
+	Branch coverage
+
+	Method and class coverage
+
+🔹 Usage:
+
+	Integrated with JUnit tests via Maven/Gradle.
+
+	Often used with SonarQube to enhance analysis.
+
+🔹 Output:
+
+	HTML and XML reports showing which lines/methods are covered or missed.
+
+
+
+✅ 5. SpotBugs (Successor of FindBugs)
+
+🔹 Purpose:
+	Detects potential runtime bugs using bytecode analysis.
+
+🔹 What It Detects:
+	Null pointer risks
+
+	Infinite recursive loops
+
+	Unused values
+
+	Multithreading issues
+
+🔹 Usage:
+
+	Integrated via Maven/Gradle or plugins in IDEs.
+
+	Uses optional plugin Find Security Bugs for security issues.
+
+🔹 Output:
+
+	Detailed bug report with severity levels and explanations.
+
+
+
+
+
+
+Below are the main UML diagrams typically used for an eCommerce project with their purpose and a brief explanation for each, tailored for a standard eCommerce application.
+
+📌 1. Use Case Diagram
+
+Purpose: Shows interactions between users (actors) and system functionalities.
+
+
+
+Actors:
+
+	Customer
+
+	Admin
+
+	Payment Gateway
+
+
+
+
+Main Use Cases:
+
+	Register/Login
+
+	Browse Products
+
+	Add to Cart
+
+	Place Order
+
+	Make Payment
+
+	Track Order
+
+	Manage Inventory (Admin)
+
+	Generate Reports (Admin)
+
+
+
+📌 2. Class Diagram
+
+Purpose: Shows system structure by representing classes, attributes, methods, and relationships.
+
+
+
+Main Classes:
+
+
+	User (Customer/Admin)
+
+	Product
+
+	Cart
+
+	Order
+
+	Payment
+
+	Shipment
+
+	Category
+
+
+
+
+
+Relationships:
+
+	A User has a Cart
+
+	A Cart contains multiple Products
+
+	A User can place multiple Orders
+
+	An Order has one Payment and one Shipment
+
+
+
+
+📌 3. Sequence Diagram
+
+Purpose: Describes how objects interact in a sequence of messages.
+
+
+Example: Place Order Flow
+
+	Customer selects product
+
+	Adds to Cart
+
+	Proceeds to Checkout
+
+	Enters Shipping Info
+
+	Confirms Payment
+
+	System places order
+
+	Payment gateway confirms transaction
+
+	Order gets stored
+
+	Shipment scheduled
+
+
+
+📌 4. Activity Diagram
+
+
+Purpose: Shows workflow of operations and decision points.
+
+
+Example: Order Process
+
+	Start
+
+	Login/Register
+
+	Browse Products
+
+	Add to Cart
+
+	Checkout
+
+		If payment fails → Retry
+
+		If payment success → Place order
+
+	Generate Invoice
+
+	End
+
+
+📌 5. Component Diagram
+
+Purpose: Shows high-level system components and their dependencies.
+
+
+Components:
+
+
+	User Interface (Web/Mobile)
+
+	Product Service
+
+	Cart Service
+
+	Order Service
+
+	Payment Service
+
+	Notification Service
+
+	Admin Panel
+
+	Database
+
+
+📌 6. Deployment Diagram
+
+Purpose: Describes physical deployment of artifacts on nodes (servers, DB, cloud).
+
+
+Example Nodes:
+
+	Web Server
+
+	App Server
+
+	Database Server
+
+	Payment Gateway (External)
+
+	Notification Service (External)
+

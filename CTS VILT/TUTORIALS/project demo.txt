@@ -1,0 +1,329 @@
+Project Structure Overview       (ProductManagementSystem)
+================================
+
+
+Name  : Pms
+
+Group : edu.hitam
+
+package : edu.hitam.pms
+
+
+
+Now add Dependencies
+=======================
+
+	Spring Web
+	Spring boot devtool
+	Spring Data MongoDB
+	Lombok
+		
+
+
+Next create packages like
+
+	edu.hitm.pms.model
+		..  Product  (C)
+
+	edu.hitm.pms.repository
+
+		.. ProductRepository  (I)
+
+	edu.hitm.pms.service
+		.. ProductService   (C)
+
+
+	edu.hitm.pms.controller
+
+		.. ProductController (C)
+
+
+
+
+
+Backend (Spring Boot + MongoDB):
+
+   1. Spring Boot (Backend)
+   2. ReactJS (Frontend)
+
+
+Model: Product with fields id, name, price, description
+
+
+
+
+MongoDB Configuration (application.properties)
+==============================================================
+
+spring.application.name=Pms
+
+server.port = 8080
+
+# MongoDB Configuration
+
+spring.data.mongodb.host=localhost
+spring.data.mongodb.port=27017
+spring.data.mongodb.database=PMS
+
+
+
+Model Class (Product.java)
+==============================
+
+
+package edu.hitam.pms.model;
+
+package edu.hitam.pms.model;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document
+public class Product {
+
+    @Id
+    private String id;
+    private String name;
+    private double price;
+    private String description;
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public double getPrice() {
+		return price;
+	}
+	public void setPrice(double price) {
+		this.price = price;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public Product() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public Product(String id, String name, double price, String description) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.price = price;
+		this.description = description;
+	}
+
+    
+    
+}
+
+
+Repository Interface
+=======================
+package edu.hitam.pms.repository;
+
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+import edu.hitam.pms.model.Product;
+
+public interface ProductRepository extends MongoRepository<Product, String> {
+
+}
+
+Service Class
+===============
+
+package edu.hitam.pms.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import edu.hitam.pms.model.Product;
+import edu.hitam.pms.repository.ProductRepository;
+
+@Service
+public class ProductService {
+
+	@Autowired
+	private ProductRepository repo;
+	
+		
+    public List<Product> getAll() {
+        return repo.findAll();
+    }
+
+    public Product getById(String id) {
+        return repo.findById(id).orElse(null);
+    }
+
+    public Product save(Product product) {
+        return repo.save(product);
+    }
+
+    public Product update(String id, Product product) {
+        product.setId(id);
+        return repo.save(product);
+    }
+
+    public void delete(String id) {
+        repo.deleteById(id);
+    }
+
+}
+
+
+
+Controller Class
+
+
+package edu.hitam.pms.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import edu.hitam.pms.model.Product;
+import edu.hitam.pms.service.ProductService;
+
+@RestController
+@RequestMapping("/api/products")
+@CrossOrigin(origins = "http://localhost:3000")
+
+public class ProductController {
+
+	@Autowired
+	private ProductService service;
+	
+	
+
+    @GetMapping
+    public List<Product> getAll() {
+        return service.getAll();
+    }
+
+    @GetMapping("/{id}")
+    public Product getById(@PathVariable String id) {
+        return service.getById(id);
+    }
+
+    @PostMapping
+    public Product create(@RequestBody Product product) {
+        return service.save(product);
+    }
+
+    @PutMapping("/{id}")
+    public Product update(@PathVariable String id, @RequestBody Product product) {
+        return service.update(id, product);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable String id) {
+        service.delete(id);
+    }
+
+    
+}
+
+
+
+==========================================================================================
+
+2. ReactJS (Frontend)
+
+Install Packages
+
+npx create-react-app product-crud
+cd product-crud
+npm install axios
+
+
+
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+
+const apiUrl = "http://localhost:8080/api/products";
+
+function App() {
+  const [products, setProducts] = useState([]);
+  const [form, setForm] = useState({ name: '', price: '', description: '', id: null });
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    const res = await axios.get(apiUrl);
+    setProducts(res.data);
+  };
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async () => {
+    if (form.id) {
+      await axios.put(`${apiUrl}/${form.id}`, form);
+    } else {
+      await axios.post(apiUrl, form);
+    }
+    setForm({ name: '', price: '', description: '', id: null });
+    fetchProducts();
+  };
+
+  const editProduct = (product) => {
+    setForm(product);
+  };
+
+  const deleteProduct = async (id) => {
+    await axios.delete(`${apiUrl}/${id}`);
+    fetchProducts();
+  };
+
+  return (
+    <div style={{ padding: 20 }}>
+      <h2>Product CRUD with React and Spring Boot + MongoDB</h2>
+      <input name="name" value={form.name} onChange={handleChange} placeholder="Name" />
+      <input name="price" value={form.price} onChange={handleChange} placeholder="Price" type="number" />
+      <input name="description" value={form.description} onChange={handleChange} placeholder="Description" />
+      <button onClick={handleSubmit}>{form.id ? "Update" : "Add"}</button>
+      <hr />
+      <ul>
+        {products.map(p => (
+          <li key={p.id}>
+            {p.name} - ₹{p.price} - {p.description}
+            <button onClick={() => editProduct(p)}>Edit</button>
+            <button onClick={() => deleteProduct(p.id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+
+export default App;
+
+
+Run the Application
+
+npm start

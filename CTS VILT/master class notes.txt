@@ -1,0 +1,636 @@
+WORA -> Write Once Run Anywhere
+
+
+class Demo
+{
+	int x; //class variable
+
+	static int z; //static variable
+
+	void show()
+	{
+		int y; //local variable
+
+	}
+
+}
+
+Scanner Class
+=============
+	This class is used to take input values through keyboard.
+
+This class is derived from "util" package.
+So, first we have to import it.
+
+
+	import java.util.Scanner;
+
+
+To create object for Scanner class
+==================================
+
+	Scanner objectname=new Scanner(System.in);
+
+
+methods
+=======
+
+	nextInt()
+	nextFloat()
+	nextDouble()
+	next()
+	..
+
+
+Array
+=======
+An array is  a collection of similar datatypes under single name.
+Using array we can store multiple values under single variablename.
+
+
+Single dimentional array
+---------------------------
+
+To declare an array
+======================
+
+	syntax:
+		datatype arrayname[];
+
+
+	ex:
+		int marks[];
+
+
+To allocate memory as
+=======================
+
+syntax:
+		arrayname=new datatype[size];
+
+Ex:
+		marks=new int[10];
+
+
+		
+To declare & allocate memory as
+================================
+
+
+syntax:
+		datatype []arrayname=new datatype[size];
+
+ex:
+
+		int []marks=new int[10];
+
+
+To initialize an array
+=====================
+
+	datatype []arrayname={value1,value2,value3,......};
+
+Ex:
+	int []marks={20,50,70,35,45};
+
+
+
+To declare multidimentional array
+======================
+
+	syntax:
+		datatype arrayname[][];
+
+
+	ex:
+		int marks[][];
+
+
+To allocate memory for multidimentional array
+=======================
+
+syntax:
+		arrayname=new datatype[rows][cols];
+
+Ex:
+		marks=new int[2][5];
+
+
+		
+To declare & allocate memory as
+================================
+
+
+syntax:
+		datatype [][]arrayname=new datatype[rows][cols];
+
+ex:
+
+		int [][]marks=new int[2][5];
+
+
+
+
+POP (Procedural Oriented Programming)
+=====
+
+
+	void main()
+	{
+
+		…
+			..
+		..
+	show()
+	display()
+	..
+	..
+
+	}
+
+	void show()
+	{
+
+	}
+
+	void display()
+	{
+
+	}
+
+	void calculate()
+	{
+
+	}
+
+
+
+
+Class
+========
+	It is a Template  or blueprint
+	It won't allocate memory
+
+	It is a  combination of attributes(state) and methods(behaviour) of class.
+
+	It is also called user defined datatype.
+
+ 
+syntax:
+
+	modifier class classname
+	{
+
+
+		properties 
+
+		methods
+
+		constructors
+
+		static blocks
+
+
+	}
+
+
+What is an Object
+==================
+	It is an instance of class, using object we can access class members outside the class.
+
+To create an object as
+======================
+
+	classname objectname=new classname();
+
+
+
+
+java for-each Loop
+
+In Java, the for-each loop is used to iterate through elements of arrays and collections (like ArrayList). 
+It is also known as the enhanced for loop.
+
+for-each Loop Syntax
+
+for(dataType item : array) {
+    ...
+}
+
+Here,
+
+array - an array or a collection
+
+item - each item of array/collection is assigned to this variable
+
+dataType - the data type of the array/collection
+
+
+
+
+
+Java Class and Objects
+===========================
+
+class Lamp {
+  
+  // stores the value for light
+  // true if light is on
+  // false if light is off
+  boolean isOn;
+
+  // method to turn on the light
+  void turnOn() {
+    isOn = true;
+    System.out.println("Light on? " + isOn);
+
+  }
+
+  // method to turnoff the light
+  void turnOff() {
+    isOn = false;
+    System.out.println("Light on? " + isOn);
+  }
+}
+
+public class Main {
+  public static void main(String[] args) {
+
+    // create objects led and halogen
+    Lamp led = new Lamp();
+    Lamp halogen = new Lamp();
+
+    // turn on the light by
+    // calling method turnOn()
+    led.turnOn();
+
+    // turn off the light by
+    // calling method turnOff()
+    halogen.turnOff();
+  }
+}
+
+
+
+
+//Method Return Type
+
+class Main {
+
+// create a method
+  public static int square(int num) {
+
+    // return statement
+    return num * num;
+  }
+
+  public static void main(String[] args) {
+    int result;
+
+    // call the method
+    // store returned value to result
+    result = square(10);
+
+    System.out.println("Squared value of 10 is: " + result);
+  }
+}
+
+
+
+
+Inheritance
+===============
+
+	Inheritance is a technique of creating new classes already existing classes.
+The existing classes are called "BASE" or "SUPER" or "PARENT" classes and the new classes are called "DERIVE" or "SUB" or "CHILD" classes.
+
+	Once inherited base class properties to derived calss then no need to create object for base class. By using Derived class object we can access it.
+
+Syntax:
+
+	modifier class DerivedClasname   extends    Base-Class-Name
+	{
+
+
+	}
+
+
+Types of inheritance
+========================
+
+1. Single inheritance
+2.Multi level inheritance
+3.Heirachical inheritance
+
+Note:
+	In Java, Multiple inheritance is not there but we can solve by using interface technique.
+
+
+Single Inheritnace
+=================
+
+
+class BaseClass
+{
+
+	//implements some methods here
+
+}
+
+class DerivedClass extends BaseClass
+{
+
+	//implements some extra methods here
+
+}
+
+
+DerivedClass ob=new DerivedClass();    //code reusability
+
+
+Method overloading
+====================
+
+
+class Main
+{
+
+	void print()
+	{
+
+	}
+
+	void print(int x)
+	{
+
+	}
+
+	void print(int x, int y)
+	{
+
+	..
+	}
+	…
+	..
+}
+
+
+
+
+
+Static Blocks
+
+In Java, static blocks are used to initialize the static variables.
+
+
+static {
+    // variable initialization
+}
+
+
+The static block is executed only once when the class is loaded in memory. The class is loaded if either the object of the class is requested in code or the static members are requested in code.
+
+A class can have multiple static blocks and each static block is executed in the same sequence in which they have been written in a program.
+
+
+
+class Main {
+
+   // static variables
+   static int a = 23;
+   static int b;
+   static int max;
+
+
+   // static blocks
+   static {
+       System.out.println("First Static block.");
+       b = a * 4;
+   }
+   static {
+       System.out.println("Second Static block.");
+       max = 30;
+   }
+
+   // static method
+   static void display() {
+
+       System.out.println("a = " + a);
+       System.out.println("b = " + b);
+       System.out.println("max = " + max);
+   }
+
+   public static void main(String args[]) {
+       // calling the static method
+       display();
+   }
+}
+
+
+
+
+
+//Default methods in interface
+
+interface Polygon {
+  void getArea();
+
+  // default method 
+  default void getSides() {
+    System.out.println("I can get sides of a polygon.");
+  }
+}
+
+// implements the interface
+class Rectangle implements Polygon {
+  public void getArea() {
+    int length = 6;
+    int breadth = 5;
+    int area = length * breadth;
+    System.out.println("The area of the rectangle is " + area);
+  }
+
+  // overrides the getSides()
+  public void getSides() {
+    System.out.println("I have 4 sides.");
+  }
+}
+
+// implements the interface
+class Square implements Polygon {
+  public void getArea() {
+    int length = 5;
+    int area = length * length;
+    System.out.println("The area of the square is " + area);
+  }
+}
+
+class Main {
+  public static void main(String[] args) {
+
+    // create an object of Rectangle
+    Rectangle r1 = new Rectangle();
+    r1.getArea();
+    r1.getSides();
+
+    // create an object of Square
+    Square s1 = new Square();
+    s1.getArea();
+    s1.getSides();
+  }
+}
+
+
+
+
+
+//Java polymorphism
+
+class Polygon {
+
+  // method to render a shape
+  public void render() {
+    System.out.println("Rendering Polygon...");
+  }
+}
+
+class Square extends Polygon {
+
+  // renders Square
+  public void render() {
+    System.out.println("Rendering Square...");
+  }
+}
+
+class Circle extends Polygon {
+
+  // renders circle
+  public void render() {
+    System.out.println("Rendering Circle...");
+  }
+}
+
+class Main {
+  public static void main(String[] args) {
+    
+    // create an object of Square
+    Square s1 = new Square();
+    s1.render();
+
+    // create an object of Circle
+    Circle c1 = new Circle();
+    c1.render();
+  }
+}
+
+
+
+
+02-09-2024
+
+
+
+Exception handling
+========================
+
+Throw in Java is a keyword that is used to throw a built-in exception or a custom exception explicitly or manually. Using throw keyword, we can throw either checked or unchecked exceptions in Java programming.
+
+syntax:
+
+throw exception_name;
+
+
+
+try
+{
+  // Code that might throw Exception.
+}
+catch(Exception e) 
+{
+// Rethrow the same exception.
+   throw e;
+}
+
+
+
+
+public class ThrowTest 
+{
+public static void main(String[] args) 
+{
+  int num = 1;
+
+  for(num = 1; num <= 10; num++)
+ {
+  try
+  {
+    if(num == 5)
+        throw new ArithmeticException("ArithmeticException");
+
+    else if(num < 2)
+        throw new RuntimeException("RuntimeException");
+
+    else if(num > 9)
+        throw new NullPointerException("NullPointerException");	
+  }
+  catch(Exception e)
+  {
+     System.out.println("Caught an exception");
+     System.out.println(e.getMessage());
+  }
+ }
+ }
+}
+
+
+
+
+
+Java Comparable Example
+======================
+
+
+class Student implements Comparable<Student>
+{  
+
+private int rollno;  
+private String name;  
+private int age;  
+
+Student(int rollno,String name,int age)
+{  
+this.rollno=rollno;  
+this.name=name;  
+this.age=age;  
+}  
+  
+public int compareTo(Student st)
+{  
+if(age==st.age)  
+return 0;  
+else if(age>st.age)  
+return 1;  
+else  
+return -1;  
+}  
+}  
+
+
+
+import java.util.*;  
+
+public class TestSort1
+{  
+public static void main(String args[]){  
+ArrayList<Student> al=new ArrayList<Student>();  
+al.add(new Student(1,"James",25));  
+al.add(new Student(8,"Anil",28));  
+al.add(new Student(3,"John",20));  
+  
+Collections.sort(al);  
+for(Student st:al){  
+System.out.println(st.rollno+" "+st.name+" "+st.age);  
+}  
+}  
+}  
+

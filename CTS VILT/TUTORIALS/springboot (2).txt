@@ -1,0 +1,605 @@
+@SpringBootApplication
+@RestController
+public class DemoApplication {
+   @Value("${spring.application.name}")
+   private String name;
+   public static void main(String[] args) {
+      SpringApplication.run(DemoApplication.class, args);
+   }
+   @RequestMapping(value = "/")
+   public String name() {
+      return name;
+   }
+}   
+
+
+-----------------------------------------------
+
+Product.java
+
+
+public class Product {
+   private String id;
+   private String name;
+
+   public String getId() {
+      return id;
+   }
+   public void setId(String id) {
+      this.id = id;
+   }
+   public String getName() {
+      return name;
+   }
+   public void setName(String name) {
+      this.name = name;
+   }
+}
+
+
+@RestController
+public class ProductServiceController {
+   private static Map<String, Product> productRepo = new HashMap<>();
+   static {
+      Product honey = new Product();
+      honey.setId("1");
+      honey.setName("Honey");
+      productRepo.put(honey.getId(), honey);
+      
+      Product almond = new Product();
+      almond.setId("2");
+      almond.setName("Almond");
+      productRepo.put(almond.getId(), almond);
+   }
+   
+   @DeleteMapping(value = "/products/{id}")
+   public ResponseEntity<Object> delete(@PathVariable("id") String id) { 
+      productRepo.remove(id);
+      return new ResponseEntity<>("Product is deleted successsfully", HttpStatus.OK);
+   }
+   
+   @PutMapping(value = "/products/{id}")
+   public ResponseEntity<Object> updateProduct(@PathVariable("id") String id, @RequestBody Product product) { 
+      productRepo.remove(id);
+      product.setId(id);
+      productRepo.put(id, product);
+      return new ResponseEntity<>("Product is updated successsfully", HttpStatus.OK);
+   }
+   
+   @PostMapping(value = "/products")
+   public ResponseEntity<Object> createProduct(@RequestBody Product product) {
+      productRepo.put(product.getId(), product);
+      return new ResponseEntity<>("Product is created successfully", HttpStatus.CREATED);
+   }
+   
+   @GetMapping(value = "/products")
+   public ResponseEntity<Object> getProduct() {
+      return new ResponseEntity<>(productRepo.values(), HttpStatus.OK);
+   }
+}
+
+======================================================================
+
+Build Spring Boot REST API returns Java Bean
+
+ we will build a simple Spring boot REST API which returns Java bean as JSON to the client.
+
+
+Let's first create a Student java bean class that the REST API want to return to the client:
+
+
+public class Student {
+	private String firstName;
+	private String lastName;
+	
+	public Student(String firstName, String lastName) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
+	
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+}
+
+
+
+
+StudentController class and the below code to it:
+
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class StudentController {	
+	
+	// http://localhost:8080/student
+	@GetMapping("/student")
+	public Student getStudent() {
+		return new Student("Sam", "Sundar");
+	}
+}
+
+
+@RestController annotation, which marks the class as a controller where every method returns a domain object instead of a view. 
+Its shorthand for @Controller and @ResponseBody rolled together.
+
+
+@GetMapping annotation for mapping HTTP GET requests onto specific handler methods. Specifically, @GetMapping is a composed annotation that acts as a shortcut for @RequestMapping(method = RequestMethod.GET).
+
+
+
+Build Spring Boot REST API returns List
+=========================================
+@RestController
+public class StudentController {
+
+	@GetMapping("/students")
+	public List<Student> getStudents(){		
+		List<Student> students = new ArrayList<>();
+		students.add(new Student("Ramesh", "Fadatare"));
+		students.add(new Student("Tony", "Cena"));
+		students.add(new Student("Sanjay", "Jadhav"));
+		students.add(new Student("Ram", "Jadhav"));
+		students.add(new Student("Umesh", "Fadatare"));
+		return students;
+	}
+}
+
+
+
+
+
+
+Spring Boot REST API with Path Variable
+=========================================
+
+ we will build a simple Spring boot REST API to demonstrate the usage of @PathVariable annotation.
+
+
+
+@RestController
+public class StudentController {
+	
+	// http://localhost:8080/student/1
+	// @PathVariable annotation
+	@GetMapping("/student/{firstName}/{lastName}/")
+	public Student studentPathVariable(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName) 
+{
+		return new Student(firstName, lastName);
+	}
+}
+
+
+
+
+
+
+Create CRUD (Create, Read, Update, Delete) REST endpoints for an Employee class using an in-memory list instead of a database.
+
+
+Employee.java (Model)
+java
+Copy
+Edit
+package com.example.demo.model;
+
+public class Employee {
+    private int id;
+    private String name;
+    private String department;
+    private double salary;
+
+    // Constructors
+    public Employee() {}
+    public Employee(int id, String name, String department, double salary) {
+        this.id = id;
+        this.name = name;
+        this.department = department;
+        this.salary = salary;
+    }
+
+    // Getters & Setters
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getDepartment() {
+        return department;
+    }
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+    public double getSalary() {
+        return salary;
+    }
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+}
+3. EmployeeService.java (Service Layer)
+
+
+package com.example.demo.service;
+
+import com.example.demo.model.Employee;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+
+@Service
+public class EmployeeService {
+
+    private final Map<Integer, Employee> employeeMap = new HashMap<>();
+
+    public List<Employee> getAllEmployees() {
+        return new ArrayList<>(employeeMap.values());
+    }
+
+    public Employee getEmployeeById(int id) {
+        return employeeMap.get(id);
+    }
+
+    public Employee addEmployee(Employee employee) {
+        employeeMap.put(employee.getId(), employee);
+        return employee;
+    }
+
+    public Employee updateEmployee(int id, Employee updatedEmployee) {
+        if (employeeMap.containsKey(id)) {
+            updatedEmployee.setId(id);
+            employeeMap.put(id, updatedEmployee);
+            return updatedEmployee;
+        }
+        return null;
+    }
+
+    public boolean deleteEmployee(int id) {
+        return employeeMap.remove(id) != null;
+    }
+}
+4. EmployeeController.java (Controller Layer)
+
+
+package com.example.demo.controller;
+
+import com.example.demo.model.Employee;
+import com.example.demo.service.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/employees")
+public class EmployeeController {
+
+    @Autowired
+    private EmployeeService employeeService;
+
+    // Create
+    @PostMapping
+    public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
+        return ResponseEntity.ok(employeeService.addEmployee(employee));
+    }
+
+    // Read all
+    @GetMapping
+    public ResponseEntity<List<Employee>> getAllEmployees() {
+        return ResponseEntity.ok(employeeService.getAllEmployees());
+    }
+
+    // Read one
+    @GetMapping("/{id}")
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable int id) {
+        Employee employee = employeeService.getEmployeeById(id);
+        if (employee != null) {
+            return ResponseEntity.ok(employee);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    // Update
+    @PutMapping("/{id}")
+    public ResponseEntity<Employee> updateEmployee(@PathVariable int id, @RequestBody Employee employee) {
+        Employee updated = employeeService.updateEmployee(id, employee);
+        if (updated != null) {
+            return ResponseEntity.ok(updated);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    // Delete
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable int id) {
+        if (employeeService.deleteEmployee(id)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+}
+5. DemoApplication.java
+
+
+package com.example.demo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class DemoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+}
+
+
+
+>ê Test with Postman or cURL
+POST /api/employees ’ Add employee
+
+GET /api/employees ’ List all
+
+GET /api/employees/{id} ’ Get one
+
+PUT /api/employees/{id} ’ Update employee
+
+DELETE /api/employees/{id} ’ Delete employee
+
+=========================================================================
+import com.example.demo.model.Employee;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class EmployeeService {
+
+    private final List<Employee> employeeList = new ArrayList<>();
+
+    public List<Employee> getAllEmployees() {
+        return employeeList;
+    }
+
+    public Employee getEmployeeById(int id) {
+        return employeeList.stream()
+                .filter(emp -> emp.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public Employee addEmployee(Employee employee) {
+        employeeList.add(employee);
+        return employee;
+    }
+
+    public Employee updateEmployee(int id, Employee updatedEmployee) {
+        for (int i = 0; i < employeeList.size(); i++) {
+            if (employeeList.get(i).getId() == id) {
+                updatedEmployee.setId(id); // Keep original ID
+                employeeList.set(i, updatedEmployee);
+                return updatedEmployee;
+            }
+        }
+        return null;
+    }
+
+    public boolean deleteEmployee(int id) {
+        return employeeList.removeIf(emp -> emp.getId() == id);
+    }
+}
+ 3. EmployeeController.java  No change needed
+Reuse the exact same code.
+
+ 4. DemoApplication.java  No change needed
+>ê Sample JSON for testing (Postman)
+POST /api/employees
+
+
+
+{
+  "id": 1,
+  "name": "John Doe",
+  "department": "IT",
+  "salary": 50000
+
+===================================
+
+1. Product.java  Model
+
+
+package com.example.productapi.model;
+
+public class Product {
+    private int id;
+    private String name;
+    private double price;
+    private int quantity;
+
+    // Constructors
+    public Product() {}
+    public Product(int id, String name, double price, int quantity) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    // Getters & Setters
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+}
+=Ä 2. ProductService.java  Service Layer using List<Product>
+
+
+package com.example.productapi.service;
+
+import com.example.productapi.model.Product;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class ProductService {
+
+    private final List<Product> productList = new ArrayList<>();
+
+    public List<Product> getAllProducts() {
+        return productList;
+    }
+
+    public Product getProductById(int id) {
+        return productList.stream()
+                .filter(p -> p.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public Product addProduct(Product product) {
+        productList.add(product);
+        return product;
+    }
+
+    public Product updateProduct(int id, Product updatedProduct) {
+        for (int i = 0; i < productList.size(); i++) {
+            if (productList.get(i).getId() == id) {
+                updatedProduct.setId(id); // Ensure same ID
+                productList.set(i, updatedProduct);
+                return updatedProduct;
+            }
+        }
+        return null;
+    }
+
+    public boolean deleteProduct(int id) {
+        return productList.removeIf(p -> p.getId() == id);
+    }
+}
+=Ä 3. ProductController.java  REST API
+
+
+package com.example.productapi.controller;
+
+import com.example.productapi.model.Product;
+import com.example.productapi.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/products")
+public class ProductController {
+
+    @Autowired
+    private ProductService productService;
+
+    // Create
+    @PostMapping
+    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
+        return ResponseEntity.ok(productService.addProduct(product));
+    }
+
+    // Read All
+    @GetMapping
+    public ResponseEntity<List<Product>> getAllProducts() {
+        return ResponseEntity.ok(productService.getAllProducts());
+    }
+
+    // Read One
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable int id) {
+        Product product = productService.getProductById(id);
+        return product != null ? ResponseEntity.ok(product) : ResponseEntity.notFound().build();
+    }
+
+    // Update
+    @PutMapping("/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable int id, @RequestBody Product product) {
+        Product updated = productService.updateProduct(id, product);
+        return updated != null ? ResponseEntity.ok(updated) : ResponseEntity.notFound().build();
+    }
+
+    // Delete
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable int id) {
+        boolean removed = productService.deleteProduct(id);
+        return removed ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
+}
+=Ä 4. ProductApiApplication.java  Main Class
+java
+Copy
+Edit
+package com.example.productapi;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class ProductApiApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(ProductApiApplication.class, args);
+    }
+}
+>ê Sample Test (JSON)
+POST /api/products
+json
+Copy
+Edit
+{
+  "id": 1,
+  "name": "Laptop",
+  "price": 65000.50,
+  "quantity": 5
+}
+
+

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans  
+    xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:p="http://www.springframework.org/schema/p"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+               http://www.springframework.org/schema/beans/spring-beans.xsd">  
+  
+<bean id="studentbean" class="com.cts.SpringProject.Student">  
+<property name="name" value="Rohit Sharma"></property>  
+</bean>  
+  
+</beans>  
+
+
+//collections
+
+class Emp
+{
+private String ename;
+private List<String> phones
+private Set<String>address
+private Map<String,String> course;
+private Properties props;
+
+getter/setters
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

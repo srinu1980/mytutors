@@ -1,0 +1,536 @@
+
+class User {
+    private String name;
+    private String email;
+
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+
+    public void saveUser() {
+        // Code to save user to database
+        System.out.println("User saved to database.");
+    }
+
+    public void sendEmail(String message) {
+        // Code to send email
+        System.out.println("Email sent to " + email + " with message: " + message);
+    }
+
+    // Getters and setters
+}
+
+
+Adherence to SRP:
+
+class User {
+    private String name;
+    private String email;
+
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+
+    // Getters and setters
+}
+
+class UserRepository {
+    public void saveUser(User user) {
+        // Code to save user to database
+        System.out.println("User " + user.getName() + " saved to database.");
+    }
+}
+
+class EmailService {
+    public void sendEmail(User user, String message) {
+        // Code to send email
+        System.out.println("Email sent to " + user.getEmail() + " with message: " + message);
+    }
+}
+
+
+Main class:
+
+public class Main {
+    public static void main(String[] args) {
+        User user = new User("James Smith", "smith.james@gmail.com");
+
+        UserRepository userRepository = new UserRepository();
+        userRepository.saveUser(user);
+
+        EmailService emailService = new EmailService();
+        emailService.sendEmail(user, "Welcome to our platform!");
+    }
+}
+
+
+
+2.
+
+Example:
+
+
+class Rectangle {
+    private double width;
+    private double height;
+
+    // Getters and setters
+}
+
+class Circle {
+    private double radius;
+
+    // Getters and setters
+}
+
+class AreaCalculator {
+    public double calculateArea(Object shape) {
+        if (shape instanceof Rectangle) {
+            Rectangle rectangle = (Rectangle) shape;
+            return rectangle.getWidth() * rectangle.getHeight();
+        } else if (shape instanceof Circle) {
+            Circle circle = (Circle) shape;
+            return Math.PI * circle.getRadius() * circle.getRadius();
+        }
+        return 0;
+    }
+}
+
+Adherence to OCP:
+
+interface Shape {
+    double calculateArea();
+}
+
+class Rectangle implements Shape {
+    private double width;
+    private double height;
+
+    @Override
+    public double calculateArea() {
+        return width * height;
+    }
+
+    // Getters and setters
+}
+
+class Circle implements Shape {
+    private double radius;
+
+    @Override
+    public double calculateArea() {
+        return Math.PI * radius * radius;
+    }
+
+    // Getters and setters
+}
+
+class AreaCalculator {
+    public double calculateArea(Shape shape) {
+        return shape.calculateArea();
+    }
+}
+Main class:
+
+public class Main {
+    public static void main(String[] args) {
+        Shape rectangle = new Rectangle(4, 5);
+        Shape circle = new Circle(3);
+
+        AreaCalculator calculator = new AreaCalculator();
+        System.out.println("Rectangle area: " + calculator.calculateArea(rectangle));
+        System.out.println("Circle area: " + calculator.calculateArea(circle));
+    }
+}
+
+
+
+3.
+Violation of LSP:
+
+class Bird {
+    public void fly() {
+        System.out.println("Bird is flying");
+    }
+}
+
+class Sparrow extends Bird {
+    @Override
+    public void fly() {
+        System.out.println("Sparrow is flying");
+    }
+}
+
+class Penguin extends Bird {
+    @Override
+    public void fly() {
+        throw new UnsupportedOperationException("Penguins can't fly");
+    }
+}
+
+
+Adherence to LSP:
+
+abstract class Bird {
+    public abstract void move();
+}
+
+class Sparrow extends Bird {
+    @Override
+    public void move() {
+        System.out.println("Sparrow is flying");
+    }
+}
+
+class Penguin extends Bird {
+    @Override
+    public void move() {
+        System.out.println("Penguin is swimming");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Bird sparrow = new Sparrow();
+        Bird penguin = new Penguin();
+
+        sparrow.move(); // Output: Sparrow is flying
+        penguin.move(); // Output: Penguin is swimming
+    }
+}
+
+
+
+
+
+Example
+Imagine we have a Worker interface that defines methods for different types of workers (full-time, part-time, contractor).
+
+
+public interface Worker {
+
+    void calculateFullTimeSalary();
+
+    void calculatePartTimeSalary();
+
+    void calculateContractorHours();
+
+}
+
+​
+
+public class FullTimeEmployee implements Worker {
+
+    @Override
+
+    public void calculateFullTimeSalary() {
+
+        // Calculate full-time salary
+
+    }
+
+​
+
+    @Override
+
+    public void calculatePartTimeSalary() {
+
+        // Not applicable, throw exception or leave empty
+
+    }
+
+​
+
+    @Override
+
+    public void calculateContractorHours() {
+
+        // Not applicable, throw exception or leave empty
+
+    }
+
+}
+
+
+In this example, the FullTimeEmployee class is forced to implement methods it doesn't need, violating the ISP. To address this, we can segregate the interface into smaller, focused interfaces:
+
+
+public interface FullTimeWorker {
+
+    void calculateFullTimeSalary();
+
+}
+
+​
+
+public interface PartTimeWorker {
+
+    void calculatePartTimeSalary();
+
+}
+
+public interface ContractWorker {
+
+    void calculateContractorHours();
+
+}
+
+​
+
+public class FullTimeEmployee implements FullTimeWorker {
+
+    @Override
+
+    public void calculateFullTimeSalary() {
+
+        // Calculate full-time salary
+
+    }
+
+}
+
+
+Now, each class only implements the methods it needs, adhering to the ISP.
+
+
+
+or
+
+
+interface Worker {
+    void work();
+    void eat();
+}
+
+class Developer implements Worker {
+    @Override
+    public void work() {
+        System.out.println("Developer is coding.");
+    }
+
+    @Override
+    public void eat() {
+        System.out.println("Developer is eating.");
+    }
+}
+
+class Robot implements Worker {
+    @Override
+    public void work() {
+        System.out.println("Robot is working.");
+    }
+
+    @Override
+    public void eat() {
+        throw new UnsupportedOperationException("Robot does not eat.");
+    }
+}
+Adherence to ISP:
+
+interface Workable {
+    void work();
+}
+
+interface Eatable {
+    void eat();
+}
+
+class Developer implements Workable, Eatable {
+    @Override
+    public void work() {
+        System.out.println("Developer is coding.");
+    }
+
+    @Override
+    public void eat() {
+        System.out.println("Developer is eating.");
+    }
+}
+
+class Robot implements Workable {
+    @Override
+    public void work() {
+        System.out.println("Robot is working.");
+    }
+}
+Main class:
+
+public class Main {
+    public static void main(String[] args) {
+        Workable developer = new Developer();
+        developer.work();
+
+        Eatable eatableDeveloper = (Eatable) developer;
+        eatableDeveloper.eat();
+
+        Workable robot = new Robot();
+        robot.work();
+    }
+}
+
+
+
+
+
+
+5.
+
+Violation of DIP:
+
+class LightBulb {
+    public void turnOn() {
+        System.out.println("LightBulb is turned on");
+    }
+
+    public void turnOff() {
+        System.out.println("LightBulb is turned off");
+    }
+}
+
+class Switch {
+    private LightBulb lightBulb;
+
+    public Switch(LightBulb lightBulb) {
+        this.lightBulb = lightBulb;
+    }
+
+    public void flip(boolean on) {
+        if (on) {
+            lightBulb.turnOn();
+        } else {
+            lightBulb.turnOff();
+        }
+    }
+}
+Adherence to DIP:
+
+interface Switchable {
+    void turnOn();
+    void turnOff();
+}
+
+class LightBulb implements Switchable {
+    @Override
+    public void turnOn() {
+        System.out.println("LightBulb is turned on");
+    }
+
+    @Override
+    public void turnOff() {
+        System.out.println("LightBulb is turned off");
+    }
+}
+
+class Switch {
+    private Switchable switchable;
+
+    public Switch(Switchable switchable) {
+        this.switchable = switchable;
+    }
+
+    public void flip(boolean on) {
+        if (on) {
+            switchable.turnOn();
+        } else {
+            switchable.turnOff();
+        }
+    }
+}
+Main class:
+
+public class Main {
+    public static void main(String[] args) {
+        Switchable lightBulb = new LightBulb();
+        Switch lightSwitch = new Switch(lightBulb);
+        lightSwitch.flip(true);  // Output: LightBulb is turned on
+        lightSwitch.flip(false); // Output: LightBulb is turned off
+    }
+}
+
+
+
+or
+
+let’s consider an best use case
+
+You go to a local store to buy something, and you decide to pay for it by using your card. So, when you give your card to the clerk for making the payment, the clerk doesn’t bother to check what kind of card you have given.
+
+Even if you have given a debit card or credit card it not even matter; they will simply swipe it. this is what the abstraction between clerk and you to relay on Card processing
+
+now let’s replace this example in code to understand it better .
+
+let’s assume you have two option to do payments Debit card and Credit card
+
+public class DebitCard{
+public void doTransaction(int amount){
+        System.out.println("tx done with DebitCard");
+    }
+}
+Credit Card
+
+public class CreditCard{
+public void doTransaction(int amount){
+        System.out.println("tx done with CreditCard");
+    }
+}
+Now with this two card you went to shopping mall and purchased some order and decided to pay using CreditCard
+
+public class ShoppingMall {
+private DebitCard debitCard;
+public ShoppingMall(DebitCard debitCard) {
+        this.debitCard = debitCard;
+   }
+public void doPayment(Object order, int amount){              debitCard.doTransaction(amount); 
+ }
+public static void main(String[] args) {
+     DebitCard debitCard=new DebitCard();
+     ShoppingMall shoppingMall=new ShoppingMall(debitCard);
+     shoppingMall.doPayment("some order",5000);
+    }
+}
+if you observe this is wrong design of coding , now ShoppingMall class tightly coupled with DebitCard
+
+now there is some error in your debit card and user want to go with Credit card then this won’t be possible because ShoppingMall is tightly couple with Debit Card
+
+we can do that , remove Debit card from constructor and inject CreditCard. which not good approach to write code
+because to follow DIP we need to design our application in such a way so that my shopping mall payment system should accept any type of ATM Card (it shouldn’t care whether it is debit or credit card)
+
+To simplify this designing principle further i am creating a interface called Bankcards like bellow
+
+public interface BankCard {
+  public void doTransaction(int amount);
+}
+Now both DebitCard and CreditCard will use This BankCard as abstraction
+
+public class CreditCard implements BankCard{
+public void doTransaction(int amount){            System.out.println("tx done with CreditCard");
+    }
+}
+similarly DebitCard
+
+public class DebitCard implements BankCard{
+public void doTransaction(int amount){
+System.out.println("tx done with DebitCard");
+    }
+}
+Now you need to redesign Shopping mall implementation
+
+public class ShoppingMall {
+private BankCard bankCard;
+public ShoppingMall(BankCard bankCard) {
+        this.bankCard = bankCard;
+    }
+public void doPayment(Object order, int amount){
+        bankCard.doTransaction(amount);
+    }
+public static void main(String[] args) {
+        BankCard bankCard=new CreditCard();
+        ShoppingMall shoppingMall1=new ShoppingMall(bankCard);
+        shoppingMall1.doPayment("do some order", 10000);
+    }
+}
+Now if you observe shopping mall is loosely coupled with BankCard , any type of card process the payment without any impact . which proofs DIP
+
+ 

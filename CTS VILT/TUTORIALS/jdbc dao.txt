@@ -1,0 +1,403 @@
+At first create table named student in MySql database and inset values into it as.
+
+CREATE TABLE student (
+RollNo int(9)  PRIMARY KEY NOT NULL,
+Name tinytext NOT NULL,
+Course varchar(25) NOT NULL,
+Address text
+ );
+
+ConnectionFactory.java
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class ConnectionFactory {
+	String driverClassName = "com.mysql.jdbc.Driver";
+	String connectionUrl = "jdbc:mysql://localhost:3306/student";
+	String dbUser = "root";
+	String dbPwd = "root";
+
+	private static ConnectionFactory connectionFactory = null;
+
+	private ConnectionFactory() {
+		try {
+			Class.forName(driverClassName);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Connection getConnection() throws SQLException {
+		Connection conn = null;
+		conn = DriverManager.getConnection(connectionUrl, dbUser, dbPwd);
+		return conn;
+	}
+
+	public static ConnectionFactory getInstance() {
+		if (connectionFactory == null) {
+			connectionFactory = new ConnectionFactory();
+		}
+		return connectionFactory;
+	}
+}
+
+StudentBean.java
+
+
+import java.io.Serializable;
+
+public class StudentBean implements Serializable {
+	int rollNo;
+	String name;
+	String course;
+	String address;
+
+	public StudentBean() {
+
+	}
+
+	public StudentBean(int roll, String name, String course, String address) {
+		this.rollNo = roll;
+		this.name = name;
+		this.course = course;
+		this.address = address;
+	}
+
+	public int getRollNo() {
+		return rollNo;
+	}
+
+	public void setRollNo(int rollNo) {
+		this.rollNo = rollNo;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getCourse() {
+		return course;
+	}
+
+	public void setCourse(String course) {
+		this.course = course;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+}
+
+
+StudentJDBCDAO.java
+
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class StudentJDBCDAO {
+	Connection connection = null;
+	PreparedStatement ptmt = null;
+	ResultSet resultSet = null;
+
+	public StudentJDBCDAO() {
+
+	}
+
+	private Connection getConnection() throws SQLException {
+		Connection conn;
+		conn = ConnectionFactory.getInstance().getConnection();
+		return conn;
+	}
+
+	public void add(StudentBean studentBean) {
+		try {
+			String queryString = "INSERT INTO student(RollNo, Name, Course, Address) VALUES(?,?,?,?)";
+			connection = getConnection();
+			ptmt = connection.prepareStatement(queryString);
+			ptmt.setInt(1, studentBean.getRollNo());
+			ptmt.setString(2, studentBean.getName());
+			ptmt.setString(3, studentBean.getCourse());
+			ptmt.setString(4, studentBean.getAddress());
+			ptmt.executeUpdate();
+			System.out.println("Data Added Successfully");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ptmt != null)
+					ptmt.close();
+				if (connection != null)
+					connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+
+	}
+
+	public void update(StudentBean studentBean) {
+
+		try {
+		String queryString = "UPDATE student SET Name=? WHERE RollNo=?";
+			connection = getConnection();
+			ptmt = connection.prepareStatement(queryString);
+			ptmt.setString(1, studentBean.getName());
+			ptmt.setInt(2, studentBean.getRollNo());
+			ptmt.executeUpdate();
+			System.out.println("Table Updated Successfully");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ptmt != null)
+					ptmt.close();
+				if (connection != null)
+					connection.close();
+			}
+
+			catch (SQLException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+
+			}
+		}
+	}
+
+	public void delete(int rollNo) {
+
+		try {
+			String queryString = "DELETE FROM student WHERE RollNo=?";
+			connection = getConnection();
+			ptmt = connection.prepareStatement(queryString);
+			ptmt.setInt(1, rollNo);
+			ptmt.executeUpdate();
+			System.out.println("Data deleted Successfully");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ptmt != null)
+					ptmt.close();
+				if (connection != null)
+					connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+
+	}
+
+	public void findAll() {
+		try {
+			String queryString = "SELECT * FROM student";
+			connection = getConnection();
+			ptmt = connection.prepareStatement(queryString);
+			resultSet = ptmt.executeQuery();
+			while (resultSet.next()) {
+			System.out.println("Roll No " + resultSet.getInt("RollNo")
+			+ ", Name " + resultSet.getString("Name") + ", Course "
+				+ resultSet.getString("Course") + ", Address "
+				+ resultSet.getString("Address"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (resultSet != null)
+					resultSet.close();
+				if (ptmt != null)
+					ptmt.close();
+				if (connection != null)
+					connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+}
+
+
+MainClaz.java
+
+
+public class MainClaz {
+	public static void main(String[] args) {
+		StudentJDBCDAO student = new StudentJDBCDAO();
+		StudentBean alok = new StudentBean();
+		alok.setName("Alok");
+		alok.setRollNo(8);
+		alok.setCourse("MBA");
+		alok.setAddress("Ranchi");
+		StudentBean tinkoo = new StudentBean();
+		tinkoo.setName("Arvind");
+		tinkoo.setRollNo(6);
+		// Adding Data
+		student.add(alok);
+		// Deleting Data
+		student.delete(7);
+		// Updating Data
+		student.update(tinkoo);
+		// Displaying Data
+		student.findAll();
+	}
+}
+
+
+
+Roll No 1, Name Java, Course MCA, Address Motihari
+Roll No 2, Name Ravi, Course BCA, Address Patna
+Roll No 3, Name Mansukh, Course M.Sc, Address Katihar
+Roll No 4, Name Raman, Course B.Tech, Address Betiah
+Roll No 5, Name Kanhaiya, Course M.Tech, Address Delhi
+Roll No 6, Name Arvind, Course MBA, Address Alligarh
+Roll No 8, Name Alok, Course MBA, Address Ranchi
+==========================================================
+
+Program  : 2
+
+
+Step 1
+Create  Student.java
+
+
+public class Student {
+   private String name;
+   private int rollNo;
+
+   Student(String name, int rollNo){
+      this.name = name;
+      this.rollNo = rollNo;
+   }
+
+   public String getName() {
+      return name;
+   }
+
+   public void setName(String name) {
+      this.name = name;
+   }
+
+   public int getRollNo() {
+      return rollNo;
+   }
+
+   public void setRollNo(int rollNo) {
+      this.rollNo = rollNo;
+   }
+}
+
+
+Step 2
+Create Data Access Object Interface.
+
+StudentDao.java
+
+import java.util.List;
+
+public interface StudentDao {
+   public List<Student> getAllStudents();
+   public Student getStudent(int rollNo);
+   public void updateStudent(Student student);
+   public void deleteStudent(Student student);
+}
+
+
+Step 3
+Create concrete class implementing above interface.
+
+StudentDaoImpl.java
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class StudentDaoImpl implements StudentDao {
+	
+   //list is working as a database
+   List<Student> students;
+
+   public StudentDaoImpl(){
+      students = new ArrayList<Student>();
+      Student student1 = new Student("Robert",0);
+      Student student2 = new Student("John",1);
+      students.add(student1);
+      students.add(student2);		
+   }
+   @Override
+   public void deleteStudent(Student student) {
+      students.remove(student.getRollNo());
+      System.out.println("Student: Roll No " + student.getRollNo() + ", deleted from database");
+   }
+
+   //retrive list of students from the database
+   @Override
+   public List<Student> getAllStudents() {
+      return students;
+   }
+
+   @Override
+   public Student getStudent(int rollNo) {
+      return students.get(rollNo);
+   }
+
+   @Override
+   public void updateStudent(Student student) {
+      students.get(student.getRollNo()).setName(student.getName());
+System.out.println("Student: Roll No " + student.getRollNo() + ", updated in the database");
+   }
+}
+Step 4
+Use the StudentDao to demonstrate Data Access Object pattern usage.
+
+DaoPatternDemo.java
+
+public class DaoPatternDemo {
+   public static void main(String[] args) {
+      StudentDao studentDao = new StudentDaoImpl();
+
+      //print all students
+      for (Student student : studentDao.getAllStudents()) {
+  System.out.println("Student: [RollNo : " + student.getRollNo() + ", Name : " + student.getName() + " ]");
+      }
+
+
+      //update student
+      Student student =studentDao.getAllStudents().get(0);
+      student.setName("Michael");
+      studentDao.updateStudent(student);
+
+      //get the student
+      studentDao.getStudent(0);
+      System.out.println("Student: [RollNo : " + student.getRollNo() + ", Name : " + student.getName() + " ]");		
+   }
+}
+Step 5
+Verify the output.
+
+Student: [RollNo : 0, Name : Robert ]
+Student: [RollNo : 1, Name : John ]
+Student: Roll No 0, updated in the database
+Student: [RollNo : 0, Name : Michael ]

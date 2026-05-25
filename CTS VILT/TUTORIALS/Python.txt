@@ -1,0 +1,1355 @@
+
+
+https://www.programiz.com/python-programming/online-compiler/
+
+https://www.w3schools.com/python/python_getstarted.asp
+
+
+
+
+1. What is Python?
+
+Python is a high-level, interpreted, general-purpose programming language.
+
+Created by Guido van Rossum in 1991.
+
+Designed to be simple, readable, and powerful.
+
+2. Key Features of Python
+
+ Easy to learn & read → Syntax looks like plain English.
+
+ Cross-platform → Runs on Windows, macOS, Linux.
+
+ Interpreted → Run code directly without compilation.
+
+ Dynamically typed → No need to declare variable types.
+
+ Large library support → Thousands of modules (NumPy, Pandas, Django, Flask).
+
+ Versatile → Used in web apps, AI, data science, automation, gaming, IoT.
+
+
+3. Why Learn Python?
+
+Most popular programming language today.
+
+Widely used in:
+
+Web Development → Django, Flask, FastAPI
+
+Data Science & AI → Pandas, NumPy, TensorFlow, PyTorch
+
+Automation & Scripting → Save time by automating tasks
+
+Game Development → Pygame
+
+Cybersecurity, IoT, Finance
+
+
+
+
+Python Input & Output
+==========================
+
+1. Output in Python – print()
+
+The print() function is used to display output.
+
+Example:
+
+print("Hello, World!")   # Prints text
+print(10 + 5)            # Prints result of expression
+print("Name:", "Rahul")  # Prints multiple values
+
+
+
+
+Formatting Output
+=========================
+
+You can format output in different ways:
+
+a) Using , (comma)
+x = 10
+y = 20
+print("Sum is", x + y)
+
+
+
+b) Using f-strings (modern way)
+
+name = "Rahul"
+age = 25
+print(f"My name is {name}, and I am {age} years old.")
+
+
+
+c) Using .format()
+
+print("My name is {} and I am {} years old" .format("Mike", 22))
+
+
+2. Input in Python – input()
+=================================
+
+The input() function is used to take user input (always returns string).
+
+
+Example:
+
+name = input("Enter your name: ")
+print("Hello,", name)
+
+
+
+3. Type Conversion in Input
+
+Since input() always gives a string, we must convert to integer/float if needed.
+
+Example:
+
+# Taking integer input
+age = int(input("Enter your age: "))
+
+# Taking float input
+price = float(input("Enter price: "))
+
+print("Age:", age, "Price:", price)
+
+
+
+
+4. Multiple Inputs in One Line
+
+We can take multiple inputs using split().
+
+Example:
+x, y = input("Enter two numbers: ").split()
+print("x =", x, "y =", y)
+
+
+
+
+
+Convert them to integers:
+
+x, y = map(int, input("Enter two numbers: ").split())
+print("Sum =", x + y)
+
+
+
+
+Use print() → for output
+
+Use input() → for input (string by default)
+
+Convert input using int(), float(), etc.
+
+Use split() and map() for multiple inputs
+
+
+
+Operators in Python
+=========================
+
+Operators are symbols that perform operations on variables and values.
+
+1. Arithmetic Operators
+
+Used for mathematical calculations.
+
+a, b = 10, 3
+
+print(a + b)  # Addition → 13
+print(a - b)  # Subtraction → 7
+print(a * b)  # Multiplication → 30
+print(a / b)  # Division (float) → 3.333...
+print(a // b) # Floor Division → 3
+print(a % b)  # Modulus (remainder) → 1
+print(a ** b) # Exponentiation (power) → 1000
+
+
+2. Comparison (Relational) Operators
+
+Used to compare values (returns True or False).
+
+x, y = 5, 10
+
+print(x == y)  # Equal → False
+print(x != y)  # Not equal → True
+print(x > y)   # Greater than → False
+print(x < y)   # Less than → True
+print(x >= 5)  # Greater or equal → True
+print(y <= 10) # Less or equal → True
+
+3. Logical Operators
+
+Used to combine conditions.
+
+a, b = True, False
+
+print(a and b)  # AND → False
+print(a or b)   # OR  → True
+print(not a)    # NOT → False
+
+4. Assignment Operators
+
+Used to assign values to variables.
+
+x = 10
+x += 5   # x = x + 5 → 15
+x -= 3   # x = x - 3 → 12
+x *= 2   # x = x * 2 → 24
+x /= 4   # x = x / 4 → 6.0
+x %= 5   # x = x % 5 → 1.0
+x **= 3  # x = x ** 3 → 1.0
+
+5. Bitwise Operators
+
+Work at the binary (bit) level.
+
+a, b = 5, 3   # In binary: a=101, b=011
+
+print(a & b)  # AND → 1  (001)
+print(a | b)  # OR  → 7  (111)
+print(a ^ b)  # XOR → 6  (110)
+print(~a)     # NOT → -6 (inverts bits)
+
+
+6. Membership Operators
+
+Check if a value exists in a sequence.
+
+fruits = ["apple", "banana"]
+
+print("apple" in fruits)   # True
+print("mango" not in fruits) # True
+
+7. Identity Operators
+
+Check if two objects refer to the same memory location.
+
+x = [1, 2, 3]
+y = x
+z = [1, 2, 3]
+
+print(x is y)      # True (same object)
+print(x is z)      # False (different objects, same values)
+print(x is not z)  # True
+
+
+
+
+
+
+
+ Data Types
+=================
+
+Python has built-in data types to store different kinds of values.
+
+1. Numeric Types
+
+Used to store numbers.
+
+x = 10        # int (integer)
+y = 3.14      # float (decimal)
+z = 2 + 5j    # complex number
+
+
+Examples:
+
+print(type(x))  # <class 'int'>
+print(type(y))  # <class 'float'>
+print(type(z))  # <class 'complex'>
+
+2. String (str)
+
+Text enclosed in quotes.
+
+name = "Python"
+print(name.upper())   # PYTHON
+print(name[0])        # P (indexing)
+
+3. Boolean (bool)
+
+Logical values: True or False.
+
+is_easy = True
+print(10 > 5)   # True
+print(5 > 10)   # False
+
+4. Sequence Types
+
+a) List (list) – ordered, changeable, allows duplicates
+
+fruits = ["apple", "banana", "cherry"]
+
+fruits.append("mango")
+
+print(fruits)  # ['apple', 'banana', 'cherry', 'mango']
+
+
+
+b) Tuple (tuple) – ordered, unchangeable, allows duplicates
+
+numbers = (1, 2, 3, 4)
+print(numbers[0])  # 1
+
+c) Range (range) – sequence of numbers
+
+r = range(5)
+print(list(r))  # [0, 1, 2, 3, 4]
+
+
+
+5. Set Types
+
+a) Set (set) – unordered, unique values
+s = {1, 2, 3, 3}
+print(s)  # {1, 2, 3}
+
+b) Frozen Set (frozenset) – immutable set
+fs = frozenset([1, 2, 3])
+print(fs)
+
+6. Mapping Type
+Dictionary (dict) – key-value pairs
+student = {"name": "Rahul", "age": 20}
+print(student["name"])  # Rahul
+
+7. None Type
+
+Represents no value / null.
+
+x = None
+print(x)       # None
+print(type(x)) # <class 'NoneType'>
+
+
+ Type Conversion
+====================
+
+You can convert between data types:
+
+x = "100"
+y = int(x)   # convert string to int
+z = float(y) # convert int to float
+
+print(type(y), type(z))  
+
+
+
+
+
+
+
+
+
+In Python, sequence types are:
+====================================
+
+List → ordered, mutable
+
+Tuple → ordered, immutable
+
+Range → sequence of numbers
+
+String (also a sequence of characters)
+
+
+
+ 1. List
+===============
+
+A list is a collection that is ordered and changeable.
+
+fruits = ["apple", "banana", "cherry"]
+
+
+Common List Methods
+
+fruits.append("mango")       # Add item at end
+fruits.insert(1, "grape")    # Insert at index
+fruits.remove("banana")      # Remove item
+fruits.pop()                 # Remove last item
+fruits.sort()                # Sort list
+fruits.reverse()             # Reverse order
+print(len(fruits))           # Length of list
+
+
+
+
+ 2. Tuple
+=================
+
+A tuple is like a list but immutable (cannot be changed).
+
+numbers = (10, 20, 30, 40)
+
+Tuple Methods
+print(numbers.count(20))   # Count occurrences
+print(numbers.index(30))   # Find index of value
+
+
+-> Tuples don’t have methods like append or remove because they cannot be modified.
+
+
+ 3. Range
+=============
+
+A range represents a sequence of numbers.
+
+r = range(1, 6)  
+print(list(r))   # [1, 2, 3, 4, 5]
+
+
+
+
+ 4. String
+============
+
+A string is a sequence of characters (immutable).
+
+name = "python"
+
+String Methods
+print(name.upper())     # PYTHON
+print(name.lower())     # python
+print(name.capitalize())# Python
+print(name.replace("p", "j"))  # jython
+print(name.find("th"))  # 2
+print(name.split("t"))  # ['py', 'hon']
+print(len(name))        # 6
+
+
+
+
+
+Conditional & Iterative Statements in Python
+================================================
+
+ 1. Conditional Statements
+
+Used to make decisions in programs.
+
+if Statement
+
+age = 18
+
+if age >= 18:
+    print("You are an adult")
+
+
+if-else Statement
+
+num = 5
+
+if num % 2 == 0:
+    print("Even")
+else:
+    print("Odd")
+
+
+if-elif-else Statement
+marks = 85
+if marks >= 90:
+    print("Grade A")
+elif marks >= 75:
+    print("Grade B")
+elif marks >= 50:
+    print("Grade C")
+else:
+    print("Fail")
+
+
+
+Nested if
+x = 10
+if x > 0:
+    if x % 2 == 0:
+        print("Positive Even")
+    else:
+        print("Positive Odd")
+
+
+ 2. Iterative Statements (Loops)
+=====================================
+for Loop
+
+Used to iterate over a sequence (list, tuple, string, range).
+
+for i in range(5):
+    print(i)   # 0 1 2 3 4
+
+
+Looping over a list:
+
+fruits = ["apple", "banana", "cherry"]
+for fruit in fruits:
+    print(fruit)
+
+
+while Loop
+==================
+
+Repeats as long as a condition is true.
+
+count = 1
+while count <= 5:
+    print("Count:", count)
+    count += 1
+
+
+ 3. Loop Control Statements
+==============================
+
+break → exit loop immediately
+
+for i in range(10):
+    if i == 5:
+        break
+    print(i)
+
+
+
+
+continue → skip current iteration
+=================================
+for i in range(5):
+    if i == 2:
+        continue
+    print(i)
+
+
+else with loop
+======================
+Runs if loop completes without break.
+
+for i in range(5):
+    print(i)
+else:
+    print("Loop finished!")
+
+
+
+
+
+
+
+
+
+
+What is a Dictionary in Python?
+==================================
+
+A dictionary is a built-in data type in Python used to store data in key-value pairs.
+
+It is unordered (in Python < 3.7), but from Python 3.7+ dictionaries maintain insertion order.
+
+It is mutable, meaning you can change, add, or remove items.
+
+Keys must be unique and immutable (like strings, numbers, tuples).
+
+Values can be of any data type (string, int, list, dict, etc.).
+
+ Syntax
+
+dictionary_name = {
+    "key1": "value1",
+    "key2": "value2",
+    "key3": "value3"
+}
+
+
+ Example 1: Creating and Accessing Dictionary
+
+student = {
+    "name": "Nancy",
+    "age": 21,
+    "course": "Computer Science",
+    "skills": ["Python", "Java", "SQL"]
+}
+
+# Access values using keys
+print(student["name"])   # Nancy
+print(student["skills"]) # ['Python', 'Java', 'SQL']
+
+# Using get() (safe way, avoids error if key not found)
+print(student.get("age"))   # 21
+print(student.get("grade")) # None (instead of error)
+
+
+ Example 2: Adding, Updating, and Deleting
+
+student["age"] = 22               # Update value
+student["grade"] = "A"            # Add new key-value
+del student["course"]             # Delete a key
+removed = student.pop("skills")   # Remove and return value
+
+print(student)
+# {'name': 'Nancy', 'age': 22, 'grade': 'A'}
+
+print("Removed:", removed)
+# Removed: ['Python', 'Java', 'SQL']
+
+
+
+
+
+
+ Word Count Program
+==========================
+
+text = "python is easy and python is powerful"
+word_count = {}
+
+for word in text.split():
+    word_count[word] = word_count.get(word, 0) + 1
+
+print(word_count)
+# {'python': 2, 'is': 2, 'easy': 1, 'and': 1, 'powerful': 1}
+
+
+
+
+
+
+
+
+Functions in Python
+=========================
+
+A function is a block of reusable code that performs a specific task.
+
+ 1. Defining a Function
+
+Use the def keyword.
+
+def greet():
+    print("Hello, welcome to Python!")
+
+
+ Calling the function:
+
+greet()
+
+
+
+ 2. Function with Parameters
+
+def greet(name):
+    print(f"Hello, {name}!")
+
+
+ Call:
+============
+greet("Rahul")
+
+
+
+3. Function with Return Value
+
+def add(a, b):
+    return a + b
+
+result = add(5, 3)
+print("Sum =", result)
+
+
+
+4. Default Parameters
+
+If no argument is passed, default value is used.
+
+def greet(name="Guest"):
+    print("Hello,", name)
+
+greet("Bob")   # Hello, Bob
+greet()        # Hello, Guest
+
+
+ 5. Keyword Arguments
+
+Pass arguments by name.
+
+def student(name, age):
+    print(f"Name: {name}, Age: {age}")
+
+student(age=20, name="Rahul")
+
+
+6. Variable-Length Arguments
+
+a) *args → multiple positional arguments
+
+def add_numbers(*args):
+    return sum(args)
+
+print(add_numbers(2, 4, 6, 8))  # 20
+
+
+
+
+7. Lambda Functions (Anonymous Functions)
+
+Used for short, single-line functions.
+
+square = lambda x: x ** 2
+
+print(square(5))   # 25
+
+
+
+8. Recursion in Functions
+
+A function calling itself.
+
+def factorial(n):
+    if n == 0:
+        return 1
+    else:
+        return n * factorial(n-1)
+
+print(factorial(5))  # 120
+
+
+9. Built-in Functions
+
+Python already has many built-in functions:
+
+len() → length
+
+sum() → sum of elements
+
+max() / min() → largest/smallest
+
+sorted() → sort sequence
+
+type() → check data type
+
+
+Example:
+
+nums = [10, 5, 8]
+print(sum(nums))     # 23
+print(max(nums))     # 10
+
+
+
+
+
+
+
+
+
+What is a Module in Python?
+============================
+
+A module in Python is simply a file containing Python code (functions, classes, variables).
+
+The file has a .py extension.
+
+Modules help in code reusability, readability, and organization.
+
+Instead of writing the same functions again, you can put them in a module and import them wherever needed.
+
+
+ Types of Modules
+==================
+
+Built-in Modules – Already provided by Python (e.g., math, datetime, os).
+
+User-Defined Modules – Created by programmers (your own .py file).
+
+Third-Party Modules – Installed using pip (e.g., numpy, pandas).
+
+
+ How to Create a User-Defined Module
+=========================================
+
+
+Create a .py file with functions, variables, or classes.
+
+Import it into another Python program.
+
+Use its functions/variables.
+
+
+
+Simple User-Defined Module
+===============================
+
+Step 1 – Create a module file (mymath.py)
+
+# mymath.py (User Defined Module)
+
+def add(a, b):
+    return a + b
+
+def subtract(a, b):
+    return a - b
+
+def multiply(a, b):
+    return a * b
+
+def divide(a, b):
+    if b != 0:
+        return a / b
+    else:
+        return "Division by zero not allowed"
+
+
+
+
+Step 2 – Use it in another program (main.py)
+# main.py
+
+import mymath  # Import user-defined module
+
+print("Addition:", mymath.add(10, 5))
+print("Subtraction:", mymath.subtract(10, 5))
+print("Multiplication:", mymath.multiply(10, 5))
+print("Division:", mymath.divide(10, 5))
+
+
+
+
+ Example 2: Real-Time Example – Employee Salary Module
+=========================================================
+
+Step 1 – Create module (salary.py)
+
+# salary.py
+
+def calculate_bonus(salary, performance):
+    if performance == "A":
+        return salary * 0.20
+    elif performance == "B":
+        return salary * 0.10
+    else:
+        return salary * 0.05
+
+def calculate_total_salary(salary, performance):
+    bonus = calculate_bonus(salary, performance)
+    return salary + bonus
+
+Step 2 – Use it in another program (company.py)
+# company.py
+
+import salary
+
+basic_salary = 50000
+performance = "A"
+
+bonus = salary.calculate_bonus(basic_salary, performance)
+total = salary.calculate_total_salary(basic_salary, performance)
+
+print(f"Employee Bonus: {bonus}")
+print(f"Total Salary: {total}")
+
+
+ Output:
+==============
+
+Employee Bonus: 10000.0
+Total Salary: 60000.0
+
+
+ Why Use Modules in Real Projects?
+======================================
+
+Keeps code organized (separate files for logic, database, UI, etc.).
+
+Allows reuse across multiple programs.
+
+Improves readability & maintainability.
+
+Encourages modular development (team collaboration).
+
+
+
+Create __init__.py
+===================
+
+Inside yourModuleName/, add an empty file named __init__.py.
+
+This tells Python that yourModuleName is a package.
+
+
+====================================================================
+
+
+
+
+
+ File Handling
+===================
+
+File handling in Python allows us to create, read, write, and delete files on the system.
+
+It provides built-in functions to interact with files easily.
+
+
+ Opening a File
+====================
+
+We use the open() function.
+
+file = open("example.txt", "mode")
+
+
+Modes:
+
+	"r" → Read (default) – file must exist.
+
+	"w" → Write – creates new file or overwrites existing.
+
+	"a" → Append – adds data at the end of file.
+
+	"x" → Create – creates new file, error if file exists.
+
+	"b" → Binary mode (e.g., images).
+
+	"t" → Text mode (default).
+
+
+ Example:
+
+
+f = open("myfile.txt", "r")   # open file for reading
+print(f.read())
+f.close()
+
+
+Reading from a File
+======================
+
+f = open("myfile.txt", "r")
+
+print(f.read())         # Read entire file
+print(f.read(10))       # Read first 10 characters
+print(f.readline())     # Read one line
+print(f.readlines())    # Read all lines into a list
+
+f.close()
+
+
+ Writing to a File
+=====================
+
+f = open("myfile.txt", "w")
+f.write("Hello, Python!\n")
+f.write("This is file handling example.")
+f.close()
+
+
+ Note: "w" will overwrite the file. Use "a" to append.
+
+
+f = open("myfile.txt", "a")
+
+f.write("\nNew line added.")
+
+f.close()
+
+
+ Using with 
+==================
+
+When we use with, the file is automatically closed.
+
+with open("myfile.txt", "r") as f:
+    content = f.read()
+    print(content)
+
+
+
+
+ Iterating Over a File
+==========================
+with open("myfile.txt", "r") as f:
+    for line in f:
+        print(line.strip())
+
+
+File Handling with Binary Files
+================================
+
+Ex: Copy an image file
+
+
+with open("image.jpg", "rb") as f1:
+    data = f1.read()
+
+with open("copy.jpg", "wb") as f2:
+    f2.write(data)
+
+
+
+ Deleting a File
+=================
+
+We use the os module.
+
+import os
+
+# remove file
+os.remove("myfile.txt")
+
+# check if file exists before deleting
+if os.path.exists("myfile.txt"):
+    os.remove("myfile.txt")
+else:
+    print("File not found")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OOPs in Python
+
+OOP (Object-Oriented Programming) is a way of structuring programs around objects (real-world entities) and classes (blueprints).
+
+
+1. Class and Object
+
+Class → A blueprint/template for creating objects.
+
+Object → An instance of a class.
+
+class Person:
+    def __init__(self, name, age):   # Constructor
+        self.name = name
+        self.age = age
+
+    def greet(self):   # Method
+        print(f"Hello, my name is {self.name} and I am {self.age} years old.")
+
+
+# Creating objects
+p1 = Person("Rahul", 25)
+p2 = Person("Sam", 30)
+
+p1.greet()
+p2.greet()
+
+
+
+2. Pillars of OOPs in Python
+
+1) Encapsulation
+
+Wrapping variables & methods inside a class.
+
+Use public, protected, private attributes.
+
+class BankAccount:
+    def __init__(self, balance):
+        self.__balance = balance   # private attribute
+
+    def deposit(self, amount):
+        self.__balance += amount
+
+    def get_balance(self):
+        return self.__balance
+
+acc = BankAccount(1000)
+acc.deposit(500)
+print(acc.get_balance())   # 1500
+
+
+
+2) Inheritance
+
+Allows one class to inherit properties & methods from another.
+
+class Animal:
+    def speak(self):
+        print("I am an animal")
+
+class Dog(Animal):   # Dog inherits from Animal
+    def speak(self):
+        print("Woof! Woof!")
+
+d = Dog()
+d.speak()   # Woof! Woof!
+
+
+ Types of inheritance:
+
+Single
+
+Multiple
+
+Multilevel
+
+Hierarchical
+
+
+
+3) Polymorphism
+
+One interface, many implementations.
+
+Achieved by method overriding / overloading-like behavior.
+
+class Bird:
+    def fly(self):
+        print("Some birds can fly")
+
+class Sparrow(Bird):
+    def fly(self):
+        print("Sparrow can fly high")
+
+class Penguin(Bird):
+    def fly(self):
+        print("Penguins cannot fly")
+
+for b in (Sparrow(), Penguin()):
+    b.fly()
+
+
+===============================================
+
+# base class
+class Animal:
+    
+    def eat(self):
+        print( "I can eat!")
+    
+    def sleep(self):
+        print("I can sleep!")
+
+# derived class
+class Dog(Animal):
+    
+    def bark(self):
+        print("I can bark! Woof woof!!")
+
+# Create object of the Dog class
+dog1 = Dog()
+
+# Calling members of the base class
+dog1.eat()
+dog1.sleep()
+
+# Calling member of the derived class
+dog1.bark();
+
+
+
+
+4) Abstraction
+
+Hiding implementation details & showing only essential features.
+
+
+
+
+3. Special (Magic/Dunder) Methods
+
+Python classes have special methods starting with __.
+
+class Book:
+    def __init__(self, title, pages):
+        self.title = title
+        self.pages = pages
+
+    def __str__(self):
+        return f"{self.title} has {self.pages} pages"
+
+b = Book("Python Basics", 250)
+print(b)   # Python Basics has 250 pages
+
+
+4. OOPs Concepts in Action – Example
+
+class Vehicle:
+    def __init__(self, brand):
+        self.brand = brand
+
+    def drive(self):
+        print("Vehicle is moving")
+
+class Car(Vehicle):   # Inheritance
+    def __init__(self, brand, model):
+        super().__init__(brand)    # Call parent constructor
+        self.model = model
+
+    def drive(self):   # Polymorphism
+        print(f"{self.brand} {self.model} is driving")
+
+car1 = Car("Tesla", "Model S")
+car1.drive()
+
+
+
+============================================
+
+==================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Employ:
+    def __init__(self, emp_id, name, salary):
+        self._emp_id = emp_id     # private variable (using _)
+        self._name = name
+        self._salary = salary
+
+    # Getter for emp_id
+    def get_emp_id(self):
+        return self._emp_id
+
+    # Setter for emp_id
+    def set_emp_id(self, emp_id):
+        self._emp_id = emp_id
+
+    # Getter for name
+    def get_name(self):
+        return self._name
+
+    # Setter for name
+    def set_name(self, name):
+        self._name = name
+
+    # Getter for salary
+    def get_salary(self):
+        return self._salary
+
+    # Setter for salary
+    def set_salary(self, salary):
+        if salary > 0:   # validation
+            self._salary = salary
+        else:
+            print("Salary must be positive!")
+
+
+# Create object of Employ
+emp1 = Employ(101, "Suresh", 50000)
+
+# Access values using getters
+print("Employee ID:", emp1.get_emp_id())
+print("Employee Name:", emp1.get_name())
+print("Employee Salary:", emp1.get_salary())
+
+# Update values using setters
+emp1.set_name("Dinesh")
+emp1.set_salary(60000)
+
+print("\nAfter update:")
+print("Employee ID:", emp1.get_emp_id())
+print("Employee Name:", emp1.get_name())
+print("Employee Salary:", emp1.get_salary())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+In Python, we usually prefer @property because it makes code cleaner and looks like normal attribute access (without explicitly calling get_...() and set_...() methods).
+
+Employ class using @property:
+==============================
+
+class Employ:
+    def __init__(self, emp_id, name, salary):
+        self._emp_id = emp_id
+        self._name = name
+        self._salary = salary
+
+    # emp_id property (read-only)
+    @property
+    def emp_id(self):
+        return self._emp_id
+
+    # name property (getter + setter)
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = value
+
+    # salary property (getter + setter with validation)
+    @property
+    def salary(self):
+        return self._salary
+
+    @salary.setter
+    def salary(self, value):
+        if value > 0:
+            self._salary = value
+        else:
+            print("Salary must be positive!")
+
+
+# Create object
+emp1 = Employ(101, "Srinivas", 50000)
+
+# Access attributes like normal variables
+
+print("Employee ID:", emp1.emp_id)     # read-only
+print("Employee Name:", emp1.name)
+print("Employee Salary:", emp1.salary)
+
+# Update attributes (uses setter behind the scenes)
+emp1.name = "Rao"
+emp1.salary = 60000
+
+print("\nAfter update:")
+print("Employee ID:", emp1.emp_id)
+print("Employee Name:", emp1.name)
+print("Employee Salary:", emp1.salary)
+
+
+

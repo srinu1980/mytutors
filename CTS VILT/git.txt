@@ -1,0 +1,90 @@
+
+
+Open your Brower
+=================
+
+First login your GitHub account
+
+Create New Repository
+
+	Name  : SampleRepo
+
+	Click on CreateRepository button
+
+
+Now goto Command Prompt:
+=========================
+
+	git init
+	git add sample1.txt
+	git status
+
+
+	C:\>git config --global user.name "srinivas"
+
+	C:\>git config --global user.email "srinu@gmail.com"
+
+
+	git commit -m "This is My First Commit"
+
+	git branch -M main
+
+
+
+
+
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/srinu1980/samplerepo.git
+git push -u origin main
+
+
+
+
+I want to upload my backend project(Ecommerce) into My Git repository
+==================================================================
+
+
+First Create a new repository 
+
+Open Browser, then sign in into your GitHub account
+
+
+
+
+
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/srinu1980/ecommercebackendproject.git
+git push -u origin main
+
+
+
+
+
+
+https://github.com/srinu1980/ecommercebackendproject
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

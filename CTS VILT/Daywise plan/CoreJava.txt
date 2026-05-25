@@ -1,0 +1,330 @@
+
+LTS  -> Java 8 features
+
+	JDK 17    features
+
+	JDK 21  features
+
+
+	JDK 24
+	Java
+	=========
+
+
+
+POP  -> Procedure Oriented Programming
+
+		functional
+
+		void fun1()
+		{
+
+		}
+
+OOP -> Object
+
+
+from java 8 features onwards
+	pop
+
+	WORA  -> Write Once Run on Anywhere
+
+
+	C  -> Dennis Richie  (POP)
+
+	C++ -> Bjourny Stroustrupt  (POP & OOP)
+
+	GUI /Web 
+	
+	Sun Microsystem
+	1991  -> OAK
+
+	1995  -> Java
+
+	Team  -> Green Team  (5 members)
+
+		James Gousling
+		Patric Naughton
+		Head Frank
+		Mike Scheridon
+		Chrish warth
+
+	1996  -> jdk 1.0
+		
+
+	2010  ->  Oracle corp			
+		java 8 features
+
+
+	c  -> 		
+		
+	
+	J2SE -> Java 2 Standard Edition
+
+	standalone applications /Windows Applications
+	Gui
+	Its works on only single machine
+	No need any servers
+
+Ex:  Swings /JWT
+
+
+	J2EE  -> Enterprise Edition
+	
+	Web applications
+	Server side application (Apache Tomcat, Web Logic, Web sphere, JBose, et...)
+
+ Servlets /JSP
+
+
+
+	JDK 1.8
+	
+		JRE  -> .dll
+		JAVA  -> .exe
+
+
+
+
+	J2ME  -> Micro Edition
+		
+
+	
+class Sample
+{
+
+	int x;  //instance variable
+
+	static int z; //static variable
+
+	void method1()
+	{
+
+		int y;  //local variable
+
+	}
+
+}
+
+
+
+Primitive datatypes
+====================
+
+
+	Numeric datatypes
+
+		integer datatypes
+
+			byte
+			short
+			int
+			long
+
+		real number datatype
+			float
+			double
+
+	Character datatypes
+
+			char
+
+	Boolean Datatypes
+		Boolean  -> true /false
+
+
+
+Scanner Class
+=================
+	This class is used to take input values through keyboard.
+
+This class is derived from "util" package.
+
+
+Whenever use this class, first we need to import this package.
+To  import this package like
+
+	import java.util.Scanner;
+
+
+
+Syntax for Scanner Class
+=======================
+
+	Scanner objectName =new Scanner(System.in);
+
+Important methods are :
+========================
+
+	objectName.nextInt()
+		nextDouble()
+		nextLong()
+		next()
+	
+
+
+Operators
+=============
+	An operator is a symbol, which is used to perform any operations between operands.
+
+These operators are :
+
+1. Arithmatic operators
+	+	-	 *  	/  	%
+
+2. Relational operators
+	>  <   ==   !=     >=    <=
+
+3. Logical operators
+
+	&&	And
+	||	OR
+	!	Not
+4. Assignment operator
+
+	=
+
+	This operator is used to assign right value or expression to left-side variable.
+
+Ex:
+	a=10;
+	res=a+b;
+
+6. Ternary operator
+
+	(condition) ? true-statements : false-statements
+
+7. Unary operators
+
+	++   -> increment operator
+	--	-> decrement operator
+
+8. Bitwise operators
+
+	&	|	
+
+	>>	<<
+
+
+
+Array
+===========
+
+	An array is a collection of similar datypes.
+	All elements are stored in memory continouslly.
+	Array index start with zero end with n-1.
+
+	Arrays are 
+
+		Single Dimentional array
+
+		Multi dimentional array
+
+
+To declare an array
+=======================
+
+syntax:
+		datatype []arrayname;
+
+
+ex:	int []arr;
+
+
+To allocate memory 
+===================
+
+syntax:
+		arrayname =new datatype[size];
+
+ex:
+		arr=new int[10];
+
+
+To declare & allocate memory as
+===================================
+
+syntax:
+
+	datatype []arrayname =new datatype[size];
+
+ex:
+	int []arr=new int[10];
+
+
+
+
+To declare & allocate memory for multidimentionala array
+===================================
+
+syntax:
+
+	datatype [][]arrayname =new datatype[rows][cols];
+
+ex:
+	int [][]arr=new int[2][3];
+
+
+
+To initialize an array
+====================
+
+syn:
+		datatype []arr={value1, value2,value3,....};
+
+
+
+String
+================
+
+	String is a class, which contains set of objects.
+
+We an also declare String object in 2 ways :
+
+1. String Literal
+
+2. using new keyword
+
+
+String Literal
+===============
+
+	String s="Welcome";
+
+Using new Keyword
+=================
+
+	String s=new String("Welcome");
+
+
+
+String class having more important methods
+=============================================
+
+length()
+toLowerCase()
+toUpperCase()
+equals()
+equalsIgnoreCase(
+indexOf
+charAt
+split
+
+
+To see all methods in String class
+
+javap java.lang.String
+
+
+
+
+cognizant.tekstac.com
+
+
+
+
+
+
+
+
+

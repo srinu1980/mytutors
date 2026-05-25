@@ -1,0 +1,227 @@
+To work with proxy design pattern.
+
+Concept Explanation:
+
+The Proxy design pattern provides a surrogate or placeholder for another object to control access to it. This pattern is useful when you want to add an extra layer of control over access to an object. The proxy helps in implementing access control, logging, monitoring, lazy initialization, and remote object representation. It typically handles additional functionality such as resource management, access restrictions, and performance optimizations. It is also known as the Surrogate Pattern.
+
+Concept Implementation:
+
+In this program, the Proxy design pattern is implemented to control access to the locker system. The ILockerAccess interface defines the method getLockerAccess for accessing the locker. The LockerService class implements this interface, providing the actual implementation of locker access. The ProxyService class also implements the ILockerAccess interface, acting as a proxy to the LockerService. It checks the authentication of the customer by iterating through the list obtained from the AuthenticationRepo and invokes the getLockerAccess method of LockerService only if the customer is authenticated. Otherwise, it returns "Unauthorized". This ensures controlled access to the locker system based on authentication status.
+
+Scenario:
+
+Implement the below scenario using the proxy pattern. 
+
+Software for Locker system is created which returns the name of the customer who can access the locker. Only selected members are allowed to access the locker. If a customer tries to access the locker and if he is an authenticated customer, the locker system should return the message <<name>> allowed to access the locker.
+
+Customer class is created with the attributes lockerId and customerName, getters and setters.
+
+AuthenticationRepo class is created with a method,
+
+List<Customer> getLockerCredentails()
+
+This method creates few customer's and returns a list of customers who are the authenticated customers who can access the locker.
+
+ILockerAccess interface is created with the  below method
+String getLockerAccess(String lockerId,String name)
+
+LockerService class should implement ILockerAccess
+
+Override the getLockerAccess.
+
+This method should return the string which should be <<name>> allowed to access the locker.
+
+ProxyService class should implement ILockerAccess
+
+Override the getLockerAccess as below,
+
+Create an object for AuthenticationRepo
+Iterate the list from AuthenticationRepo and check if the name and locker id match with the passed name and locker id, if it matches invoke the getLockerAccess method of LockerService else return "Unauthorized"
+
+Use Client which is main to test by creating and invoking ProxyService
+
+ 
+
+Note: Customer, AuthenticationRepo, ILockerAccess is already provided as part of the code skeleton. Do not change class name or attributes or methods in it.
+
+ 
+
+Sample Input 1: 
+
+Enter the Customer name:
+
+Oliver
+
+Enter the Locker Id:
+
+L100
+
+ 
+
+Sample Output 1:
+
+Oliver allowed to access the locker.
+
+ 
+
+Sample Input 2:
+
+Enter the Customer name:
+
+Jerry
+
+Enter the Locker Id:
+
+L111
+
+ 
+
+Sample Output 2:
+
+Unauthorized
+
+
+
+
+LockerSystem/src/AuthenticationRepo.java
+     
+     //Don't change the code
+     
+     import java.util.ArrayList;
+     import java.util.List;
+     
+     public class AuthenticationRepo {
+     	
+     	Customer c1 = new Customer("Michael","L001");
+    	Customer c2 = new Customer("Oliver","L100");
+    	Customer c3 = new Customer("John","L101");
+    	
+    	
+    	public List<Customer> getLockerCredentials()
+    	{
+    		List<Customer> custList = new ArrayList<Customer>();
+    		custList.add(c1);
+    		custList.add(c2);
+    		custList.add(c3);
+    		
+    		//System.out.println(custList);
+    		return custList;
+    		
+    	}
+    }
+    	 	  	  	 		     	   	      	 	
+    
+LockerSystem/src/Client.java
+     import java.util.Scanner;
+     
+     public class Client {
+     
+     	public static void main(String[] args) {
+     		// TODO Auto-generated method stub
+     		
+     		Scanner sc = new Scanner(System.in);
+     		
+    		System.out.println("Enter the Customer name:");
+    		String cust = sc.nextLine();
+    		System.out.println("Enter the Locker Id:");
+    		String lockerId = sc.nextLine();
+    		
+    		ProxyService ps = new ProxyService();
+    		System.out.println(ps.getLockerAccess(cust, lockerId));
+    		
+    
+    	}
+    
+    }
+    
+LockerSystem/src/Customer.java
+    //Don't change the code
+     public class Customer
+     {
+     	private String CustomerName;
+     	private String lockerId;
+     	
+     	public Customer(String customerName, String lockerId) 
+     	{
+     		this.CustomerName = customerName;
+    		this.lockerId = lockerId;
+    	}
+    	
+    	public String getCustomerName() {
+    		return CustomerName;
+    	}
+    	public void setCustomerName(String customerName) {
+    		CustomerName = customerName;
+    	}
+    	public String getLockerId() {
+    		return lockerId;
+    	}
+    	public void setLockerId(String lockerId) {
+    		this.lockerId = lockerId;
+    	}
+    	
+    
+    }
+    	 	  	  	 		     	   	      	 	
+    
+LockerSystem/src/ILockerAccess.java
+     //Don't change the code
+     public interface ILockerAccess {
+     	public String getLockerAccess(String name, String lockerId);
+     }
+     
+LockerSystem/src/LockerService.java
+     
+     public class LockerService implements ILockerAccess {
+     
+     	//Fill the code
+     	@Override
+     	public String getLockerAccess(String name, String lockerId) 
+     	{
+     	
+     		
+    		//java.util.Date date = new java.util.Date();
+    		return name+" allowed to access the locker.";
+    		//+lockerId +" at "+date
+    		
+    	}
+    
+    }
+    
+LockerSystem/src/ProxyService.java
+     import java.util.List;
+     
+     public class ProxyService implements ILockerAccess {
+     
+     	//Fill the code
+     	@Override
+     	public String getLockerAccess(String name, String lockerId) 
+     	{	
+     		
+    		AuthenticationRepo ar = new AuthenticationRepo();
+    		
+    		List<Customer> cList = ar.getLockerCredentials();
+    		
+    		LockerService lockerObj = new LockerService();
+    		String msg = null;
+    		for(Customer c : cList)
+    		{
+    			if (c.getCustomerName().equals(name) && c.getLockerId().equals(lockerId))
+    			{
+    				msg = lockerObj.getLockerAccess(name, lockerId);
+    				break;
+    			}
+    			else
+    				msg = "Unauthorized";
+    		}
+    		return msg;
+    	}
+    
+    }
+    	 	  	  	 		     	   	      	 	
+    
+
+
+
+
+

@@ -1,0 +1,691 @@
+Java Database Connectivity with MySQL
+
+
+Driver class: 
+
+The driver class for the mysql database is com.mysql.jdbc.Driver.
+
+
+
+Connection URL: 
+
+The connection URL for the mysql database is jdbc:mysql://localhost:3306/dbName 
+
+Username: The default username for the mysql database is root.
+
+Password: It is the password given by the user 
+
+
+
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class StudentDAO {
+	
+	
+	public static void insertStudentToDB(Student st) { 
+		////this Student st means...insert this st into db.
+		
+		try {
+			
+			//jdbc code write here.....
+			//create connection
+			Connection con = ConnectionProvider.createConnection();
+			
+			//create and fire query
+			String q = "insert into students(sName, sPhone, sCity) values (?,?,?)";
+			//PreparedStatement because of comple type query...
+			PreparedStatement pstmt = con.prepareStatement(q);
+			//set the value of parameters
+			pstmt.setString(1, st.getStudentName());
+			pstmt.setString(2, st.getStudentPhone());
+			pstmt.setString(3, st.getStudentPhone());
+			
+			//execute
+			pstmt.executeUpdate();
+			
+			//this will only execute if all is going well
+			System.out.println("Succefully Inserted the Student");
+			
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+		
+		
+	}
+
+	public static void deleteStudent(int userId) {
+try {
+			
+			//jdbc code write here.....
+			//create connection
+			Connection con = ConnectionProvider.createConnection();
+			
+			//create and fire query
+			String q = "delete from students where sId=?";
+			//PreparedStatement because of complete type query...
+			PreparedStatement pstmt = con.prepareStatement(q);
+			//set the value of parameters
+			pstmt.setInt(1, userId);
+			//execute
+			pstmt.executeUpdate();
+			
+			//this will only execute if all is going well means pstmt.executeUpdate(); is executed successfully
+			System.out.println("Succefully Deleted the Student...");
+			
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+	public static void updateStudent() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static void updateStudent(Student st) {
+		
+		try {
+			
+			//create connection
+			Connection con = ConnectionProvider.createConnection();
+			
+			//create & fire query...
+			
+			String q = "update students set sName=?, sPhone=?, sCity=? where sId=? ";
+			PreparedStatement pstmt = con.prepareStatement(q);
+			
+			pstmt.setString(1, st.getStudentName());
+			pstmt.setString(2, st.getStudentPhone());
+			pstmt.setString(3, st.getStudentCity());
+			pstmt.setInt(4, st.getStudentId());
+			
+			pstmt.executeUpdate();
+			System.out.println("Update Successfully...");
+			
+			
+			
+			
+			
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	public static void showAllStudenet() {
+		//display all Student
+try {
+			
+			//create connection
+			Connection con = ConnectionProvider.createConnection();
+			
+			//create & fire query...
+			
+			String q = "select * from students";
+			Statement stmt = con.createStatement();
+			
+			ResultSet set =stmt.executeQuery(q);
+			
+			while (set.next()) {
+				int id=set.getInt(1);
+				String name=set.getString(2);
+				String phone=set.getString(3);
+				//String city=set.getString(4); //or
+				String city=set.getString("sCity");
+				
+				System.out.println("ID :"+id);
+				System.out.println("Name :"+name);
+				System.out.println("Phone :"+phone);
+				System.out.println("City :"+city);
+				System.out.println("++++++++++++++++++++++++++++++");
+				
+				
+				
+			}
+			
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	//////////////
+
+}
+
+
+
+
+
+
+=====================
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+public class ConnectionProvider {
+	
+	static Connection con;
+	
+	public static Connection createConnection() {
+		
+		try {
+			
+			//steps of creating Database connection...
+			
+			//1. load the driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			
+			//2. Create the connection...
+			String url = "jdbc:mysql://localhost:3306/student_management_app";
+			String username = "root";
+			String password = "wasim";
+			con = DriverManager.getConnection(url, username, password);
+			
+			
+		
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		//return the connection
+		return con;
+		
+		
+		
+	}
+}
+
+=====================================
+
+public class Student {
+	private int studentId;
+	private String studentName;
+	private String studentPhone;
+	private String studentCity;
+	
+	
+	//setter and getters....
+	
+	public int getStudentId() {
+		return studentId;
+	}
+
+	public void setStudentId(int studentId) {
+		this.studentId = studentId;
+	}
+
+	public String getStudentName() {
+		return studentName;
+	}
+
+	public void setStudentName(String studentName) {
+		this.studentName = studentName;
+	}
+
+	public String getStudentPhone() {
+		return studentPhone;
+	}
+
+	public void setStudentPhone(String studentPhone) {
+		this.studentPhone = studentPhone;
+	}
+
+	public String getStudentCity() {
+		return studentCity;
+	}
+
+	public void setStudentCity(String studentCity) {
+		this.studentCity = studentCity;
+	}
+	
+	
+	
+	
+	//Constructor...
+	public Student(int studentId, String studentName, String studentPhone, String studentCity) {
+		super();
+		this.studentId = studentId;
+		this.studentName = studentName;
+		this.studentPhone = studentPhone;
+		this.studentCity = studentCity;
+	}
+
+	//2nd constructor
+	public Student(String studentName, String studentPhone, String studentCity) {
+		super();
+		this.studentName = studentName;
+		this.studentPhone = studentPhone;
+		this.studentCity = studentCity;
+	}
+
+	
+	public Student() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public String toString() {
+		return "Student [studentId=" + studentId + ", studentName=" + studentName + ", studentPhone=" + studentPhone
+				+ ", studentCity=" + studentCity + "]";
+	}
+
+}
+
+
+================================
+package com.student.management.app;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+/**
+ * Author Md. Talal Wasim
+ * 
+ * */
+
+public class MainStudentManage {
+
+	public static void main(String[] args) throws IOException {
+		System.out.println("Welcome to Student Management App.");
+		//taking input from users...
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		//Menu Driven Program...
+		while (true) {
+			System.out.println();
+			System.out.println("PRESS 1 to ADD/Insert Student");
+			System.out.println("PRESS 2 to Delete Student");
+			System.out.println("PRESS 3 to Update Student");
+			System.out.println("PRESS 4 to Display Student");
+			System.out.println("PRESS 5 to Exit App");
+			
+			int Userchoice = Integer.parseInt(br.readLine());//throws IOException
+			
+			if(Userchoice==1) {
+				
+				//add student
+				System.out.println("Enter student name :");
+				String name = br.readLine();
+				
+				System.out.println("Enter student Phone :");
+				String phone = br.readLine();
+				
+				System.out.println("Enter student city :");
+				String city = br.readLine();
+				
+				//create student object to store student
+				//we are not using studentsId, Id will auto generated by Database;
+				Student st = new Student(name, phone, city);
+				StudentDAO.insertStudentToDB(st);
+				System.out.println(st);
+				
+				
+				
+				
+				
+				
+			}else if (Userchoice == 2) {
+				
+				//delete student
+				//for deleting student you need to take id
+				System.out.println("Enter student ID to delete student.");
+				int userId = Integer.parseInt(br.readLine());
+				StudentDAO.deleteStudent(userId);
+				
+				
+			}else if (Userchoice==3) {
+				//Update the student...
+				System.out.println("Enter new Name for Updating Student :");
+				String name= br.readLine();
+				System.out.println("Enter new Phone :");
+				String phone= br.readLine();
+				System.out.println("Enter new City :");
+				String city= br.readLine();
+				System.out.println("Enter the Student ID :");
+				int id= Integer.parseInt(br.readLine());
+				
+				Student st = new Student(id, name, phone, city);
+				StudentDAO.updateStudent(st);
+				
+			}else if (Userchoice==4) {
+				//Display all Student
+				
+				StudentDAO.showAllStudenet();
+				
+				
+			}else if (Userchoice==5) {
+				//exit App
+				break;
+			}else {
+				//leave it Blank...
+			}
+			
+			
+		}
+		System.out.println("Thank you for using the APP");
+
+
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+===============================================================================================================================
+
+Model 2:
+
+
+
+package com.demo;
+
+public class Employee {
+	private String ID;
+	private String name;
+	private String salary;
+	
+	public String getID() {
+		return ID;
+	}
+	public void setID(String iD) {
+		ID = iD;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getSalary() {
+		return salary;
+	}
+	public void setSalary(String salary) {
+		this.salary = salary;
+	}
+	public Employee(String iD, String name, String salary) {
+		super();
+		ID = iD;
+		this.name = name;
+		this.salary = salary;
+	}
+	public Employee() {
+		super();
+	}
+	@Override
+	public String toString() {
+		return "Employee ID=" + ID + ", name=" + name + ", salary=" + salary;
+	}
+	
+	
+}
+
+
+
+--------
+package com.demo;
+
+public interface EmployeeDAO {
+	public void getAllEmployees();
+	public Employee getEmployeeById(String ID);
+	public Employee addEmployee(Employee e);
+	public Employee delEmployee(String ID);
+	public Employee updateEmployee(String ID, String name);
+	
+}
+---------
+import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class EmployeeImpl implements EmployeeDAO {
+	String username ="sa";
+	String password="Bharat51";
+	String url = "jdbc:sqlserver://localhost\\NIKITA\\SQLEXPRESS;databaseName=Demo;integratedSecurity=true";
+	Employee e = new Employee();
+
+	@Override
+		public void getAllEmployees() {
+		try
+		{
+			String query = "select * from Employee";
+			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");	
+			Connection conn = DriverManager.getConnection(url, username, password);
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery(query);
+			
+			while(rs.next())
+			{		
+				String id = rs.getString(1);
+				e.setID(id);
+				String name = rs.getString(2);
+				e.setName(name);
+				String sal = rs.getString(3);
+				e.setSalary(sal);
+				System.out.printf("|%5s|%-10s|%-10s|\n", id, name, sal);
+			}
+			
+			rs.close();
+			st.close();
+			conn.close();
+		}
+		catch (ClassNotFoundException | SQLException e) {		
+			e.printStackTrace();
+			}
+		}
+	
+		@Override
+		public Employee getEmployeeById(String ID) {
+			try
+			{
+				String query = "select * from Employee where ID="+ID;
+				Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+				Connection conn = DriverManager.getConnection(url, username, password);
+				Statement st = conn.createStatement();
+				ResultSet rs = st.executeQuery(query);
+					while(rs.next())
+					{					
+						String i = rs.getString(1);
+						e.setID(i);
+						String name = rs.getString(2);
+						e.setName(name);
+						String salary = rs.getString(3);
+						e.setSalary(salary);
+						//System.out.println("Employee ID: "+i+"\tEmployee name: "+name+"\tSalary: "+salary);
+						System.out.println("         Employee Data          ");
+						System.out.println("-----------------------------");
+						System.out.printf("|%5s|%-10s|%-10s|\n", "ID", "Name", "Salary");
+						System.out.println("-----------------------------");
+						System.out.printf("|%5s|%-10s|%-10s|\n", i, name, salary);
+						System.out.println("-----------------------------");
+					}
+				
+				
+				rs.close();
+				st.close();
+				conn.close();
+			}
+			catch (ClassNotFoundException | SQLException e) {		
+				e.printStackTrace();
+			}
+			return e;
+		}
+	
+			
+		@Override
+		public Employee addEmployee(Employee e) {
+			try {
+				Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+				Connection conn = DriverManager.getConnection(url, username, password);
+		        PreparedStatement ps = conn.prepareStatement("INSERT INTO Employee VALUES (?, ?, ?)");
+		       ps.setString(1, e.getID());
+		       ps.setString(2, e.getName());
+		       ps.setString(3, e.getSalary());
+		      int i =  ps.executeUpdate();
+		      if(i > 0) {
+		    	  System.out.println("Employee added successfully...!");		      	     
+		      }
+		      else
+		    	  System.out.println("Failed to add a record........!");
+		      ps.close();
+		      conn.close();
+		    } catch (ClassNotFoundException | SQLException ex) {
+		        ex.printStackTrace();
+		    }
+		    return null;
+			
+		}
+	
+		@Override
+		public Employee delEmployee(String ID) {
+			try
+			{
+				Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+				Connection conn = DriverManager.getConnection(url, username, password);
+				String sql = "DELETE FROM Employee WHERE ID=?";
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ps.setString(1, ID);
+												 
+				int i = ps.executeUpdate();
+				if (i > 0) {
+				    System.out.println("Data deleted successfully!");
+				}
+				else
+					System.out.println("Failed to delete data..!");
+				
+				ps.close();
+				conn.close();
+				
+			}catch (ClassNotFoundException | SQLException ex) {
+		        ex.printStackTrace();
+		    }
+			return null;
+			
+		}
+
+
+		@Override
+		public Employee updateEmployee(String ID, String name) {
+			try
+			{
+				Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+				Connection conn = DriverManager.getConnection(url, username, password);
+				String sql = "UPDATE Employee SET Name= ? WHERE ID=?";
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ps.setString(1, name);
+				ps.setString(2, ID);
+								 
+				int i = ps.executeUpdate();
+				if (i > 0) {
+				    System.out.println("An existing user was updated successfully!");
+				}
+				else
+					System.out.println("Failed to update data..!");
+				
+				ps.close();
+				conn.close();
+				
+			}catch (ClassNotFoundException | SQLException ex) {
+		        ex.printStackTrace();
+		    }
+			return null;
+			
+		}
+}
+
+--------------
+
+import java.util.Scanner;
+
+public class App  {
+	public static void main(String[] args) {
+		int choice,num;
+		
+		EmployeeDAO dao = new EmployeeImpl();
+		Employee e;
+		
+		do {
+			System.out.println("<-------Menu------>");
+			System.out.println("1.Get Employee by ID");
+			System.out.println("2.Add Employee");
+			System.out.println("3.Update Employee");
+			System.out.println("4.Delete Employee");
+			System.out.println("5.Get all Employees");
+			Scanner sc = new Scanner(System.in);
+			choice = sc.nextInt();
+		
+		switch(choice)
+		{
+		case 1: System.out.println("Enter the ID of Employee: ");
+				String id1 = sc.next();
+				e = dao.getEmployeeById(id1);
+			break;
+			
+		case 2: System.out.println("Enter Employee Details: ");
+				System.out.println("Enter Employee ID: ");
+				String id2 = sc.next();
+				System.out.println("Enter Employee Name: ");
+				String name = sc.next();
+				System.out.println("Enter Salary: ");
+				String salary = sc.next();
+				Employee e1 = new Employee(id2, name, salary);
+				e = dao.addEmployee(e1);
+			break;
+			
+		case 3:	System.out.println("Enter the ID to change record: ");
+				String id3 = sc.next();
+				System.out.println("Enter the new Name: ");
+				String name1 = sc.next();
+				e = dao.updateEmployee(id3, name1);
+			break;
+			
+		case 4: System.out.println("Enter the ID to delete record");
+				String id4 = sc.next();
+				e = dao.delEmployee(id4);
+				break;
+			
+		case 5: System.out.println("Employee Data");
+				System.out.println("-----------------------------");
+				System.out.printf("|%5s|%-10s|%-10s|\n", "ID", "Name", "Salary");
+				System.out.println("-----------------------------");
+				dao.getAllEmployees();
+				System.out.println("-----------------------------");
+				break;
+		default:
+			System.out.println("Wrong input..!"); 
+			break;
+		}
+		System.out.println("Enter 9 to continue..!");
+		num = sc.nextInt();
+		}while(num == 9);
+	}
+}
+
+--------------
+

@@ -1,0 +1,257 @@
+React Router
+-------------
+
+React Router is a library for handling routing and navigation in React JS Applications. It allows you to create dynamic routes providing a seamless user experience by mapping various URLs to components. It enables navigation in single-page application (SPA) without refreshing the entire page.
+
+Components of React Router
+==========================
+BrowserRouter: Uses the HTML5 history API to keep your UI in sync with the ------------                  URL.
+
+HashRouter: Uses the hash portion of the URL (i.e., window.location.hash) to ----------            keep your UI in sync with the URL.
+
+
+
+<BrowserRouter>
+    (/* Your routes go here */}
+</BrowserRouter>
+
+
+
+2. Routes and Route
+
+Routes: A container for all your route definitions.
+
+Route: Defines a single route with a path and the component to render.
+
+<Routes>
+    <Route path="/" element={<Home />} />
+    <Route path="/about" element={<About />} />
+</Routes>
+
+
+3. Link and NavLink
+
+Link: Creates navigational links in your application.
+
+NavLink: Similar to Link but provides additional styling attributes when the link is active.
+
+<nav>
+    <NavLink to="/" activeClassName="active">Home</NavLink>
+    <Link to="/about">About</Link>
+</nav>
+
+
+
+
+
+
+
+
+Steps to Create Routes using React Router
+===========================================
+
+Step 1: Initialize React Project
+
+npx create-react-app react-router-example
+
+cd react-router-example
+
+Step 2: Install React Router
+
+Install react-router in your application write the following command in your terminal
+
+npm install react-router-dom
+
+
+
+/* src/index.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+}
+
+nav li {
+    margin: 0 10px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+}
+
+button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+
+
+// src/index.js
+
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+    <React.StrictMode>
+        <App />
+    </React.StrictMode>
+);
+
+
+// src/App.js
+
+import React from "react";
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Link,
+    useNavigate,
+    Outlet,
+} from "react-router-dom";
+
+
+// Home Page Component
+const Home = () => {
+    const navigate = useNavigate();
+
+    return (
+        <div>
+            <h2>Home Page</h2>
+            <button onClick={() =>
+                 navigate("/contact")}>Go to Contact</button>
+        </div>
+    );
+};
+
+// About Page Component 
+const About = () => (
+    <div>
+        <h2>About Page</h2>
+        <nav>
+            <ul>
+                <li>
+                    <Link to="team">Our Team</Link>
+                </li>
+                <li>
+                    <Link to="company">Our Company</Link>
+                </li>
+            </ul>
+        </nav>
+        <Outlet />
+    </div>
+);
+
+// Components for other pages
+const Contact = () => <h2>Contact Page</h2>;
+const Team = () => <h2>Team Page</h2>;
+const Company = () => <h2>Company Page</h2>;
+
+function App() {
+    return (
+        <Router>
+            <nav>
+                <ul>
+                    <li>
+                        <Link to="/">Home</Link>
+                    </li>
+                    <li>
+                        <Link to="/about">About</Link>
+                    </li>
+                    <li>
+                        <Link to="/contact">Contact</Link>
+                    </li>
+                </ul>
+            </nav>
+            {/*Implementing Routes for respective Path */}
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />}>
+                    <Route path="team" element={<Team />} />
+                    <Route path="company" element={<Company />} />
+                </Route>
+                <Route path="/contact" element={<Contact />} />
+            </Routes>
+        </Router>
+    );
+}
+
+export default App;
+
+
+-------------------------------------
+
+npm start
+
+
+
+Uses of React Router
+----------------------
+	Navigation and Routing:
+	Dynamic Routing: 
+	URL Management:
+	Component-Based Approach
+
+
+
+
+React JS Types of Routers :
+
+On the basis of the part of the URL that the router will use to track the content that the user is trying to view, React Router provides three different kinds of routers: 
+
+--Memory Router
+--Browser Router
+--Hash Router
+
+
+
+Memory Router:
+-----------------
+The memory router keeps the URL changes in memory not in the user browsers.
+
+import { MemoryRouter as Router } from 'react-router-dom';
+
+
+Browser Router:
+----------------
+It uses HTML 5 history API (i.e. pushState, replaceState, and popState API) to keep your UI in sync with the URL.
+
+import { BrowserRouter as Router } from 'react-router-dom';
+
+
+Hash Router:
+-------------
+Hash router uses client-side hash routing. It uses the hash portion of the URL (i.e. window.location.hash) to keep your UI in sync with the URL.
+import { HashRouter as Router } from 'react-router-dom';
+
+
+
+

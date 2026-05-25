@@ -1,0 +1,65 @@
+
+Meeting session name should be in the below format:
+
+ 
+
+Java Standard (VILT)
+
+
+Session Name (Morning)- 9Am to 1PM
+<LP Name->_<Cohortcode1, Cohortcode2>_<Topic Name>
+JavaStandard_TTP2SPJS2538_AgileMethodology
+
+
+Session Name(Afternoon)- 2Pm to 6PM
+<LP Name->_<Cohortcode1, Cohortcode2>_DoubtClearingSession
+
+JavaStandard_TTP2SPJS2538_DoubtClearingSession
+
+
+
+JavaStandard_TTP2SPJS2538_ShellScripting
+JavaStandard_TTP2SPJS2538_DoubtClearingSession
+
+
+
+JavaStandard_TTP2SPJS2538_JavaScript JQuery
+
+
+
+"HTML5, CSS3, 
+Bootstrap 5
+jQuery
+ANSI SQL using Oracle"
+
+
+script.sh
+
+     read p
+     
+     for((m=1; m<=p; m++))
+    do
+   
+   13 	for((a=m; a<=p; a++))
+   14 	do
+   15 	echo -ne " ";
+   16 	done
+   17 	
+   18 	# This loop print the left
+   19 	# side of the pyramid
+   20 	for((n=1; n<=m; n++))
+   21 	do
+   22 	echo -ne "#";
+   23 	done
+   24 
+   25 	# This loop print right
+   26 	# side of the pyramid.
+   27 	for((i=1; i<m; i++))
+   28 	do
+   29 	echo -ne "#";
+   30 	done
+   31 
+   32 	# New line
+   33 	echo;
+   34 done
+   35 

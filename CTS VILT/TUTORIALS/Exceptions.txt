@@ -1,0 +1,337 @@
+
+
+Exception Handling
+
+Collections
+
+Java 8 Fetaures / Lamda Expre Streams
+
+
+
+
+
+try
+catch
+throw
+throws 
+finally
+
+
+
+void method()
+{
+
+	try
+	{
+
+		business logic implement here
+
+		
+
+	}
+	catch(Exception-Name  object)
+	{
+
+		throw the Exception
+
+	}
+
+	finally
+	{
+
+
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Why an exception occurs?
+=============================
+
+There can be several reasons that can cause a program to throw exception. 
+
+For example: Opening a non-existing file in your program,
+	 Network connection problem,
+ 	bad input data provided by user etc.
+
+Unreachable catch block for ArithmeticException. It is already handled by the catch block for Exception
+
+
+
+1. ArithmeticException:
+=============================
+
+int num = 25/0;//ArithmeticException
+
+
+2. NullPointerException:
+
+When a variable contains null value and you are performing an operation on the variable. 
+
+
+String str = null;  
+
+//NullPointerException
+System.out.println(str.length());
+
+
+
+3. NumberFormatException:
+
+This exception occurs where there is a type mismatch. 
+
+Let’s say you are trying to perform an arithmetic operator on a string variable.
+
+String str = "cognizant"; 
+
+//NumberFormatException  
+
+int num=Integer.parseInt(str);
+
+
+4. ArrayIndexOutOfBoundsException:
+
+When you are trying to access the array index which is beyond the size of array. 
+
+Here, we are trying to access the index 8 (9th element) but the size of the array is only 3. 
+
+This exception occurs when you are accessing index which doesn’t exist.
+
+int arr[]=new int[3]; 
+
+//ArrayIndexOutOfBoundsException  
+arr[8]=100;
+
+
+
+
+public class ExcepTest {
+
+   public static void main(String args[]) {
+      try {
+         int a[] = new int[2];
+         int b = 0;
+         int c = 1/b;
+         System.out.println("Access element three :" + a[3]);
+      }
+      catch (ArrayIndexOutOfBoundsException e) {
+         System.out.println("ArrayIndexOutOfBoundsException thrown  :" + e);
+      }catch (Exception e) {
+          System.out.println("Exception thrown  :" + e);
+      }
+      System.out.println("Out of the block");
+   }
+}
+
+
+
+
+
+Why Java Finally Block Used?
+===============================
+
+Java finally block can be used for clean-up (closing) the connections, files opened, streams, etc. those must be closed before exiting the program.
+
+It can also be used to print some final information.
+
+
+
+
+try: The code that can cause the exception, is placed inside try block. The try block detects whether the exception occurs or not, if exception occurs, it transfer the flow of program to the corresponding catch block or finally block. A try block is always followed by either a catch block or finally block.
+
+catch: The catch block is where we write the logic to handle the exception, if it occurs. A catch block only executes if an exception is caught by the try block. A catch block is always accompanied by a try block.
+
+finally: This block always executes whether an exception is occurred or not.
+
+
+
+
+
+throw: It is used to explicitly throw an exception. It can be used to throw a checked or unchecked exception.
+
+throws: It is used in method signature. It indicates that this method might throw one of the declared exceptions. While calling such methods, we need to handle the exceptions using try-catch block.
+
+
+
+
+User Defined Exception
+==========================
+
+
+Whenver create an exception , that exception class must be extends  Exception /RuntimeException
+
+
+syn:
+
+	class MyOwnException extends Exception
+	{
+
+
+		public MyOwnException(String s)
+		{
+
+			System.out.println(s)
+
+		}
+
+
+		public String toString()
+		{
+			return "Message"
+		}
+
+	}
+
+
+User Defined Exception (or)Custom Exception
+==================================================
+
+A custom exception in Java is a user-defined exception class created to handle specific error conditions or business logic violations within an application. 
+
+Instead of relying solely on the standard, built-in Java exceptions, developers can design custom exceptions that are more descriptive and tailored to the unique needs of their software.
+
+
+Why Use Java Custom Exceptions?
+==================================
+
+To represent application-specific errors.
+To add clear, descriptive error messages for better debugging.
+To encapsulate business logic errors in a meaningful way.
+
+
+Create a User-Defined Custom Exception
+===========================================
+
+1.    Create a new class that extends Exception (for checked exceptions) or 		RuntimeException (for unchecked exceptions).
+
+2.     Provide constructors to initialize the exception with custom messages.
+
+3.     Add methods to provide additional details about the exception. (this is 	optional)
+
+
+Example:
+==============
+
+class MyException extends Exception
+ { 
+
+	private int ex; 
+
+	MyException(int a) 
+	{ 
+
+		ex = a; 
+	}
+ 
+	public String toString()
+ 	{ 
+		return "MyException[" + ex +"] is less than zero"; }
+	 }
+ 
+class Demo
+ { 
+
+static void sum(int a,int b) throws MyException
+ {
+
+ if(a<0) 
+ {
+	 throw new MyException(a); //calling constructor of user-defined exception class 
+} 
+else
+ { System.out.println(a+b);
+ }
+
+ } 
+
+public static void main(String[] args) 
+{
+ try { sum(-10, 10); } 
+
+catch(MyException me) 
+{ System.out.println(me); //it calls the toString() method of user-defined Exception } } }
+
+
+
+
+
+
+
+
+
+
+
+Java throws and throw
+========================
+If a method does not handle a checked exception, the method must declare it using the throws keyword. The throws keyword appears at the end of a method's signature.
+
+You can throw an exception, either a newly instantiated one or an exception that you just caught, by using the throw keyword.
+
+
+
+Syn:
+
+method(parameters) throws exception {
+  // Method implementation
+  throw new exception();
+}
+
+
+
+
+public class ThrowDemo{  
+   void checkAge(int age){  
+	if(age<18)  
+	   throw new ArithmeticException("Not Eligible for voting");  
+	else  
+	   System.out.println("Eligible for voting");  
+   }  
+   public static void main(String args[]){  
+	Example1 obj = new Example1();
+	obj.checkAge(13);  
+	System.out.println("End Of Program");  
+   }  
+}
+
+
+===============================================
+
+public class ThrowsDemo{  
+   int division(int a, int b) throws ArithmeticException{  
+	int t = a/b;
+	return t;
+   }  
+   public static void main(String args[]){  
+	Example1 obj = new Example1();
+	try{
+	   System.out.println(obj.division(15,0));  
+	}
+	catch(ArithmeticException e){
+	   System.out.println("You shouldn't divide number by zero");
+	}
+   }  
+}
+

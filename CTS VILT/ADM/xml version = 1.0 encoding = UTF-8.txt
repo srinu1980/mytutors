@@ -1,0 +1,69 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns = "http://www.springframework.org/schema/beans"
+   xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation = "http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+
+<bean class="com.cts.autowired.Address" name="address">
+
+<property name="street" value="First Street"></property>
+<property name="city" value="Pune"></property>
+
+
+</bean>
+
+<bean class="com.cts.autowired.Emp" name="emp1" autowire="byType"></bean>
+  </beans>
+
+
+
+
+
+HelloWorld.java
+=============
+
+public class HelloWorld {
+   private String message;
+
+   public void setMessage(String message){
+      this.message  = message;
+   }
+   public void getMessage(){
+      System.out.println("Your Message : " + message);
+   }
+}
+
+
+
+
+
+
+HelloWorldConfig.java
+===============
+
+import org.springframework.context.annotation.*;
+
+@Configuration
+public class HelloWorldConfig {
+   @Bean 
+   public HelloWorld helloWorld(){
+      return new HelloWorld();
+   }
+}
+
+
+
+
+public class MainApp {
+   public static void main(String[] args) {
+      ApplicationContext ctx = 
+         new AnnotationConfigApplicationContext(HelloWorldConfig.class);
+   
+      HelloWorld helloWorld = ctx.getBean(HelloWorld.class);
+      helloWorld.setMessage("Hello World!");
+      helloWorld.getMessage();
+   }
+}
+

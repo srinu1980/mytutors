@@ -1,0 +1,421 @@
+Factory Design Pattern
+
+// Step 1: Define a common product interface.
+interface Drink {
+    void prepare();
+}
+
+// Step 2: Implement concrete classes of the product.
+class Coffee implements Drink {
+    @Override
+    public void prepare() {
+        System.out.println("Preparing coffee.");
+    }
+}
+
+class Tea implements Drink {
+    @Override
+    public void prepare() {
+        System.out.println("Preparing tea.");
+    }
+}
+
+// Step 3: Define the factory and provide its concrete implementation.
+class DrinkFactory {
+    public Drink getDrink(String drinkType) {
+        if (drinkType == null) {
+            return null;
+        }
+        if (drinkType.equalsIgnoreCase("COFFEE")) {
+            return new Coffee();
+        } else if (drinkType.equalsIgnoreCase("TEA")) {
+            return new Tea();
+        }
+        return null;
+    }
+}
+
+// Demonstrate the Factory Design Pattern.
+public class FactoryPatternIllustration {
+    public static void main(String[] args) {
+        DrinkFactory drinkFactory = new DrinkFactory();
+
+        Drink drink1 = drinkFactory.getDrink("COFFEE");
+        drink1.prepare();
+
+        Drink drink2 = drinkFactory.getDrink("TEA");
+        drink2.prepare();
+    }
+}
+
+
+
+=======================================================================
+Builder Design Pattern
+
+
+// Step 1: Create the product class.
+class Car {
+    private String engine;
+    private String wheels;
+    private String color;
+
+    public void setEngine(String engine) { this.engine = engine; }
+    public void setWheels(String wheels) { this.wheels = wheels; }
+    public void setColor(String color) { this.color = color; }
+
+    @Override
+    public String toString() {
+        return "Car [engine=" + engine + ", wheels=" + wheels + ", color=" + color + "]";
+    }
+}
+
+// Step 2: Create the builder interface.
+interface CarBuilder {
+    void buildEngine();
+    void buildWheels();
+    void buildColor();
+    Car getCar();
+}
+
+// Step 3: Implement the builder.
+class SportsCarBuilder implements CarBuilder {
+    private Car car = new Car();
+
+    @Override
+    public void buildEngine() {
+        car.setEngine("Sports Engine");
+    }
+
+    @Override
+    public void buildWheels() {
+        car.setWheels("Racing Wheels");
+    }
+
+    @Override
+    public void buildColor() {
+        car.setColor("Red");
+    }
+
+    @Override
+    public Car getCar() {
+        return car;
+    }
+}
+
+// Step 4: Define a director class.
+class CarDirector {
+    private CarBuilder builder;
+
+    public CarDirector(CarBuilder builder) {
+        this.builder = builder;
+    }
+
+    public Car construct() {
+        builder.buildEngine();
+        builder.buildWheels();
+        builder.buildColor();
+        return builder.getCar();
+    }
+}
+
+// Demonstration
+public class BuilderPatternDemo {
+    public static void main(String[] args) {
+        CarBuilder sportsCarBuilder = new SportsCarBuilder();
+        CarDirector director = new CarDirector(sportsCarBuilder);
+
+        Car car = director.construct();
+        System.out.println(car);
+    }
+}
+
+
+
+
+Prototype Design Pattern
+
+
+
+
+// Step 1: Create a prototype interface.
+interface Prototype {
+    Prototype clone();
+}
+
+// Step 2: Implement the prototype interface in concrete class.
+class ConcretePrototype implements Prototype {
+    private String attribute;
+
+    public ConcretePrototype(String attribute) {
+        this.attribute = attribute;
+    }
+
+    public String getAttribute() {
+        return attribute;
+    }
+
+    @Override
+    public Prototype clone() {
+        return new ConcretePrototype(this.attribute);
+    }
+
+    @Override
+    public String toString() {
+        return "Attribute: " + attribute;
+    }
+}
+
+// Demonstration
+public class PrototypePatternDemo {
+    public static void main(String[] args) {
+        ConcretePrototype original = new ConcretePrototype("Initial Value");
+        ConcretePrototype cloned = (ConcretePrototype) original.clone();
+
+        System.out.println("Original Object: " + original);
+        System.out.println("Cloned Object: " + cloned);
+    }
+}
+
+
+==================================================================================================
+
+Adapter Design Pattern
+
+
+
+
+
+// Step 1: Define the target interface.
+interface Target {
+    void request();
+}
+
+// Step 2: Implement an adapter class.
+class Adapter implements Target {
+    private Adaptee adaptee;
+
+    public Adapter(Adaptee adaptee) {
+        this.adaptee = adaptee;
+    }
+
+    @Override
+    public void request() {
+        adaptee.specificRequest();
+    }
+}
+
+// Existing incompatible class.
+class Adaptee {
+    public void specificRequest() {
+        System.out.println("Called specificRequest() of Adaptee.");
+    }
+}
+
+// Demonstration
+public class AdapterPatternDemo {
+    public static void main(String[] args) {
+        Adaptee adaptee = new Adaptee();
+        Target target = new Adapter(adaptee);
+
+        target.request();
+    }
+}
+
+
+======================================================================================================
+
+
+// Step 1: Create the Color interface (Implementor)
+interface Color {
+    void applyColor();
+}
+
+// Step 2: Implement the Color interface
+class Red implements Color {
+    public void applyColor() {
+        System.out.println("Applying red color");
+    }
+}
+
+class Blue implements Color {
+    public void applyColor() {
+        System.out.println("Applying blue color");
+    }
+}
+
+// Step 3: Create the Shape abstraction
+abstract class Shape {
+    protected Color color;
+
+    public Shape(Color color) {
+        this.color = color;
+    }
+
+    abstract void draw();
+}
+
+// Step 4: Implement the Shape abstraction
+class Circle extends Shape {
+    public Circle(Color color) {
+        super(color);
+    }
+
+    public void draw() {
+        System.out.print("Drawing Circle in ");
+        color.applyColor();
+    }
+}
+
+class Square extends Shape {
+    public Square(Color color) {
+        super(color);
+    }
+
+    public void draw() {
+        System.out.print("Drawing Square in ");
+        color.applyColor();
+    }
+}
+
+// Step 5: Demonstrate the Bridge Design Pattern
+public class BridgePatternDemo {
+    public static void main(String[] args) {
+        Shape redCircle = new Circle(new Red());
+        Shape blueSquare = new Square(new Blue());
+
+        redCircle.draw();
+        blueSquare.draw();
+    }
+}
+
+
+
+=====================================================================================================
+
+// Step 1: Define the component interface
+interface Beverage {
+    String getDescription();
+    double cost();
+}
+
+// Step 2: Implement concrete components
+class Espresso implements Beverage {
+    public String getDescription() {
+        return "Espresso";
+    }
+
+    public double cost() {
+        return 1.99;
+    }
+}
+
+// Step 3: Create abstract decorator class
+abstract class BeverageDecorator implements Beverage {
+    protected Beverage beverage;
+}
+
+// Step 4: Implement concrete decorators
+class Milk extends BeverageDecorator {
+    public Milk(Beverage beverage) {
+        this.beverage = beverage;
+    }
+
+    public String getDescription() {
+        return beverage.getDescription() + ", Milk";
+    }
+
+    public double cost() {
+        return beverage.cost() + 0.30;
+    }
+}
+
+class Sugar extends BeverageDecorator {
+    public Sugar(Beverage beverage) {
+        this.beverage = beverage;
+    }
+
+    public String getDescription() {
+        return beverage.getDescription() + ", Sugar";
+    }
+
+    public double cost() {
+        return beverage.cost() + 0.10;
+    }
+}
+
+// Step 5: Demonstrate the Decorator Pattern
+public class DecoratorPatternDemo {
+    public static void main(String[] args) {
+        Beverage espresso = new Espresso();
+        System.out.println(espresso.getDescription() + " $" + espresso.cost());
+
+        Beverage espressoWithMilk = new Milk(espresso);
+        System.out.println(espressoWithMilk.getDescription() + " $" + espressoWithMilk.cost());
+
+        Beverage espressoWithMilkSugar = new Sugar(espressoWithMilk);
+        System.out.println(espressoWithMilkSugar.getDescription() + " $" + espressoWithMilkSugar.cost());
+    }
+}
+
+
+=====================================================================================
+
+
+// Step 1: Define the interface
+interface Image {
+    void display();
+}
+
+// Step 2: Implement the RealObject
+class RealImage implements Image {
+    private String filename;
+
+    public RealImage(String filename) {
+        this.filename = filename;
+        loadFromDisk();
+    }
+
+    private void loadFromDisk() {
+        System.out.println("Loading " + filename);
+    }
+
+    @Override
+    public void display() {
+        System.out.println("Displaying " + filename);
+    }
+}
+
+// Step 3: Implement the Proxy
+class ProxyImage implements Image {
+    private RealImage realImage;
+    private String filename;
+
+    public ProxyImage(String filename) {
+        this.filename = filename;
+    }
+
+    @Override
+    public void display() {
+        if(realImage == null) {
+            realImage = new RealImage(filename);
+        }
+        realImage.display();
+    }
+}
+
+// Client code
+public class ProxyPatternDemo {
+    public static void main(String[] args) {
+        Image image = new ProxyImage("testImage.jpg");
+
+        // Image will be loaded from disk
+        image.display();
+        System.out.println("");
+
+        // Image will not be loaded from disk
+        image.display();
+    }
+}
+
+
