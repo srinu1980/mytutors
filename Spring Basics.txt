@@ -1,0 +1,206 @@
+
+
+In Spring Framework, Stereotype Annotations are special annotations used to mark a class as a Spring-managed component.
+
+They help Spring identify and automatically create objects (beans) during component scanning.
+
+
+Main Stereotype Annotations in Spring
+
+1. @Component
+
+	Generic stereotype annotation.
+	Used for any Spring-managed component.
+
+
+
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class EmployeeService {
+
+    public void display() {
+        System.out.println("Employee Service Class");
+    }
+}
+
+
+Purpose
+
+Tells Spring to create an object (bean) of this class.
+Base annotation for other stereotype annotations.
+
+
+2. @Service
+
+Used in the Service Layer.
+Represents business logic classes.
+
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class PaymentService {
+
+    public void payment() {
+        System.out.println("Payment Processing");
+    }
+}
+
+
+
+Purpose
+
+Indicates business/service logic.
+Makes code more readable and organized.
+
+
+
+3. @Repository
+Used in the DAO/Persistence Layer.
+Handles database operations.
+
+
+
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class EmployeeRepository {
+
+    public void save() {
+        System.out.println("Data Saved");
+    }
+}
+
+
+
+Special Feature
+
+Converts database exceptions into Spring exceptions automatically.
+
+
+
+4. @Controller
+Used in Spring MVC applications.
+Handles HTTP requests.
+
+
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class HomeController {
+
+    @RequestMapping("/home")
+    public String home() {
+        return "home.jsp";
+    }
+}
+
+
+Purpose
+Receives user requests.
+Returns view/pages.
+
+
+5. @RestController
+
+Combination of:
+	@Controller
+	@ResponseBody
+
+	Used for REST APIs.
+
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class ProductController {
+
+    @GetMapping("/product")
+    public String getProduct() {
+        return "Mobile";
+    }
+}
+
+
+Purpose
+
+Returns JSON/XML data directly.
+Mainly used in RESTful web services.
+
+
+
+Hierarchy of Stereotype Annotations
+
+
+@Component
+   |
+   |-- @Service
+   |-- @Repository
+   |-- @Controller
+          |
+          |-- @RestController
+
+
+Advantages of Stereotype Annotations
+
+
+	Reduces XML configuration.
+	Supports automatic bean creation.
+	Improves readability	.
+	Separates application layers clearly.
+	Supports dependency injection.
+
+
+
+Example of Layered Architecture
+
+Controller Layer  -> @Controller / @RestController
+Service Layer     -> @Service
+DAO Layer         -> @Repository
+Utility Class     -> @Component
+
+
+Component Scanning
+
+Spring automatically scans classes using:
+
+@ComponentScan("com.example")
+
+
+
+or in Spring Boot:
+
+@SpringBootApplication
+
+
+
+because it internally contains:
+
+@ComponentScan
+
+
+
+Difference between @Component and @Service
+
+@Component	@Service
+
+
+Generic annotation	Specific for service layer
+Used anywhere	Used for business logic
+Less readable	More semantic/readable
+
+
+Summary
+
+Annotation		Layer			Purpose
+=============================================================================
+@Component		Generic			Any Spring Bean
+@Service		Service			Business Logic
+@Repository		DAO			Database Operations
+@Controller		MVC			Handles Requests
+@RestController		REST API		Returns JSON/XML
