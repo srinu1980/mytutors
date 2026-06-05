@@ -1,0 +1,1471 @@
+
+
+
+
+
+Global Exception Handling in Spring Boot REST API
+
+
+
+
+Why Do We Need Exception Handling?
+
+
+Suppose a client requests:
+
+GET /products/100
+
+
+
+But Product ID 100 does not exist.
+
+
+Without exception handling:
+----------------------------
+
+{
+  "timestamp":"2026-06-05T10:30:00",
+  "status":500,
+  "error":"Internal Server Error"
+}
+
+
+
+This is not user-friendly.
+
+
+Instead, we want:
+
+{
+  "message":"Product not found with id : 100",
+  "status":404,
+  "timestamp":"2026-06-05T10:30:00"
+}
+
+
+This is where Global Exception Handling helps.
+
+Exception Handling Flow
+
+
+Client
+  |
+Controller
+  |
+Service
+  |
+Exception Thrown
+  |
+Global Exception Handler
+  |
+Custom Response
+
+
+
+Step 1: Create Custom Exception
+
+Create package:
+
+exception
+
+
+ProductNotFoundException.java
+
+package com.example.exception;
+
+public class ProductNotFoundException
+        extends RuntimeException {
+
+    public ProductNotFoundException(String message) {
+        super(message);
+    }
+}
+
+
+
+Why RuntimeException?
+
+public class ProductNotFoundException
+       extends RuntimeException
+
+
+RuntimeException is unchecked.
+
+No need to write:
+
+throws ProductNotFoundException
+
+everywhere.
+
+
+
+
+
+Step 2: Create Error Response DTO
+
+
+Create a common error response object.
+
+
+ErrorResponse.java
+
+Using Java 21 Record:
+
+package com.example.exception;
+
+import java.time.LocalDateTime;
+
+public record ErrorResponse(
+        String message,
+        int status,
+        LocalDateTime timestamp
+) {
+}
+
+
+
+Step 3: Throw Exception from Service Layer
+
+
+Current code:
+
+public Product getProduct(Integer id){
+
+    return repository.findById(id)
+            .orElse(null);
+}
+
+
+Replace with:
+
+public Product getProduct(Integer id){
+
+    return repository.findById(id)
+            .orElseThrow(() ->
+                    new ProductNotFoundException(
+                            "Product not found with id : " + id
+                    ));
+}
+
+
+
+Update Delete Method
+
+public void deleteProduct(Integer id){
+
+    Product product =
+            repository.findById(id)
+                    .orElseThrow(() ->
+                            new ProductNotFoundException(
+                                    "Product not found with id : " + id
+                            ));
+
+    repository.delete(product);
+}
+
+Update Method
+
+public Product updateProduct(Integer id,
+                             Product product){
+
+    Product existing =
+            repository.findById(id)
+                    .orElseThrow(() ->
+                            new ProductNotFoundException(
+                                    "Product not found with id : " + id
+                            ));
+
+    existing.setProductName(
+            product.getProductName());
+
+    existing.setPrice(
+            product.getPrice());
+
+    return repository.save(existing);
+}
+
+
+
+Step 4: Create Global Exception Handler
+
+GlobalExceptionHandler.java
+
+package com.example.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.time.LocalDateTime;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(
+            ProductNotFoundException.class)
+    public ResponseEntity<ErrorResponse>
+    handleProductNotFoundException(
+            ProductNotFoundException ex){
+
+        ErrorResponse error =
+                new ErrorResponse(
+                        ex.getMessage(),
+                        HttpStatus.NOT_FOUND.value(),
+                        LocalDateTime.now()
+                );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+}
+
+
+
+Understanding Annotations
+
+@RestControllerAdvice
+@RestControllerAdvice
+
+Acts globally for all controllers.
+
+
+
+
+Instead of:
+
+try{
+}
+catch(){
+}
+
+
+
+inside every controller method.
+
+@ExceptionHandler
+@ExceptionHandler(
+        ProductNotFoundException.class)
+
+
+
+
+Handles only:
+
+ProductNotFoundException
+
+
+
+
+
+Simplified Controller
+
+
+Before:
+
+@GetMapping("/{id}")
+public ResponseEntity<Product>
+getProduct(@PathVariable Integer id){
+
+    Product product =
+            service.getProduct(id);
+
+    if(product == null){
+        return ResponseEntity
+                .notFound()
+                .build();
+    }
+
+    return ResponseEntity.ok(product);
+}
+
+
+
+After Global Exception Handling:
+
+@GetMapping("/{id}")
+public ResponseEntity<Product>
+getProduct(@PathVariable Integer id){
+
+    return ResponseEntity.ok(
+            service.getProduct(id)
+    );
+}
+
+
+Much cleaner.
+
+Testing
+
+Existing Product
+
+GET /products/1
+
+Response:
+
+{
+  "productId":1,
+  "productName":"Laptop",
+  "price":50000
+}
+Status:
+
+200 OK
+Non Existing Product
+GET /products/100
+Response:
+
+{
+  "message":"Product not found with id : 100",
+  "status":404,
+  "timestamp":"2026-06-05T10:30:00"
+}
+
+Status:
+
+404 NOT FOUND
+
+
+-------------------
+
+Handle Generic Exceptions
+
+Add another handler.
+
+@ExceptionHandler(Exception.class)
+public ResponseEntity<ErrorResponse>
+handleException(Exception ex){
+
+    ErrorResponse error =
+            new ErrorResponse(
+                    ex.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    LocalDateTime.now()
+            );
+
+    return ResponseEntity
+            .status(
+                    HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(error);
+}
+
+
+
+Final Project Structure
+
+src/main/java
+|
+├── controller
+|      └── ProductController
+|
+├── service
+|      └── ProductService
+|
+├── repository
+|      └── ProductRepository
+|
+├── entity
+|      └── Product
+|
+├── exception
+|      ├── ProductNotFoundException
+|      ├── ErrorResponse
+|      └── GlobalExceptionHandler
+|
+└── ProductApplication
+
+
+
+What is @RestControllerAdvice?
+
+A specialized component that handles exceptions globally across all controllers.
+
+
+Why use a Custom Exception?
+To provide meaningful business-specific error messages.
+
+
+
+Example:
+
+ProductNotFoundException
+UserNotFoundException
+OrderNotFoundException
+
+
+
+
+Why use ErrorResponse DTO?
+
+To return a consistent JSON error structure to clients.
+
+Difference between @ControllerAdvice and @RestControllerAdvice?
+
+
+Annotation	Usage
+
+@ControllerAdvice	MVC Applications
+
+@RestControllerAdvice	REST APIs (returns JSON automatically)
+
+
+
+
+
+The next step is Swagger/OpenAPI Documentation.
+
+Swagger automatically generates API documentation and provides a UI to test REST APIs from the browser.
+
+What is OpenAPI?
+
+OpenAPI is a specification for describing REST APIs.
+
+Example:
+
+GET /products
+POST /products
+PUT /products/{id}
+DELETE /products/{id}
+OpenAPI documents these endpoints automatically.
+
+
+
+What is Swagger?
+
+Swagger provides:
+
+	Interactive API Documentation
+
+	API Testing UI
+
+	Request/Response Details
+
+	HTTP Status Codes
+
+
+
+Request Body Examples
+
+Without Swagger:
+
+Developer → Read Code → Understand APIs
+
+
+With Swagger:
+
+Developer → Open Browser → Test APIs
+
+
+
+Step 1: Add Dependency
+
+For Spring Boot 3.x use springdoc-openapi.
+
+pom.xml
+<dependency>
+    <groupId>org.springdoc</groupId>
+    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+    <version>2.8.9</version>
+</dependency>
+
+
+Step 2: Run Application
+
+Start Spring Boot:
+
+mvn spring-boot:run
+
+
+
+Step 3: Open Swagger UI
+
+Default URL:
+
+http://localhost:8080/swagger-ui.html
+or
+
+http://localhost:8080/swagger-ui/index.html
+You will see all Product APIs automatically listed.
+
+
+
+Step 4: Existing Product Controller
+
+@RestController
+@RequestMapping("/products")
+public class ProductController {
+
+}
+
+
+Swagger automatically scans this controller.
+
+Basic Swagger Output
+Product Controller
+
+GET     /products
+GET     /products/{id}
+POST    /products
+PUT     /products/{id}
+DELETE  /products/{id}
+
+
+Step 5: Add OpenAPI Information
+
+Create configuration class.
+
+OpenApiConfig.java
+package com.example.config;
+
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class OpenApiConfig {
+
+    @Bean
+    public OpenAPI customOpenAPI() {
+
+        return new OpenAPI()
+                .info(
+                        new Info()
+                                .title("Product Management API")
+                                .version("1.0")
+                                .description(
+                                        "Spring Boot CRUD Application"
+                                )
+                );
+    }
+}
+
+
+Swagger UI Shows
+
+Product Management API
+
+Version : 1.0
+
+Description:
+Spring Boot CRUD Application
+
+
+
+Step 6: Add Controller Documentation
+Import:
+
+import io.swagger.v3.oas.annotations.Operation;
+
+
+GET All Products
+@Operation(
+        summary = "Get All Products",
+        description = "Returns all products from database"
+)
+@GetMapping
+public ResponseEntity<List<Product>>
+getAllProducts() {
+
+    return ResponseEntity.ok(
+            service.getAllProducts()
+    );
+}
+GET Product By Id
+@Operation(
+        summary = "Get Product By Id",
+        description = "Fetch product using ID"
+)
+@GetMapping("/{id}")
+public ResponseEntity<Product>
+getProduct(@PathVariable Integer id) {
+
+    return ResponseEntity.ok(
+            service.getProduct(id)
+    );
+}
+CREATE Product
+@Operation(
+        summary = "Create Product",
+        description = "Create new Product"
+)
+@PostMapping
+public ResponseEntity<Product>
+addProduct(
+        @RequestBody Product product) {
+
+    return ResponseEntity.status(201)
+            .body(
+                    service.saveProduct(product)
+            );
+}
+UPDATE Product
+@Operation(
+        summary = "Update Product",
+        description = "Update Product details"
+)
+@PutMapping("/{id}")
+public ResponseEntity<Product>
+updateProduct(
+        @PathVariable Integer id,
+        @RequestBody Product product) {
+
+    return ResponseEntity.ok(
+            service.updateProduct(id,
+                    product)
+    );
+}
+DELETE Product
+@Operation(
+        summary = "Delete Product",
+        description = "Delete Product using ID"
+)
+@DeleteMapping("/{id}")
+public ResponseEntity<String>
+deleteProduct(
+        @PathVariable Integer id) {
+
+    service.deleteProduct(id);
+
+    return ResponseEntity.ok(
+            "Product Deleted Successfully"
+    );
+}
+Step 7: Document Product Entity
+package com.example.entity;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Entity
+public class Product {
+
+    @Schema(
+            description = "Product Id",
+            example = "101"
+    )
+    @Id
+    private Integer productId;
+
+    @Schema(
+            description = "Product Name",
+            example = "Laptop"
+    )
+    private String productName;
+
+    @Schema(
+            description = "Product Price",
+            example = "55000"
+    )
+    private Double price;
+
+}
+Swagger Request Example
+{
+  "productId": 101,
+  "productName": "Laptop",
+  "price": 55000
+}
+Generated automatically.
+
+Step 8: Document Response Codes
+Import:
+
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+Example:
+
+@Operation(summary = "Get Product")
+@ApiResponse(
+        responseCode = "200",
+        description = "Product Found"
+)
+@ApiResponse(
+        responseCode = "404",
+        description = "Product Not Found"
+)
+@GetMapping("/{id}")
+public ResponseEntity<Product>
+getProduct(
+        @PathVariable Integer id) {
+
+    return ResponseEntity.ok(
+            service.getProduct(id)
+    );
+}
+Step 9: View OpenAPI JSON
+Swagger UI:
+
+http://localhost:8080/swagger-ui/index.html
+OpenAPI Specification:
+
+http://localhost:8080/v3/api-docs
+Returns JSON documentation for all APIs.
+
+Example API Flow in Swagger
+Create Product
+{
+  "productId": 1,
+  "productName": "Laptop",
+  "price": 50000
+}
+Click:
+
+Execute
+Response:
+
+{
+  "productId": 1,
+  "productName": "Laptop",
+  "price": 50000
+}
+Status:
+
+201 CREATED
+Benefits of Swagger
+No need for Postman during development
+
+Interactive API testing
+
+Better team collaboration
+
+Automatically updated documentation
+
+Useful for frontend developers
+
+Standard OpenAPI specification
+
+Updated Project Structure
+src/main/java
+|
+├── controller
+│     └── ProductController
+|
+├── service
+│     └── ProductService
+|
+├── repository
+│     └── ProductRepository
+|
+├── entity
+│     └── Product
+|
+├── exception
+│     ├── ProductNotFoundException
+│     ├── ErrorResponse
+│     └── GlobalExceptionHandler
+|
+├── config
+│     └── OpenApiConfig
+|
+└── ProductApplication
+
+
+
+
+
+DTO Pattern (RequestDTO / ResponseDTO)
+
+DTO Pattern (RequestDTO / ResponseDTO) in Spring Boot
+After learning:
+
+✅ CRUD Operations
+✅ ResponseEntity
+✅ Global Exception Handling
+✅ Swagger/OpenAPI
+
+The next important concept is DTO (Data Transfer Object) Pattern.
+
+Why DTO?
+Suppose your Entity is:
+
+@Entity
+public class Product {
+
+    @Id
+    private Integer productId;
+
+    private String productName;
+
+    private Double price;
+}
+If you directly return Entity objects:
+
+return product;
+Problems:
+
+Exposes database structure
+
+Difficult to customize API responses
+
+Security risks when entities contain sensitive data
+
+Tight coupling between API and Database
+
+DTO Architecture
+Client
+   |
+RequestDTO
+   |
+Controller
+   |
+Service
+   |
+Entity
+   |
+Database
+   |
+ResponseDTO
+   |
+Client
+Current Flow (Without DTO)
+Request JSON
+      ↓
+ Product Entity
+      ↓
+ Database
+      ↓
+ Product Entity
+      ↓
+ Response JSON
+New Flow (With DTO)
+Request JSON
+      ↓
+ProductRequestDTO
+      ↓
+Product Entity
+      ↓
+Database
+      ↓
+Product Entity
+      ↓
+ProductResponseDTO
+      ↓
+Response JSON
+Step 1: Create Request DTO
+Using Java 21 Record.
+
+ProductRequestDTO.java
+package com.example.dto;
+
+public record ProductRequestDTO(
+        String productName,
+        Double price
+) {
+}
+Used for:
+
+POST /products
+PUT /products/{id}
+Step 2: Create Response DTO
+ProductResponseDTO.java
+package com.example.dto;
+
+public record ProductResponseDTO(
+        Integer productId,
+        String productName,
+        Double price
+) {
+}
+Used for:
+
+GET /products
+GET /products/{id}
+Step 3: Product Entity
+package com.example.entity;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name="products")
+public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer productId;
+
+    private String productName;
+
+    private Double price;
+
+    // Getters and Setters
+}
+Step 4: Service Layer
+Create Product
+public ProductResponseDTO createProduct(
+        ProductRequestDTO requestDTO) {
+
+    Product product = new Product();
+
+    product.setProductName(
+            requestDTO.productName());
+
+    product.setPrice(
+            requestDTO.price());
+
+    Product savedProduct =
+            repository.save(product);
+
+    return new ProductResponseDTO(
+            savedProduct.getProductId(),
+            savedProduct.getProductName(),
+            savedProduct.getPrice()
+    );
+}
+Step 5: Get Product By Id
+public ProductResponseDTO getProduct(
+        Integer id) {
+
+    Product product =
+            repository.findById(id)
+                    .orElseThrow(() ->
+                            new ProductNotFoundException(
+                                    "Product not found"
+                            ));
+
+    return new ProductResponseDTO(
+            product.getProductId(),
+            product.getProductName(),
+            product.getPrice()
+    );
+}
+Step 6: Get All Products
+public List<ProductResponseDTO>
+getAllProducts() {
+
+    return repository.findAll()
+            .stream()
+            .map(product ->
+                    new ProductResponseDTO(
+                            product.getProductId(),
+                            product.getProductName(),
+                            product.getPrice()
+                    ))
+            .toList();
+}
+Java 21 Stream API:
+
+.toList();
+creates immutable list.
+
+Step 7: Update Product
+public ProductResponseDTO updateProduct(
+        Integer id,
+        ProductRequestDTO dto) {
+
+    Product product =
+            repository.findById(id)
+                    .orElseThrow(() ->
+                            new ProductNotFoundException(
+                                    "Product not found"
+                            ));
+
+    product.setProductName(
+            dto.productName());
+
+    product.setPrice(
+            dto.price());
+
+    Product updatedProduct =
+            repository.save(product);
+
+    return new ProductResponseDTO(
+            updatedProduct.getProductId(),
+            updatedProduct.getProductName(),
+            updatedProduct.getPrice()
+    );
+}
+Step 8: Controller
+Create Product
+@PostMapping
+public ResponseEntity<ProductResponseDTO>
+createProduct(
+        @RequestBody ProductRequestDTO dto) {
+
+    return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(
+                    service.createProduct(dto)
+            );
+}
+Get Product
+@GetMapping("/{id}")
+public ResponseEntity<ProductResponseDTO>
+getProduct(
+        @PathVariable Integer id) {
+
+    return ResponseEntity.ok(
+            service.getProduct(id)
+    );
+}
+Get All Products
+@GetMapping
+public ResponseEntity<List<ProductResponseDTO>>
+getAllProducts() {
+
+    return ResponseEntity.ok(
+            service.getAllProducts()
+    );
+}
+Update Product
+@PutMapping("/{id}")
+public ResponseEntity<ProductResponseDTO>
+updateProduct(
+        @PathVariable Integer id,
+        @RequestBody ProductRequestDTO dto) {
+
+    return ResponseEntity.ok(
+            service.updateProduct(id, dto)
+    );
+}
+Request Example
+{
+  "productName":"Laptop",
+  "price":65000
+}
+Notice:
+
+{
+  "productId":1
+}
+is not required from client.
+
+Response Example
+{
+  "productId":1,
+  "productName":"Laptop",
+  "price":65000
+}
+DTO Benefits
+Without DTO
+@PostMapping
+public Product save(
+        @RequestBody Product product)
+API directly depends on Entity.
+
+With DTO
+@PostMapping
+public ProductResponseDTO save(
+        @RequestBody ProductRequestDTO dto)
+Entity remains internal.
+
+Optional Mapper Method
+Instead of repeating conversion logic:
+
+private ProductResponseDTO mapToDTO(
+        Product product){
+
+    return new ProductResponseDTO(
+            product.getProductId(),
+            product.getProductName(),
+            product.getPrice()
+    );
+}
+Usage:
+
+return mapToDTO(product);
+Project Structure
+src/main/java
+|
+├── controller
+│      ProductController
+|
+├── service
+│      ProductService
+|
+├── repository
+│      ProductRepository
+|
+├── entity
+│      Product
+|
+├── dto
+│      ProductRequestDTO
+│      ProductResponseDTO
+|
+├── exception
+│      ProductNotFoundException
+│      ErrorResponse
+│      GlobalExceptionHandler
+|
+└── config
+       OpenApiConfig
+Interview Question
+What is DTO?
+DTO (Data Transfer Object) is an object used to transfer data between layers or between client and server without exposing Entity classes.
+
+Why use DTO?
+Decouples API from Database
+
+Improves Security
+
+Customizes Request/Response
+
+Easier Validation
+
+Better Maintainability
+
+Why use Java 21 Records for DTOs?
+public record ProductResponseDTO(
+        Integer productId,
+        String productName,
+        Double price
+) {}
+Advantages:
+
+Immutable
+
+Thread-safe
+
+Less boilerplate
+
+Auto-generated constructor, getters, equals, hashCode, and toString
+
+Next Step: Bean Validation
+Now that DTOs are introduced, the next logical enhancement is Bean Validation:
+
+public record ProductRequestDTO(
+
+    @NotBlank
+    String productName,
+
+    @Positive
+    Double price
+
+) {}
+Combined with @Valid and your existing GlobalExceptionHandler, this creates a robust, production-ready API validation layer.
+
+
+Bean Validation (@Valid, @NotBlank, @Positive)
+
+Bean Validation in Spring Boot
+After implementing:
+
+✅ CRUD Operations
+✅ ResponseEntity
+✅ Global Exception Handling
+✅ Swagger/OpenAPI
+✅ DTO Pattern
+
+The next step is Bean Validation.
+
+Bean Validation ensures that incoming request data is valid before it reaches the Service layer.
+
+Why Bean Validation?
+Suppose a client sends:
+
+{
+  "productName": "",
+  "price": -5000
+}
+Without validation, invalid data gets stored in the database.
+
+With validation, Spring automatically rejects the request and returns a meaningful error response.
+
+Add Validation Dependency
+For Spring Boot 3.x:
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-validation</artifactId>
+</dependency>
+Common Validation Annotations
+Annotation	Purpose
+@NotNull	Value cannot be null
+@NotBlank	String cannot be null or empty
+@NotEmpty	Collection/String cannot be empty
+@Size	Min/Max length
+@Min	Minimum value
+@Max	Maximum value
+@Positive	Must be > 0
+@PositiveOrZero	Must be >= 0
+@Email	Valid email format
+@Pattern	Custom regex validation
+ProductRequestDTO
+Apply validation rules to DTO.
+
+package com.example.dto;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+
+public record ProductRequestDTO(
+
+        @NotBlank(message = "Product name cannot be blank")
+        String productName,
+
+        @Positive(message = "Price must be greater than zero")
+        Double price
+
+) {
+}
+What Does @NotBlank Validate?
+Invalid:
+
+{
+  "productName": ""
+}
+{
+  "productName": "   "
+}
+{
+  "productName": null
+}
+Valid:
+
+{
+  "productName": "Laptop"
+}
+What Does @Positive Validate?
+Invalid:
+
+{
+  "price": -1000
+}
+{
+  "price": 0
+}
+Valid:
+
+{
+  "price": 50000
+}
+Controller Changes
+Use @Valid.
+
+package com.example.controller;
+
+import com.example.dto.ProductRequestDTO;
+import com.example.dto.ProductResponseDTO;
+import com.example.service.ProductService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/products")
+public class ProductController {
+
+    private final ProductService service;
+
+    public ProductController(ProductService service) {
+        this.service = service;
+    }
+
+    @PostMapping
+    public ResponseEntity<ProductResponseDTO>
+    createProduct(
+            @Valid @RequestBody ProductRequestDTO dto) {
+
+        return ResponseEntity.status(201)
+                .body(service.createProduct(dto));
+    }
+}
+What Does @Valid Do?
+@Valid @RequestBody ProductRequestDTO dto
+Flow:
+
+Request
+   |
+Validation
+   |
+Valid ? ---- YES ---> Controller
+   |
+   NO
+   |
+Validation Exception
+Spring automatically validates DTO fields before executing controller logic.
+
+Validation Failure Example
+Request:
+
+{
+  "productName": "",
+  "price": -100
+}
+Spring throws:
+
+MethodArgumentNotValidException
+Handle Validation Errors Globally
+Update your GlobalExceptionHandler.
+
+package com.example.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(
+            MethodArgumentNotValidException.class)
+    public ResponseEntity<Object>
+    handleValidationException(
+            MethodArgumentNotValidException ex) {
+
+        String errorMessage =
+                ex.getBindingResult()
+                  .getFieldError()
+                  .getDefaultMessage();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(errorMessage);
+    }
+}
+Better Validation Response DTO
+Create:
+
+package com.example.exception;
+
+import java.time.LocalDateTime;
+import java.util.Map;
+
+public record ValidationErrorResponse(
+
+        int status,
+
+        String message,
+
+        Map<String, String> errors,
+
+        LocalDateTime timestamp
+
+) {
+}
+Improved Global Handler
+@ExceptionHandler(
+        MethodArgumentNotValidException.class)
+public ResponseEntity<ValidationErrorResponse>
+handleValidationException(
+        MethodArgumentNotValidException ex) {
+
+    Map<String, String> errors =
+            new HashMap<>();
+
+    ex.getBindingResult()
+            .getFieldErrors()
+            .forEach(error ->
+                    errors.put(
+                            error.getField(),
+                            error.getDefaultMessage()
+                    ));
+
+    ValidationErrorResponse response =
+            new ValidationErrorResponse(
+                    400,
+                    "Validation Failed",
+                    errors,
+                    LocalDateTime.now()
+            );
+
+    return ResponseEntity
+            .badRequest()
+            .body(response);
+}
+Validation Error Response
+Request:
+
+{
+  "productName": "",
+  "price": -100
+}
+Response:
+
+{
+  "status": 400,
+  "message": "Validation Failed",
+  "errors": {
+    "productName": "Product name cannot be blank",
+    "price": "Price must be greater than zero"
+  },
+  "timestamp": "2026-06-05T10:30:00"
+}
+More Useful Validations
+Length Validation
+@Size(
+    min = 3,
+    max = 50,
+    message = "Product name must be between 3 and 50 characters"
+)
+String productName;
+Price Range
+@Min(
+    value = 100,
+    message = "Minimum price is 100"
+)
+@Max(
+    value = 1000000,
+    message = "Maximum price is 1000000"
+)
+Product DTO Example
+public record ProductRequestDTO(
+
+    @NotBlank(
+        message = "Product name is required"
+    )
+
+    @Size(
+        min = 3,
+        max = 50,
+        message = "Product name must contain 3 to 50 characters"
+    )
+    String productName,
+
+    @Positive(
+        message = "Price must be greater than zero"
+    )
+    Double price
+
+) {
+}
+Complete Request Flow
+Client
+  |
+ProductRequestDTO
+  |
+@Valid
+  |
+Validation Success
+  |
+Controller
+  |
+Service
+  |
+Repository
+  |
+Database
+If validation fails:
+
+Client
+  |
+@Valid
+  |
+MethodArgumentNotValidException
+  |
+GlobalExceptionHandler
+  |
+Custom Error Response
+Interview Questions
+What is Bean Validation?
+Bean Validation is a standard mechanism for validating request data using annotations such as:
+
+@NotBlank
+@Positive
+@Email
+@Size
+What is @Valid?
+@Valid triggers validation of an object before controller execution.
+
+public ResponseEntity<?> create(
+        @Valid @RequestBody ProductRequestDTO dto)
+Difference Between @NotNull and @NotBlank?
+Annotation	Null	Empty String	Spaces Only
+@NotNull	❌	✅	✅
+@NotBlank	❌	❌	❌
+Why Put Validation in DTO Instead of Entity?
+Because validation belongs to the API contract (request data), while entities represent database structure.
+
+
