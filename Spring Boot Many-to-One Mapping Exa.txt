@@ -1,0 +1,520 @@
+Spring Boot Many-to-One Mapping Example (Employee → Department)
+Business Requirement
+
+In an organization:
+
+Many Employees belong to one Department.
+One Department can have many Employees.
+Real-Time Example
+IT Department
+    |
+    +-- Ravi
+    +-- Kumar
+    +-- John
+
+HR Department
+    |
+    +-- Smith
+    +-- David
+Relationship Diagram
+Employee (Many)
+      |
+      | ManyToOne
+      |
+Department (One)
+Example
+Employee Ravi
+        |
+        |
+        +------> IT Department
+
+Employee Kumar
+        |
+        |
+        +------> IT Department
+
+Employee John
+        |
+        |
+        +------> IT Department
+Database Tables
+DEPARTMENTS
+department_id	department_name
+1	IT
+2	HR
+EMPLOYEES
+employee_id	employee_name	email	salary	department_id
+101	Ravi	ravi@gmail.com	65000	1
+102	Kumar	kumar@gmail.com	70000	1
+103	Smith	smith@gmail.com	60000	2
+Project Structure
+com.example.manytoone
+
+├── controller
+│      └── EmployeeController
+│
+├── service
+│      ├── EmployeeService
+│      └── EmployeeServiceImpl
+│
+├── repository
+│      ├── EmployeeRepository
+│      └── DepartmentRepository
+│
+├── entity
+│      ├── Employee
+│      └── Department
+│
+└── dto
+       ├── EmployeeRequestDTO
+       └── EmployeeResponseDTO
+Step 1: Department Entity
+package com.example.entity;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "departments")
+public class Department {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long departmentId;
+
+    private String departmentName;
+
+    // Getters and Setters
+
+    public Long getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(Long departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
+}
+Step 2: Employee Entity
+package com.example.entity;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "employees")
+public class Employee {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long employeeId;
+
+    private String employeeName;
+
+    private String email;
+
+    private Double salary;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
+    private Department department;
+
+    // Getters and Setters
+
+    public Long getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(Double salary) {
+        this.salary = salary;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+}
+Why @ManyToOne?
+@ManyToOne
+@JoinColumn(name = "department_id")
+private Department department;
+
+Because:
+
+Many Employees
+        |
+        |
+        +------> One Department
+
+The foreign key is stored in the Employee table:
+
+employees
+---------------------------
+employee_id
+employee_name
+department_id  ← Foreign Key
+Step 3: DTO Classes
+EmployeeRequestDTO
+package com.example.dto;
+
+import jakarta.validation.constraints.*;
+
+public record EmployeeRequestDTO(
+
+        @NotBlank(message = "Employee name is required")
+        String employeeName,
+
+        @Email(message = "Invalid email")
+        String email,
+
+        @Positive(message = "Salary must be positive")
+        Double salary,
+
+        @NotNull(message = "Department Id is required")
+        Long departmentId
+
+) {
+}
+EmployeeResponseDTO
+package com.example.dto;
+
+public record EmployeeResponseDTO(
+
+        Long employeeId,
+
+        String employeeName,
+
+        String email,
+
+        Double salary,
+
+        String departmentName
+
+) {
+}
+Step 4: Repositories
+EmployeeRepository
+package com.example.repository;
+
+import com.example.entity.Employee;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface EmployeeRepository
+        extends JpaRepository<Employee, Long> {
+}
+DepartmentRepository
+package com.example.repository;
+
+import com.example.entity.Department;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface DepartmentRepository
+        extends JpaRepository<Department, Long> {
+}
+Step 5: Service Layer
+EmployeeService
+package com.example.service;
+
+import com.example.dto.EmployeeRequestDTO;
+import com.example.dto.EmployeeResponseDTO;
+
+import java.util.List;
+
+public interface EmployeeService {
+
+    EmployeeResponseDTO createEmployee(
+            EmployeeRequestDTO dto);
+
+    EmployeeResponseDTO getEmployeeById(Long id);
+
+    List<EmployeeResponseDTO> getAllEmployees();
+
+    void deleteEmployee(Long id);
+}
+EmployeeServiceImpl
+package com.example.service;
+
+import com.example.dto.EmployeeRequestDTO;
+import com.example.dto.EmployeeResponseDTO;
+import com.example.entity.Department;
+import com.example.entity.Employee;
+import com.example.repository.DepartmentRepository;
+import com.example.repository.EmployeeRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class EmployeeServiceImpl
+        implements EmployeeService {
+
+    private final EmployeeRepository employeeRepository;
+    private final DepartmentRepository departmentRepository;
+
+    @Override
+    public EmployeeResponseDTO createEmployee(
+            EmployeeRequestDTO dto) {
+
+        Department department =
+                departmentRepository.findById(
+                        dto.departmentId())
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Department not found"));
+
+        Employee employee = new Employee();
+
+        employee.setEmployeeName(
+                dto.employeeName());
+
+        employee.setEmail(
+                dto.email());
+
+        employee.setSalary(
+                dto.salary());
+
+        employee.setDepartment(
+                department);
+
+        Employee savedEmployee =
+                employeeRepository.save(employee);
+
+        return mapToDTO(savedEmployee);
+    }
+
+    @Override
+    public EmployeeResponseDTO getEmployeeById(
+            Long id) {
+
+        Employee employee =
+                employeeRepository.findById(id)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Employee not found"));
+
+        return mapToDTO(employee);
+    }
+
+    @Override
+    public List<EmployeeResponseDTO>
+    getAllEmployees() {
+
+        return employeeRepository.findAll()
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+
+    @Override
+    public void deleteEmployee(Long id) {
+
+        employeeRepository.deleteById(id);
+    }
+
+    private EmployeeResponseDTO mapToDTO(
+            Employee employee) {
+
+        return new EmployeeResponseDTO(
+
+                employee.getEmployeeId(),
+
+                employee.getEmployeeName(),
+
+                employee.getEmail(),
+
+                employee.getSalary(),
+
+                employee.getDepartment()
+                        .getDepartmentName()
+        );
+    }
+}
+Step 6: REST Controller
+package com.example.controller;
+
+import com.example.dto.EmployeeRequestDTO;
+import com.example.dto.EmployeeResponseDTO;
+import com.example.service.EmployeeService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/employees")
+@RequiredArgsConstructor
+public class EmployeeController {
+
+    private final EmployeeService employeeService;
+
+    @PostMapping
+    public ResponseEntity<EmployeeResponseDTO>
+    createEmployee(
+            @Valid
+            @RequestBody EmployeeRequestDTO dto) {
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(
+                        employeeService
+                                .createEmployee(dto)
+                );
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EmployeeResponseDTO>
+    getEmployeeById(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                employeeService
+                        .getEmployeeById(id)
+        );
+    }
+
+    @GetMapping
+    public ResponseEntity<List<EmployeeResponseDTO>>
+    getAllEmployees() {
+
+        return ResponseEntity.ok(
+                employeeService
+                        .getAllEmployees()
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String>
+    deleteEmployee(
+            @PathVariable Long id) {
+
+        employeeService.deleteEmployee(id);
+
+        return ResponseEntity.ok(
+                "Employee deleted successfully");
+    }
+}
+Sample Data
+Insert Department First
+INSERT INTO departments(department_name)
+VALUES ('IT');
+
+INSERT INTO departments(department_name)
+VALUES ('HR');
+Create Employee Request
+Endpoint
+POST /api/employees
+Request Body
+{
+  "employeeName": "Ravi",
+  "email": "ravi@gmail.com",
+  "salary": 75000,
+  "departmentId": 1
+}
+Response
+{
+  "employeeId": 1,
+  "employeeName": "Ravi",
+  "email": "ravi@gmail.com",
+  "salary": 75000,
+  "departmentName": "IT"
+}
+What Happens Internally?
+Department department =
+departmentRepository.findById(1L).get();
+
+employee.setDepartment(department);
+
+employeeRepository.save(employee);
+
+Hibernate generates:
+
+INSERT INTO employees
+(employee_name,email,salary,department_id)
+VALUES
+('Ravi','ravi@gmail.com',75000,1);
+Generated Tables
+departments
+department_id	department_name
+1	IT
+2	HR
+employees
+employee_id	employee_name	email	salary	department_id
+1	Ravi	ravi@gmail.com	75000	1
+Interview Questions
+Why is @ManyToOne placed in Employee?
+
+Because the foreign key (department_id) exists in the Employee table.
+
+@ManyToOne
+@JoinColumn(name = "department_id")
+private Department department;
+Does @ManyToOne create a join table?
+
+No.
+
+It creates a foreign key column:
+
+department_id
+
+inside the employee table.
+
+What is the default FetchType for @ManyToOne?
+@ManyToOne
+
+Default:
+
+FetchType.EAGER
+
+Most enterprise applications explicitly use:
+
+@ManyToOne(fetch = FetchType.LAZY)
+
+to improve performance.
+
+Real-Time Examples of Many-to-One
+Many Side	One Side
+Employees	Department
+Students	College
+Orders	Customer
+Books	Author
+Accounts	Bank
+Products	Category
+
+This is the most common JPA relationship used in enterprise applications because most business systems contain multiple child records linked to a single parent record.

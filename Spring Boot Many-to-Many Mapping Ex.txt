@@ -1,0 +1,481 @@
+Spring Boot Many-to-Many Mapping Example (Student ↔ Course)
+Business Requirement
+
+In a Learning Management System (LMS):
+
+One Student can enroll in multiple Courses.
+One Course can have multiple Students.
+Real-Time Example
+Student Ravi
+    |
+    +-- Java
+    +-- Spring Boot
+    +-- ReactJS
+
+Student Kumar
+    |
+    +-- Java
+    +-- Angular
+
+Course Java
+    |
+    +-- Ravi
+    +-- Kumar
+    +-- John
+Relationship Diagram
+Student (Many)
+      ↕
+ ManyToMany
+      ↕
+Course (Many)
+Database Design
+
+Since both sides are "many", Hibernate creates a join table.
+
+STUDENTS
+student_id	student_name	email
+1	Ravi	ravi@gmail.com
+COURSES
+course_id	course_name	duration
+101	Java	3 Months
+STUDENT_COURSE
+student_id	course_id
+1	101
+1	102
+2	101
+Project Structure
+com.example.manytomany
+
+├── controller
+│      └── StudentController
+│
+├── service
+│      ├── StudentService
+│      └── StudentServiceImpl
+│
+├── repository
+│      ├── StudentRepository
+│      └── CourseRepository
+│
+├── entity
+│      ├── Student
+│      └── Course
+│
+└── dto
+       ├── StudentRequestDTO
+       └── StudentResponseDTO
+Step 1: Course Entity
+package com.example.entity;
+
+import jakarta.persistence.*;
+import java.util.List;
+
+@Entity
+@Table(name = "courses")
+public class Course {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long courseId;
+
+    private String courseName;
+
+    private String duration;
+
+    @ManyToMany(mappedBy = "courses")
+    private List<Student> students;
+
+    // Getters and Setters
+}
+Step 2: Student Entity
+package com.example.entity;
+
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "students")
+public class Student {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long studentId;
+
+    private String studentName;
+
+    private String email;
+
+    @ManyToMany
+    @JoinTable(
+            name = "student_course",
+
+            joinColumns =
+            @JoinColumn(name = "student_id"),
+
+            inverseJoinColumns =
+            @JoinColumn(name = "course_id")
+    )
+    private List<Course> courses =
+            new ArrayList<>();
+
+    // Getters and Setters
+}
+Understanding @JoinTable
+@ManyToMany
+@JoinTable(
+        name = "student_course",
+
+        joinColumns =
+        @JoinColumn(name = "student_id"),
+
+        inverseJoinColumns =
+        @JoinColumn(name = "course_id")
+)
+private List<Course> courses;
+
+Hibernate creates:
+
+student_course
+
+table automatically.
+
+student_course
+-------------------------
+student_id | course_id
+-------------------------
+1          | 101
+1          | 102
+2          | 101
+Step 3: DTO Classes
+StudentRequestDTO
+package com.example.dto;
+
+import jakarta.validation.constraints.*;
+import java.util.List;
+
+public record StudentRequestDTO(
+
+        @NotBlank(message = "Student name is required")
+        String studentName,
+
+        @Email(message = "Invalid email")
+        String email,
+
+        @NotEmpty(message = "At least one course required")
+        List<Long> courseIds
+
+) {
+}
+StudentResponseDTO
+package com.example.dto;
+
+import java.util.List;
+
+public record StudentResponseDTO(
+
+        Long studentId,
+
+        String studentName,
+
+        String email,
+
+        List<String> courses
+
+) {
+}
+Step 4: Repositories
+StudentRepository
+package com.example.repository;
+
+import com.example.entity.Student;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface StudentRepository
+        extends JpaRepository<Student, Long> {
+}
+CourseRepository
+package com.example.repository;
+
+import com.example.entity.Course;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CourseRepository
+        extends JpaRepository<Course, Long> {
+}
+Step 5: Service Layer
+StudentService
+package com.example.service;
+
+import com.example.dto.StudentRequestDTO;
+import com.example.dto.StudentResponseDTO;
+
+import java.util.List;
+
+public interface StudentService {
+
+    StudentResponseDTO createStudent(
+            StudentRequestDTO dto);
+
+    StudentResponseDTO getStudentById(Long id);
+
+    List<StudentResponseDTO> getAllStudents();
+
+    void deleteStudent(Long id);
+}
+StudentServiceImpl
+package com.example.service;
+
+import com.example.dto.StudentRequestDTO;
+import com.example.dto.StudentResponseDTO;
+import com.example.entity.Course;
+import com.example.entity.Student;
+import com.example.repository.CourseRepository;
+import com.example.repository.StudentRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class StudentServiceImpl
+        implements StudentService {
+
+    private final StudentRepository studentRepository;
+    private final CourseRepository courseRepository;
+
+    @Override
+    public StudentResponseDTO createStudent(
+            StudentRequestDTO dto) {
+
+        List<Course> courses =
+                courseRepository.findAllById(
+                        dto.courseIds());
+
+        Student student = new Student();
+
+        student.setStudentName(
+                dto.studentName());
+
+        student.setEmail(
+                dto.email());
+
+        student.setCourses(courses);
+
+        Student savedStudent =
+                studentRepository.save(student);
+
+        return mapToDTO(savedStudent);
+    }
+
+    @Override
+    public StudentResponseDTO getStudentById(
+            Long id) {
+
+        Student student =
+                studentRepository.findById(id)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Student not found"));
+
+        return mapToDTO(student);
+    }
+
+    @Override
+    public List<StudentResponseDTO>
+    getAllStudents() {
+
+        return studentRepository.findAll()
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+
+    @Override
+    public void deleteStudent(Long id) {
+
+        studentRepository.deleteById(id);
+    }
+
+    private StudentResponseDTO mapToDTO(
+            Student student) {
+
+        return new StudentResponseDTO(
+
+                student.getStudentId(),
+
+                student.getStudentName(),
+
+                student.getEmail(),
+
+                student.getCourses()
+                        .stream()
+                        .map(Course::getCourseName)
+                        .toList()
+        );
+    }
+}
+Step 6: REST Controller
+package com.example.controller;
+
+import com.example.dto.StudentRequestDTO;
+import com.example.dto.StudentResponseDTO;
+import com.example.service.StudentService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/students")
+@RequiredArgsConstructor
+public class StudentController {
+
+    private final StudentService studentService;
+
+    @PostMapping
+    public ResponseEntity<StudentResponseDTO>
+    createStudent(
+            @Valid
+            @RequestBody StudentRequestDTO dto) {
+
+        return ResponseEntity.status(
+                HttpStatus.CREATED)
+                .body(
+                        studentService
+                                .createStudent(dto)
+                );
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<StudentResponseDTO>
+    getStudentById(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                studentService
+                        .getStudentById(id)
+        );
+    }
+
+    @GetMapping
+    public ResponseEntity<List<StudentResponseDTO>>
+    getAllStudents() {
+
+        return ResponseEntity.ok(
+                studentService
+                        .getAllStudents()
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String>
+    deleteStudent(
+            @PathVariable Long id) {
+
+        studentService.deleteStudent(id);
+
+        return ResponseEntity.ok(
+                "Student deleted successfully");
+    }
+}
+Insert Courses First
+INSERT INTO courses(course_name,duration)
+VALUES ('Java','3 Months');
+
+INSERT INTO courses(course_name,duration)
+VALUES ('Spring Boot','2 Months');
+
+INSERT INTO courses(course_name,duration)
+VALUES ('ReactJS','2 Months');
+Create Student Request
+Endpoint
+POST /api/students
+Request Body
+{
+  "studentName": "Ravi",
+  "email": "ravi@gmail.com",
+  "courseIds": [1,2,3]
+}
+Response
+{
+  "studentId": 1,
+  "studentName": "Ravi",
+  "email": "ravi@gmail.com",
+  "courses": [
+    "Java",
+    "Spring Boot",
+    "ReactJS"
+  ]
+}
+What Happens Internally?
+List<Course> courses =
+        courseRepository.findAllById(
+                dto.courseIds());
+
+student.setCourses(courses);
+
+studentRepository.save(student);
+
+Hibernate generates:
+
+INSERT INTO students
+(student_name,email)
+VALUES
+('Ravi','ravi@gmail.com');
+INSERT INTO student_course
+(student_id,course_id)
+VALUES
+(1,1);
+INSERT INTO student_course
+(student_id,course_id)
+VALUES
+(1,2);
+INSERT INTO student_course
+(student_id,course_id)
+VALUES
+(1,3);
+Generated Tables
+students
+student_id	student_name	email
+1	Ravi	ravi@gmail.com
+courses
+course_id	course_name	duration
+1	Java	3 Months
+2	Spring Boot	2 Months
+3	ReactJS	2 Months
+student_course
+student_id	course_id
+1	1
+1	2
+1	3
+Interview Questions
+Why do we need @JoinTable?
+
+Because there is no foreign key column that can represent a many-to-many relationship. A separate join table is required.
+
+What does mappedBy = "courses" mean?
+@ManyToMany(mappedBy = "courses")
+private List<Student> students;
+
+It tells Hibernate that the relationship is already managed by the courses field in the Student entity.
+
+Does @ManyToMany create a join table automatically?
+
+Yes. Hibernate creates the join table (student_course) automatically if it does not exist.
+
+Real-Time Examples of Many-to-Many
+Entity A	Entity B
+Students	Courses
+Users	Roles
+Employees	Projects
+Doctors	Patients
+Authors	Books
+Actors	Movies
+Important Best Practice
+
+In enterprise applications, avoid using CascadeType.ALL on @ManyToMany relationships because deleting a student should not delete shared course records. Usually, courses are managed independently and only the join-table entries are added or removed.

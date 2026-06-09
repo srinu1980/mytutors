@@ -1,0 +1,390 @@
+Spring Boot One-to-One Mapping Example (Person ↔ Passport)
+Business Requirement
+One Person has one Passport.
+One Passport belongs to one Person.
+Database Relationship
+PERSON
++------------+--------------+
+| person_id  | person_name  |
++------------+--------------+
+| 1          | Ravi         |
++------------+--------------+
+
+PASSPORT
++-------------+----------------+-----------+
+| passport_id | passport_no    | person_id |
++-------------+----------------+-----------+
+| 101         | IN1234567      | 1         |
++-------------+----------------+-----------+
+Project Structure
+com.example.onetoone
+
+├── controller
+│     └── PersonController
+│
+├── service
+│     └── PersonService
+│
+├── repository
+│     ├── PersonRepository
+│     └── PassportRepository
+│
+├── entity
+│     ├── Person
+│     └── Passport
+│
+└── dto
+      ├── PersonRequestDTO
+      └── PersonResponseDTO
+Step 1: Passport Entity
+package com.example.entity;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "passport")
+public class Passport {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long passportId;
+
+    @Column(nullable = false, unique = true)
+    private String passportNumber;
+
+    private String country;
+
+    // Getters and Setters
+
+    public Long getPassportId() {
+        return passportId;
+    }
+
+    public void setPassportId(Long passportId) {
+        this.passportId = passportId;
+    }
+
+    public String getPassportNumber() {
+        return passportNumber;
+    }
+
+    public void setPassportNumber(String passportNumber) {
+        this.passportNumber = passportNumber;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+}
+Step 2: Person Entity
+package com.example.entity;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "person")
+public class Person {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long personId;
+
+    private String personName;
+
+    private String email;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "passport_id")
+    private Passport passport;
+
+    // Getters and Setters
+
+    public Long getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(Long personId) {
+        this.personId = personId;
+    }
+
+    public String getPersonName() {
+        return personName;
+    }
+
+    public void setPersonName(String personName) {
+        this.personName = personName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Passport getPassport() {
+        return passport;
+    }
+
+    public void setPassport(Passport passport) {
+        this.passport = passport;
+    }
+}
+Step 3: DTO Classes
+PersonRequestDTO
+package com.example.dto;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+public record PersonRequestDTO(
+
+        @NotBlank(message = "Person name is required")
+        String personName,
+
+        @Email(message = "Invalid email")
+        String email,
+
+        @NotBlank(message = "Passport number is required")
+        String passportNumber,
+
+        @NotBlank(message = "Country is required")
+        String country
+
+) {
+}
+PersonResponseDTO
+package com.example.dto;
+
+public record PersonResponseDTO(
+
+        Long personId,
+        String personName,
+        String email,
+        String passportNumber,
+        String country
+
+) {
+}
+Step 4: Repositories
+PersonRepository
+package com.example.repository;
+
+import com.example.entity.Person;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PersonRepository
+        extends JpaRepository<Person, Long> {
+}
+PassportRepository
+package com.example.repository;
+
+import com.example.entity.Passport;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PassportRepository
+        extends JpaRepository<Passport, Long> {
+}
+Step 5: Service Layer
+PersonService
+package com.example.service;
+
+import com.example.dto.PersonRequestDTO;
+import com.example.dto.PersonResponseDTO;
+
+import java.util.List;
+
+public interface PersonService {
+
+    PersonResponseDTO savePerson(PersonRequestDTO dto);
+
+    PersonResponseDTO getPersonById(Long id);
+
+    List<PersonResponseDTO> getAllPersons();
+
+    void deletePerson(Long id);
+}
+PersonServiceImpl
+package com.example.service;
+
+import com.example.dto.PersonRequestDTO;
+import com.example.dto.PersonResponseDTO;
+import com.example.entity.Passport;
+import com.example.entity.Person;
+import com.example.repository.PersonRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class PersonServiceImpl implements PersonService {
+
+    private final PersonRepository personRepository;
+
+    @Override
+    public PersonResponseDTO savePerson(PersonRequestDTO dto) {
+
+        Passport passport = new Passport();
+        passport.setPassportNumber(dto.passportNumber());
+        passport.setCountry(dto.country());
+
+        Person person = new Person();
+        person.setPersonName(dto.personName());
+        person.setEmail(dto.email());
+        person.setPassport(passport);
+
+        Person savedPerson =
+                personRepository.save(person);
+
+        return mapToDTO(savedPerson);
+    }
+
+    @Override
+    public PersonResponseDTO getPersonById(Long id) {
+
+        Person person =
+                personRepository.findById(id)
+                        .orElseThrow(() ->
+                                new RuntimeException("Person not found"));
+
+        return mapToDTO(person);
+    }
+
+    @Override
+    public List<PersonResponseDTO> getAllPersons() {
+
+        return personRepository.findAll()
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+
+    @Override
+    public void deletePerson(Long id) {
+
+        personRepository.deleteById(id);
+    }
+
+    private PersonResponseDTO mapToDTO(Person person) {
+
+        return new PersonResponseDTO(
+                person.getPersonId(),
+                person.getPersonName(),
+                person.getEmail(),
+                person.getPassport().getPassportNumber(),
+                person.getPassport().getCountry()
+        );
+    }
+}
+Step 6: REST Controller
+package com.example.controller;
+
+import com.example.dto.PersonRequestDTO;
+import com.example.dto.PersonResponseDTO;
+import com.example.service.PersonService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/persons")
+@RequiredArgsConstructor
+public class PersonController {
+
+    private final PersonService personService;
+
+    @PostMapping
+    public ResponseEntity<PersonResponseDTO>
+    createPerson(
+            @Valid @RequestBody PersonRequestDTO dto) {
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(personService.savePerson(dto));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PersonResponseDTO>
+    getPersonById(@PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                personService.getPersonById(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<PersonResponseDTO>>
+    getAllPersons() {
+
+        return ResponseEntity.ok(
+                personService.getAllPersons());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String>
+    deletePerson(@PathVariable Long id) {
+
+        personService.deletePerson(id);
+
+        return ResponseEntity.ok(
+                "Person deleted successfully");
+    }
+}
+Sample POST Request
+Endpoint
+POST /api/persons
+Request Body
+{
+  "personName": "Ravi Kumar",
+  "email": "ravi@gmail.com",
+  "passportNumber": "IN12345678",
+  "country": "India"
+}
+Response
+{
+  "personId": 1,
+  "personName": "Ravi Kumar",
+  "email": "ravi@gmail.com",
+  "passportNumber": "IN12345678",
+  "country": "India"
+}
+How CascadeType.ALL Works
+@OneToOne(cascade = CascadeType.ALL)
+@JoinColumn(name = "passport_id")
+private Passport passport;
+
+When saving:
+
+personRepository.save(person);
+
+Hibernate automatically:
+
+1. Save Passport
+2. Generate passport_id
+3. Save Person
+4. Store passport_id as foreign key
+
+No need to call:
+
+passportRepository.save(passport);
+
+explicitly.
+
+Generated Tables
+passport
+passport_id	passport_number	country
+1	IN12345678	India
+person
+person_id	person_name	email	passport_id
+1	Ravi Kumar	ravi@gmail.com	1
+
+This example follows a typical enterprise structure using Entity → Repository → Service → Controller → DTO and demonstrates a complete @OneToOne relationship with Spring Boot, Spring Data JPA, Validation, and REST APIs.
