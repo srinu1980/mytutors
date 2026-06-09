@@ -1,0 +1,565 @@
+Correct. In the previous example, the Product Entity and DTOs contain almost the same fields, so beginners may not clearly understand why DTOs are needed.
+
+In real-world corporate projects, Entities often contain database-related fields, audit fields, and sensitive information that should never be exposed to clients.
+
+Real-Time Example: Product Management System
+Product Entity (Database Table)
+@Entity
+@Table(name = "products")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long productId;
+
+    private String productName;
+
+    private Double price;
+
+    private Integer quantity;
+
+    // Internal fields
+    private Double supplierCost;
+
+    private String supplierName;
+
+    private String warehouseLocation;
+
+    // Audit fields
+    private LocalDateTime createdDate;
+
+    private LocalDateTime modifiedDate;
+}
+Why Not Return Entity Directly?
+
+Suppose the database contains:
+
+{
+  "productId": 101,
+  "productName": "Laptop",
+  "price": 60000,
+  "quantity": 10,
+  "supplierCost": 45000,
+  "supplierName": "ABC Suppliers",
+  "warehouseLocation": "Chennai Warehouse",
+  "createdDate": "2026-06-09T10:00:00",
+  "modifiedDate": "2026-06-09T12:00:00"
+}
+
+If we return the Entity directly:
+
+@GetMapping("/{id}")
+public Product getProduct(@PathVariable Long id)
+
+Response:
+
+{
+  "productId": 101,
+  "productName": "Laptop",
+  "price": 60000,
+  "quantity": 10,
+  "supplierCost": 45000,
+  "supplierName": "ABC Suppliers",
+  "warehouseLocation": "Chennai Warehouse",
+  "createdDate": "2026-06-09T10:00:00",
+  "modifiedDate": "2026-06-09T12:00:00"
+}
+Problems
+
+❌ Supplier cost exposed
+
+❌ Supplier details exposed
+
+❌ Warehouse details exposed
+
+❌ Internal audit information exposed
+
+❌ Security risk
+
+ProductRequestDTO
+
+The client should only send the required data.
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class ProductRequestDTO {
+
+    @NotBlank(message = "Product name is required")
+    private String productName;
+
+    @Positive(message = "Price must be greater than zero")
+    private Double price;
+
+    @PositiveOrZero(message = "Quantity cannot be negative")
+    private Integer quantity;
+}
+ProductResponseDTO
+
+Return only business-required information.
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ProductResponseDTO {
+
+    private Long productId;
+
+    private String productName;
+
+    private Double price;
+
+    private Integer quantity;
+}
+Service Layer Mapping
+DTO → Entity
+Product product = Product.builder()
+        .productName(dto.getProductName())
+        .price(dto.getPrice())
+        .quantity(dto.getQuantity())
+
+        // Internal values
+        .supplierCost(0.0)
+        .supplierName("DEFAULT")
+        .warehouseLocation("CHENNAI")
+
+        .createdDate(LocalDateTime.now())
+        .modifiedDate(LocalDateTime.now())
+        .build();
+Entity → DTO
+private ProductResponseDTO mapToDTO(Product product) {
+
+    return ProductResponseDTO.builder()
+            .productId(product.getProductId())
+            .productName(product.getProductName())
+            .price(product.getPrice())
+            .quantity(product.getQuantity())
+            .build();
+}
+Another Corporate Example: Employee Management
+
+This is where DTOs become even more important.
+
+Employee Entity
+@Entity
+public class Employee {
+
+    private Long employeeId;
+
+    private String employeeName;
+
+    private String email;
+
+    private String password;
+
+    private String aadhaarNumber;
+
+    private Double salary;
+
+    private String bankAccountNumber;
+
+    private String panNumber;
+}
+EmployeeResponseDTO
+public class EmployeeResponseDTO {
+
+    private Long employeeId;
+
+    private String employeeName;
+
+    private String email;
+}
+Entity Data
+{
+  "employeeId":1,
+  "employeeName":"Ravi",
+  "email":"ravi@gmail.com",
+  "password":"admin123",
+  "aadhaarNumber":"123456789012",
+  "salary":85000,
+  "bankAccountNumber":"1234567890",
+  "panNumber":"ABCDE1234F"
+}
+DTO Response
+{
+  "employeeId":1,
+  "employeeName":"Ravi",
+  "email":"ravi@gmail.com"
+}
+
+Now the purpose of DTO is very clear:
+
+Entity (Database Layer)	DTO (API Layer)
+Contains all database fields	Contains only required fields
+May contain sensitive data	Hides sensitive data
+Used by JPA/Hibernate	Used by Client/API
+Represents Database Structure	Represents API Contract
+Can change frequently	Usually stable
+Corporate Interview Answer
+
+Why do we use DTO in Spring Boot?
+
+DTO (Data Transfer Object) is used to transfer data between the client and server without exposing the Entity directly. It helps hide sensitive information, perform request validation, reduce unnecessary data transfer, and maintain a clean separation between the API layer and database layer. In enterprise applications, DTOs improve security, maintainability, and API flexibility.
+
+
+
+This is a good real-time example because password is a sensitive field. DTOs clearly demonstrate why we should not expose Entity objects directly.
+
+Project Structure
+
+
+
+com.example.usermanagement
+
+├── controller
+│     └── UserController.java
+│
+├── dto
+│     ├── UserRequestDTO.java
+│     └── UserResponseDTO.java
+│
+├── entity
+│     └── UserDetails.java
+│
+├── repository
+│     └── UserRepository.java
+│
+├── service
+│     ├── UserService.java
+│     └── UserServiceImpl.java
+│
+└── exception
+      ├── ResourceNotFoundException.java
+      └── GlobalExceptionHandler.java
+
+
+
+
+
+1. Entity Layer
+UserDetails.java
+
+package com.example.usermanagement.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity
+@Table(name = "users")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class UserDetails {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userId;
+
+    private String userName;
+
+    private String email;
+
+    private String password;
+}
+
+
+
+Why DTO?
+Entity Data
+{
+   "userId":1,
+   "userName":"John",
+   "email":"john@gmail.com",
+   "password":"john@123"
+}
+
+If we return Entity directly, the password is exposed.
+
+Instead, use DTOs.
+
+2. DTO Layer
+UserRequestDTO.java
+
+Used for Create/Update operations.
+
+package com.example.usermanagement.dto;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserRequestDTO {
+
+    @NotBlank(message = "User Name is required")
+    @Size(min = 3, max = 30,
+          message = "User Name must contain 3 to 30 characters")
+    private String userName;
+
+    @NotBlank(message = "Email is required")
+    @Email(message = "Enter valid email")
+    private String email;
+
+    @NotBlank(message = "Password is required")
+    @Size(min = 8,
+          message = "Password must contain minimum 8 characters")
+    @Pattern(
+            regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).*$",
+            message = "Password must contain uppercase, lowercase and number"
+    )
+    private String password;
+}
+UserResponseDTO.java
+
+Password is intentionally excluded.
+
+package com.example.usermanagement.dto;
+
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class UserResponseDTO {
+
+    private Long userId;
+
+    private String userName;
+
+    private String email;
+}
+3. Repository Layer
+UserRepository.java
+package com.example.usermanagement.repository;
+
+import com.example.usermanagement.entity.UserDetails;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserRepository
+        extends JpaRepository<UserDetails, Long> {
+
+    boolean existsByEmail(String email);
+}
+4. Service Layer
+UserService.java
+package com.example.usermanagement.service;
+
+import com.example.usermanagement.dto.*;
+
+import java.util.List;
+
+public interface UserService {
+
+    UserResponseDTO saveUser(UserRequestDTO dto);
+
+    UserResponseDTO getUserById(Long userId);
+
+    List<UserResponseDTO> getAllUsers();
+
+    UserResponseDTO updateUser(Long userId,
+                               UserRequestDTO dto);
+
+    void deleteUser(Long userId);
+}
+5. Service Implementation
+UserServiceImpl.java
+package com.example.usermanagement.service;
+
+import com.example.usermanagement.dto.*;
+import com.example.usermanagement.entity.UserDetails;
+import com.example.usermanagement.exception.ResourceNotFoundException;
+import com.example.usermanagement.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class UserServiceImpl
+        implements UserService {
+
+    private final UserRepository repository;
+
+    @Override
+    public UserResponseDTO saveUser(
+            UserRequestDTO dto) {
+
+        UserDetails user = UserDetails.builder()
+                .userName(dto.getUserName())
+                .email(dto.getEmail())
+                .password(dto.getPassword())
+                .build();
+
+        UserDetails savedUser =
+                repository.save(user);
+
+        return mapToResponseDTO(savedUser);
+    }
+
+    @Override
+    public UserResponseDTO getUserById(Long userId) {
+
+        UserDetails user = repository.findById(userId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "User Not Found : " + userId));
+
+        return mapToResponseDTO(user);
+    }
+
+    @Override
+    public List<UserResponseDTO> getAllUsers() {
+
+        return repository.findAll()
+                .stream()
+                .map(this::mapToResponseDTO)
+                .toList();
+    }
+
+    @Override
+    public UserResponseDTO updateUser(
+            Long userId,
+            UserRequestDTO dto) {
+
+        UserDetails user = repository.findById(userId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "User Not Found : " + userId));
+
+        user.setUserName(dto.getUserName());
+        user.setEmail(dto.getEmail());
+        user.setPassword(dto.getPassword());
+
+        UserDetails updatedUser =
+                repository.save(user);
+
+        return mapToResponseDTO(updatedUser);
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
+
+        UserDetails user = repository.findById(userId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "User Not Found : " + userId));
+
+        repository.delete(user);
+    }
+
+    private UserResponseDTO mapToResponseDTO(
+            UserDetails user) {
+
+        return UserResponseDTO.builder()
+                .userId(user.getUserId())
+                .userName(user.getUserName())
+                .email(user.getEmail())
+                .build();
+    }
+}
+6. Controller Layer
+UserController.java
+package com.example.usermanagement.controller;
+
+import com.example.usermanagement.dto.*;
+import com.example.usermanagement.service.UserService;
+
+import jakarta.validation.Valid;
+
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/users")
+@RequiredArgsConstructor
+public class UserController {
+
+    private final UserService service;
+
+    @PostMapping
+    public ResponseEntity<UserResponseDTO>
+    saveUser(
+            @Valid
+            @RequestBody UserRequestDTO dto) {
+
+        return new ResponseEntity<>(
+                service.saveUser(dto),
+                HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDTO>
+    getUserById(@PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                service.getUserById(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserResponseDTO>>
+    getAllUsers() {
+
+        return ResponseEntity.ok(
+                service.getAllUsers());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponseDTO>
+    updateUser(
+            @PathVariable Long id,
+            @Valid @RequestBody UserRequestDTO dto) {
+
+        return ResponseEntity.ok(
+                service.updateUser(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String>
+    deleteUser(@PathVariable Long id) {
+
+        service.deleteUser(id);
+
+        return ResponseEntity.ok(
+                "User Deleted Successfully");
+    }
+}
+API Response Example
+Create User Request
+{
+  "userName":"John",
+  "email":"john@gmail.com",
+  "password":"John@123"
+}
+Response
+{
+  "userId":1,
+  "userName":"John",
+  "email":"john@gmail.com"
+}
+
+Notice that:
