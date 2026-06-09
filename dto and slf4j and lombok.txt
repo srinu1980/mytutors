@@ -1,0 +1,1265 @@
+
+
+SLF4J introduction with best example 
+
+SLF4J Introduction with Best Example
+What is SLF4J?
+SLF4J (Simple Logging Facade for Java) is a logging abstraction framework. It provides a common API for different logging frameworks such as:
+
+Logback
+
+Log4j2
+
+java.util.logging (JUL)
+
+Instead of directly using Log4j or Logback APIs, developers write logging code using SLF4J. Later, they can switch the underlying logging framework without changing application code.
+
+Why Use SLF4J?
+✅ Decouples application code from logging implementation
+
+✅ Better performance using parameterized logging
+
+✅ Easy to switch logging frameworks
+
+✅ Industry standard for Spring Boot applications
+
+Logging Levels
+Level	Purpose
+TRACE	Detailed debugging information
+DEBUG	Developer debugging messages
+INFO	General application flow
+WARN	Warning messages
+ERROR	Error situations
+Maven Dependency (Spring Boot)
+Spring Boot already includes SLF4J and Logback through starter dependencies.
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+No additional dependency is required.
+
+Basic SLF4J Example
+ProductService.java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class ProductService {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(ProductService.class);
+
+    public void addProduct() {
+
+        logger.trace("Trace Message");
+
+        logger.debug("Debug Message");
+
+        logger.info("Product creation started");
+
+        logger.warn("Product price is not provided");
+
+        logger.error("Unable to save product");
+
+        logger.info("Product created successfully");
+    }
+}
+Output
+INFO  Product creation started
+WARN  Product price is not provided
+ERROR Unable to save product
+INFO  Product created successfully
+By default, TRACE and DEBUG logs may not appear depending on configuration.
+
+Best Practice: Parameterized Logging
+❌ Avoid String Concatenation
+
+String productName = "Laptop";
+
+logger.info("Product Name : " + productName);
+Even if INFO logging is disabled, string concatenation still occurs.
+
+✅ Use Placeholders
+
+String productName = "Laptop";
+
+logger.info("Product Name : {}", productName);
+Multiple Parameters:
+
+logger.info("Product Id : {}, Name : {}, Price : {}",
+            101,
+            "Laptop",
+            50000);
+Output:
+
+Product Id : 101, Name : Laptop, Price : 50000
+Real-Time Spring Boot Example
+Product Controller
+@RestController
+@RequestMapping("/products")
+public class ProductController {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(ProductController.class);
+
+    @GetMapping("/{id}")
+    public ResponseEntity<String> getProduct(
+            @PathVariable Long id) {
+
+        logger.info("Fetching product with id {}", id);
+
+        try {
+
+            if(id <= 0) {
+                logger.warn("Invalid product id {}", id);
+                return ResponseEntity.badRequest()
+                        .body("Invalid Product Id");
+            }
+
+            logger.info("Product fetched successfully");
+
+            return ResponseEntity.ok("Laptop");
+
+        } catch (Exception ex) {
+
+            logger.error("Error while fetching product {}", id, ex);
+
+            return ResponseEntity.internalServerError()
+                    .body("Something went wrong");
+        }
+    }
+}
+Logging Exceptions
+❌ Bad Practice
+
+catch(Exception ex){
+    logger.error(ex.getMessage());
+}
+Only the message is logged.
+
+✅ Good Practice
+
+catch(Exception ex){
+    logger.error("Error occurred while saving product", ex);
+}
+This logs:
+
+Error message
+
+Stack trace
+
+Root cause
+
+Configure Logging Level
+application.properties
+logging.level.root=INFO
+
+logging.level.com.example=DEBUG
+Levels
+logging.level.root=TRACE
+logging.level.root=DEBUG
+logging.level.root=INFO
+logging.level.root=WARN
+logging.level.root=ERROR
+SLF4J with Lombok (@Slf4j)
+Instead of creating Logger manually:
+
+private static final Logger logger =
+        LoggerFactory.getLogger(ProductService.class);
+Use Lombok:
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class ProductService {
+
+    public void addProduct() {
+
+        log.info("Product saved");
+
+        log.warn("Price is missing");
+
+        log.error("Database error");
+    }
+}
+Recommended Logging Strategy in Spring Boot
+Controller Layer
+log.info("Request received for product id {}", id);
+Service Layer
+log.info("Business logic execution started");
+Repository Layer
+log.debug("Executing database query");
+Exception Handler
+log.error("Unhandled exception occurred", ex);
+Interview Question
+Difference Between SLF4J and Logback?
+SLF4J	Logback
+Logging API (Facade)	Logging Implementation
+Defines logging methods	Performs actual logging
+Independent of implementation	Works behind SLF4J
+Easy framework switching	One concrete logging framework
+In Spring Boot:
+
+SLF4J = Logging API
+
+Logback = Default logging implementation
+
+This combination is the most commonly used logging approach in modern Spring Boot applications.
+
+
+Same like generate about Lombok introduction with spring boot project
+
+Lombok Introduction with Spring Boot – Beginner to Advanced
+What is Lombok?
+Lombok is a Java library that reduces boilerplate code by automatically generating:
+
+Getters
+
+Setters
+
+Constructors
+
+toString()
+
+equals() and hashCode()
+
+Builder Pattern
+
+Logger Objects
+
+at compile time using annotations.
+
+Without Lombok, Java classes become lengthy because of repetitive code. Lombok helps keep classes clean and readable.
+
+Why Use Lombok?
+Without Lombok
+public class Product {
+
+    private Long productId;
+    private String productName;
+    private double price;
+
+    public Product() {
+    }
+
+    public Product(Long productId, String productName, double price) {
+        this.productId = productId;
+        this.productName = productName;
+        this.price = price;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{productId=" + productId +
+                ", productName='" + productName +
+                "', price=" + price + "}";
+    }
+}
+More than 40 lines of code.
+
+With Lombok
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+public class Product {
+
+    private Long productId;
+    private String productName;
+    private double price;
+}
+Only a few lines.
+
+Maven Dependency
+Spring Boot projects require Lombok dependency.
+
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <optional>true</optional>
+</dependency>
+Commonly Used Lombok Annotations
+Annotation	Purpose
+@Getter	Generates getters
+@Setter	Generates setters
+@ToString	Generates toString()
+@EqualsAndHashCode	Generates equals() and hashCode()
+@NoArgsConstructor	Default constructor
+@AllArgsConstructor	Parameterized constructor
+@RequiredArgsConstructor	Constructor for final fields
+@Data	Combines multiple annotations
+@Builder	Builder Pattern
+@Slf4j	Logger creation
+@Getter and @Setter
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class Product {
+
+    private Long productId;
+    private String productName;
+    private double price;
+}
+Generated automatically:
+
+product.getProductName();
+product.setPrice(50000);
+@NoArgsConstructor
+Generates default constructor.
+
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+public class Product {
+
+    private Long productId;
+    private String productName;
+}
+Generated:
+
+Product product = new Product();
+@AllArgsConstructor
+Generates constructor with all fields.
+
+@AllArgsConstructor
+public class Product {
+
+    private Long productId;
+    private String productName;
+    private double price;
+}
+Usage:
+
+Product product =
+        new Product(101L, "Laptop", 50000);
+@ToString
+@ToString
+public class Product {
+
+    private Long productId;
+    private String productName;
+}
+Usage:
+
+System.out.println(product);
+Output:
+
+Product(productId=101, productName=Laptop)
+@Data Annotation
+Most commonly used annotation.
+
+Equivalent to:
+
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@RequiredArgsConstructor
+Example:
+
+import lombok.Data;
+
+@Data
+public class Product {
+
+    private Long productId;
+    private String productName;
+    private double price;
+}
+Spring Boot Product Example
+Product Model
+import lombok.Data;
+
+@Data
+public class Product {
+
+    private Long productId;
+    private String productName;
+    private double price;
+}
+No need to write:
+
+Getters
+
+Setters
+
+toString()
+
+equals()
+
+hashCode()
+
+@Builder Annotation
+Useful when object has many fields.
+
+Without Builder
+Product product =
+        new Product(101L,
+                    "Laptop",
+                    50000);
+With Builder
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
+public class Product {
+
+    private Long productId;
+    private String productName;
+    private double price;
+}
+Usage:
+
+Product product =
+        Product.builder()
+               .productId(101L)
+               .productName("Laptop")
+               .price(50000)
+               .build();
+Benefits:
+
+✅ Readable
+
+✅ Flexible
+
+✅ Avoids constructor confusion
+
+@Slf4j Annotation
+Instead of:
+
+private static final Logger logger =
+        LoggerFactory.getLogger(ProductService.class);
+Use:
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class ProductService {
+
+    public void saveProduct() {
+
+        log.info("Product saved");
+
+        log.warn("Price is missing");
+
+        log.error("Database error");
+    }
+}
+Complete Spring Boot Example
+Product.java
+import lombok.*;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Product {
+
+    private Long productId;
+    private String productName;
+    private double price;
+}
+ProductService.java
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Slf4j
+@Service
+public class ProductService {
+
+    public Product getProduct() {
+
+        log.info("Fetching product");
+
+        return Product.builder()
+                .productId(101L)
+                .productName("Laptop")
+                .price(50000)
+                .build();
+    }
+}
+ProductController.java
+@RestController
+@RequestMapping("/products")
+@RequiredArgsConstructor
+public class ProductController {
+
+    private final ProductService productService;
+
+    @GetMapping
+    public Product getProduct() {
+        return productService.getProduct();
+    }
+}
+What does @RequiredArgsConstructor do?
+private final ProductService productService;
+Lombok automatically generates:
+
+public ProductController(
+        ProductService productService) {
+    this.productService = productService;
+}
+This is the recommended way for dependency injection in Spring Boot.
+
+Best Practices in Spring Boot
+Model / DTO
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Product {
+}
+Service
+@Slf4j
+@Service
+public class ProductService {
+}
+Controller
+@RestController
+@RequiredArgsConstructor
+public class ProductController {
+}
+Entity
+Prefer:
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+public class Product {
+}
+Avoid using @Data on JPA entities because it can generate unwanted equals(), hashCode(), and toString() methods that may affect performance and relationships.
+
+Interview Questions
+What is Lombok?
+A Java library that reduces boilerplate code by generating methods and constructors using annotations.
+
+What is the difference between @Data and @Getter/@Setter?
+@Getter → Generates getters only.
+
+@Setter → Generates setters only.
+
+@Data → Generates getters, setters, toString(), equals(), hashCode(), and required constructor.
+
+Why use @RequiredArgsConstructor?
+It supports constructor-based dependency injection and automatically generates constructors for final fields.
+
+Which Lombok annotation is most used in Spring Boot?
+@Data
+
+@Builder
+
+@Slf4j
+
+@RequiredArgsConstructor
+
+These are the most commonly used Lombok annotations in real-world Spring Boot applications.
+
+
+Generate introduction with real time application for DTO(Data Transfer Object)
+
+DTO (Data Transfer Object) Introduction with Real-Time Spring Boot Application
+What is DTO?
+DTO (Data Transfer Object) is a design pattern used to transfer data between different layers of an application (Controller, Service, Repository) or between the client and server.
+
+A DTO contains only the data required for a specific operation and helps hide unnecessary entity details from clients.
+
+Simple Definition
+DTO is an object used to transfer data between layers without exposing the actual Entity.
+
+Why Do We Need DTO?
+Suppose we have a Product Entity:
+
+public class Product {
+
+    private Long productId;
+    private String productName;
+    private Double price;
+    private String supplierName;
+    private String internalCode;
+    private LocalDateTime createdDate;
+}
+If we return this Entity directly to the client:
+
+@GetMapping("/{id}")
+public Product getProduct(@PathVariable Long id) {
+    return productService.getProduct(id);
+}
+Response:
+
+{
+  "productId": 101,
+  "productName": "Laptop",
+  "price": 50000,
+  "supplierName": "ABC Suppliers",
+  "internalCode": "P001",
+  "createdDate": "2026-06-09T10:00:00"
+}
+The client receives unnecessary information.
+
+Solution: DTO
+Create a DTO containing only required fields.
+
+public class ProductResponseDTO {
+
+    private Long productId;
+    private String productName;
+    private Double price;
+}
+Response:
+
+{
+  "productId": 101,
+  "productName": "Laptop",
+  "price": 50000
+}
+Now sensitive/internal fields are hidden.
+
+Benefits of DTO
+Security
+Hide sensitive fields.
+
+password
+internalCode
+salary
+Better API Design
+Return only necessary data.
+
+Loose Coupling
+Changes in Entity won't affect API responses.
+
+Validation Support
+DTOs can contain validation annotations.
+
+Real-Time Example: E-Commerce Application
+Layer Architecture
+Client
+   ↓
+Controller
+   ↓
+RequestDTO
+   ↓
+Service
+   ↓
+Entity
+   ↓
+Database
+Database
+   ↓
+Entity
+   ↓
+Service
+   ↓
+ResponseDTO
+   ↓
+Controller
+   ↓
+Client
+Product Entity
+import lombok.*;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Product {
+
+    private Long productId;
+    private String productName;
+    private Double price;
+    private String supplierName;
+    private String internalCode;
+}
+Request DTO
+Used while creating a product.
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import lombok.Data;
+
+@Data
+public class ProductRequestDTO {
+
+    @NotBlank(message = "Product Name is required")
+    private String productName;
+
+    @Positive(message = "Price must be positive")
+    private Double price;
+}
+Client Request:
+
+{
+  "productName": "Laptop",
+  "price": 50000
+}
+Response DTO
+Used while sending data back.
+
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
+public class ProductResponseDTO {
+
+    private Long productId;
+    private String productName;
+    private Double price;
+}
+Service Layer
+@Service
+public class ProductService {
+
+    public ProductResponseDTO saveProduct(
+            ProductRequestDTO requestDTO) {
+
+        Product product = new Product();
+
+        product.setProductId(101L);
+        product.setProductName(requestDTO.getProductName());
+        product.setPrice(requestDTO.getPrice());
+
+        return ProductResponseDTO.builder()
+                .productId(product.getProductId())
+                .productName(product.getProductName())
+                .price(product.getPrice())
+                .build();
+    }
+}
+Controller Layer
+@RestController
+@RequestMapping("/products")
+@RequiredArgsConstructor
+public class ProductController {
+
+    private final ProductService productService;
+
+    @PostMapping
+    public ResponseEntity<ProductResponseDTO>
+            createProduct(
+            @Valid @RequestBody ProductRequestDTO dto) {
+
+        ProductResponseDTO response =
+                productService.saveProduct(dto);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(response);
+    }
+}
+API Flow
+Request
+POST /products
+{
+  "productName": "Laptop",
+  "price": 50000
+}
+Request DTO
+ProductRequestDTO
+↓
+
+Entity
+Product
+↓
+
+Response DTO
+ProductResponseDTO
+↓
+
+Response
+{
+  "productId": 101,
+  "productName": "Laptop",
+  "price": 50000
+}
+DTO Mapping
+Manual Mapping
+ProductResponseDTO dto =
+        ProductResponseDTO.builder()
+                .productId(product.getProductId())
+                .productName(product.getProductName())
+                .price(product.getPrice())
+                .build();
+Java 21 Record DTO
+Modern Spring Boot applications often use Records for DTOs.
+
+Request DTO
+public record ProductRequestDTO(
+        String productName,
+        Double price
+) {
+}
+Response DTO
+public record ProductResponseDTO(
+        Long productId,
+        String productName,
+        Double price
+) {
+}
+Benefits:
+
+Immutable
+
+Less code
+
+Better readability
+
+Java 21 recommended approach
+
+DTO vs Entity
+Feature	DTO	Entity
+Purpose	Data Transfer	Database Mapping
+Contains Business Data	Yes	Yes
+Contains DB Information	No	Yes
+Validation	Yes	Limited
+Exposed to Client	Yes	Not Recommended
+Best Practice in Spring Boot
+Request
+POST /products
+Use:
+
+ProductRequestDTO
+Response
+Use:
+
+ProductResponseDTO
+Database
+Use:
+
+Product Entity
+Never expose Entity objects directly through REST APIs.
+
+Interview Questions
+What is DTO?
+A DTO (Data Transfer Object) is an object used to transfer data between application layers without exposing Entity objects directly.
+
+Why use DTO instead of Entity?
+Security
+
+Validation
+
+Loose coupling
+
+Better API design
+
+What are RequestDTO and ResponseDTO?
+RequestDTO → Receives client input.
+
+ResponseDTO → Sends data to client.
+
+Can we use Java Records as DTOs?
+Yes. Java Records are lightweight, immutable, and highly recommended for DTOs in Spring Boot applications using Java 17+ and Java 21.
+
+Real-World Flow
+Client Request
+      ↓
+ProductRequestDTO
+      ↓
+Service Layer
+      ↓
+Product Entity
+      ↓
+Database
+      ↓
+ProductResponseDTO
+      ↓
+Client Response
+This RequestDTO → Entity → ResponseDTO approach is the standard pattern used in most production Spring Boot REST API applications.
+
+
+spring boot validations with real time example
+
+Spring Boot Validations with Real-Time Example
+What is Validation?
+Validation is the process of checking whether incoming data is correct before processing it.
+
+For example, when a user creates a product:
+
+Product Name should not be empty.
+
+Price should be greater than 0.
+
+Email should be in valid format.
+
+If invalid data is received, the application should reject the request and return a meaningful error message.
+
+Why Do We Need Validation?
+Without validation:
+
+{
+  "productName": "",
+  "price": -100
+}
+Invalid data gets stored in the database.
+
+With validation:
+
+{
+  "message": "Validation Failed"
+}
+The request is rejected before reaching business logic.
+
+Validation Dependency
+Spring Boot 3.x uses Jakarta Validation.
+
+Maven Dependency
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-validation</artifactId>
+</dependency>
+Real-Time E-Commerce Example
+ProductRequestDTO
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
+
+@Data
+public class ProductRequestDTO {
+
+    @NotBlank(message = "Product Name is mandatory")
+    @Size(min = 3, max = 50,
+          message = "Product Name should contain 3 to 50 characters")
+    private String productName;
+
+    @Positive(message = "Price must be greater than zero")
+    private Double price;
+}
+Common Validation Annotations
+@NotNull
+Field cannot be null.
+
+@NotNull
+private String productName;
+Valid:
+
+{
+  "productName": "Laptop"
+}
+Invalid:
+
+{
+  "productName": null
+}
+@NotBlank
+Used for Strings.
+
+Rejects:
+
+null
+
+empty string
+
+spaces
+
+@NotBlank
+private String productName;
+Invalid:
+
+{
+  "productName": ""
+}
+{
+  "productName": "   "
+}
+@Size
+@Size(min = 3, max = 20)
+private String productName;
+Valid:
+
+{
+  "productName":"Laptop"
+}
+Invalid:
+
+{
+  "productName":"AB"
+}
+@Positive
+@Positive
+private Double price;
+Valid:
+
+{
+  "price":50000
+}
+Invalid:
+
+{
+  "price":-100
+}
+@PositiveOrZero
+@PositiveOrZero
+private Integer quantity;
+Allows:
+
+0
+1
+2
+10
+Rejects:
+
+-1
+@Email
+@Email(message = "Invalid Email Format")
+private String email;
+Valid:
+
+abc@gmail.com
+Invalid:
+
+abcgmail.com
+@Pattern
+Mobile Number Validation
+
+@Pattern(
+    regexp = "^[0-9]{10}$",
+    message = "Mobile number must contain 10 digits"
+)
+private String mobile;
+Valid:
+
+9876543210
+Invalid:
+
+98765
+Controller Validation
+Validation works only when we use @Valid.
+
+@RestController
+@RequestMapping("/products")
+@RequiredArgsConstructor
+public class ProductController {
+
+    private final ProductService productService;
+
+    @PostMapping
+    public ResponseEntity<String> saveProduct(
+            @Valid
+            @RequestBody ProductRequestDTO dto) {
+
+        return ResponseEntity.ok("Product Saved");
+    }
+}
+Valid Request
+{
+  "productName":"Laptop",
+  "price":50000
+}
+Response:
+
+Product Saved
+Invalid Request
+{
+  "productName":"",
+  "price":-100
+}
+Default Response:
+
+{
+  "timestamp":"2026-06-09T10:00:00",
+  "status":400,
+  "error":"Bad Request"
+}
+Global Exception Handling for Validation Errors
+Create a Global Exception Handler.
+
+GlobalExceptionHandler.java
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(
+            MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidation(
+            MethodArgumentNotValidException ex) {
+
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getBindingResult()
+                .getFieldErrors()
+                .forEach(error ->
+                        errors.put(
+                                error.getField(),
+                                error.getDefaultMessage()));
+
+        return errors;
+    }
+}
+Validation Error Response
+Request:
+
+{
+  "productName":"",
+  "price":-100
+}
+Response:
+
+{
+  "productName":"Product Name is mandatory",
+  "price":"Price must be greater than zero"
+}
+This is much more user-friendly.
+
+Real-Time User Registration Example
+UserRequestDTO
+import jakarta.validation.constraints.*;
+import lombok.Data;
+
+@Data
+public class UserRequestDTO {
+
+    @NotBlank(message = "Name is required")
+    private String name;
+
+    @Email(message = "Invalid Email")
+    private String email;
+
+    @Pattern(
+            regexp = "^[0-9]{10}$",
+            message = "Mobile must contain 10 digits"
+    )
+    private String mobile;
+
+    @Size(
+            min = 8,
+            message = "Password must contain at least 8 characters"
+    )
+    private String password;
+}
+Validation Flow
+Client Request
+       ↓
+UserRequestDTO
+       ↓
+@Valid
+       ↓
+Validation Framework
+       ↓
+Valid Data ?
+   /         \
+ Yes          No
+  ↓            ↓
+Controller   Exception
+  ↓            ↓
+Service     GlobalExceptionHandler
+  ↓            ↓
+Database   Error Response
+Validation Groups (Advanced)
+Sometimes validations differ for Create and Update operations.
+
+Example:
+
+Create Product
+@NotNull
+private Long productId;
+Update Product
+Product ID must already exist.
+
+Validation Groups help handle such scenarios.
+
+Best Practices
+Use DTOs for Validation
+✅ Good
+
+public class ProductRequestDTO {
+
+    @NotBlank
+    private String productName;
+}
+❌ Avoid
+
+@Entity
+public class Product {
+
+    @NotBlank
+    private String productName;
+}
+Keep validation inside Request DTOs.
+
+Always Use Custom Messages
+✅
+
+@NotBlank(
+    message = "Product Name is mandatory"
+)
+❌
+
+@NotBlank
+Use Global Exception Handling
+Return meaningful error messages instead of default Spring Boot errors.
+
+Most Used Validation Annotations in Projects
+Annotation	Purpose
+@NotNull	Cannot be null
+@NotBlank	String cannot be empty
+@NotEmpty	Collection/String cannot be empty
+@Size	Length validation
+@Positive	Greater than 0
+@PositiveOrZero	Greater than or equal to 0
+@Email	Email validation
+@Pattern	Regex validation
+@Min	Minimum value
+@Max	Maximum value
+@Past	Past date validation
+@Future	Future date validation
+Interview Questions
+What is @Valid?
+@Valid triggers validation on the incoming request object before the controller method executes.
+
+What happens if validation fails?
+Spring Boot throws MethodArgumentNotValidException.
+
+Where should validations be placed?
+In Request DTO classes, not in Entities.
+
+Why use Global Exception Handling?
+To return clean, consistent, and user-friendly validation error responses.
+
+Real-World Spring Boot Flow
+Request JSON
+      ↓
+RequestDTO
+      ↓
+@Valid
+      ↓
+Validation
+      ↓
+Controller
+      ↓
+Service
+      ↓
+Repository
+      ↓
+Database
+This RequestDTO + @Valid + Global Exception Handling pattern is the standard approach used in production Spring Boot REST API applications.
+
+
