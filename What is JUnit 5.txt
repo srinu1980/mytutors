@@ -1,0 +1,1484 @@
+
+What is JUnit 5?
+
+JUnit 5 is the latest version of the JUnit testing framework used to write and execute automated tests for Java applications.
+
+
+
+JUnit 5 Architecture
+============================
+
+JUnit 5 consists of:
+
+JUnit Platform
+      ↓
+JUnit Jupiter
+      ↓
+JUnit Vintage
+
+
+JUnit Platform
+==================
+Runs testing frameworks.
+
+JUnit Jupiter
+==============
+Provides JUnit 5 APIs and annotations.
+
+
+JUnit Vintage
+=================
+Supports older JUnit 4 tests.
+
+
+Maven Dependency
+=====================
+
+For a Spring Boot project:
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+</dependency>
+
+
+
+For a Core Java project:
+=======================
+
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter</artifactId>
+    <version>5.10.2</version>
+    <scope>test</scope>
+</dependency>
+
+
+
+
+Creating Your First Test
+-------------------------
+
+Calculator Class
+
+
+public class Calculator {
+
+    public int add(int a, int b) {
+        return a + b;
+    }
+}
+
+
+CalculatorTest Class
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class CalculatorTest {
+
+    @Test
+    void testAdd() {
+
+        Calculator calculator =
+                new Calculator();
+
+        int result =
+                calculator.add(10, 20);
+
+        assertEquals(30, result);
+    }
+}
+
+
+Understanding @Test
+-----------------------
+
+The @Test annotation tells JUnit:
+
+"Execute this method as a test case."
+
+Example:
+
+@Test
+void testMultiplication() {
+
+    assertEquals(20, 4 * 5);
+}
+
+
+Assertions
+--------------
+
+Assertions compare actual results with expected results.
+
+assertEquals()
+
+Checks whether two values are equal.
+
+@Test
+void testAddition() {
+
+    assertEquals(50, 20 + 30);
+}
+
+
+
+Test Lifecycle Annotations
+-----------------------------
+
+JUnit provides lifecycle methods that execute before and after tests.
+
+@BeforeEach
+
+Runs before every test.
+
+@BeforeEach
+void init() {
+
+    System.out.println("Before Test");
+}
+
+Example Output:
+
+Before Test
+Test 1
+
+Before Test
+Test 2
+@AfterEach
+
+Runs after every test.
+
+@AfterEach
+void cleanup() {
+
+    System.out.println("After Test");
+}
+@BeforeAll
+
+Runs only once before all tests.
+
+@BeforeAll
+static void start() {
+
+    System.out.println("Application Started");
+}
+@AfterAll
+
+Runs only once after all tests.
+
+@AfterAll
+static void stop() {
+
+    System.out.println("Application Closed");
+}
+
+
+
+Complete Lifecycle Example
+
+import org.junit.jupiter.api.*;
+
+class EmployeeServiceTest {
+
+    @BeforeAll
+    static void beforeAll() {
+        System.out.println("Before All");
+    }
+
+    @BeforeEach
+    void beforeEach() {
+        System.out.println("Before Each");
+    }
+
+    @Test
+    void test1() {
+        System.out.println("Test 1");
+    }
+
+    @Test
+    void test2() {
+        System.out.println("Test 2");
+    }
+
+    @AfterEach
+    void afterEach() {
+        System.out.println("After Each");
+    }
+
+    @AfterAll
+    static void afterAll() {
+        System.out.println("After All");
+    }
+}
+
+
+Output
+
+Before All
+
+Before Each
+Test 1
+After Each
+
+Before Each
+Test 2
+After Each
+
+After All
+Exception Testing
+
+Service
+
+public class BankService {
+
+    public void withdraw(double amount) {
+
+        if(amount <= 0) {
+            throw new IllegalArgumentException(
+                    "Invalid Amount");
+        }
+    }
+}
+
+Test
+
+@Test
+void testWithdrawException() {
+
+    BankService service =
+            new BankService();
+
+    assertThrows(
+            IllegalArgumentException.class,
+            () -> service.withdraw(-100)
+    );
+}
+
+
+
+@Test
+void shouldReturnBonus() {
+
+    // Arrange
+    EmployeeService service =
+            new EmployeeService();
+
+    // Act
+    double bonus =
+            service.calculateBonus(50000);
+
+    // Assert
+    assertEquals(5000, bonus);
+}
+Naming Conventions
+----------------------
+
+Avoid:
+--------
+test1()
+test2()
+test3()
+
+Use meaningful names:
+----------------------
+shouldCalculateEmployeeBonus()
+shouldReturnEmployeeById()
+shouldThrowExceptionForInvalidSalary()
+
+
+
+
+
+Real-Time Corporate Example
+----------------------------
+
+Service
+public class ProductService {
+
+    public double applyDiscount(double price) {
+        return price * 0.90;
+    }
+}
+
+
+Test
+@Test
+void shouldApplyTenPercentDiscount() {
+
+    ProductService service =
+            new ProductService();
+
+    double result =
+            service.applyDiscount(1000);
+
+    assertEquals(900, result);
+}
+
+JUnit 5 Important Annotations Summary
+
+Annotation	Purpose
+===============================================
+@Test		Marks a test method
+@BeforeEach	Executes before every test
+@AfterEach	Executes after every test
+@BeforeAll	Executes once before all tests
+@AfterAll	Executes once after all tests
+@Disabled	Skips a test
+@DisplayName	Custom test name
+
+
+What is Mockito?
+
+Mockito is a popular Java mocking framework used along with JUnit to create mock objects for unit testing.
+
+It helps us test a class in isolation without depending on external systems like:
+
+Database
+REST APIs
+File Systems
+Email Services
+Third-party Services
+
+
+Why Mockito?
+
+Consider a Spring Boot application:
+
+EmployeeController
+        |
+        ↓
+EmployeeService
+        |
+        ↓
+EmployeeRepository
+        |
+        ↓
+      Database
+
+Suppose we want to test EmployeeService.
+
+Without Mockito:
+
+Test requires a database connection.
+Test execution becomes slow.
+Failures may occur due to DB issues.
+
+With Mockito:
+
+EmployeeService
+       |
+       ↓
+Mock EmployeeRepository
+
+No database is required.
+
+Tests become:
+
+✅ Fast
+
+✅ Independent
+
+✅ Reliable
+
+Real-Time Example
+
+EmployeeService
+@Service
+@RequiredArgsConstructor
+public class EmployeeService {
+
+    private final EmployeeRepository repository;
+
+    public Employee findById(Long id) {
+
+        return repository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Employee Not Found"));
+    }
+}
+
+
+Problem
+
+While testing:
+
+repository.findById(id)
+
+tries to connect to the database.
+
+Instead of using a real database, Mockito creates a fake repository.
+
+Mockito Dependency
+
+Spring Boot already provides Mockito through:
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+</dependency>
+
+
+Core Mockito Annotations
+-----------------------------
+Annotation	Purpose
+
+@Mock		Creates fake object
+@InjectMocks	Injects mock objects
+@Spy		Partial mocking
+@Captor		Captures arguments
+@ExtendWith(MockitoExtension.class)	Enables Mockito in JUnit 5
+@Mock Annotation	Creates a fake object.
+
+
+
+Example:
+
+@Mock
+EmployeeRepository repository;
+
+Mockito creates:
+
+EmployeeRepository repository =
+        Mockito.mock(EmployeeRepository.class);
+@InjectMocks Annotation
+
+Injects mocked dependencies into the class being tested.
+
+Example:
+
+@InjectMocks
+EmployeeService service;
+
+Mockito internally does:
+
+EmployeeService service =
+        new EmployeeService(repository);
+
+where repository is the mocked object.
+
+Complete Example
+-------------------
+
+Employee Entity
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Employee {
+
+    private Long employeeId;
+    private String employeeName;
+    private String department;
+}
+
+Repository
+
+public interface EmployeeRepository {
+
+    Optional<Employee> findById(Long id);
+}
+
+
+Service
+
+@Service
+@RequiredArgsConstructor
+public class EmployeeService {
+
+    private final EmployeeRepository repository;
+
+    public Employee findById(Long id) {
+
+        return repository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Employee Not Found"));
+    }
+}
+
+
+Test Class
+
+@ExtendWith(MockitoExtension.class)
+class EmployeeServiceTest {
+
+    @Mock
+    private EmployeeRepository repository;
+
+    @InjectMocks
+    private EmployeeService service;
+
+    @Test
+    void shouldReturnEmployee() {
+
+        Employee employee =
+                new Employee(
+                        1L,
+                        "John",
+                        "IT");
+
+        when(repository.findById(1L))
+                .thenReturn(Optional.of(employee));
+
+        Employee result =
+                service.findById(1L);
+
+        assertEquals(
+                "John",
+                result.getEmployeeName());
+    }
+}
+
+
+Understanding when()
+
+Mockito uses:
+
+when(...)
+
+to define mock behavior.
+
+Example:
+
+when(repository.findById(1L))
+        .thenReturn(Optional.of(employee));
+
+Meaning:
+
+When repository.findById(1L)
+is called
+
+Return employee
+thenReturn()
+
+Returns predefined data.
+
+when(repository.findAll())
+        .thenReturn(employeeList);
+
+
+Example: Testing findAll()
+
+Service
+public List<Employee> findAll() {
+
+    return repository.findAll();
+}
+
+
+Test
+@Test
+void shouldReturnAllEmployees() {
+
+    List<Employee> employees =
+            Arrays.asList(
+                    new Employee(1L,"John","IT"),
+                    new Employee(2L,"David","HR"));
+
+    when(repository.findAll())
+            .thenReturn(employees);
+
+    List<Employee> result =
+            service.findAll();
+
+    assertEquals(2, result.size());
+}
+
+
+verify()
+
+Used to check whether a method was called.
+
+Example:
+
+verify(repository).findById(1L);
+
+Meaning:
+
+Ensure repository.findById(1L)
+was executed exactly once.
+
+
+verify Example
+
+@Test
+void shouldCallRepositoryMethod() {
+
+    Employee employee =
+            new Employee(
+                    1L,
+                    "John",
+                    "IT");
+
+    when(repository.findById(1L))
+            .thenReturn(Optional.of(employee));
+
+    service.findById(1L);
+
+    verify(repository).findById(1L);
+}
+
+
+verify Times
+
+Called once:
+
+verify(repository,times(1))
+        .findById(1L);
+
+Called twice:
+
+verify(repository,times(2))
+        .findById(1L);
+
+Never called:
+
+verify(repository,never())
+        .save(any());
+
+Exception Testing with Mockito
+
+
+Service
+public Employee findById(Long id) {
+
+    return repository.findById(id)
+            .orElseThrow(() ->
+                    new RuntimeException(
+                            "Employee Not Found"));
+}
+
+
+Test
+
+@Test
+void shouldThrowException() {
+
+    when(repository.findById(1L))
+            .thenReturn(Optional.empty());
+
+    assertThrows(
+            RuntimeException.class,
+            () -> service.findById(1L));
+}
+
+Mockito Matchers
+
+Instead of exact values:
+
+when(repository.findById(1L))
+
+Use:
+
+when(repository.findById(anyLong()))
+
+Common Matchers:
+
+any()
+anyString()
+anyLong()
+anyInt()
+eq()
+
+Example:
+
+when(repository.findById(anyLong()))
+        .thenReturn(Optional.of(employee));
+Real-Time Spring Boot Example
+Product Service
+
+@Service
+@RequiredArgsConstructor
+public class ProductService {
+
+    private final ProductRepository repository;
+
+    public Product save(Product product) {
+
+        return repository.save(product);
+    }
+}
+
+Test
+
+@ExtendWith(MockitoExtension.class)
+class ProductServiceTest {
+
+    @Mock
+    ProductRepository repository;
+
+    @InjectMocks
+    ProductService service;
+
+    @Test
+    void shouldSaveProduct() {
+
+        Product product =
+                new Product(
+                        1L,
+                        "Laptop",
+                        50000.0);
+
+        when(repository.save(product))
+                .thenReturn(product);
+
+        Product saved =
+                service.save(product);
+
+        assertNotNull(saved);
+
+        verify(repository).save(product);
+    }
+}
+
+
+
+JUnit vs Mockito
+
+
+JUnit	Mockito
+
+
+Testing Framework	Mocking Framework
+
+Executes Tests		Creates Fake Objects
+Assertions		Mock Behaviors
+@Test			@Mock
+
+
+Together:
+
+JUnit
+   +
+Mockito
+   =
+Unit Testing
+
+
+Mockito is mostly used for:
+
+Service Layer Testing
+
+because services depend on repositories.
+
+
+Example:
+
+@Test
+void shouldReturnEmployee() {
+
+    // Arrange
+    Employee employee =
+            new Employee(
+                    1L,
+                    "John",
+                    "IT");
+
+    when(repository.findById(1L))
+            .thenReturn(Optional.of(employee));
+
+    // Act
+    Employee result =
+            service.findById(1L);
+
+    // Assert
+    assertEquals(
+            "John",
+            result.getEmployeeName());
+}
+Frequently Asked Interview Questions
+What is Mockito?
+
+Mockito is a Java mocking framework used to create mock objects for unit testing.
+
+Why use Mockito?
+
+To test classes independently without real databases, APIs, or external systems.
+
+What is @Mock?
+
+Creates a fake object.
+
+What is @InjectMocks?
+
+Injects mocked dependencies into the class under test.
+
+What is verify()?
+
+Checks whether a method was called.
+
+Difference between Stub and Mock?
+Stub	Mock
+Returns predefined data	Verifies interactions
+Used with thenReturn()	Used with verify()
+
+
+
+
+
+
+
+
+Generate code for Mockito with junit test cases to perform CRUD operations with spring boot project  
+
+Mockito with JUnit 5 – CRUD Operations Testing in Spring Boot
+What is Mockito?
+Mockito is a mocking framework used to create fake objects (mock objects) for unit testing.
+
+Why Mockito?
+In a Spring Boot application, Service classes depend on Repository classes.
+
+Example:
+
+@Service
+public class EmployeeService {
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public Employee saveEmployee(Employee employee) {
+        return employeeRepository.save(employee);
+    }
+}
+When testing EmployeeService, we don't want to connect to a real database.
+
+Instead, we mock the repository using Mockito.
+
+Project Structure
+src
+├── main
+│   ├── java
+│   │   └── com.example.employee
+│   │       ├── controller
+│   │       ├── service
+│   │       ├── repository
+│   │       └── model
+│
+└── test
+    └── java
+        └── com.example.employee
+            └── service
+                └── EmployeeServiceTest.java
+1. Employee Entity
+package com.example.employee.model;
+
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Employee {
+
+    private Long id;
+    private String name;
+    private String email;
+    private Double salary;
+}
+2. Repository Layer
+package com.example.employee.repository;
+
+import java.util.List;
+import java.util.Optional;
+
+import com.example.employee.model.Employee;
+
+public interface EmployeeRepository {
+
+    Employee save(Employee employee);
+
+    List<Employee> findAll();
+
+    Optional<Employee> findById(Long id);
+
+    void deleteById(Long id);
+}
+3. Custom Exception
+package com.example.employee.exception;
+
+public class EmployeeNotFoundException extends RuntimeException {
+
+    public EmployeeNotFoundException(String message) {
+        super(message);
+    }
+}
+4. Service Layer
+package com.example.employee.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.example.employee.exception.EmployeeNotFoundException;
+import com.example.employee.model.Employee;
+import com.example.employee.repository.EmployeeRepository;
+
+@Service
+public class EmployeeService {
+
+    private EmployeeRepository repository;
+
+    public EmployeeService(EmployeeRepository repository) {
+        this.repository = repository;
+    }
+
+    // Create
+    public Employee saveEmployee(Employee employee) {
+        return repository.save(employee);
+    }
+
+    // Read All
+    public List<Employee> getAllEmployees() {
+        return repository.findAll();
+    }
+
+    // Read By Id
+    public Employee getEmployeeById(Long id) {
+
+        return repository.findById(id)
+                .orElseThrow(() ->
+                        new EmployeeNotFoundException("Employee Not Found"));
+    }
+
+    // Update
+    public Employee updateEmployee(Long id, Employee employee) {
+
+        Employee existingEmployee =
+                repository.findById(id)
+                        .orElseThrow(() ->
+                                new EmployeeNotFoundException("Employee Not Found"));
+
+        existingEmployee.setName(employee.getName());
+        existingEmployee.setEmail(employee.getEmail());
+        existingEmployee.setSalary(employee.getSalary());
+
+        return repository.save(existingEmployee);
+    }
+
+    // Delete
+    public void deleteEmployee(Long id) {
+
+        repository.findById(id)
+                .orElseThrow(() ->
+                        new EmployeeNotFoundException("Employee Not Found"));
+
+        repository.deleteById(id);
+    }
+}
+
+
+JUnit 5 + Mockito Test Class
+
+Annotations Used
+
+Annotation				Purpose
+============================================================
+@ExtendWith(MockitoExtension.class)	Enable Mockito
+
+@Mock					Create Mock Object
+
+@InjectMocks				Inject Mock Dependencies
+
+@Test					Test Method
+
+when()					Mock Method Call
+
+verify()				Verify Method Invocation
+
+
+
+EmployeeServiceTest
+
+package com.example.employee.service;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import com.example.employee.exception.EmployeeNotFoundException;
+import com.example.employee.model.Employee;
+import com.example.employee.repository.EmployeeRepository;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class EmployeeServiceTest {
+
+    @Mock
+    private EmployeeRepository repository;
+
+    @InjectMocks
+    private EmployeeService service;
+
+    private Employee employee;
+
+    @BeforeEach
+    void setup() {
+
+        employee = Employee.builder()
+                .id(1L)
+                .name("John")
+                .email("john@gmail.com")
+                .salary(50000.0)
+                .build();
+    }
+
+    // ==========================
+    // CREATE TEST CASE
+    // ==========================
+
+    @Test
+    void saveEmployeeTest() {
+
+        when(repository.save(any(Employee.class)))
+                .thenReturn(employee);
+
+        Employee savedEmployee =
+                service.saveEmployee(employee);
+
+        assertNotNull(savedEmployee);
+        assertEquals("John", savedEmployee.getName());
+
+        verify(repository, times(1))
+                .save(employee);
+    }
+
+    // ==========================
+    // GET ALL TEST CASE
+    // ==========================
+
+    @Test
+    void getAllEmployeesTest() {
+
+        List<Employee> employeeList =
+                Arrays.asList(
+                        employee,
+                        new Employee(2L,
+                                "David",
+                                "david@gmail.com",
+                                60000.0)
+                );
+
+        when(repository.findAll())
+                .thenReturn(employeeList);
+
+        List<Employee> result =
+                service.getAllEmployees();
+
+        assertEquals(2, result.size());
+
+        verify(repository, times(1))
+                .findAll();
+    }
+
+    // ==========================
+    // GET BY ID TEST CASE
+    // ==========================
+
+    @Test
+    void getEmployeeByIdTest() {
+
+        when(repository.findById(1L))
+                .thenReturn(Optional.of(employee));
+
+        Employee result =
+                service.getEmployeeById(1L);
+
+        assertEquals("John",
+                result.getName());
+
+        verify(repository)
+                .findById(1L);
+    }
+
+    // ==========================
+    // GET BY ID EXCEPTION TEST
+    // ==========================
+
+    @Test
+    void getEmployeeByIdNotFoundTest() {
+
+        when(repository.findById(1L))
+                .thenReturn(Optional.empty());
+
+        assertThrows(
+                EmployeeNotFoundException.class,
+                () -> service.getEmployeeById(1L)
+        );
+    }
+
+    // ==========================
+    // UPDATE TEST CASE
+    // ==========================
+
+    @Test
+    void updateEmployeeTest() {
+
+        Employee updatedEmployee =
+                Employee.builder()
+                        .id(1L)
+                        .name("Updated John")
+                        .email("updated@gmail.com")
+                        .salary(70000.0)
+                        .build();
+
+        when(repository.findById(1L))
+                .thenReturn(Optional.of(employee));
+
+        when(repository.save(any(Employee.class)))
+                .thenReturn(updatedEmployee);
+
+        Employee result =
+                service.updateEmployee(1L,
+                        updatedEmployee);
+
+        assertEquals(
+                "Updated John",
+                result.getName()
+        );
+
+        assertEquals(
+                70000.0,
+                result.getSalary()
+        );
+
+        verify(repository)
+                .findById(1L);
+
+        verify(repository)
+                .save(any(Employee.class));
+    }
+
+    // ==========================
+    // DELETE TEST CASE
+    // ==========================
+
+    @Test
+    void deleteEmployeeTest() {
+
+        when(repository.findById(1L))
+                .thenReturn(Optional.of(employee));
+
+        doNothing()
+                .when(repository)
+                .deleteById(1L);
+
+        service.deleteEmployee(1L);
+
+        verify(repository)
+                .deleteById(1L);
+    }
+
+    // ==========================
+    // DELETE EXCEPTION TEST
+    // ==========================
+
+    @Test
+    void deleteEmployeeNotFoundTest() {
+
+        when(repository.findById(1L))
+                .thenReturn(Optional.empty());
+
+        assertThrows(
+                EmployeeNotFoundException.class,
+                () -> service.deleteEmployee(1L)
+        );
+    }
+}
+Maven Dependencies
+<dependencies>
+
+    <!-- Spring Boot Test -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+
+    <!-- Mockito -->
+    <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <scope>test</scope>
+    </dependency>
+
+</dependencies>
+
+
+
+What is JUnit 5?
+
+JUnit 5 is the latest version of the JUnit testing framework used for writing and executing Java unit test cases.
+
+It helps developers verify that application code works as expected.
+
+Why JUnit 5?
+
+Automates testing process
+Detects bugs early
+Improves code quality
+Supports Test-Driven Development (TDD)
+Reduces manual testing effort
+JUnit 5 Architecture
+
+
+
+JUnit 5 consists of three modules:
+
+JUnit Platform
+
+Launches testing frameworks on JVM.
+
+JUnit Jupiter
+
+Provides testing API and annotations.
+
+JUnit Vintage
+
+Supports JUnit 3 and JUnit 4 tests.
+
+Common JUnit 5 Annotations
+============================
+
+Annotation			Purpose
+==========================================================
+@Test			Marks a method as a test case
+@BeforeEach		Executes before every test
+@AfterEach		Executes after every test
+@BeforeAll		Executes once before all tests
+@AfterAll		Executes once after all tests
+@DisplayName		Custom test name
+@Disabled		Skips a test case
+
+
+
+Example
+
+import org.junit.jupiter.api.*;
+
+class CalculatorTest {
+
+    @BeforeEach
+    void setup() {
+        System.out.println("Before Test");
+    }
+
+    @Test
+    void addTest() {
+        int result = 10 + 20;
+        Assertions.assertEquals(30, result);
+    }
+
+    @AfterEach
+    void cleanup() {
+        System.out.println("After Test");
+    }
+}
+
+
+Important Assertions
+
+Assertion		Purpose
+====================================================
+assertEquals()		Compare expected and actual values
+assertNotEquals()	Verify values are different
+assertTrue()		Verify condition is true
+assertFalse()		Verify condition is false
+assertNull()		Verify object is null
+assertNotNull()		Verify object is not null
+assertThrows()		Verify exception is thrown
+
+
+Example
+
+assertEquals(100, employee.getSalary());
+
+assertNotNull(employee);
+
+assertThrows(
+    RuntimeException.class,
+    () -> service.getEmployeeById(10L)
+);
+
+
+
+
+What is Mockito?
+
+Mockito is a Java mocking framework used to create fake (mock) objects for testing.
+
+It allows us to test a class independently without using actual database, API, or external services.
+
+
+Why Mockito?
+
+Suppose:
+
+@Service
+public class EmployeeService {
+
+    private EmployeeRepository repository;
+
+    public EmployeeService(EmployeeRepository repository) {
+        this.repository = repository;
+    }
+}
+
+
+While testing EmployeeService, we don't want to connect to a real database.
+
+Mockito creates a fake repository and returns predefined data.
+
+Common Mockito Annotations
+
+Annotation		Purpose
+================================================
+@Mock			Creates mock object
+@InjectMocks		Injects mock objects into class under test
+@ExtendWith(MockitoExtension.class) Enables Mockito support in JUnit 5
+
+
+Example
+
+@ExtendWith(MockitoExtension.class)
+class EmployeeServiceTest {
+
+    @Mock
+    private EmployeeRepository repository;
+
+    @InjectMocks
+    private EmployeeService service;
+}
+
+
+Used Mockito Methods
+---------------------
+1. when()
+
+Used to define mock behavior.
+
+when(repository.findById(1L))
+        .thenReturn(Optional.of(employee));
+
+
+2. verify()
+
+Verifies method invocation.
+
+verify(repository, times(1))
+        .save(employee);
+
+3. any()
+
+Matches any object.
+
+when(repository.save(any(Employee.class)))
+        .thenReturn(employee);
+
+
+4. doNothing()
+
+Used for void methods.
+
+doNothing()
+    .when(repository)
+    .deleteById(1L);
+
+
+5. doThrow()
+
+Used to throw exceptions.
+
+
+doThrow(new RuntimeException())
+    .when(repository)
+    .deleteById(1L);
+
+
+
+
+Testing Framework	Mocking Framework
+============================================
+Executes test cases	Creates fake objects
+
+Provides assertions	Provides mock behavior
+
+Used for validation	Used for dependency isolation
+
+
+
+Real-Time Example
+
+Without Mockito
+
+EmployeeService
+       |
+       v
+EmployeeRepository
+       |
+       v
+Database
+
+Testing requires database connection.
+
+
+
+With Mockito
+
+EmployeeService
+       |
+       v
+Mock EmployeeRepository
+       |
+       v
+Fake Data
+
+No database required, tests execute faster.
+
+
+
+1. What is JUnit 5?
+
+JUnit 5 is a unit testing framework used to write and execute Java test cases.
+
+2. What is Mockito?
+
+Mockito is a mocking framework used to create mock objects for testing.
+
+3. Difference between @Mock and @InjectMocks?
+
+@Mock → Creates a fake object.
+
+@InjectMocks → Injects mocked dependencies into the class under test.
+
+
+4. Why use Mockito?
+
+To test business logic independently without database or external systems.
+
+5. What is assertThrows()?
+
+Used to verify that a method throws the expected exception.
+
+assertThrows(
+    EmployeeNotFoundException.class,
+    () -> service.getEmployeeById(100L)
+);
+
+
