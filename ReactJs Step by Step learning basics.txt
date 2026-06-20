@@ -1,0 +1,2600 @@
+1. What is ReactJS?
+
+ReactJS is a JavaScript library developed by Meta Platforms for building fast and interactive User Interfaces (UI).
+
+
+
+Traditional JavaScript
+-----------------------
+
+<div id="root"></div>
+
+<script>
+document.getElementById("root").innerHTML = "Hello World";
+</script>
+
+
+ReactJS
+-------------
+
+function App() {
+  return <h1>Hello World</h1>;
+}
+
+
+React automatically updates the UI when data changes.
+
+
+
+
+2. Create React Project
+
+Install Node.js first.
+
+Create a React project using Vite:
+
+npm create vite@latest react-basics -- --template react
+
+
+
+Move into project:
+
+cd react-basics
+
+
+
+Install dependencies:
+
+npm install
+
+
+Run application:
+
+npm run dev
+
+
+
+
+Project Structure:
+---------------------
+
+react-basics
+|
+├── src
+│   ├── App.jsx
+│   ├── main.jsx
+│
+├── package.json
+
+
+3. Functional Component
+--------------------------
+App.jsx
+
+function App() {
+  return (
+    <div>
+      <h1>Welcome to React</h1>
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
+Output:
+--------
+Welcome to React
+
+
+4. JSX (JavaScript XML)
+--------------------------
+
+JSX allows writing HTML inside JavaScript.
+
+
+function App() {
+  const name = "Srinivasa";
+
+  return (
+    <div>
+      <h1>Hello {name}</h1>
+    </div>
+  );
+}
+
+
+Output:
+
+Hello Srinivasa
+
+5. Props Example
+
+Props are used to pass data from Parent to Child.
+
+Student.jsx
+
+function Student(props) {
+  return (
+    <div>
+      <h2>Name: {props.name}</h2>
+      <h2>Course: {props.course}</h2>
+    </div>
+  );
+}
+
+
+
+export default Student;
+
+App.jsx
+
+import Student from "./Student";
+
+function App() {
+  return (
+    <div>
+      <Student name="John" course="ReactJS" />
+      <Student name="David" course="Spring Boot" />
+    </div>
+  );
+}
+
+
+export default App;
+
+6. useState Hook
+-------------------
+
+Used to manage component state.
+
+
+Counter Example
+
+import { useState } from "react";
+
+function App() {
+
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <h1>Count : {count}</h1>
+
+      <button onClick={() => setCount(count + 1)}>
+        Increment
+      </button>
+    </div>
+  );
+}
+
+export default App;
+
+
+
+Output:
+
+Count : 0
+
+
+Click button:
+
+Count : 1
+Count : 2
+Count : 3
+
+
+
+7. Event Handling
+-------------------
+
+function App() {
+
+  const showMessage = () => {
+    alert("Button Clicked");
+  };
+
+  return (
+    <button onClick={showMessage}>
+      Click Me
+    </button>
+  );
+}
+
+
+
+export default App;
+
+
+
+
+8. Conditional Rendering
+------------------------
+function App() {
+
+  const isLoggedIn = true;
+
+  return (
+    <div>
+      {isLoggedIn
+        ? <h1>Welcome User</h1>
+        : <h1>Please Login</h1>}
+    </div>
+  );
+}
+
+export default App;
+
+
+
+9. Rendering Lists
+-------------------
+
+function App() {
+
+  const employees = [
+    "John",
+    "David",
+    "Smith"
+  ];
+
+  return (
+    <div>
+      <ul>
+        {
+          employees.map((emp,index) =>
+            <li key={index}>{emp}</li>
+          )
+        }
+      </ul>
+    </div>
+  );
+}
+
+export default App;
+
+
+
+10. Forms Example
+-----------------
+import { useState } from "react";
+
+function App() {
+
+  const [name, setName] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    alert(name);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+
+      <button type="submit">
+        Submit
+      </button>
+
+    </form>
+  );
+}
+
+export default App;
+
+
+
+11. useEffect Hook
+--------------------
+
+Used for API calls and lifecycle operations.
+
+import { useEffect } from "react";
+
+function App() {
+
+  useEffect(() => {
+    console.log("Component Loaded");
+  }, []);
+
+  return (
+    <h1>React Hooks Example</h1>
+  );
+}
+
+export default App;
+
+
+
+12. Fetch API Data
+---------------------
+import { useEffect, useState } from "react";
+
+function App() {
+
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then(res => res.json())
+      .then(data => setUsers(data));
+
+  }, []);
+
+  return (
+    <div>
+
+      <h2>Users List</h2>
+
+      {
+        users.map(user => (
+          <p key={user.id}>
+            {user.name}
+          </p>
+        ))
+      }
+
+    </div>
+  );
+}
+
+
+export default App;
+
+
+
+
+13. Parent-Child Communication
+--------------------------------
+
+Child.jsx
+
+function Child({ sendData }) {
+
+  return (
+    <button onClick={() => sendData("Hello Parent")}>
+      Send Data
+    </button>
+  );
+}
+
+export default Child;
+
+
+App.jsx
+
+import Child from "./Child";
+
+function App() {
+
+  const receiveData = (msg) => {
+    alert(msg);
+  };
+
+  return (
+    <Child sendData={receiveData} />
+  );
+}
+
+
+export default App;
+
+14. React Folder Structure (Corporate Standard)
+---------------------------------------------------
+
+src
+│
+├── components
+│   ├── Header.jsx
+│   ├── Footer.jsx
+│   └── EmployeeCard.jsx
+│
+├── pages
+│   ├── Home.jsx
+│   ├── Employees.jsx
+│
+├── services
+│   └── EmployeeService.js
+│
+├── hooks
+│
+├── App.jsx
+├── main.jsx
+
+
+
+
+
+
+Move into project:
+
+cd react-basics
+
+Install dependencies:
+
+npm install
+
+Run application:
+
+npm run dev
+
+Project Structure:
+
+react-basics
+|
+├── src
+│   ├── App.jsx
+│   ├── main.jsx
+│
+├── package.json
+3. Functional Component
+App.jsx
+function App() {
+  return (
+    <div>
+      <h1>Welcome to React</h1>
+    </div>
+  );
+}
+
+export default App;
+
+Output:
+
+Welcome to React
+4. JSX (JavaScript XML)
+
+JSX allows writing HTML inside JavaScript.
+
+function App() {
+  const name = "Srinivasa";
+
+  return (
+    <div>
+      <h1>Hello {name}</h1>
+    </div>
+  );
+}
+
+Output:
+
+Hello Srinivasa
+5. Props Example
+
+Props are used to pass data from Parent to Child.
+
+Student.jsx
+function Student(props) {
+  return (
+    <div>
+      <h2>Name: {props.name}</h2>
+      <h2>Course: {props.course}</h2>
+    </div>
+  );
+}
+
+export default Student;
+App.jsx
+import Student from "./Student";
+
+function App() {
+  return (
+    <div>
+      <Student name="John" course="ReactJS" />
+      <Student name="David" course="Spring Boot" />
+    </div>
+  );
+}
+
+export default App;
+6. useState Hook
+
+Used to manage component state.
+
+Counter Example
+import { useState } from "react";
+
+function App() {
+
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <h1>Count : {count}</h1>
+
+      <button onClick={() => setCount(count + 1)}>
+        Increment
+      </button>
+    </div>
+  );
+}
+
+export default App;
+
+Output:
+
+Count : 0
+
+Click button:
+
+Count : 1
+Count : 2
+Count : 3
+7. Event Handling
+function App() {
+
+  const showMessage = () => {
+    alert("Button Clicked");
+  };
+
+  return (
+    <button onClick={showMessage}>
+      Click Me
+    </button>
+  );
+}
+
+export default App;
+8. Conditional Rendering
+function App() {
+
+  const isLoggedIn = true;
+
+  return (
+    <div>
+      {isLoggedIn
+        ? <h1>Welcome User</h1>
+        : <h1>Please Login</h1>}
+    </div>
+  );
+}
+
+export default App;
+9. Rendering Lists
+function App() {
+
+  const employees = [
+    "John",
+    "David",
+    "Smith"
+  ];
+
+  return (
+    <div>
+      <ul>
+        {
+          employees.map((emp,index) =>
+            <li key={index}>{emp}</li>
+          )
+        }
+      </ul>
+    </div>
+  );
+}
+
+export default App;
+10. Forms Example
+import { useState } from "react";
+
+function App() {
+
+  const [name, setName] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    alert(name);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+
+      <button type="submit">
+        Submit
+      </button>
+
+    </form>
+  );
+}
+
+export default App;
+11. useEffect Hook
+
+Used for API calls and lifecycle operations.
+
+import { useEffect } from "react";
+
+function App() {
+
+  useEffect(() => {
+    console.log("Component Loaded");
+  }, []);
+
+  return (
+    <h1>React Hooks Example</h1>
+  );
+}
+
+export default App;
+12. Fetch API Data
+import { useEffect, useState } from "react";
+
+function App() {
+
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then(res => res.json())
+      .then(data => setUsers(data));
+
+  }, []);
+
+  return (
+    <div>
+
+      <h2>Users List</h2>
+
+      {
+        users.map(user => (
+          <p key={user.id}>
+            {user.name}
+          </p>
+        ))
+      }
+
+    </div>
+  );
+}
+
+export default App;
+13. Parent-Child Communication
+Child.jsx
+function Child({ sendData }) {
+
+  return (
+    <button onClick={() => sendData("Hello Parent")}>
+      Send Data
+    </button>
+  );
+}
+
+export default Child;
+App.jsx
+import Child from "./Child";
+
+function App() {
+
+  const receiveData = (msg) => {
+    alert(msg);
+  };
+
+  return (
+    <Child sendData={receiveData} />
+  );
+}
+
+export default App;
+14. React Folder Structure (Corporate Standard)
+src
+│
+├── components
+│   ├── Header.jsx
+│   ├── Footer.jsx
+│   └── EmployeeCard.jsx
+│
+├── pages
+│   ├── Home.jsx
+│   ├── Employees.jsx
+│
+├── services
+│   └── EmployeeService.js
+│
+├── hooks
+│
+├── App.jsx
+├── main.jsx
+
+
+
+React Learning Roadmap
+-------------------------
+
+Phase 1 - Basics
+
+✅ Components
+✅ JSX
+✅ Props
+✅ State (useState)
+✅ Event Handling
+✅ Conditional Rendering
+✅ List Rendering
+
+Phase 2 - Intermediate
+
+✅ Forms
+✅ useEffect
+✅ API Calls
+✅ Component Communication
+✅ Custom Hooks
+
+Phase 3 - Advanced
+
+✅ React Router
+✅ Context API
+✅ Redux Toolkit
+✅ Authentication (JWT)
+✅ Protected Routes
+
+Phase 4 - Full Stack
+
+✅ React + Spring Boot REST APIs
+✅ Login & Registration
+✅ CRUD Operations
+✅ JWT Security
+✅ Role-Based Access (ADMIN, USER)
+
+
+
+
+ReactJS Phase 1 - Basics with TypeScript
+-------------------------------------------
+
+
+TypeScript adds type safety to React applications. It helps catch errors during development and improves code quality.
+
+1. Create React + TypeScript Project
+
+
+
+Using Vite:
+
+npm create vite@latest react-ts-app -- --template react-ts
+
+
+
+Move into project:
+
+cd react-ts-app
+
+
+Install dependencies:
+
+npm install
+
+Run application:
+
+npm run dev
+
+
+
+
+
+
+Project Structure:
+
+src
+│
+├── App.tsx
+├── main.tsx
+└── assets
+
+
+
+2. Functional Component
+---------------------
+App.tsx
+
+function App() {
+  return (
+    <div>
+      <h1>Welcome to React TypeScript</h1>
+    </div>
+  );
+}
+
+export default App;
+
+Output:
+
+Welcome to React TypeScript
+
+
+3. JSX with TypeScript
+-------------------------
+
+function App() {
+  const name: string = "Srinivasa";
+
+  return (
+    <div>
+      <h1>Hello {name}</h1>
+    </div>
+  );
+}
+
+export default App;
+
+
+4. Variables and Data Types
+--------------------------------
+
+function App() {
+  const userName: string = "John";
+  const age: number = 25;
+  const isActive: boolean = true;
+
+  return (
+    <div>
+      <h2>Name: {userName}</h2>
+      <h2>Age: {age}</h2>
+      <h2>Status: {isActive ? "Active" : "Inactive"}</h2>
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
+5. Props Example
+------------------
+
+Student Component
+
+Student.tsx
+
+type StudentProps = {
+  name: string;
+  course: string;
+};
+
+function Student({ name, course }: StudentProps) {
+  return (
+    <div>
+      <h3>Name: {name}</h3>
+      <h3>Course: {course}</h3>
+    </div>
+  );
+}
+
+export default Student;
+
+
+App.tsx
+
+
+import Student from "./Student";
+
+function App() {
+  return (
+    <div>
+      <Student
+        name="John"
+        course="React"
+      />
+
+      <Student
+        name="David"
+        course="Spring Boot"
+      />
+    </div>
+  );
+}
+
+export default App;
+
+
+6. useState Hook
+------------------
+
+Counter Example
+
+import { useState } from "react";
+
+function App() {
+
+  const [count, setCount] = useState<number>(0);
+
+  return (
+    <div>
+      <h1>Count : {count}</h1>
+
+      <button onClick={() => setCount(count + 1)}>
+        Increment
+      </button>
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
+7. Event Handling
+----------------------
+
+function App() {
+
+  const showMessage = (): void => {
+    alert("Button Clicked");
+  };
+
+  return (
+    <button onClick={showMessage}>
+      Click Me
+    </button>
+  );
+}
+
+export default App;
+
+
+
+8. Conditional Rendering
+--------------------------
+
+function App() {
+
+  const isLoggedIn: boolean = true;
+
+  return (
+    <div>
+      {
+        isLoggedIn
+          ? <h1>Welcome User</h1>
+          : <h1>Please Login</h1>
+      }
+    </div>
+  );
+}
+
+export default App;
+
+
+9. List Rendering
+-----------------
+
+function App() {
+
+  const employees: string[] = [
+    "John",
+    "David",
+    "Smith"
+  ];
+
+  return (
+    <div>
+      <ul>
+        {
+          employees.map((employee, index) => (
+            <li key={index}>
+              {employee}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  );
+}
+
+export default App;
+
+
+
+10. Working with Objects
+---------------------------
+
+
+function App() {
+
+  const employee: {
+    id: number;
+    name: string;
+    salary: number;
+  } = {
+    id: 101,
+    name: "John",
+    salary: 50000
+  };
+
+  return (
+    <div>
+      <h2>ID: {employee.id}</h2>
+      <h2>Name: {employee.name}</h2>
+      <h2>Salary: {employee.salary}</h2>
+    </div>
+  );
+}
+
+export default App;
+
+
+
+11. Interface Example
+-----------------------
+
+
+Interfaces are commonly used in React.
+
+interface Employee {
+  id: number;
+  name: string;
+  department: string;
+}
+function App() {
+
+  const employee: Employee = {
+    id: 101,
+    name: "John",
+    department: "IT"
+  };
+
+  return (
+    <div>
+      <h2>{employee.name}</h2>
+      <h2>{employee.department}</h2>
+    </div>
+  );
+}
+
+export default App;
+
+
+
+12. List of Objects
+---------------------
+
+interface Employee {
+  id: number;
+  name: string;
+  department: string;
+}
+
+function App() {
+
+  const employees: Employee[] = [
+    {
+      id: 1,
+      name: "John",
+      department: "IT"
+    },
+    {
+      id: 2,
+      name: "David",
+      department: "HR"
+    }
+  ];
+
+  return (
+    <div>
+
+      <h2>Employees</h2>
+
+      {
+        employees.map(emp => (
+          <div key={emp.id}>
+            <p>{emp.name}</p>
+            <p>{emp.department}</p>
+          </div>
+        ))
+      }
+
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
+13. Form Handling
+-----------------------
+
+import { useState } from "react";
+
+function App() {
+
+  const [name, setName] = useState<string>("");
+
+  const handleSubmit = (
+    e: React.FormEvent<HTMLFormElement>
+  ): void => {
+
+    e.preventDefault();
+
+    alert(name);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+
+      <input
+        type="text"
+        value={name}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setName(e.target.value)
+        }
+      />
+
+      <button type="submit">
+        Submit
+      </button>
+
+    </form>
+  );
+}
+
+export default App;
+
+
+
+14. Reusable Employee Card Component
+---------------------------------------
+
+EmployeeCard.tsx
+
+interface EmployeeProps {
+  id: number;
+  name: string;
+  department: string;
+}
+
+function EmployeeCard({
+  id,
+  name,
+  department
+}: EmployeeProps) {
+
+  return (
+    <div>
+      <h3>ID: {id}</h3>
+      <h3>Name: {name}</h3>
+      <h3>Department: {department}</h3>
+      <hr />
+    </div>
+  );
+}
+
+export default EmployeeCard;
+
+
+App.tsx
+
+import EmployeeCard from "./EmployeeCard";
+
+function App() {
+
+  return (
+    <div>
+
+      <EmployeeCard
+        id={1}
+        name="John"
+        department="IT"
+      />
+
+      <EmployeeCard
+        id={2}
+        name="David"
+        department="HR"
+      />
+
+    </div>
+  );
+}
+
+export default App;
+
+
+Corporate Folder Structure
+-------------------------------
+src
+│
+├── components
+│   ├── EmployeeCard.tsx
+│   └── Student.tsx
+│
+├── interfaces
+│   └── Employee.ts
+│
+├── pages
+│   └── Home.tsx
+│
+├── App.tsx
+├── main.tsx
+
+
+
+
+
+
+1. What is React?
+
+A JavaScript library for building User Interfaces.
+
+2. What is TypeScript?
+
+A superset of JavaScript that adds static typing.
+
+3. What is JSX?
+
+JavaScript XML used to write HTML-like syntax inside React components.
+
+4. What are Components?
+
+Reusable UI building blocks.
+
+5. What are Props?
+
+Data passed from parent component to child component.
+
+6. What is State?
+
+Data managed inside a component using hooks like useState.
+
+7. Difference Between Props and State?
+
+Props			State
+
+Read-only		Mutable
+Parent to Child		Managed inside component
+Cannot modify		Can update
+
+
+8. What is useState?
+
+A React Hook used to manage state in functional components.
+
+9. Why use Interfaces in TypeScript?
+
+To define the structure of objects and improve type safety.
+
+10. Why TypeScript in React?
+Compile-time error checking
+Better IDE support
+Better code maintainability
+Improved scalability for enterprise applications
+Mini Project for Practice
+
+Build an Employee Management UI with:
+
+Add Employee
+Display Employee List
+Delete Employee
+useState
+Props
+Interfaces
+TypeScript
+
+This project will prepare you for Phase 2 topics such as Hooks, Forms, API Calls, and React Router.
+
+
+
+
+ReactJS Phase 2 (TypeScript)
+==============================
+
+
+Hooks, Forms, API Calls, and React Router
+
+After learning Components, Props, State, and TypeScript basics, the next step is learning React Hooks, Forms, API Integration, and Routing.
+
+
+
+
+Project Structure
+
+src
+│
+├── components
+│   ├── EmployeeForm.tsx
+│   ├── EmployeeList.tsx
+│
+├── pages
+│   ├── Home.tsx
+│   ├── Employees.tsx
+│   └── About.tsx
+│
+├── services
+│   └── EmployeeService.ts
+│
+├── interfaces
+│   └── Employee.ts
+│
+├── App.tsx
+├── main.tsx
+
+
+
+
+1. useEffect Hook
+
+
+
+Why use useEffect?
+----------------
+
+Used for:
+
+API Calls
+Component Initialization
+Side Effects
+Timers
+Event Listeners
+
+
+
+
+Syntax
+------------
+
+useEffect(() => {
+
+}, []);
+
+
+
+
+
+
+Example
+----------
+
+import { useEffect } from "react";
+
+function Home() {
+
+  useEffect(() => {
+    console.log("Component Loaded");
+  }, []);
+
+  return <h1>Home Page</h1>;
+}
+
+export default Home;
+
+
+
+
+Lifecycle Equivalent
+----------------------
+
+
+Component Created
+      ↓
+useEffect()
+      ↓
+API Call / Load Data
+      ↓
+Render UI
+
+
+
+
+2. useEffect with Cleanup
+----------------------------
+
+Example
+
+import { useEffect } from "react";
+
+function Timer() {
+
+  useEffect(() => {
+
+    const interval = setInterval(() => {
+      console.log("Running...");
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+
+  }, []);
+
+  return <h1>Timer Component</h1>;
+}
+
+export default Timer;
+
+
+
+
+Cleanup executes when component unmounts.
+
+3. Controlled Forms
+-----------------------
+
+Employee Interface
+
+export interface Employee {
+  id: number;
+  name: string;
+  department: string;
+}
+
+
+EmployeeForm.tsx
+--------------------
+
+import { useState } from "react";
+
+function EmployeeForm() {
+
+  const [name, setName] = useState("");
+  const [department, setDepartment] = useState("");
+
+  const handleSubmit = (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+
+    e.preventDefault();
+
+    console.log({
+      name,
+      department
+    });
+
+    setName("");
+    setDepartment("");
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+
+      <input
+        type="text"
+        placeholder="Employee Name"
+        value={name}
+        onChange={(e) =>
+          setName(e.target.value)
+        }
+      />
+
+      <br /><br />
+
+      <input
+        type="text"
+        placeholder="Department"
+        value={department}
+        onChange={(e) =>
+          setDepartment(e.target.value)
+        }
+      />
+
+      <br /><br />
+
+      <button type="submit">
+        Save
+      </button>
+
+    </form>
+  );
+}
+
+export default EmployeeForm;
+
+
+
+4. Multiple Form Fields using Object State
+
+import { useState } from "react";
+
+interface Employee {
+  name: string;
+  department: string;
+}
+
+function EmployeeForm() {
+
+  const [employee, setEmployee] =
+    useState<Employee>({
+      name: "",
+      department: ""
+    });
+
+  const handleChange =
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+
+      setEmployee({
+        ...employee,
+        [e.target.name]: e.target.value
+      });
+    };
+
+  return (
+    <>
+      <input
+        name="name"
+        value={employee.name}
+        onChange={handleChange}
+      />
+
+      <input
+        name="department"
+        value={employee.department}
+        onChange={handleChange}
+      />
+    </>
+  );
+}
+
+export default EmployeeForm;
+
+
+
+5. API Calls Using Fetch
+
+
+EmployeeService.ts
+const BASE_URL =
+  "https://jsonplaceholder.typicode.com/users";
+
+export const getEmployees = async () => {
+
+  const response =
+    await fetch(BASE_URL);
+
+  return response.json();
+};
+
+
+EmployeeList.tsx
+-----------------
+
+import { useEffect, useState } from "react";
+import { getEmployees } from "../services/EmployeeService";
+
+function EmployeeList() {
+
+  const [employees, setEmployees] =
+    useState<any[]>([]);
+
+  useEffect(() => {
+
+    loadEmployees();
+
+  }, []);
+
+  const loadEmployees = async () => {
+
+    const data = await getEmployees();
+
+    setEmployees(data);
+  };
+
+  return (
+    <div>
+
+      <h2>Employees</h2>
+
+      {
+        employees.map(emp => (
+          <p key={emp.id}>
+            {emp.name}
+          </p>
+        ))
+      }
+
+    </div>
+  );
+}
+
+export default EmployeeList;
+
+
+6. API Calls Using Axios
+
+Install Axios
+
+npm install axios
+
+
+
+
+EmployeeService.ts
+-------------------
+
+import axios from "axios";
+
+const BASE_URL =
+  "https://jsonplaceholder.typicode.com/users";
+
+export const getEmployees = () =>
+  axios.get(BASE_URL);
+
+
+EmployeeList.tsx
+------------------
+
+import { useEffect, useState } from "react";
+import { getEmployees } from "../services/EmployeeService";
+
+function EmployeeList() {
+
+  const [employees, setEmployees] =
+    useState<any[]>([]);
+
+  useEffect(() => {
+
+    loadEmployees();
+
+  }, []);
+
+  const loadEmployees = async () => {
+
+    const response =
+      await getEmployees();
+
+    setEmployees(response.data);
+  };
+
+  return (
+    <>
+      {
+        employees.map(emp => (
+          <p key={emp.id}>
+            {emp.name}
+          </p>
+        ))
+      }
+    </>
+  );
+}
+
+export default EmployeeList;
+
+
+
+7. React Router
+-------------------
+
+Install Router
+
+npm install react-router-dom
+
+
+Create Pages
+----------------
+
+Home.tsx
+----------
+function Home() {
+  return <h1>Home Page</h1>;
+}
+
+export default Home;
+
+
+About.tsx
+-------------
+function About() {
+  return <h1>About Page</h1>;
+}
+
+export default About;
+
+
+Employees.tsx
+-----------------
+function Employees() {
+  return <h1>Employees Page</h1>;
+}
+
+export default Employees;
+
+
+Configure Router
+======================
+
+App.tsx
+-----------
+
+import {
+ BrowserRouter,
+ Routes,
+ Route,
+ Link
+}
+from "react-router-dom";
+
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Employees from "./pages/Employees";
+
+function App() {
+
+ return (
+
+  <BrowserRouter>
+
+   <nav>
+
+    <Link to="/">Home</Link>
+
+    <br />
+
+    <Link to="/about">About</Link>
+
+    <br />
+
+    <Link to="/employees">
+      Employees
+    </Link>
+
+   </nav>
+
+   <Routes>
+
+    <Route
+      path="/"
+      element={<Home />}
+    />
+
+    <Route
+      path="/about"
+      element={<About />}
+    />
+
+    <Route
+      path="/employees"
+      element={<Employees />}
+    />
+
+   </Routes>
+
+  </BrowserRouter>
+
+ );
+}
+
+export default App;
+
+
+
+8. URL Path Variables
+===========================
+
+
+App.tsx
+
+
+<Route
+ path="/employee/:id"
+ element={<EmployeeDetails />}
+/>
+
+
+EmployeeDetails.tsx
+=======================
+
+import { useParams }
+from "react-router-dom";
+
+function EmployeeDetails() {
+
+ const { id } = useParams();
+
+ return (
+  <h1>Employee Id : {id}</h1>
+ );
+}
+
+export default EmployeeDetails;
+
+
+
+9. Navigation Programmatically
+
+import {
+ useNavigate
+}
+from "react-router-dom";
+
+function Home() {
+
+ const navigate =
+   useNavigate();
+
+ const goToEmployees = () => {
+   navigate("/employees");
+ };
+
+ return (
+  <button
+   onClick={goToEmployees}
+  >
+   Employees
+  </button>
+ );
+}
+
+export default Home;
+
+
+
+10. Custom Hook
+===================
+
+useCounter.ts
+----------------
+
+import { useState } from "react";
+
+function useCounter() {
+
+ const [count, setCount] =
+   useState(0);
+
+ const increment = () =>
+   setCount(count + 1);
+
+ return {
+   count,
+   increment
+ };
+}
+
+export default useCounter;
+
+
+Counter.tsx
+---------------
+
+import useCounter
+from "./useCounter";
+
+function Counter() {
+
+ const {
+   count,
+   increment
+ } = useCounter();
+
+ return (
+  <>
+   <h2>{count}</h2>
+
+   <button
+    onClick={increment}
+   >
+    Increment
+   </button>
+  </>
+ );
+}
+
+export default Counter;
+
+
+
+
+Mini Employee CRUD Application
+
+Features
+
+✅ Add Employee
+
+✅ Display Employee List
+
+✅ Delete Employee
+
+✅ Update Employee
+
+✅ React Router
+
+✅ Axios
+
+✅ TypeScript
+
+✅ Forms
+
+✅ useState
+
+✅ useEffect
+
+
+
+
+ReactJS Phase 3 (Enterprise Level with TypeScript)
+=======================================================
+
+This phase focuses on concepts used in real-world enterprise applications such as React + Spring Boot projects.
+
+Enterprise Architecture
+
+src
+│
+├── api
+│   ├── axiosConfig.ts
+│   └── employeeApi.ts
+│
+├── components
+│   ├── Navbar.tsx
+│   ├── ProtectedRoute.tsx
+│   └── Loader.tsx
+│
+├── pages
+│   ├── Login.tsx
+│   ├── Dashboard.tsx
+│   ├── Employees.tsx
+│   └── Unauthorized.tsx
+│
+├── hooks
+│   └── useAuth.ts
+│
+├── context
+│   └── AuthContext.tsx
+│
+├── redux
+│   ├── store.ts
+│   └── employeeSlice.ts
+│
+├── types
+│   └── Employee.ts
+│
+├── services
+│   └── AuthService.ts
+│
+├── App.tsx
+└── main.tsx
+
+
+
+1. Context API
+================
+
+Used to share data globally without prop drilling.
+
+AuthContext.tsx
+
+
+import {
+  createContext,
+  useState,
+  ReactNode
+} from "react";
+
+interface AuthContextType {
+  token: string;
+  setToken: (token: string) => void;
+}
+
+export const AuthContext =
+  createContext<AuthContextType>(
+    {} as AuthContextType
+  );
+
+interface Props {
+  children: ReactNode;
+}
+
+export function AuthProvider({
+  children
+}: Props) {
+
+  const [token, setToken] =
+    useState("");
+
+  return (
+    <AuthContext.Provider
+      value={{
+        token,
+        setToken
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+
+
+2. useContext
+==============
+
+import {
+  useContext
+} from "react";
+
+import {
+  AuthContext
+} from "../context/AuthContext";
+
+function Dashboard() {
+
+  const { token } =
+    useContext(AuthContext);
+
+  return (
+    <h2>Token: {token}</h2>
+  );
+}
+
+export default Dashboard;
+
+
+
+3. useReducer
+==============
+
+Suitable for complex state management.
+
+import {
+  useReducer
+} from "react";
+
+interface State {
+  count: number;
+}
+
+type Action =
+  | { type: "INCREMENT" }
+  | { type: "DECREMENT" };
+
+const reducer = (
+  state: State,
+  action: Action
+): State => {
+
+  switch (action.type) {
+
+    case "INCREMENT":
+      return {
+        count: state.count + 1
+      };
+
+    case "DECREMENT":
+      return {
+        count: state.count - 1
+      };
+
+    default:
+      return state;
+  }
+};
+
+function Counter() {
+
+  const [state, dispatch] =
+    useReducer(
+      reducer,
+      { count: 0 }
+    );
+
+  return (
+    <>
+      <h2>{state.count}</h2>
+
+      <button
+        onClick={() =>
+          dispatch({
+            type: "INCREMENT"
+          })
+        }
+      >
+        +
+      </button>
+    </>
+  );
+}
+
+
+
+4. JWT Authentication Flow
+=========================
+
+
+Spring Boot Backend
+--------------------
+
+Login Request
+      ↓
+Authenticate User
+      ↓
+Generate JWT
+      ↓
+Return Token
+
+
+React Frontend
+----------------
+
+User Login
+      ↓
+Receive JWT Token
+      ↓
+Store Token
+      ↓
+Attach Token to API Requests
+      ↓
+Access Protected Resources
+
+
+
+5. Login API Integration
+=======================
+
+AuthService.ts
+
+
+import axios from "axios";
+
+const BASE_URL =
+  "http://localhost:8080/api/auth";
+
+export const login = (
+  username: string,
+  password: string
+) => {
+
+  return axios.post(
+    `${BASE_URL}/login`,
+    {
+      username,
+      password
+    }
+  );
+};
+
+
+Login.tsx
+-------------
+
+import {
+  useState
+} from "react";
+
+import {
+  login
+} from "../services/AuthService";
+
+function Login() {
+
+  const [username, setUsername] =
+    useState("");
+
+  const [password, setPassword] =
+    useState("");
+
+  const handleLogin =
+    async () => {
+
+      const response =
+        await login(
+          username,
+          password
+        );
+
+      localStorage.setItem(
+        "token",
+        response.data.token
+      );
+    };
+
+  return (
+    <>
+      <input
+        onChange={(e) =>
+          setUsername(
+            e.target.value
+          )
+        }
+      />
+
+      <input
+        type="password"
+        onChange={(e) =>
+          setPassword(
+            e.target.value
+          )
+        }
+      />
+
+      <button
+        onClick={handleLogin}
+      >
+        Login
+      </button>
+    </>
+  );
+}
+
+export default Login;
+
+
+
+6. Axios Interceptor
+----------------------------
+
+
+Automatically adds JWT token to requests.
+
+axiosConfig.ts
+===============
+
+import axios from "axios";
+
+const api = axios.create({
+  baseURL:
+    "http://localhost:8080/api"
+});
+
+api.interceptors.request.use(
+  (config) => {
+
+    const token =
+      localStorage.getItem(
+        "token"
+      );
+
+    if (token) {
+      config.headers.Authorization =
+        `Bearer ${token}`;
+    }
+
+    return config;
+  }
+);
+
+export default api;
+
+
+
+7. Protected Routes
+========================
+
+ProtectedRoute.tsx
+
+import {
+  Navigate
+} from "react-router-dom";
+
+interface Props {
+  children: JSX.Element;
+}
+
+function ProtectedRoute({
+  children
+}: Props) {
+
+  const token =
+    localStorage.getItem(
+      "token"
+    );
+
+  return token
+    ? children
+    : <Navigate to="/login" />;
+}
+
+export default ProtectedRoute;
+
+
+App.tsx
+===========
+
+
+<Route
+ path="/dashboard"
+ element={
+  <ProtectedRoute>
+    <Dashboard />
+  </ProtectedRoute>
+ }
+/>
+
+
+8. Role-Based Authorization
+===============================
+
+
+JWT Payload
+-------------
+
+
+{
+  "sub": "john",
+  "role": "ADMIN"
+}
+
+Role Check
+-------------
+
+const role =
+  localStorage.getItem(
+    "role"
+  );
+
+if(role === "ADMIN"){
+   console.log(
+     "Admin Access"
+   );
+}
+
+
+9. Redux Toolkit
+-------------------
+
+Install:
+
+npm install @reduxjs/toolkit  react-redux
+
+
+store.ts
+-----------
+
+
+import {
+ configureStore
+}
+from
+"@reduxjs/toolkit";
+
+import employeeReducer
+from "./employeeSlice";
+
+export const store =
+ configureStore({
+
+  reducer: {
+   employee:
+     employeeReducer
+  }
+
+});
+
+
+
+employeeSlice.ts
+-----------------
+
+import {
+ createSlice
+}
+from
+"@reduxjs/toolkit";
+
+const employeeSlice =
+ createSlice({
+
+  name: "employee",
+
+  initialState: {
+   employees: []
+  },
+
+  reducers: {
+
+   setEmployees:
+   (state, action) => {
+
+    state.employees =
+      action.payload;
+   }
+  }
+});
+
+export const {
+ setEmployees
+}
+=
+employeeSlice.actions;
+
+export default
+employeeSlice.reducer;
+
+
+
+10. React Query (TanStack Query)
+--------------------------------
+
+Install:
+
+npm install @tanstack/react-query
+
+
+
+Why React Query?
+===================
+
+API caching
+Background refresh
+Retry mechanism
+Loading state
+Error handling
+
+
+
+Employee API
+==================
+
+const getEmployees =
+ async () => {
+
+  const response =
+   await api.get(
+     "/employees"
+   );
+
+  return response.data;
+};
+
+
+Component
+---------------------
+
+
+
+import {
+ useQuery
+}
+from
+"@tanstack/react-query";
+
+
+function Employees() {
+
+ const {
+  data,
+  isLoading
+ } = useQuery({
+
+  queryKey:
+   ["employees"],
+
+  queryFn:
+   getEmployees
+ });
+
+ if(isLoading){
+  return <h2>Loading...</h2>;
+ }
+
+ return (
+  <>
+   {
+    data.map(
+      (employee:any) =>
+      (
+       <p
+        key={
+         employee.id
+        }
+       >
+        {employee.name}
+       </p>
+      )
+    )
+   }
+  </>
+ );
+}
+
+
+Complete Enterprise Authentication Flow
+=========================================
+
+React Login Page
+       ↓
+Spring Boot Login API
+       ↓
+Generate JWT Token
+       ↓
+Store JWT
+       ↓
+Axios Interceptor
+       ↓
+Attach Bearer Token
+       ↓
+Protected Route
+       ↓
+Authorized Access
+
+
+
+
+React + Spring Boot Integration Flow
+-----------------------------------
+
+React UI
+   ↓
+Axios
+   ↓
+Spring Boot REST API
+   ↓
+Service Layer
+   ↓
+Repository Layer
+   ↓
+Database
+
+
+
+
+
+What is Context API?
+
+Used for sharing state globally across components.
+
+
+What is useReducer?
+
+Alternative to useState for complex state logic.
+
+
+Why Redux Toolkit?
+
+Provides centralized state management with less boilerplate.
+
+
+What is JWT?
+
+JSON Web Token used for authentication and authorization.
+
+
+What is Axios Interceptor?
+
+Intercepts requests/responses and allows adding JWT tokens automatically.
+
+What is Protected Route?
+
+A route accessible only to authenticated users.
+
+What is React Query?
+
+A data-fetching library that manages API state, caching, loading, and retries.
+
+
+
+Final Enterprise Project
+
+Since you already work heavily with Spring Boot, build:
+
+Employee Management System
+
+Backend (Spring Boot)
+
+Spring Security
+JWT Authentication
+Role-Based Access (ADMIN, USER)
+CRUD APIs
+MySQL/PostgreSQL
+DTO
+Validation
+Global Exception Handling
+
+Frontend (React + TypeScript)
+
+React Router
+Axios
+JWT Authentication
+Protected Routes
+Context API
+Redux Toolkit
+React Query
+Form Validation
+Employee CRUD
+
+This mirrors a real enterprise React + Spring Boot application and is excellent preparation for interviews and project work.
+

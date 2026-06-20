@@ -1,0 +1,1148 @@
+An Employee Management System with Spring Boot + Spring Security + JWT + Role-Based Authorization is one of the best enterprise-level projects for learning and interviews.
+
+Project Architecture
+
+
+
+Employee Management System
+
+Frontend (React + TypeScript)
+        |
+        | HTTP Requests
+        |
+Spring Boot REST APIs
+        |
+Spring Security + JWT
+        |
+Service Layer
+        |
+Repository Layer (JPA)
+        |
+MySQL/PostgreSQL
+
+
+Technology Stack
+======================
+
+
+Backend
+
+Java 21 (or Java 17)
+Spring Boot 3.x
+Spring Security
+Spring Data JPA
+JWT Authentication
+MySQL/PostgreSQL
+Lombok
+Validation
+Global Exception Handling
+Maven
+
+
+
+
+
+Features
+==============
+
+Authentication
+----------------
+
+User Registration
+User Login
+JWT Token Generation
+JWT Validation
+
+
+
+Authorization
+---------------
+
+ADMIN Role
+----------
+
+	Create Employee
+	Update Employee
+	Delete Employee
+	View Employees
+
+USER Role
+------------
+
+	View Employees Only
+
+
+
+Employee Operations
+=================
+
+Create Employee
+Get Employee By Id
+Get All Employees
+Update Employee
+Delete Employee
+
+
+
+
+
+
+Project Structure
+------------------
+
+src/main/java/com/company/ems
+
+├── config
+│   ├── SecurityConfig.java
+│   └── JwtAuthenticationFilter.java
+│
+├── controller
+│   ├── AuthController.java
+│   └── EmployeeController.java
+│
+├── dto
+│   ├── LoginRequest.java
+│   ├── RegisterRequest.java
+│   ├── AuthResponse.java
+│   └── EmployeeDto.java
+│
+├── entity
+│   ├── User.java
+│   ├── Role.java
+│   └── Employee.java
+│
+├── repository
+│   ├── UserRepository.java
+│   ├── RoleRepository.java
+│   └── EmployeeRepository.java
+│
+├── security
+│   ├── JwtService.java
+│   ├── CustomUserDetailsService.java
+│   └── JwtAuthenticationFilter.java
+│
+├── service
+│   ├── AuthService.java
+│   └── EmployeeService.java
+│
+├── exception
+│   ├── ResourceNotFoundException.java
+│   └── GlobalExceptionHandler.java
+│
+└── EmployeeManagementApplication.java
+
+
+
+Maven Dependencies
+
+<dependencies>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>com.mysql</groupId>
+        <artifactId>mysql-connector-j</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-api</artifactId>
+        <version>0.12.5</version>
+    </dependency>
+
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-impl</artifactId>
+        <version>0.12.5</version>
+        <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-jackson</artifactId>
+        <version>0.12.5</version>
+        <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+    </dependency>
+
+</dependencies>
+
+
+
+Database Configuration
+------------------------
+
+application.properties
+
+spring.datasource.url=jdbc:mysql://localhost:3306/emsdb
+spring.datasource.username=root
+spring.datasource.password=root
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+jwt.secret=MySecretKeyMySecretKeyMySecretKey123456
+jwt.expiration=86400000
+
+
+
+
+Employee Entity
+---------------
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Employee {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long employeeId;
+
+    private String employeeName;
+
+    private String email;
+
+    private Double salary;
+
+    private String department;
+}
+
+
+
+Employee DTO
+-----------
+
+@Getter
+@Setter
+public class EmployeeDto {
+
+    private Long employeeId;
+
+    @NotBlank(message = "Name is required")
+    private String employeeName;
+
+    @Email(message = "Invalid email")
+    private String email;
+
+    @NotNull
+    private Double salary;
+
+    @NotBlank
+    private String department;
+}
+
+
+Employee Repository
+------------------
+
+@Repository
+public interface EmployeeRepository
+        extends JpaRepository<Employee, Long> {
+}
+
+
+
+Employee Service Interface
+----------------------------
+
+
+public interface EmployeeService {
+
+    EmployeeDto saveEmployee(EmployeeDto dto);
+
+    EmployeeDto getEmployeeById(Long id);
+
+    List<EmployeeDto> getAllEmployees();
+
+    EmployeeDto updateEmployee(Long id,
+                               EmployeeDto dto);
+
+    void deleteEmployee(Long id);
+}
+
+
+
+Employee Service Implementation
+---------------------------------
+
+@Service
+@RequiredArgsConstructor
+public class EmployeeServiceImpl
+        implements EmployeeService {
+
+    private final EmployeeRepository repository;
+
+    @Override
+    public EmployeeDto saveEmployee(EmployeeDto dto) {
+
+        Employee employee = new Employee();
+
+        employee.setEmployeeName(
+                dto.getEmployeeName());
+
+        employee.setEmail(
+                dto.getEmail());
+
+        employee.setSalary(
+                dto.getSalary());
+
+        employee.setDepartment(
+                dto.getDepartment());
+
+        Employee saved =
+                repository.save(employee);
+
+        dto.setEmployeeId(
+                saved.getEmployeeId());
+
+        return dto;
+    }
+}
+
+
+Employee Controller
+--------------------
+
+@RestController
+@RequestMapping("/api/employees")
+@RequiredArgsConstructor
+public class EmployeeController {
+
+    private final EmployeeService service;
+
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<EmployeeDto>
+    createEmployee(
+            @Valid
+            @RequestBody EmployeeDto dto) {
+
+        return ResponseEntity.ok(
+                service.saveEmployee(dto));
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    public ResponseEntity<List<EmployeeDto>>
+    getAllEmployees() {
+
+        return ResponseEntity.ok(
+                service.getAllEmployees());
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String>
+    deleteEmployee(@PathVariable Long id) {
+
+        service.deleteEmployee(id);
+
+        return ResponseEntity.ok(
+                "Employee Deleted");
+    }
+}
+
+
+Role Entity
+---------------------
+
+@Entity
+@Getter
+@Setter
+public class Role {
+
+    @Id
+    @GeneratedValue(strategy =
+            GenerationType.IDENTITY)
+    private Long roleId;
+
+    private String roleName;
+}
+
+
+User Entity
+---------------
+
+
+@Entity
+@Getter
+@Setter
+public class User {
+
+    @Id
+    @GeneratedValue(strategy =
+            GenerationType.IDENTITY)
+    private Long userId;
+
+    private String username;
+
+    private String password;
+
+    @ManyToOne
+    private Role role;
+}
+
+
+JWT Flow
+------------
+
+Login Request
+      ↓
+Spring Security
+      ↓
+AuthenticationManager
+      ↓
+Validate Credentials
+      ↓
+Generate JWT Token
+      ↓
+Return JWT Token
+      ↓
+Client Stores Token
+      ↓
+Authorization Header
+Bearer Token
+      ↓
+JWT Filter
+      ↓
+Protected APIs
+
+
+
+
+Spring Security Configuration
+-------------------------------
+
+
+@Configuration
+@EnableMethodSecurity
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+    private final JwtAuthenticationFilter filter;
+
+    @Bean
+    SecurityFilterChain securityFilterChain(
+            HttpSecurity http)
+            throws Exception {
+
+        return http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+
+                        .requestMatchers(
+                                "/api/auth/**")
+                        .permitAll()
+
+                        .anyRequest()
+                        .authenticated())
+
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(
+                                SessionCreationPolicy.STATELESS))
+
+                .addFilterBefore(
+                        filter,
+                        UsernamePasswordAuthenticationFilter.class)
+
+                .build();
+    }
+}
+
+
+
+Global Exception Handling
+--------------------------
+
+ResourceNotFoundException
+-----------------------------
+
+public class ResourceNotFoundException
+        extends RuntimeException {
+
+    public ResourceNotFoundException(
+            String message) {
+
+        super(message);
+    }
+}
+
+GlobalExceptionHandler
+------------------------
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(
+            ResourceNotFoundException.class)
+    public ResponseEntity<String>
+    handleResourceNotFound(
+            ResourceNotFoundException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(
+            MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String,String>>
+    handleValidation(
+            MethodArgumentNotValidException ex) {
+
+        Map<String,String> errors =
+                new HashMap<>();
+
+        ex.getBindingResult()
+                .getFieldErrors()
+                .forEach(error ->
+                        errors.put(
+                                error.getField(),
+                                error.getDefaultMessage()));
+
+        return ResponseEntity
+                .badRequest()
+                .body(errors);
+    }
+}
+
+
+
+REST APIs
+--------------
+
+Authentication APIs
+
+
+
+Register
+POST /api/auth/register
+
+
+Login
+POST /api/auth/login
+
+
+
+Employee APIs
+Create Employee
+
+
+POST /api/employees
+
+Get All Employees
+
+GET /api/employees
+
+Get Employee By Id
+
+GET /api/employees/{id}
+
+
+
+Update Employee
+
+PUT /api/employees/{id}
+
+Delete Employee
+DELETE /api/employees/{id}
+
+
+
+
+Why DTO?
+==========
+
+Hide sensitive fields
+Reduce payload size
+Validation support
+Decouple API from Entity
+
+
+
+Why JWT?
+=======
+
+Stateless Authentication
+Scalable
+Secure Token-Based Access
+
+
+
+Why Global Exception Handling?
+=========================
+
+Centralized error management
+Consistent API responses
+
+
+Why Role-Based Authorization?
+============================
+
+Restricts access based on user roles
+Improves security
+
+
+
+
+
+
+Difference Between Authentication and Authorization?
+=====================================================
+
+Authentication				Authorization
+------------------------------------------------------
+
+Who are you?				What can you access?
+Login					Permissions
+JWT Validation				Role Checking
+
+
+
+
+
+
+
+Yes. For an enterprise-grade Spring Boot application, the next step is implementing a complete JWT Authentication and Authorization module.
+
+Enterprise JWT Security Architecture
+
+Client (React/Angular/Postman)
+          |
+          |
+      Login API
+          |
+          v
+AuthController
+          |
+          v
+AuthenticationManager
+          |
+          v
+UserDetailsService
+          |
+          v
+Database
+          |
+          v
+Generate JWT + Refresh Token
+          |
+          v
+Return Tokens
+          |
+          v
+Protected APIs
+          |
+          v
+JwtAuthenticationFilter
+          |
+          v
+Spring Security Context
+
+
+Project Structure
+====================
+
+com.company.ems
+
+├── config
+│   └── SecurityConfig.java
+│
+├── controller
+│   ├── AuthController.java
+│   └── EmployeeController.java
+│
+├── dto
+│   ├── LoginRequest.java
+│   ├── RegisterRequest.java
+│   ├── AuthResponse.java
+│   ├── RefreshTokenRequest.java
+│   └── EmployeeDto.java
+│
+├── entity
+│   ├── User.java
+│   ├── Role.java
+│   ├── RefreshToken.java
+│   └── Employee.java
+│
+├── repository
+│   ├── UserRepository.java
+│   ├── RoleRepository.java
+│   ├── RefreshTokenRepository.java
+│   └── EmployeeRepository.java
+│
+├── security
+│   ├── JwtService.java
+│   ├── JwtAuthenticationFilter.java
+│   └── CustomUserDetailsService.java
+│
+├── service
+│   ├── AuthService.java
+│   ├── RefreshTokenService.java
+│   └── EmployeeService.java
+│
+├── exception
+│   └── GlobalExceptionHandler.java
+
+
+Step 1: User Entity
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Table(name="users")
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userId;
+
+    @Column(unique = true)
+    private String username;
+
+    private String email;
+
+    private String password;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Role role;
+}
+Step 2: Role Entity
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Role {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long roleId;
+
+    private String roleName;
+}
+
+Example Data:
+
+INSERT INTO role(role_id,role_name)
+VALUES(1,'ROLE_ADMIN');
+
+INSERT INTO role(role_id,role_name)
+VALUES(2,'ROLE_USER');
+Step 3: UserRepository
+@Repository
+public interface UserRepository
+        extends JpaRepository<User, Long> {
+
+    Optional<User> findByUsername(String username);
+}
+Step 4: RegisterRequest DTO
+@Getter
+@Setter
+public class RegisterRequest {
+
+    @NotBlank
+    private String username;
+
+    @Email
+    private String email;
+
+    @NotBlank
+    private String password;
+}
+Step 5: LoginRequest DTO
+@Getter
+@Setter
+public class LoginRequest {
+
+    private String username;
+
+    private String password;
+}
+Step 6: AuthResponse DTO
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class AuthResponse {
+
+    private String accessToken;
+
+    private String refreshToken;
+
+    private String username;
+
+    private String role;
+}
+Step 7: CustomUserDetailsService
+
+Spring Security loads user details from DB.
+
+@Service
+@RequiredArgsConstructor
+public class CustomUserDetailsService
+        implements UserDetailsService {
+
+    private final UserRepository userRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(
+            String username)
+            throws UsernameNotFoundException {
+
+        User user =
+                userRepository.findByUsername(username)
+                        .orElseThrow(() ->
+                                new UsernameNotFoundException(
+                                        "User Not Found"));
+
+        return org.springframework.security.core.userdetails.User
+                .builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .authorities(user.getRole().getRoleName())
+                .build();
+    }
+}
+Step 8: Password Encoder
+@Bean
+public PasswordEncoder passwordEncoder() {
+
+    return new BCryptPasswordEncoder();
+}
+Step 9: Authentication Manager
+@Bean
+public AuthenticationManager authenticationManager(
+        AuthenticationConfiguration configuration)
+        throws Exception {
+
+    return configuration.getAuthenticationManager();
+}
+Step 10: JwtService
+
+Generate and Validate JWT.
+
+@Service
+public class JwtService {
+
+    private final String SECRET =
+            "MySecretKeyMySecretKeyMySecretKey123456";
+
+    public String generateToken(
+            UserDetails userDetails) {
+
+        return Jwts.builder()
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date())
+                .expiration(
+                        new Date(
+                                System.currentTimeMillis()
+                                        + 86400000))
+                .signWith(
+                        Keys.hmacShaKeyFor(
+                                SECRET.getBytes()),
+                        Jwts.SIG.HS256)
+                .compact();
+    }
+
+    public String extractUsername(
+            String token) {
+
+        return Jwts.parser()
+                .verifyWith(
+                        Keys.hmacShaKeyFor(
+                                SECRET.getBytes()))
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+    }
+}
+
+
+Step 11: JWT Authentication Filter
+
+Runs before every request.
+
+@Component
+@RequiredArgsConstructor
+public class JwtAuthenticationFilter
+        extends OncePerRequestFilter {
+
+    private final JwtService jwtService;
+
+    private final CustomUserDetailsService userDetailsService;
+
+    @Override
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain chain)
+            throws ServletException, IOException {
+
+        String header =
+                request.getHeader("Authorization");
+
+        if(header == null ||
+                !header.startsWith("Bearer ")) {
+
+            chain.doFilter(request,response);
+            return;
+        }
+
+        String token =
+                header.substring(7);
+
+        String username =
+                jwtService.extractUsername(token);
+
+        if(username != null &&
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication() == null) {
+
+            UserDetails userDetails =
+                    userDetailsService
+                            .loadUserByUsername(username);
+
+            UsernamePasswordAuthenticationToken auth =
+                    new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities());
+
+            SecurityContextHolder
+                    .getContext()
+                    .setAuthentication(auth);
+        }
+
+        chain.doFilter(request,response);
+    }
+}
+
+
+Step 12: Refresh Token Entity
+
+@Entity
+@Getter
+@Setter
+public class RefreshToken {
+
+    @Id
+    @GeneratedValue(strategy =
+            GenerationType.IDENTITY)
+    private Long id;
+
+    private String token;
+
+    private Instant expiryDate;
+
+    @OneToOne
+    private User user;
+}
+
+
+
+Step 13: RefreshToken Repository
+
+@Repository
+public interface RefreshTokenRepository
+        extends JpaRepository<RefreshToken,Long> {
+
+    Optional<RefreshToken>
+    findByToken(String token);
+}
+
+
+Step 14: AuthService
+
+Register User
+
+@Service
+@RequiredArgsConstructor
+public class AuthService {
+
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder encoder;
+
+    public String register(
+            RegisterRequest request) {
+
+        Role role =
+                roleRepository
+                        .findByRoleName("ROLE_USER")
+                        .orElseThrow();
+
+        User user =
+                User.builder()
+                        .username(
+                                request.getUsername())
+                        .email(
+                                request.getEmail())
+                        .password(
+                                encoder.encode(
+                                        request.getPassword()))
+                        .role(role)
+                        .build();
+
+        userRepository.save(user);
+
+        return "User Registered Successfully";
+    }
+}
+
+
+Step 15: Login API
+
+public AuthResponse login(
+        LoginRequest request) {
+
+    authenticationManager.authenticate(
+
+            new UsernamePasswordAuthenticationToken(
+                    request.getUsername(),
+                    request.getPassword()));
+
+    User user =
+            userRepository
+                    .findByUsername(
+                            request.getUsername())
+                    .orElseThrow();
+
+    UserDetails userDetails =
+            userDetailsService
+                    .loadUserByUsername(
+                            user.getUsername());
+
+    String jwt =
+            jwtService.generateToken(
+                    userDetails);
+
+    return AuthResponse.builder()
+            .accessToken(jwt)
+            .username(user.getUsername())
+            .role(
+                    user.getRole()
+                            .getRoleName())
+            .build();
+}
+
+
+Step 16: AuthController
+
+@RestController
+@RequestMapping("/api/auth")
+@RequiredArgsConstructor
+public class AuthController {
+
+    private final AuthService authService;
+
+    @PostMapping("/register")
+    public ResponseEntity<String>
+    register(
+            @Valid
+            @RequestBody RegisterRequest request) {
+
+        return ResponseEntity.ok(
+                authService.register(request));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse>
+    login(
+            @RequestBody LoginRequest request) {
+
+        return ResponseEntity.ok(
+                authService.login(request));
+    }
+}
+
+
+Step 17: Method-Level Security
+
+@PreAuthorize("hasRole('ADMIN')")
+@PostMapping
+public EmployeeDto createEmployee() {
+}
+@PreAuthorize("hasAnyRole('ADMIN','USER')")
+@GetMapping
+public List<EmployeeDto> getAllEmployees() {
+}
+@PreAuthorize("hasRole('ADMIN')")
+@DeleteMapping("/{id}")
+public void deleteEmployee() {
+}
+
+
+Complete API Flow
+
+
+Register
+
+POST /api/auth/register
+{
+  "username":"admin",
+  "email":"admin@gmail.com",
+  "password":"admin123"
+}
+
+
+Login
+
+POST /api/auth/login
+{
+  "username":"admin",
+  "password":"admin123"
+}
+
+Response
+
+{
+  "accessToken":"eyJhbGciOiJIUzI1Ni...",
+  "refreshToken":"abcxyz123",
+  "username":"admin",
+  "role":"ROLE_ADMIN"
+}
+
+
+Access Protected API
+
+GET /api/employees
+
+
+
+Header
+
+Authorization: Bearer eyJhbGciOiJIUzI1Ni...
+Enterprise Enhancements
+
+

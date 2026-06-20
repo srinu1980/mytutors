@@ -1,0 +1,715 @@
+Employee Management System Frontend (React + TypeScript)
+
+This frontend is designed to work with your Spring Boot JWT Backend.
+
+Technology Stack
+==================
+
+React 19
+TypeScript
+React Router DOM
+Axios
+JWT Authentication
+Protected Routes
+Context API
+Redux Toolkit
+React Query (TanStack Query)
+React Hook Form + Validation
+Employee CRUD Operations
+
+
+
+
+Project Structure
+==================
+
+src
+│
+├── api
+│   ├── axiosConfig.ts
+│   └── employeeApi.ts
+│
+├── components
+│   ├── Navbar.tsx
+│   ├── ProtectedRoute.tsx
+│   └── EmployeeForm.tsx
+│
+├── context
+│   └── AuthContext.tsx
+│
+├── pages
+│   ├── Login.tsx
+│   ├── Dashboard.tsx
+│   ├── EmployeeList.tsx
+│   ├── AddEmployee.tsx
+│   └── EditEmployee.tsx
+│
+├── redux
+│   ├── store.ts
+│   └── employeeSlice.ts
+│
+├── services
+│   ├── AuthService.ts
+│   └── EmployeeService.ts
+│
+├── types
+│   ├── Employee.ts
+│   ├── LoginRequest.ts
+│   └── AuthResponse.ts
+│
+├── App.tsx
+├── main.tsx
+
+
+Step 1: Install Dependencies
+-------------------------------
+
+npm install react-router-dom
+npm install axios
+npm install @reduxjs/toolkit react-redux
+npm install @tanstack/react-query
+npm install react-hook-form
+
+
+
+Step 2: Employee Type
+---------------------
+
+types/Employee.ts
+
+
+export interface Employee {
+
+  employeeId?: number;
+
+  employeeName: string;
+
+  email: string;
+
+  salary: number;
+
+  department: string;
+}
+
+
+Step 3: Axios Configuration
+-----------------------------
+
+api/axiosConfig.ts
+
+import axios from "axios";
+
+const api = axios.create({
+
+  baseURL:
+    "http://localhost:8080/api"
+
+});
+
+api.interceptors.request.use(
+
+  (config) => {
+
+    const token =
+      localStorage.getItem("token");
+
+    if (token) {
+
+      config.headers.Authorization =
+        `Bearer ${token}`;
+    }
+
+    return config;
+  }
+
+);
+
+export default api;
+
+
+
+
+Step 4: Authentication Context
+------------------------------
+
+
+context/AuthContext.tsx
+import {
+ createContext,
+ useState
+} from "react";
+
+interface AuthContextType {
+
+ token: string | null;
+
+ login: (token: string) => void;
+
+ logout: () => void;
+}
+
+export const AuthContext =
+ createContext<AuthContextType>(
+ {} as AuthContextType
+ );
+
+export function AuthProvider(
+ { children }: any
+) {
+
+ const [token, setToken] =
+ useState(
+ localStorage.getItem("token")
+ );
+
+ const login = (
+ token: string
+ ) => {
+
+ localStorage.setItem(
+ "token",
+ token
+ );
+
+ setToken(token);
+ };
+
+ const logout = () => {
+
+ localStorage.removeItem(
+ "token"
+ );
+
+ setToken(null);
+ };
+
+ return (
+
+ <AuthContext.Provider
+ value={{
+ token,
+ login,
+ logout
+ }}
+ >
+
+ {children}
+
+ </AuthContext.Provider>
+
+ );
+}
+
+
+
+Step 5: Login API
+----------------------
+
+services/AuthService.ts
+
+
+import api from "../api/axiosConfig";
+
+export const loginApi = (
+
+ username: string,
+
+ password: string
+
+) => {
+
+ return api.post(
+ "/auth/login",
+ {
+ username,
+ password
+ }
+ );
+};
+
+
+Step 6: Login Page
+====================
+
+pages/Login.tsx
+
+import { useState } from "react";
+
+import { loginApi }
+from "../services/AuthService";
+
+function Login() {
+
+ const [username,
+ setUsername]
+ = useState("");
+
+ const [password,
+ setPassword]
+ = useState("");
+
+ const handleLogin =
+ async () => {
+
+ const response =
+ await loginApi(
+ username,
+ password
+ );
+
+ localStorage.setItem(
+ "token",
+ response.data.accessToken
+ );
+
+ window.location.href =
+ "/dashboard";
+ };
+
+ return (
+
+ <>
+ <input
+ placeholder="Username"
+ onChange={(e) =>
+ setUsername(
+ e.target.value
+ )}
+ />
+
+ <br /><br />
+
+ <input
+ type="password"
+ placeholder="Password"
+ onChange={(e) =>
+ setPassword(
+ e.target.value
+ )}
+ />
+
+ <br /><br />
+
+ <button
+ onClick={handleLogin}
+ >
+ Login
+ </button>
+
+ </>
+
+ );
+}
+
+export default Login;
+
+
+
+Step 7: Protected Route
+
+components/ProtectedRoute.tsx
+
+import {
+ Navigate
+}
+from "react-router-dom";
+
+function ProtectedRoute(
+ { children }: any
+) {
+
+ const token =
+ localStorage.getItem(
+ "token"
+ );
+
+ return token
+ ? children
+ : <Navigate to="/login" />;
+}
+
+export default ProtectedRoute;
+
+
+Step 8: React Router
+
+App.tsx
+import {
+ BrowserRouter,
+ Routes,
+ Route
+}
+from "react-router-dom";
+
+import Login
+from "./pages/Login";
+
+import Dashboard
+from "./pages/Dashboard";
+
+import EmployeeList
+from "./pages/EmployeeList";
+
+import ProtectedRoute
+from "./components/ProtectedRoute";
+
+function App() {
+
+ return (
+
+ <BrowserRouter>
+
+ <Routes>
+
+ <Route
+ path="/login"
+ element={<Login />}
+ />
+
+ <Route
+ path="/dashboard"
+ element={
+ <ProtectedRoute>
+ <Dashboard />
+ </ProtectedRoute>
+ }
+ />
+
+ <Route
+ path="/employees"
+ element={
+ <ProtectedRoute>
+ <EmployeeList />
+ </ProtectedRoute>
+ }
+ />
+
+ </Routes>
+
+ </BrowserRouter>
+
+ );
+}
+
+export default App;
+
+
+Step 9: Employee API Service
+---------------------------
+
+services/EmployeeService.ts
+
+import api from "../api/axiosConfig";
+
+export const getEmployees =
+ () => api.get("/employees");
+
+export const createEmployee =
+ (employee: any) =>
+ api.post(
+ "/employees",
+ employee
+ );
+
+export const updateEmployee =
+ (
+ id: number,
+ employee: any
+ ) =>
+ api.put(
+ `/employees/${id}`,
+ employee
+ );
+
+export const deleteEmployee =
+ (id: number) =>
+ api.delete(
+ `/employees/${id}`
+ );
+Step 10: React Query
+EmployeeList.tsx
+import {
+ useQuery
+}
+from "@tanstack/react-query";
+
+import {
+ getEmployees
+}
+from "../services/EmployeeService";
+
+function EmployeeList() {
+
+ const {
+ data,
+ isLoading
+ } = useQuery({
+
+ queryKey:
+ ["employees"],
+
+ queryFn:
+ async () => {
+
+ const response =
+ await getEmployees();
+
+ return response.data;
+ }
+
+ });
+
+ if(isLoading) {
+
+ return <h2>Loading...</h2>;
+ }
+
+ return (
+
+ <>
+ {
+
+ data.map(
+ (employee:any) => (
+
+ <div
+ key={
+ employee.employeeId
+ }
+ >
+
+ <h3>
+ {employee.employeeName}
+ </h3>
+
+ </div>
+
+ ))
+ }
+
+ </>
+
+ );
+}
+
+export default EmployeeList;
+
+
+Step 11: Redux Toolkit
+----------------------
+
+redux/employeeSlice.ts
+
+import {
+ createSlice
+}
+from
+"@reduxjs/toolkit";
+
+const employeeSlice =
+ createSlice({
+
+ name: "employee",
+
+ initialState: {
+
+ employees: []
+
+ },
+
+ reducers: {
+
+ setEmployees:
+ (
+ state,
+ action
+ ) => {
+
+ state.employees =
+ action.payload;
+ }
+
+ }
+
+});
+
+export const {
+ setEmployees
+}
+=
+employeeSlice.actions;
+
+export default
+employeeSlice.reducer;
+
+
+Step 12: Store Configuration
+----------------------------------
+
+redux/store.ts
+import {
+ configureStore
+}
+from
+"@reduxjs/toolkit";
+
+import employeeReducer
+from "./employeeSlice";
+
+export const store =
+ configureStore({
+
+ reducer: {
+
+ employee:
+ employeeReducer
+
+ }
+
+});
+
+
+Step 13: Form Validation
+--------------------------
+
+Install:
+
+npm install react-hook-form
+AddEmployee.tsx
+import {
+ useForm
+}
+from
+"react-hook-form";
+
+function AddEmployee() {
+
+ const {
+
+ register,
+
+ handleSubmit,
+
+ formState:
+ { errors }
+
+ } = useForm();
+
+ const saveEmployee =
+ (data:any) => {
+
+ console.log(data);
+ };
+
+ return (
+
+ <form
+ onSubmit={
+ handleSubmit(
+ saveEmployee
+ )
+ }
+ >
+
+ <input
+
+ {...register(
+ "employeeName",
+ {
+ required:
+ "Name Required"
+ }
+ )}
+
+ />
+
+ <p>
+ {errors.employeeName?.
+ message as string}
+ </p>
+
+ <button
+ type="submit"
+ >
+ Save
+ </button>
+
+ </form>
+
+ );
+}
+
+export default AddEmployee;
+
+
+
+Step 14: Employee CRUD Flow
+---------------------------
+
+Employee List
+      ↓
+Add Employee
+      ↓
+POST /employees
+      ↓
+Database
+
+Employee List
+      ↓
+Edit Employee
+      ↓
+PUT /employees/{id}
+      ↓
+Database
+
+Employee List
+      ↓
+Delete Employee
+      ↓
+DELETE /employees/{id}
+      ↓
+Database
+
+
+
+Dashboard Component
+-----------------------
+
+function Dashboard() {
+
+ return (
+
+ <div>
+
+ <h1>
+ Employee Management System
+ </h1>
+
+ </div>
+
+ );
+}
+
+export default Dashboard;
+
+
+
+JWT Authentication Flow
+----------------------
+
+Login
+   ↓
+Spring Boot API
+   ↓
+JWT Token
+   ↓
+LocalStorage
+   ↓
+Axios Interceptor
+   ↓
+Authorization Header
+Bearer Token
+   ↓
+Protected APIs
+
+

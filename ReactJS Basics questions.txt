@@ -1,0 +1,432 @@
+ReactJS Basics
+
+1. What is ReactJS?
+
+ReactJS is a JavaScript library developed by Meta Platforms for building reusable and interactive User Interfaces (UI).
+
+
+2. What are the features of React?
+
+Component-Based Architecture
+Virtual DOM
+JSX
+One-Way Data Binding
+Reusable Components
+Hooks Support
+High Performance
+
+
+
+3. What is JSX?
+
+JSX (JavaScript XML) allows writing HTML-like syntax inside JavaScript.
+
+const element = <h1>Hello React</h1>;
+
+4. What is a Component?
+
+A component is a reusable piece of UI.
+
+function Welcome() {
+  return <h1>Welcome</h1>;
+}
+
+
+5. Types of Components?
+
+Functional Component
+function Home() {
+  return <h1>Home</h1>;
+}
+Class Component
+class Home extends React.Component {
+  render() {
+    return <h1>Home</h1>;
+  }
+}
+
+
+6. What is Virtual DOM?
+
+Virtual DOM is a lightweight copy of the real DOM.
+
+Process:
+
+State Change
+    ↓
+Virtual DOM Updated
+    ↓
+Diffing Algorithm
+    ↓
+Real DOM Updated
+
+Benefits:
+
+Faster rendering
+Better performance
+
+
+
+7. Difference Between Real DOM and Virtual DOM
+
+
+Real DOM		Virtual DOM
+Slow			Fast
+Direct UI updates	Updates virtual copy first
+More memory operations	Optimized updates
+
+
+8. What is One-Way Data Binding?
+
+Data flows from Parent → Child using Props.
+
+Parent Component
+       ↓
+      Props
+       ↓
+Child Component
+Props and State
+
+
+
+9. What are Props?
+
+Props are read-only data passed from parent to child.
+
+<Student name="John" />
+
+
+
+10. What is State?
+
+State is mutable data managed within a component.
+
+const [count, setCount] = useState(0);
+
+
+
+11. Difference Between Props and State
+
+Props			State
+Read-only		Mutable
+Passed from parent	Managed internally
+Cannot change		Can change
+
+
+12. What happens when State changes?
+
+React re-renders the component and updates the UI.
+
+React Hooks
+
+
+13. What are Hooks?
+
+Hooks allow functional components to use React features like state and lifecycle methods.
+
+Examples:
+
+useState
+useEffect
+useContext
+useReducer
+useMemo
+useCallback
+useRef
+
+
+14. What is useState?
+
+Used to manage component state.
+
+const [count, setCount] = useState(0);
+
+
+15. What is useEffect?
+
+Used for side effects:
+
+API Calls
+Timers
+DOM Manipulation
+useEffect(() => {
+  console.log("Loaded");
+}, []);
+
+
+
+16. When does useEffect execute?
+Component Mount
+useEffect(() => {}, []);
+State Change
+useEffect(() => {}, [count]);
+Every Render
+useEffect(() => {});
+
+
+
+17. What is Cleanup Function?
+useEffect(() => {
+
+  const timer = setInterval(() => {}, 1000);
+
+  return () => {
+    clearInterval(timer);
+  };
+
+}, []);
+
+Used to prevent memory leaks.
+
+
+
+
+18. What is useContext?
+
+Used to share data globally.
+
+const user = useContext(UserContext);
+19. What is useReducer?
+
+Used for complex state management.
+
+const [state, dispatch] =
+useReducer(reducer, initialState);
+20. Difference Between useState and useReducer
+useState	useReducer
+Simple state	Complex state
+Less code	Centralized logic
+Easy to learn	Better for large apps
+21. What is useRef?
+
+Used to persist values and access DOM elements.
+
+const inputRef = useRef();
+
+
+22. What is useMemo?
+
+Optimizes expensive calculations.
+
+const total =
+useMemo(() => calculate(), []);
+23. What is useCallback?
+
+Memoizes functions.
+
+const handleClick =
+useCallback(() => {}, []);
+React Forms
+24. What is a Controlled Component?
+
+Form values controlled by React state.
+
+<input
+ value={name}
+ onChange={(e) =>
+ setName(e.target.value)}
+/>
+25. What is an Uncontrolled Component?
+
+Form values managed using DOM and refs.
+
+const ref = useRef();
+API Calls
+26. How do you call APIs in React?
+
+Using:
+
+Fetch API
+Axios
+useEffect(() => {
+
+ fetch("/users")
+   .then(res => res.json())
+   .then(data => setUsers(data));
+
+}, []);
+27. Why Axios?
+
+Advantages:
+
+Automatic JSON parsing
+Request Interceptors
+Response Interceptors
+Better Error Handling
+28. What is an Axios Interceptor?
+
+Used to intercept requests/responses.
+
+Example:
+
+axios.interceptors.request.use(config => {
+
+ config.headers.Authorization =
+ "Bearer TOKEN";
+
+ return config;
+
+});
+React Router
+29. What is React Router?
+
+Used for navigation in Single Page Applications (SPA).
+
+30. BrowserRouter vs Routes vs Route
+BrowserRouter
+
+Provides routing support.
+
+Routes
+
+Contains all routes.
+
+Route
+
+Defines a route.
+
+<Routes>
+ <Route
+  path="/"
+  element={<Home />}
+ />
+</Routes>
+31. What is useNavigate?
+
+Used for programmatic navigation.
+
+const navigate = useNavigate();
+
+navigate("/employees");
+32. What is useParams?
+
+Used to access path variables.
+
+const { id } = useParams();
+JWT Authentication
+33. What is JWT?
+
+JSON Web Token used for authentication.
+
+Structure:
+
+Header.Payload.Signature
+34. How JWT Authentication Works?
+Login
+   ↓
+Spring Boot API
+   ↓
+JWT Generated
+   ↓
+React Stores Token
+   ↓
+Protected APIs
+35. Where should JWT be stored?
+
+Common approaches:
+
+localStorage
+sessionStorage
+HttpOnly Cookies (most secure)
+36. What are Protected Routes?
+
+Routes accessible only to authenticated users.
+
+<ProtectedRoute>
+   <Dashboard />
+</ProtectedRoute>
+Redux Toolkit
+37. What is Redux?
+
+State management library.
+
+38. Why Redux Toolkit?
+Less Boilerplate
+Built-in Immer
+Better Performance
+Official Redux Approach
+39. What is a Slice?
+
+A collection of:
+
+State
+Reducers
+Actions
+createSlice({
+ name: "employee"
+})
+40. What is Store?
+
+Central location where application state is stored.
+
+React Query
+41. What is React Query (TanStack Query)?
+
+A library for data fetching and caching.
+
+Benefits:
+
+Caching
+Retry
+Loading States
+Background Refresh
+42. Difference Between React Query and Redux
+React Query	Redux
+Server State	Client State
+API Data	UI State
+Caching	Global State
+TypeScript with React
+43. Why TypeScript?
+Type Safety
+Better IDE Support
+Compile-Time Error Detection
+44. Interface vs Type
+Interface
+interface Employee {
+ id:number;
+ name:string;
+}
+Type
+type Employee = {
+ id:number;
+ name:string;
+}
+Scenario-Based Questions
+45. How do you avoid unnecessary re-renders?
+React.memo()
+useMemo()
+useCallback()
+46. How do you share data between unrelated components?
+Context API
+Redux Toolkit
+47. How do you secure React applications?
+JWT Authentication
+Protected Routes
+Role-Based Access
+HTTPS
+Input Validation
+48. How would you integrate React with Spring Boot?
+React UI
+   ↓
+Axios
+   ↓
+Spring Boot REST API
+   ↓
+Service Layer
+   ↓
+Repository
+   ↓
+Database
+49. Explain your Employee Management System project.
+
+A strong answer:
+
+"I developed an Employee Management System using React TypeScript and Spring Boot. The frontend uses React Router for navigation, Axios for API communication, JWT Authentication for security, Protected Routes for authorization, React Query for data fetching, Redux Toolkit for global state management, and React Hook Form for validation. The backend is built with Spring Boot, Spring Security, JWT, JPA, MySQL, DTOs, and Global Exception Handling."
+
+50. What is the difference between Authentication and Authorization?
+Authentication	Authorization
+Who are you?	What can you access?
+Login	Permissions
+JWT Validation	Role Validation
+
+These 50 questions cover most ReactJS interview topics asked for 2–5 years of experience, especially in React + Spring Boot full-stack roles.
