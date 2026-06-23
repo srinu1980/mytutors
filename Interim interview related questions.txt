@@ -1,0 +1,1842 @@
+
+1. What is Java?
+Java is a high-level, object-oriented, platform-independent programming language developed by James Gosling.
+
+Features:
+
+Platform Independent (WORA - Write Once Run Anywhere)
+
+Object-Oriented
+
+Secure
+
+Robust
+
+Multithreaded
+
+Distributed
+
+2. What are the main features of Java?
+
+Simple
+
+Object-Oriented
+
+Platform Independent
+
+Secure
+
+Robust
+
+Multithreaded
+
+High Performance (JIT Compiler)
+
+Portable
+
+3. What is JVM?
+
+JVM (Java Virtual Machine) is responsible for executing Java bytecode.
+
+
+Responsibilities:
+
+Loads classes
+
+Verifies bytecode
+
+Executes code
+
+Memory management
+
+Garbage collection
+
+4. Difference between JVM, JRE, and JDK?
+
+JVM			JRE				JDK
+---------------------------------------------------------------------------------------
+Executes bytecode	Runtime environment		Development kit
+Part of JRE		Contains JVM + Libraries	Contains JRE + Tools
+Runtime only		Run Java applications		Develop & Run applications
+
+
+
+5. What is Platform Independence?
+
+Java source code is compiled into bytecode (.class).
+
+Bytecode runs on any operating system having JVM.
+
+Java Code
+    ↓
+Compiler
+    ↓
+Bytecode
+    ↓
+JVM
+    ↓
+OS
+
+6. What is Object-Oriented Programming (OOP)?
+
+Programming paradigm based on objects.
+
+Four Pillars:
+Encapsulation
+
+Inheritance
+
+Polymorphism
+
+Abstraction
+
+
+7. What is Encapsulation?
+
+Binding data and methods into a single unit.
+
+class Employee {
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+}
+
+
+Advantages:
+
+Data hiding
+
+Security
+
+Maintainability
+
+
+8. What is Inheritance?
+
+Acquiring properties of parent class.
+
+class Animal {
+    void eat() {
+        System.out.println("Eating");
+    }
+}
+
+class Dog extends Animal {
+}
+Types supported by Java:
+Single
+
+Multilevel
+
+Hierarchical
+
+(Java does not support multiple inheritance through classes.)
+
+
+
+9. What is Polymorphism?
+
+One method behaving differently.
+
+Compile-Time Polymorphism
+Method Overloading
+
+class Test {
+    void add(int a,int b){}
+    void add(int a,int b,int c){}
+}
+Runtime Polymorphism
+Method Overriding
+
+class Animal {
+    void sound() {}
+}
+
+class Dog extends Animal {
+    void sound() {}
+}
+
+
+
+10. What is Abstraction?
+
+Hiding implementation details and showing functionality.
+
+Abstract Class
+abstract class Vehicle {
+    abstract void start();
+}
+Interface
+interface Vehicle {
+    void start();
+}
+
+11. Difference between Abstract Class and Interface?
+
+Abstract Class			Interface
+===============================================================
+Can have constructors		Cannot have constructors
+Supports partial abstraction	Supports full abstraction
+Can contain instance variables	Only constants
+Uses extends			Uses implements
+
+
+
+12. What is Constructor?
+
+Special method used to initialize objects.
+
+class Employee {
+    Employee() {
+        System.out.println("Constructor");
+    }
+}
+
+Types:
+
+Default Constructor
+
+Parameterized Constructor
+
+13. Can Constructor be Overloaded?
+
+Yes.
+
+class Employee {
+
+    Employee() {}
+
+    Employee(int id) {}
+}
+
+
+14. Can Constructor be Overridden?
+No.
+
+Constructors belong to the class, not inherited.
+
+
+15. What is the this keyword?
+Refers to current class object.
+
+class Employee {
+    int id;
+
+    Employee(int id) {
+        this.id = id;
+    }
+}
+
+16. What is the super keyword?
+
+Refers to parent class object.
+
+class Animal {
+    Animal() {
+        System.out.println("Animal");
+    }
+}
+
+class Dog extends Animal {
+    Dog() {
+        super();
+    }
+}
+
+
+17. What is Method Overloading?
+
+Same method name with different parameters.
+
+void add(int a,int b){}
+void add(double a,double b){}
+
+
+18. What is Method Overriding?
+Redefining parent class method in child class.
+
+@Override
+void display() {}
+19. Difference between Overloading and Overriding?
+Overloading	Overriding
+Compile Time	Runtime
+Same class	Parent-Child
+Parameters differ	Same signature
+Faster	Slightly slower
+
+
+20. What is a Static Keyword?
+Belongs to class rather than object.
+
+class Test {
+    static int count;
+}
+Static Members:
+Variables
+
+Methods
+
+Blocks
+
+Nested Classes
+
+
+21. What is Final Keyword?
+
+Final Variable
+Cannot change value.
+
+final int age = 25;
+Final Method
+Cannot override.
+
+final void display(){}
+Final Class
+Cannot inherit.
+
+final class Test {}
+
+
+22. What is String?
+String is an immutable object.
+
+String name = "Java";
+
+
+23. Difference between String, StringBuffer, and StringBuilder?
+String	StringBuffer	StringBuilder
+Immutable	Mutable	Mutable
+Slow	Thread-safe	Fast
+Less efficient for modifications	Synchronized	Non-synchronized
+
+
+24. Why String is Immutable?
+Security
+
+Thread Safety
+
+Performance
+
+String Pool optimization
+
+
+25. Difference between == and equals()?
+
+String s1 = "Java";
+String s2 = "Java";
+==
+Compares memory references.
+
+equals()
+Compares actual content.
+
+
+26. What is Exception Handling?
+Mechanism to handle runtime errors.
+
+try {
+}
+catch(Exception e) {
+}
+finally {
+}
+
+
+27. Difference between Checked and Unchecked Exceptions?
+
+Checked			Unchecked
+=======================================================
+Compile-time		Runtime
+Must handle		Optional
+IOException		NullPointerException
+
+
+28. What is Finally Block?
+
+Always executes regardless of exception.
+
+finally {
+   System.out.println("Executed");
+}
+
+29. What is Multithreading?
+Executing multiple threads simultaneously.
+
+class MyThread extends Thread {
+    public void run() {
+        System.out.println("Thread Running");
+    }
+}
+
+30. Difference between Process and Thread?
+Process	Thread
+Heavyweight	Lightweight
+Separate memory	Shared memory
+Slow creation	Fast creation
+
+
+31. What is Collection Framework?
+
+Framework used to store and manipulate groups of objects.
+
+Interfaces:
+List
+
+Set
+
+Queue
+
+Map
+
+
+32. Difference between ArrayList and LinkedList?
+
+ArrayList		LinkedList
+=================================================
+
+Dynamic Array		Doubly Linked List
+Fast retrieval		Fast insertion/deletion
+More memory efficient	More memory usage
+
+
+33. Difference between HashMap and Hashtable?
+
+HashMap			Hashtable
+==================================================
+Not synchronized	Synchronized
+Allows null key/value	No null key/value
+Faster			Slower
+
+
+34. Difference between HashMap and ConcurrentHashMap?
+
+HashMap	ConcurrentHashMap
+
+Not Thread Safe	Thread Safe
+
+Single thread usage	Multi-threaded usage
+
+35. What is Garbage Collection?
+Automatic memory cleanup process performed by JVM.
+
+System.gc();
+(Only a request to JVM.)
+
+
+
+36. What is Java 8 Features?
+
+Important Features
+Lambda Expressions
+
+Functional Interfaces
+
+Stream API
+
+Method References
+
+Default Methods
+
+Optional Class
+
+Date & Time API
+
+37. What is Lambda Expression?
+
+(a,b) -> a+b
+Used to implement functional interfaces.
+
+38. What is Functional Interface?
+Interface containing exactly one abstract method.
+
+@FunctionalInterface
+interface Demo {
+    void show();
+}
+
+
+39. What is Stream API?
+
+Processes collections efficiently.
+
+list.stream()
+    .filter(x -> x > 10)
+    .forEach(System.out::println);
+
+
+40. What is Optional?
+Avoids NullPointerException.
+
+Optional<String> name =
+       Optional.of("Java");
+
+
+
+
+Q1. Why String is Immutable?
+
+Security, Thread Safety, Caching, String Pool optimization.
+
+
+Q2. Difference between HashMap and ConcurrentHashMap?
+
+ConcurrentHashMap is thread-safe and supports concurrent access.
+
+Q3. Explain fail-fast and fail-safe iterators.
+
+Fail-Fast → ConcurrentModificationException
+
+Fail-Safe → Works on cloned collection
+
+
+Q4. Difference between Comparable and Comparator?
+
+Comparable
+--------------
+compareTo()
+
+
+Comparator
+------------
+
+compare()
+
+Q5. Explain Java Memory Areas.
+
+
+Method Area
+
+Heap
+
+Stack
+
+PC Register
+
+Native Method Stack
+
+
+
+Spring Framework Interview Questions with Answers
+
+1. What is Spring Framework?
+
+Spring is a lightweight, open-source Java framework used for building enterprise applications.
+
+Features:
+Dependency Injection (DI)
+Inversion of Control (IoC)
+Aspect-Oriented Programming (AOP)
+Transaction Management
+Spring MVC
+Integration with databases and third-party frameworks
+
+
+2. What are the modules of Spring Framework?
+
+Major Spring modules include:
+
+Spring Core
+Spring Beans
+Spring Context
+Spring Expression Language (SpEL)
+Spring AOP
+Spring JDBC
+Spring ORM
+Spring Transaction Management
+Spring MVC
+Spring Security
+Spring Boot
+
+
+3. What is IoC (Inversion of Control)?
+
+IoC means the responsibility of creating and managing objects is transferred from the application code to the Spring container.
+
+Without Spring
+EmployeeService service = new EmployeeService();
+With Spring
+@Autowired
+private EmployeeService service;
+
+Spring creates and injects the object.
+
+4. What is Dependency Injection (DI)?
+
+Dependency Injection is a design pattern where dependent objects are provided by the Spring container instead of being created manually.
+
+Types of DI
+Constructor Injection
+Setter Injection
+Field Injection
+
+
+
+5. What is the difference between IoC and DI?
+
+IoC			DI
+---------------------------------------------------
+
+Principle			Implementation
+Container manages objects	Injects dependencies
+Broad concept			Specific technique
+
+6. What is Spring Bean?
+
+A Spring Bean is an object managed by the Spring IoC Container.
+
+@Component
+public class EmployeeService {
+}
+
+
+7. What is BeanFactory?
+
+BeanFactory is the basic IoC container.
+
+Features:
+Lazy initialization
+Lightweight
+Basic DI support
+
+
+8. What is ApplicationContext?
+
+ApplicationContext is an advanced container that extends BeanFactory.
+
+Features:
+Event handling
+Internationalization (i18n)
+Bean lifecycle management
+AOP support
+
+
+
+9. Difference between BeanFactory and ApplicationContext?
+
+BeanFactory	ApplicationContext
+==================================================
+
+Basic container		Advanced container
+Lazy loading		Eager loading
+Less features		More features
+
+
+10. What are Spring Bean Scopes?
+
+Singleton (Default)
+@Scope("singleton")
+Prototype
+@Scope("prototype")
+Web Scopes
+Request
+Session
+Application
+WebSocket
+
+
+11. What is @Component?
+
+Marks a class as a Spring-managed bean.
+
+@Component
+public class EmployeeService {
+}
+
+
+12. Difference between @Component, @Service, @Repository, and @Controller?
+
+Annotation	Purpose
+=================================
+@Component	Generic bean
+@Service	Business logic
+@Repository	DAO layer
+@Controller	MVC Controller
+
+
+13. What is @Autowired?
+
+Automatically injects dependencies.
+
+@Autowired
+private EmployeeService service;
+
+
+14. What are the types of Autowiring?
+By Type
+By Name
+Constructor Injection
+Annotation-Based Injection
+
+
+15. Why is Constructor Injection preferred?
+Advantages:
+Mandatory dependencies
+Easier unit testing
+Immutability
+Avoids NullPointerException
+@Service
+public class EmployeeService {
+
+    private final EmployeeRepository repository;
+
+    public EmployeeService(EmployeeRepository repository) {
+        this.repository = repository;
+    }
+}
+
+
+16. What is @Qualifier?
+
+Used when multiple beans of the same type exist.
+
+@Autowired
+@Qualifier("employeeService")
+private Service service;
+
+
+17. What is Spring Bean Lifecycle?
+Lifecycle Methods
+Bean Instantiation
+Dependency Injection
+Initialization
+Ready for Use
+Destruction
+@PostConstruct
+public void init(){}
+
+@PreDestroy
+public void destroy(){}
+
+
+18. What is Spring AOP?
+
+Aspect-Oriented Programming separates cross-cutting concerns like:
+
+Logging
+Security
+Transactions
+Auditing
+
+
+19. What are AOP Terminologies?
+Aspect
+
+Cross-cutting concern.
+
+Advice
+
+Action performed.
+
+Join Point
+
+Point during execution.
+
+Pointcut
+
+Expression identifying join points.
+
+Weaving
+
+Applying aspects.
+
+20. What is Transaction Management in Spring?
+
+Ensures database consistency.
+
+@Transactional
+public void saveEmployee() {
+}
+
+
+21. What are ACID Properties?
+
+A - Atomicity
+
+All operations succeed or fail.
+
+C - Consistency
+
+Data remains valid.
+
+I - Isolation
+
+Transactions don't interfere.
+
+D - Durability
+
+Changes persist permanently.
+
+
+22. What is Spring JDBC?
+
+Spring JDBC simplifies database operations.
+
+JdbcTemplate jdbcTemplate;
+
+23. What is JdbcTemplate?
+
+Helper class that reduces JDBC boilerplate code.
+
+jdbcTemplate.query();
+jdbcTemplate.update();
+
+
+24. What is Spring ORM?
+
+Provides integration with ORM frameworks:
+
+Hibernate
+JPA
+EclipseLink
+
+25. What is Spring DAO?
+
+DAO (Data Access Object) pattern separates persistence logic from business logic.
+
+Spring MVC Interview Questions
+
+
+26. What is Spring MVC?
+
+Spring MVC is a web framework based on the Model-View-Controller pattern.
+
+Components:
+Model
+View
+Controller
+
+
+27. Explain Spring MVC Architecture.
+Client
+   ↓
+DispatcherServlet
+   ↓
+Controller
+   ↓
+Service
+   ↓
+Repository
+   ↓
+Database
+
+Response flows back in reverse order.
+
+
+
+28. What is DispatcherServlet?
+
+Front Controller of Spring MVC.
+
+Responsibilities:
+Receives requests
+Maps URLs
+Invokes Controllers
+Returns responses
+
+
+29. Difference between @Controller and @RestController?
+
+@Controller		@RestController
+================================================
+Returns View		Returns JSON/XML
+MVC Apps		REST APIs
+
+@RestController
+public class EmployeeController {
+}
+
+
+30. Difference between @RequestMapping and @GetMapping?
+
+@RequestMapping
+
+Supports all HTTP methods.
+
+@RequestMapping("/employees")
+
+
+@GetMapping
+
+Specific to GET requests.
+
+@GetMapping("/employees")
+
+
+
+31. What is @PathVariable?
+
+Reads value from URL.
+
+@GetMapping("/{id}")
+public Employee get(@PathVariable Long id) {
+}
+
+
+32. What is @RequestParam?
+
+Reads query parameters.
+
+@GetMapping("/employee")
+public Employee get(
+    @RequestParam Long id) {
+}
+
+
+33. What is @RequestBody?
+
+Maps JSON request to Java object.
+
+@PostMapping
+public Employee save(
+       @RequestBody Employee emp) {
+}
+
+
+34. What is @ResponseBody?
+
+Converts return value into JSON/XML response.
+
+35. What is Exception Handling in Spring?
+
+@ControllerAdvice
+public class GlobalExceptionHandler {
+}
+
+Uses:
+
+@ExceptionHandler
+
+
+
+36. What is Spring Data JPA?
+
+Simplifies database access using JPA repositories.
+
+
+37. What is JpaRepository?
+
+Provides CRUD methods.
+
+public interface EmployeeRepository
+extends JpaRepository<Employee, Long> {
+}
+
+
+38. Difference between CrudRepository, PagingAndSortingRepository, and JpaRepository?
+
+Repository			Features
+
+CrudRepository			CRUD
+PagingAndSortingRepository	CRUD + Pagination
+JpaRepository			CRUD + Pagination + JPA Features
+
+
+39. How does Spring Data JPA create queries automatically?
+
+Method naming convention.
+
+findByName(String name)
+
+findByEmail(String email)
+
+findBySalaryGreaterThan(double salary)
+
+
+40. What is JPQL?
+
+Java Persistence Query Language.
+
+@Query("SELECT e FROM Employee e")
+List<Employee> getAll();
+
+
+41. What is Native Query?
+
+Uses database-specific SQL.
+
+@Query(
+ value="SELECT * FROM employee",
+ nativeQuery=true)
+
+
+42. What is Pagination?
+
+Fetching records page by page.
+
+Pageable pageable =
+PageRequest.of(0, 10);
+
+
+43. What is Sorting?
+Sort.by("name");
+
+
+44. Difference between save() and saveAndFlush()?
+
+save()	saveAndFlush()
+Saves entity	Saves immediately
+
+Flush later	Flush now
+
+
+45. What is Entity Lifecycle?
+Transient
+Persistent
+Detached
+Removed
+
+
+
+46. What is Circular Dependency?
+
+Occurs when Bean A depends on Bean B and Bean B depends on Bean A.
+
+Constructor injection may fail.
+
+47. What is Lazy Initialization?
+
+Bean created only when needed.
+
+@Lazy
+@Component
+public class EmployeeService {
+}
+48. What is Eager Initialization?
+
+Bean created during application startup.
+
+49. What is @Primary?
+
+Specifies default bean when multiple beans exist.
+
+@Primary
+@Service
+public class EmployeeServiceImpl {
+}
+
+
+50. Why Spring is preferred in enterprise applications?
+Loose coupling
+Dependency Injection
+Transaction Management
+AOP
+Security Integration
+Microservices Support
+Easy Testing
+Production Ready
+
+
+Explain IoC and Dependency Injection.
+Difference between BeanFactory and ApplicationContext.
+Why Constructor Injection is preferred?
+Explain Spring Bean Lifecycle.
+What is Spring AOP?
+Explain Transaction Management.
+What is DispatcherServlet?
+Difference between @Controller and @RestController?
+How does Spring Data JPA generate queries?
+Difference between CrudRepository, JpaRepository, and PagingAndSortingRepository?
+
+
+
+
+1. What is Spring Framework?
+
+Spring is a lightweight framework used to develop enterprise Java applications. It provides:
+
+Dependency Injection (DI)
+Inversion of Control (IoC)
+AOP
+Transaction Management
+MVC Framework
+2. What is IoC (Inversion of Control)?
+
+IoC transfers the responsibility of object creation and lifecycle management from the application to the Spring Container.
+
+@Service
+public class EmployeeService {
+}
+
+Spring creates and manages the bean.
+
+3. What is Dependency Injection?
+
+Injecting dependent objects instead of creating them manually.
+
+Types:
+Constructor Injection ✅ (Recommended)
+Setter Injection
+Field Injection
+@Service
+public class EmployeeService {
+
+    private final EmployeeRepository repository;
+
+    public EmployeeService(EmployeeRepository repository) {
+        this.repository = repository;
+    }
+}
+4. Why Constructor Injection is preferred?
+Mandatory dependencies
+Easy Unit Testing
+Immutable fields
+Avoids NullPointerException
+5. Difference between @Component, @Service, @Repository and @Controller?
+Annotation	Purpose
+@Component	Generic Bean
+@Service	Business Logic
+@Repository	DAO Layer
+@Controller	MVC Controller
+@RestController	REST APIs
+Spring Boot Interview Questions
+6. What is Spring Boot?
+
+Spring Boot simplifies Spring application development by providing:
+
+Auto Configuration
+Embedded Server
+Starter Dependencies
+Production Ready Features
+7. What are Spring Boot Starters?
+
+Predefined dependency bundles.
+
+Examples:
+
+spring-boot-starter-web
+spring-boot-starter-data-jpa
+spring-boot-starter-security
+spring-boot-starter-test
+8. What is Auto Configuration?
+
+Automatically configures Spring Beans based on dependencies available in the classpath.
+
+Example:
+
+spring-boot-starter-web
+
+Automatically configures:
+
+DispatcherServlet
+Tomcat
+Jackson
+9. What is @SpringBootApplication?
+
+Combination of:
+
+@Configuration
+@EnableAutoConfiguration
+@ComponentScan
+10. What is Component Scanning?
+
+Spring automatically detects beans.
+
+@ComponentScan
+
+Scans:
+
+Controller
+Service
+Repository
+Component
+REST API Interview Questions
+11. What is REST?
+
+REST stands for Representational State Transfer.
+
+REST APIs use HTTP protocol for communication.
+
+12. What are HTTP Methods?
+Method	Purpose
+GET	Retrieve Data
+POST	Create Data
+PUT	Update Entire Resource
+PATCH	Partial Update
+DELETE	Delete Resource
+13. Difference between PUT and PATCH?
+PUT
+
+Updates complete resource.
+
+{
+ "id":1,
+ "name":"John",
+ "salary":50000
+}
+PATCH
+
+Updates selected fields.
+
+{
+ "salary":60000
+}
+14. Difference between @PathVariable and @RequestParam?
+@PathVariable
+@GetMapping("/{id}")
+public Employee getEmployee(
+      @PathVariable Long id)
+
+URL:
+
+/employees/1
+@RequestParam
+@GetMapping
+public Employee getEmployee(
+      @RequestParam Long id)
+
+URL:
+
+/employees?id=1
+15. What is @RequestBody?
+
+Converts JSON into Java Object.
+
+@PostMapping
+public Employee save(
+       @RequestBody Employee employee)
+16. What is ResponseEntity?
+
+Used to customize HTTP responses.
+
+return ResponseEntity
+       .status(HttpStatus.CREATED)
+       .body(employee);
+17. What are HTTP Status Codes?
+Code	Meaning
+200	OK
+201	Created
+204	No Content
+400	Bad Request
+401	Unauthorized
+403	Forbidden
+404	Not Found
+500	Internal Server Error
+Global Exception Handling Interview Questions
+18. Why Global Exception Handling?
+
+Centralized exception management.
+
+Benefits:
+
+Clean Controllers
+Reusable Code
+Consistent Error Responses
+19. What is @ControllerAdvice?
+
+Global exception handler for all controllers.
+
+@ControllerAdvice
+public class GlobalExceptionHandler {
+}
+20. What is @RestControllerAdvice?
+
+Combination of:
+
+@ControllerAdvice
+@ResponseBody
+
+Returns JSON responses.
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+}
+21. What is @ExceptionHandler?
+
+Handles specific exceptions.
+
+@ExceptionHandler(
+     ResourceNotFoundException.class)
+public ResponseEntity<String> handleException(
+     ResourceNotFoundException ex){
+}
+22. How do you handle Validation Exceptions?
+@ExceptionHandler(
+MethodArgumentNotValidException.class)
+
+Example Response:
+
+{
+ "name":"Name is required",
+ "email":"Invalid email"
+}
+23. How do you create Custom Exceptions?
+public class ResourceNotFoundException
+       extends RuntimeException {
+
+    public ResourceNotFoundException(
+           String message) {
+        super(message);
+    }
+}
+24. How is ResourceNotFoundException used?
+Employee emp =
+repository.findById(id)
+.orElseThrow(() ->
+ new ResourceNotFoundException(
+ "Employee Not Found"));
+JWT Interview Questions
+25. What is JWT?
+
+JWT = JSON Web Token
+
+Used for Authentication and Authorization.
+
+Format:
+
+Header.Payload.Signature
+
+Example:
+
+xxxxx.yyyyy.zzzzz
+26. What information is stored in JWT?
+
+Payload contains:
+
+{
+ "sub":"admin",
+ "role":"ADMIN",
+ "exp":123456789
+}
+27. What are JWT Components?
+Header
+{
+ "alg":"HS256",
+ "typ":"JWT"
+}
+Payload
+
+Contains user details.
+
+Signature
+
+Used for verification.
+
+28. Explain JWT Authentication Flow.
+User Login
+    |
+    V
+Username + Password
+    |
+    V
+AuthenticationManager
+    |
+    V
+JWT Generated
+    |
+    V
+Returned to Client
+    |
+    V
+Client Stores Token
+    |
+    V
+Authorization Header
+    |
+    V
+JWT Filter
+    |
+    V
+SecurityContext
+    |
+    V
+Controller
+29. What is Authentication?
+
+Verifying user identity.
+
+Example:
+
+Username + Password
+30. What is Authorization?
+
+Determining access permissions.
+
+Example:
+
+ADMIN -> Full Access
+USER  -> Read Only
+31. What is AuthenticationManager?
+
+Responsible for authenticating users.
+
+authenticationManager.authenticate(
+ new UsernamePasswordAuthenticationToken(
+ username,password));
+32. What is UserDetailsService?
+
+Loads user details from database.
+
+@Service
+public class CustomUserDetailsService
+implements UserDetailsService {
+}
+33. What is UserDetails?
+
+Contains authenticated user information.
+
+UserDetails
+
+Stores:
+
+Username
+Password
+Authorities
+34. What is BCryptPasswordEncoder?
+
+Encrypts passwords before storing.
+
+@Bean
+PasswordEncoder passwordEncoder() {
+   return new BCryptPasswordEncoder();
+}
+35. Why should passwords not be stored in plain text?
+
+Bad:
+
+admin123
+
+Good:
+
+$2a$10$Jkdfkdf...
+
+Security against data breaches.
+
+36. What is JwtAuthenticationFilter?
+
+Intercepts incoming requests.
+
+Responsibilities:
+
+Read JWT
+Validate JWT
+Set Authentication
+extends OncePerRequestFilter
+37. Why extend OncePerRequestFilter?
+
+Ensures filter executes only once per request.
+
+38. What is SecurityContextHolder?
+
+Stores authenticated user information.
+
+SecurityContextHolder
+.getContext()
+.setAuthentication(authentication);
+39. What is Stateless Authentication?
+
+Server does not maintain session.
+
+Each request contains JWT.
+
+Benefits:
+
+Scalable
+Faster
+Microservices Friendly
+40. Difference between Session Authentication and JWT Authentication?
+Session	JWT
+Stateful	Stateless
+Session stored on server	Token stored on client
+More memory usage	Less memory usage
+Difficult for microservices	Suitable for microservices
+Spring Security + JWT Advanced Questions
+41. Difference between Authentication and Authorization?
+Authentication	Authorization
+Who are you?	What can you access?
+42. Difference between 401 and 403?
+Code	Meaning
+401	Authentication Failed
+403	Access Denied
+43. What is Role-Based Access Control (RBAC)?
+.hasRole("ADMIN")
+.hasRole("USER")
+
+Restricts access based on roles.
+
+44. How do you secure APIs in Spring Security?
+.authorizeHttpRequests(auth ->
+ auth.requestMatchers("/auth/**")
+ .permitAll()
+ .anyRequest()
+ .authenticated())
+45. What happens if JWT expires?
+
+Request fails.
+
+Response:
+
+401 Unauthorized
+
+User must login again or use Refresh Token.
+
+Frequently Asked 5+ Years Experience Questions
+Q1. Explain complete JWT flow in Spring Boot.
+
+Login → AuthenticationManager → UserDetailsService → JWT Generation → JWT Filter → SecurityContext → Controller.
+
+Q2. Why use OncePerRequestFilter instead of Filter?
+
+Guarantees execution only once per request.
+
+Q3. Difference between AuthenticationManager and UserDetailsService?
+
+AuthenticationManager validates credentials; UserDetailsService loads user data.
+
+Q4. How do you handle exceptions globally in Spring Boot?
+
+Using @RestControllerAdvice and @ExceptionHandler.
+
+Q5. What is the difference between @ControllerAdvice and @RestControllerAdvice?
+
+@ControllerAdvice can return views; @RestControllerAdvice returns JSON responses.
+
+Q6. How do you implement role-based authorization?
+
+Using Spring Security roles (ROLE_ADMIN, ROLE_USER) with requestMatchers() or method-level security.
+
+Q7. Why is BCrypt preferred?
+
+It hashes passwords with salting and is resistant to brute-force attacks.
+
+These are the most common Spring, Spring Boot, REST API, Global Exception Handling, Spring Security, and JWT interview questions asked for Java developers with 2–10 years of experience.
+
+
+
+
+
+interface MessageService {}
+10. Why SOLID Principles are Important?
+Loose Coupling
+Maintainability
+Testability
+Scalability
+Reusability
+Design Pattern Interview Questions
+11. What are Design Patterns?
+
+Reusable solutions to common software design problems.
+
+Categories
+Creational
+Structural
+Behavioral
+12. What is Singleton Pattern?
+
+Only one object exists throughout application lifecycle.
+
+public class Singleton {
+
+    private static Singleton instance;
+
+    private Singleton(){}
+
+    public static Singleton getInstance() {
+        if(instance == null) {
+            instance = new Singleton();
+        }
+        return instance;
+    }
+}
+Real-Time Examples
+Logger
+Configuration Manager
+Cache Manager
+13. What is Factory Design Pattern?
+
+Creates objects without exposing creation logic.
+
+interface Shape {
+    void draw();
+}
+class Circle implements Shape {
+    public void draw(){}
+}
+class ShapeFactory {
+
+    public Shape getShape(String type) {
+        if(type.equals("CIRCLE"))
+            return new Circle();
+
+        return null;
+    }
+}
+14. What is Builder Pattern?
+
+Creates complex objects step by step.
+
+Employee employee =
+Employee.builder()
+        .id(1)
+        .name("John")
+        .salary(50000)
+        .build();
+Common Usage
+Lombok Builder
+DTO Creation
+15. What is Strategy Pattern?
+
+Different algorithms can be selected at runtime.
+
+interface PaymentStrategy {
+    void pay();
+}
+class CreditCardPayment
+implements PaymentStrategy {
+}
+16. What Design Patterns are Used in Spring?
+Pattern	Spring Example
+Singleton	Spring Beans
+Factory	BeanFactory
+Proxy	AOP
+Template	JdbcTemplate
+MVC	Spring MVC
+Strategy	TransactionManager
+Data Structures Interview Questions
+17. What is Data Structure?
+
+A way of organizing and storing data efficiently.
+
+18. Difference Between Array and LinkedList?
+Array	LinkedList
+Fixed size	Dynamic size
+Fast access	Slow access
+Costly insertion	Fast insertion
+19. What is Stack?
+
+LIFO (Last In First Out)
+
+Push
+Push
+Pop
+
+Example:
+
+Browser History
+Undo Operations
+20. What is Queue?
+
+FIFO (First In First Out)
+
+Insert
+Insert
+Remove
+
+Example:
+
+Ticket Booking
+Printer Queue
+21. Difference Between Stack and Queue?
+Stack	Queue
+LIFO	FIFO
+push/pop	enqueue/dequeue
+22. What is HashMap?
+
+Stores key-value pairs.
+
+Map<Integer,String> map =
+new HashMap<>();
+Characteristics
+Not synchronized
+Allows one null key
+Fast lookup
+23. How HashMap Works Internally?
+Steps
+Calculate HashCode
+Determine Bucket Index
+Store Entry
+Handle Collision
+Collision Handling
+Linked List (Java 7)
+Red Black Tree (Java 8+)
+24. Difference Between HashMap and ConcurrentHashMap?
+HashMap	ConcurrentHashMap
+Not Thread Safe	Thread Safe
+Faster	Slightly Slower
+25. What is Time Complexity?
+
+Measurement of algorithm efficiency.
+
+Operation	Complexity
+Array Access	O(1)
+Binary Search	O(log n)
+Linear Search	O(n)
+Nested Loops	O(n²)
+26. What is Binary Search?
+
+Searches sorted data.
+
+Middle Element
+
+Complexity:
+
+O(log n)
+27. Difference Between BFS and DFS?
+BFS	DFS
+Queue	Stack
+Level-wise	Depth-wise
+JUnit 5 Interview Questions
+28. What is JUnit?
+
+Most popular Java testing framework.
+
+Used for:
+
+Unit Testing
+Integration Testing
+29. What are JUnit 5 Annotations?
+@Test
+@BeforeEach
+@AfterEach
+@BeforeAll
+@AfterAll
+@DisplayName
+30. Difference Between @BeforeEach and @BeforeAll?
+BeforeEach	BeforeAll
+Before every test	Once before all tests
+31. What is Assertion?
+
+Used to validate expected results.
+
+assertEquals(10, result);
+assertNotNull(employee);
+assertThrows(
+ResourceNotFoundException.class,
+() -> service.getEmployee(1L)
+);
+32. What is Parameterized Test?
+
+Runs same test with multiple inputs.
+
+@ParameterizedTest
+@ValueSource(ints = {1,2,3})
+33. What is Test Coverage?
+
+Percentage of code tested.
+
+Common Tools:
+
+JaCoCo
+SonarQube
+Mockito Interview Questions
+34. What is Mockito?
+
+Mocking framework used with JUnit.
+
+Used to create mock objects.
+
+35. Why Mockito?
+Isolate Business Logic
+Faster Testing
+No Database Dependency
+36. What is Mock Object?
+
+Fake implementation of dependency.
+
+@Mock
+private EmployeeRepository repository;
+37. What is @InjectMocks?
+
+Injects mocked dependencies into class under test.
+
+@InjectMocks
+private EmployeeService service;
+38. Difference Between Mock and Spy?
+Mock	Spy
+Fake Object	Real Object
+All methods mocked	Real methods execute
+Mock Example
+when(repository.findAll())
+    .thenReturn(employeeList);
+Spy Example
+List<String> list =
+spy(new ArrayList<>());
+39. What is when().thenReturn()?
+
+Defines mock behavior.
+
+when(repository.findById(1L))
+.thenReturn(Optional.of(employee));
+40. What is verify()?
+
+Checks method invocation.
+
+verify(repository, times(1))
+.findById(1L);
+41. Difference Between thenReturn() and thenThrow()?
+thenReturn
+when(repo.findById(1L))
+.thenReturn(Optional.of(emp));
+thenThrow
+when(repo.findById(1L))
+.thenThrow(new RuntimeException());
+42. How to Test Exception Scenarios?
+assertThrows(
+ResourceNotFoundException.class,
+() -> service.getEmployee(1L)
+);
+43. What is ArgumentMatcher?
+
+Used for flexible matching.
+
+any()
+anyString()
+anyLong()
+
+Example:
+
+when(repository.save(any()))
+.thenReturn(employee);
+44. What is ArgumentCaptor?
+
+Captures arguments passed to mocked methods.
+
+ArgumentCaptor<Employee> captor =
+ArgumentCaptor.forClass(Employee.class);
+45. What is MockitoExtension?
+
+Integrates Mockito with JUnit 5.
+
+@ExtendWith(MockitoExtension.class)
+class EmployeeServiceTest {
+}
+Frequently Asked Senior-Level Questions (3–10 Years)
+Q1. How does HashMap work internally?
+
+HashCode → Bucket Index → Collision Handling → Retrieval.
+
+Q2. Difference between Singleton and Factory Pattern?
+
+Singleton creates one object; Factory creates multiple objects based on input.
+
+Q3. Explain SOLID principles with examples.
+
+SRP, OCP, LSP, ISP, DIP improve maintainability and scalability.
+
+Q4. Difference between Mock and Spy?
+
+Mock creates a fake object; Spy wraps a real object and allows partial mocking.
+
+Q5. Why use Mockito in Spring Boot projects?
+
+To isolate Service Layer testing from Repository and external dependencies.
+
+Q6. What are the most commonly used design patterns in Spring Boot?
+Singleton
+Factory
+Proxy
+Strategy
+Template Method
+MVC
+Q7. What annotations are commonly used in JUnit 5 and Mockito?
+@Test
+@BeforeEach
+@Mock
+@InjectMocks
+@ExtendWith(MockitoExtension.class)
+

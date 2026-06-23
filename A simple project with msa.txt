@@ -1,0 +1,347 @@
+A simple project with:
+
+API Gateway
+Eureka Server
+Department Service
+Employee Service
+OpenFeign Communication
+
+is enough to understand:
+
+Service Registration
+Service Discovery
+Inter-Service Communication
+API Gateway Routing
+CRUD Operations
+Project Structure
+microservices-demo/
+
+├── service-registry
+│
+├── api-gateway
+│
+├── department-service
+│
+└── employee-service
+1. Eureka Server
+Dependencies
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+</dependency>
+Main Class
+@SpringBootApplication
+@EnableEurekaServer
+public class EurekaServerApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(EurekaServerApplication.class,args);
+    }
+}
+application.yml
+server:
+  port: 8761
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+2. Department Service
+Packages
+com.example.department
+
+├── controller
+├── service
+├── repository
+├── entity
+└── dto
+Department Entity
+@Entity
+public class Department {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String departmentName;
+
+    private String location;
+}
+Repository
+@Repository
+public interface DepartmentRepository
+       extends JpaRepository<Department,Long> {
+}
+Service
+@Service
+@RequiredArgsConstructor
+public class DepartmentService {
+
+    private final DepartmentRepository repo;
+
+    public Department save(Department dept){
+        return repo.save(dept);
+    }
+
+    public Department getDepartment(Long id){
+        return repo.findById(id).orElseThrow();
+    }
+}
+Controller
+@RestController
+@RequestMapping("/departments")
+@RequiredArgsConstructor
+public class DepartmentController {
+
+    private final DepartmentService service;
+
+    @PostMapping
+    public Department save(@RequestBody Department dept){
+        return service.save(dept);
+    }
+
+    @GetMapping("/{id}")
+    public Department get(@PathVariable Long id){
+        return service.getDepartment(id);
+    }
+}
+application.yml
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/department_db
+    username: root
+    password: root
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+spring:
+  application:
+    name: DEPARTMENT-SERVICE
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+3. Employee Service
+Packages
+com.example.employee
+
+├── controller
+├── service
+├── repository
+├── entity
+├── dto
+└── feign
+Employee Entity
+@Entity
+public class Employee {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    private String email;
+
+    private Long departmentId;
+}
+Repository
+@Repository
+public interface EmployeeRepository
+      extends JpaRepository<Employee,Long>{
+}
+OpenFeign Client
+Dependency
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-openfeign</artifactId>
+</dependency>
+Department DTO
+@Data
+public class DepartmentDto {
+
+    private Long id;
+    private String departmentName;
+    private String location;
+}
+Feign Client
+@FeignClient(name = "DEPARTMENT-SERVICE")
+public interface DepartmentClient {
+
+    @GetMapping("/departments/{id}")
+    DepartmentDto getDepartment(@PathVariable Long id);
+}
+Response DTO
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class EmployeeResponse {
+
+    private Employee employee;
+
+    private DepartmentDto department;
+}
+Employee Service
+@Service
+@RequiredArgsConstructor
+public class EmployeeService {
+
+    private final EmployeeRepository repo;
+
+    private final DepartmentClient client;
+
+    public Employee save(Employee emp){
+        return repo.save(emp);
+    }
+
+    public EmployeeResponse getEmployee(Long id){
+
+        Employee emp =
+                repo.findById(id)
+                        .orElseThrow();
+
+        DepartmentDto dept =
+                client.getDepartment(
+                        emp.getDepartmentId());
+
+        return new EmployeeResponse(emp,dept);
+    }
+}
+Controller
+@RestController
+@RequestMapping("/employees")
+@RequiredArgsConstructor
+public class EmployeeController {
+
+    private final EmployeeService service;
+
+    @PostMapping
+    public Employee save(@RequestBody Employee emp){
+        return service.save(emp);
+    }
+
+    @GetMapping("/{id}")
+    public EmployeeResponse getEmployee(
+            @PathVariable Long id){
+
+        return service.getEmployee(id);
+    }
+}
+Main Class
+@SpringBootApplication
+@EnableFeignClients
+public class EmployeeApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(EmployeeApplication.class,args);
+    }
+}
+application.yml
+server:
+  port: 8082
+
+spring:
+  application:
+    name: EMPLOYEE-SERVICE
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+4. API Gateway
+Dependency
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-gateway</artifactId>
+</dependency>
+application.yml
+server:
+  port: 8080
+
+spring:
+  application:
+    name: API-GATEWAY
+
+  cloud:
+    gateway:
+      routes:
+
+        - id: employee-service
+          uri: lb://EMPLOYEE-SERVICE
+          predicates:
+            - Path=/employees/**
+
+        - id: department-service
+          uri: lb://DEPARTMENT-SERVICE
+          predicates:
+            - Path=/departments/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+Request Flow
+Client
+   |
+   |
+   v
+API Gateway (8080)
+   |
+   |
+   +--------------------+
+   |                    |
+   v                    v
+Employee Service     Department Service
+      |
+      |
+      v
+OpenFeign Call
+      |
+      v
+Department Service
+Test APIs
+Create Department
+POST http://localhost:8080/departments
+
+Request
+
+{
+  "departmentName":"IT",
+  "location":"Hyderabad"
+}
+Create Employee
+POST http://localhost:8080/employees
+
+Request
+
+{
+  "name":"Ravi",
+  "email":"ravi@gmail.com",
+  "departmentId":1
+}
+Get Employee With Department Details
+GET http://localhost:8080/employees/1
+
+Response
+
+{
+  "employee":{
+      "id":1,
+      "name":"Ravi",
+      "email":"ravi@gmail.com",
+      "departmentId":1
+  },
+  "department":{
+      "id":1,
+      "departmentName":"IT",
+      "location":"Hyderabad"
+  }
+}
+
+
