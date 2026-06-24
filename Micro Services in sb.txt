@@ -1,0 +1,1445 @@
+
+
+
+1. What is a Monolithic Application?
+
+A traditional Spring Boot application contains everything in one project.
+
+Example:
+
+Employee Module
+Department Module
+Project Module
+Database
+Security
+
+
+All are inside one application.
+
+Client
+  |
+  V
+Spring Boot Application
+  |
+  +-- Employee
+  +-- Department
+  +-- Project
+
+
+
+
+Problems
+
+
+Large codebase
+
+Difficult deployment
+
+Difficult maintenance
+
+One module failure may affect the whole application
+
+Scaling is difficult
+
+
+
+2. What is Microservice Architecture?
+
+Instead of one big application, divide into small independent services.
+
+Example:
+
+Employee Service
+Department Service
+Project Service
+Each service:
+
+Independent
+
+Own Database
+
+Own Deployment
+
+Own Business Logic
+
+Client
+   |
+   V
+API Gateway
+   |
+   +------------------+
+   |                  |
+   V                  V
+Employee      Department
+Service         Service
+   |
+   V
+Project
+Service
+
+
+
+3. Benefits of Microservices
+
+Independent Deployment
+Update Employee Service without affecting others.
+
+Independent Scaling
+
+If Employee APIs receive heavy traffic:
+
+Employee Service -> 5 Instances
+Department Service -> 1 Instance
+
+Better Maintenance
+Smaller codebase.
+
+Technology Freedom
+One service can use:
+
+MySQL
+
+MongoDB
+
+PostgreSQL
+
+4. What is API Gateway?
+Clients should not directly access microservices.
+
+Without Gateway:
+
+Client
+ |
+ +--> localhost:8081
+ |
+ +--> localhost:8082
+ |
+ +--> localhost:8083
+Too many URLs.
+
+With Gateway:
+
+Client
+   |
+   V
+API Gateway (8080)
+   |
+   +--> Employee Service
+   +--> Department Service
+   +--> Project Service
+Single Entry Point.
+
+5. Our Project
+We'll build:
+
+Employee Service
+Port:
+
+8081
+Department Service
+Port:
+
+8082
+Project Service
+Port:
+
+8083
+API Gateway
+Port:
+
+8080
+6. Project Structure
+microservices-demo
+
+employee-service
+department-service
+project-service
+api-gateway
+7. Employee Service
+Dependency
+Spring Web
+Lombok
+Employee.java
+package com.employee.entity;
+
+public class Employee {
+
+    private Long id;
+    private String name;
+
+    public Employee(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+EmployeeController.java
+package com.employee.controller;
+
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/employees")
+public class EmployeeController {
+
+    @GetMapping
+    public List<Employee> getEmployees() {
+
+        return List.of(
+                new Employee(1L, "Srini"),
+                new Employee(2L, "Rakesh")
+        );
+    }
+}
+application.properties
+server.port=8081
+spring.application.name=employee-service
+8. Department Service
+Department.java
+package com.department.entity;
+
+public class Department {
+
+    private Long id;
+    private String name;
+
+    public Department(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+}
+DepartmentController.java
+@RestController
+@RequestMapping("/departments")
+public class DepartmentController {
+
+    @GetMapping
+    public List<Department> getDepartments() {
+
+        return List.of(
+                new Department(1L,"IT"),
+                new Department(2L,"HR")
+        );
+    }
+}
+application.properties
+server.port=8082
+spring.application.name=department-service
+9. Project Service
+Project.java
+public class Project {
+
+    private Long id;
+    private String projectName;
+
+    public Project(Long id,String projectName) {
+        this.id=id;
+        this.projectName=projectName;
+    }
+}
+ProjectController.java
+@RestController
+@RequestMapping("/projects")
+public class ProjectController {
+
+    @GetMapping
+    public List<Project> getProjects() {
+
+        return List.of(
+                new Project(1L,"Banking"),
+                new Project(2L,"Insurance")
+        );
+    }
+}
+application.properties
+server.port=8083
+spring.application.name=project-service
+10. API Gateway
+Dependency
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-gateway</artifactId>
+</dependency>
+application.yml
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      routes:
+
+        - id: employee-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/employees/**
+
+        - id: department-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/departments/**
+
+        - id: project-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/projects/**
+11. Run Order
+Start:
+
+Employee Service
+Department Service
+Project Service
+API Gateway
+12. Testing
+Instead of:
+
+http://localhost:8081/employees
+http://localhost:8082/departments
+http://localhost:8083/projects
+Access through Gateway:
+
+Employees
+GET
+http://localhost:8080/employees
+Departments
+GET
+http://localhost:8080/departments
+Projects
+GET
+http://localhost:8080/projects
+Gateway automatically routes requests.
+
+
+
+13. How Microservices Communicate?
+RestTemplate (Old)
+RestTemplate restTemplate = new RestTemplate();
+
+String response =
+restTemplate.getForObject(
+    "http://localhost:8082/departments",
+    String.class);
+WebClient (Recommended)
+@Bean
+public WebClient webClient() {
+    return WebClient.builder().build();
+}
+String response = webClient
+        .get()
+        .uri("http://localhost:8082/departments")
+        .retrieve()
+        .bodyToMono(String.class)
+        .block();
+
+
+
+
+14. Interview Questions
+What is Microservice?
+A small independently deployable service that performs a specific business function.
+
+What is API Gateway?
+A single entry point for all client requests.
+
+Why API Gateway?
+Routing
+
+Security
+
+Logging
+
+Load Balancing
+
+Rate Limiting
+
+Difference Between Monolith and Microservices?
+Monolith	Microservices
+Single application	Multiple services
+Single deployment	Independent deployment
+Difficult scaling	Easy scaling
+Tightly coupled	Loosely coupled
+Next Level (Enterprise Project)
+After understanding this basic version, the next step is:
+
+Service Registry using Netflix Eureka Server
+
+API Gateway + Load Balancing
+
+Config Server
+
+Spring Security + JWT
+
+MySQL Databases
+
+Feign Client Communication
+
+Docker
+
+Kubernetes
+
+Distributed Logging
+
+Distributed Tracing
+
+This is the architecture commonly used in real-world enterprise Spring Boot microservices applications.
+
+
+what is service registry in microservices
+
+What is Service Registry in Microservices?
+A Service Registry is a central server where all microservices register themselves when they start.
+
+Instead of hardcoding service URLs like:
+
+http://localhost:8081
+http://localhost:8082
+http://localhost:8083
+microservices register with the Service Registry, and other services discover them dynamically.
+
+Why Do We Need Service Registry?
+Imagine you have:
+
+Employee Service
+Department Service
+Project Service
+Suppose Employee Service needs to call Department Service.
+
+Without Service Registry:
+
+http://localhost:8082/departments
+Problem:
+
+Port may change
+
+Service may move to another server
+
+Multiple instances may exist
+
+Example:
+
+Department Service Instance 1 -> 8082
+Department Service Instance 2 -> 8085
+Department Service Instance 3 -> 8087
+How will Employee Service know which instance to call?
+
+This is where Service Registry helps.
+
+Service Discovery Architecture
+                 +----------------+
+                 | Eureka Server  |
+                 | Service Registry|
+                 +----------------+
+                    /     |      \
+                   /      |       \
+                  /       |        \
+                 V        V         V
+
+       Employee   Department   Project
+        Service     Service     Service
+Each service registers itself with Eureka.
+
+What Happens During Registration?
+When Employee Service starts:
+
+Employee Service
+      |
+      |
+      V
+Eureka Server
+It sends:
+
+Service Name : EMPLOYEE-SERVICE
+Port         : 8081
+Host         : localhost
+Status       : UP
+Eureka stores this information.
+
+Service Discovery Example
+Employee Service wants to call Department Service.
+
+Instead of:
+
+http://localhost:8082/departments
+Use:
+
+http://DEPARTMENT-SERVICE/departments
+Eureka finds the actual running instance.
+
+DEPARTMENT-SERVICE
+      |
+      V
+localhost:8082
+or
+
+localhost:8085
+Netflix Eureka
+The most popular Service Registry in Spring Boot is:
+
+Netflix Eureka
+
+Components:
+
+Eureka Server
+Acts as Registry.
+
+Eureka Client
+Microservices that register themselves.
+
+Step 1: Create Eureka Server
+Dependency
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+</dependency>
+Main Class
+@SpringBootApplication
+@EnableEurekaServer
+public class EurekaServerApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(EurekaServerApplication.class, args);
+    }
+}
+application.properties
+server.port=8761
+
+spring.application.name=eureka-server
+
+eureka.client.register-with-eureka=false
+eureka.client.fetch-registry=false
+Run application:
+
+http://localhost:8761
+Eureka Dashboard opens.
+
+Step 2: Register Employee Service
+Dependency
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+application.properties
+spring.application.name=employee-service
+
+server.port=8081
+
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka
+Main Class
+@SpringBootApplication
+@EnableDiscoveryClient
+public class EmployeeApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(EmployeeApplication.class,args);
+    }
+}
+Eureka Dashboard
+After Employee Service starts:
+
+Instances currently registered with Eureka
+
+EMPLOYEE-SERVICE
+When Department Service starts:
+
+EMPLOYEE-SERVICE
+DEPARTMENT-SERVICE
+When Project Service starts:
+
+EMPLOYEE-SERVICE
+DEPARTMENT-SERVICE
+PROJECT-SERVICE
+API Gateway + Eureka
+Without Eureka:
+
+routes:
+  - id: employee-service
+    uri: http://localhost:8081
+With Eureka:
+
+routes:
+  - id: employee-service
+    uri: lb://EMPLOYEE-SERVICE
+lb:// means Load Balanced.
+
+Gateway asks Eureka:
+
+Where is EMPLOYEE-SERVICE?
+Eureka returns available instances.
+
+Load Balancing Example
+Suppose:
+
+Employee Service Instance 1 -> 8081
+Employee Service Instance 2 -> 8084
+Employee Service Instance 3 -> 8086
+All registered with Eureka.
+
+EMPLOYEE-SERVICE
+When requests come:
+
+Request 1 -> 8081
+Request 2 -> 8084
+Request 3 -> 8086
+Traffic is distributed automatically.
+
+Real-Time Flow
+Client
+   |
+   V
+API Gateway
+   |
+   V
+Eureka Server
+   |
+   +--------------------+
+   |                    |
+   V                    V
+
+Employee Service   Department Service
+Client sends request.
+
+API Gateway receives request.
+
+Gateway asks Eureka for service location.
+
+Eureka returns service instance.
+
+Gateway forwards request.
+
+Response returns to client.
+
+Interview Answer (2 Minutes)
+What is Service Registry?
+
+A Service Registry is a central repository that maintains information about all running microservices. Each service registers itself with the registry at startup and deregisters when it stops. Other services or the API Gateway can discover service locations dynamically without hardcoding hostnames and ports.
+
+Which Service Registry is commonly used in Spring Boot?
+
+Netflix Eureka is commonly used for service registration and discovery in Spring Boot microservices.
+
+Benefits:
+
+Dynamic Service Discovery
+
+No Hardcoded URLs
+
+Load Balancing
+
+High Scalability
+
+Easier Maintenance
+
+The next topic to learn after Service Registry is Feign Client, which simplifies communication between Employee, Department, and Project microservices.
+
+
+explain about API Gateway in spring boot
+
+API Gateway in Spring Boot
+What is API Gateway?
+An API Gateway is the single entry point for all client requests in a microservices architecture.
+
+Instead of clients directly calling multiple microservices, all requests first go to the API Gateway, which then routes them to the appropriate service.
+
+Without API Gateway
+Suppose we have:
+
+Employee Service → 8081
+
+Department Service → 8082
+
+Project Service → 8083
+
+Client must know all service URLs:
+
+Client
+  |
+  +--> http://localhost:8081/employees
+  |
+  +--> http://localhost:8082/departments
+  |
+  +--> http://localhost:8083/projects
+Problems
+Client must know every service URL.
+
+Security must be implemented in every service.
+
+Difficult to manage.
+
+Hard to scale.
+
+With API Gateway
+                 Client
+                    |
+                    V
+            API Gateway (8080)
+                    |
+        +-----------+-----------+
+        |           |           |
+        V           V           V
+ Employee      Department    Project
+ Service         Service     Service
+Client only knows:
+
+http://localhost:8080
+Gateway forwards requests to the correct service.
+
+Responsibilities of API Gateway
+
+1. Request Routing
+Routes requests to the appropriate microservice.
+
+Example:
+
+/employees/**  -> Employee Service
+/departments/** -> Department Service
+/projects/** -> Project Service
+2. Load Balancing
+Suppose Employee Service has multiple instances:
+
+Employee Service 1 -> 8081
+Employee Service 2 -> 8084
+Employee Service 3 -> 8085
+Gateway distributes requests automatically.
+
+Request 1 -> 8081
+Request 2 -> 8084
+Request 3 -> 8085
+
+
+
+3. Authentication & Authorization
+
+JWT validation can be done at Gateway level.
+
+Client
+  |
+ JWT Token
+  |
+  V
+API Gateway
+Gateway validates token before forwarding request.
+
+This avoids implementing JWT validation in every service.
+
+
+
+
+
+4. Logging
+All requests pass through Gateway.
+
+Example:
+
+GET /employees
+POST /departments
+DELETE /projects/1
+Gateway can log everything centrally.
+
+5. Rate Limiting
+Prevent API abuse.
+
+Example:
+
+Maximum 100 requests/minute
+After the limit:
+
+429 Too Many Requests
+6. CORS Handling
+Instead of configuring CORS in every service:
+
+@CrossOrigin
+Configure it once in Gateway.
+
+Spring Cloud Gateway
+The modern API Gateway for Spring Boot is:
+
+Spring Cloud Gateway
+
+It is:
+
+Reactive
+
+Lightweight
+
+Fast
+
+Cloud Native
+
+Dependency
+For Gateway Project:
+
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-gateway</artifactId>
+</dependency>
+Basic Gateway Configuration
+application.yml
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      routes:
+
+        - id: employee-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/employees/**
+
+        - id: department-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/departments/**
+
+        - id: project-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/projects/**
+How Routing Works
+Client Request:
+
+GET http://localhost:8080/employees
+Gateway forwards:
+
+GET http://localhost:8081/employees
+Response:
+
+[
+  {
+    "id":1,
+    "name":"Srini"
+  }
+]
+API Gateway with Eureka
+Without Eureka:
+
+uri: http://localhost:8081
+With Service Registry:
+
+uri: lb://EMPLOYEE-SERVICE
+lb:// means:
+
+Load Balanced Service Discovery
+Gateway asks the Service Registry where the service is running.
+
+API Gateway + Eureka Flow
+Client
+   |
+   V
+API Gateway
+   |
+   V
+Service Registry
+(Eureka)
+   |
+   V
+Employee Service
+Steps:
+
+Client sends request.
+
+Gateway receives request.
+
+Gateway asks Eureka.
+
+Eureka returns service location.
+
+Gateway forwards request.
+
+Response returned to client.
+
+Filters in API Gateway
+Filters execute before and after requests.
+
+Pre Filter
+Runs before request reaches service.
+
+Example:
+
+Check JWT Token
+Validate Headers
+Log Request
+Post Filter
+Runs after response returns.
+
+Example:
+
+Log Response
+Modify Response Header
+Example Custom Filter
+@Component
+public class LoggingFilter implements GlobalFilter {
+
+    @Override
+    public Mono<Void> filter(
+            ServerWebExchange exchange,
+            GatewayFilterChain chain) {
+
+        System.out.println(
+            "Incoming Request : "
+            + exchange.getRequest().getURI());
+
+        return chain.filter(exchange);
+    }
+}
+Real-Time Enterprise Architecture
+                    Client
+                       |
+                       V
+               API Gateway
+                       |
+               JWT Validation
+                       |
+                  Eureka
+                       |
+       +---------------+---------------+
+       |               |               |
+       V               V               V
+Employee Service Department Service Project Service
+       |
+     MySQL
+Advantages of API Gateway
+Feature	Benefit
+Single Entry Point	Easy access
+Routing	Directs traffic
+Security	Centralized JWT
+Load Balancing	Better performance
+Logging	Centralized monitoring
+Rate Limiting	Prevent abuse
+Service Discovery	Works with Eureka
+Interview Answer
+What is API Gateway?
+
+API Gateway is a server that acts as a single entry point for all client requests in a microservices architecture. It routes requests to the appropriate microservices and can handle cross-cutting concerns such as authentication, authorization, logging, rate limiting, load balancing, and service discovery.
+
+Which API Gateway is commonly used in Spring Boot?
+
+Spring Cloud Gateway is the most commonly used API Gateway solution in modern Spring Boot microservices applications.
+
+Key Benefits:
+
+Single Entry Point
+
+Dynamic Routing
+
+JWT Security
+
+Load Balancing
+
+Logging and Monitoring
+
+Integration with Service Registry (Eureka)
+
+Learning Path
+Microservices Basics ✅
+
+Service Registry (Eureka) ✅
+
+API Gateway ✅
+
+Feign Client
+
+Config Server
+
+Circuit Breaker (Resilience4j)
+
+JWT Security with API Gateway
+
+Docker
+
+Kubernetes
+
+Enterprise Microservices Project (Employee, Department, Project Services)
+
+
+what is feignclient in spring boot
+
+What is Feign Client in Spring Boot?
+Feign Client is a declarative HTTP client used for communication between microservices.
+
+Instead of writing complex code using RestTemplate or WebClient, Feign allows you to call another microservice by simply defining an interface.
+
+Why Do We Need Feign Client?
+Suppose:
+
+Employee Service
+Department Service
+Employee Service needs Department details.
+
+Without Feign Client, you use:
+
+RestTemplate restTemplate = new RestTemplate();
+
+Department department =
+        restTemplate.getForObject(
+                "http://localhost:8082/departments/1",
+                Department.class);
+Problems:
+
+More boilerplate code
+
+Manual URL handling
+
+Harder maintenance
+
+With Feign Client
+Just create an interface:
+
+@FeignClient(name = "DEPARTMENT-SERVICE")
+public interface DepartmentFeignClient {
+
+    @GetMapping("/departments/{id}")
+    Department getDepartmentById(@PathVariable Long id);
+}
+Now call it like a normal Java method:
+
+Department department =
+        departmentFeignClient.getDepartmentById(1L);
+Feign automatically:
+
+Creates HTTP request
+
+Calls Department Service
+
+Converts JSON to Java Object
+
+Returns response
+
+Real-Time Architecture
+Client
+   |
+   V
+API Gateway
+   |
+   V
+Employee Service
+   |
+   | Feign Client
+   V
+Department Service
+Employee Service internally calls Department Service.
+
+Feign Client Dependency
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-openfeign</artifactId>
+</dependency>
+Enable Feign
+Main Class:
+
+@SpringBootApplication
+@EnableFeignClients
+public class EmployeeApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(EmployeeApplication.class, args);
+    }
+}
+Department Service API
+Controller
+@RestController
+@RequestMapping("/departments")
+public class DepartmentController {
+
+    @GetMapping("/{id}")
+    public Department getDepartment(
+            @PathVariable Long id) {
+
+        return new Department(
+                id,
+                "Information Technology");
+    }
+}
+DTO Class
+public class Department {
+
+    private Long id;
+    private String name;
+
+    // getters setters
+}
+Create Feign Client
+@FeignClient(name = "DEPARTMENT-SERVICE")
+public interface DepartmentFeignClient {
+
+    @GetMapping("/departments/{id}")
+    Department getDepartmentById(
+            @PathVariable Long id);
+}
+Use in Service Layer
+@Service
+public class EmployeeService {
+
+    @Autowired
+    private DepartmentFeignClient departmentFeignClient;
+
+    public EmployeeResponse getEmployee() {
+
+        Department department =
+                departmentFeignClient
+                        .getDepartmentById(1L);
+
+        EmployeeResponse response =
+                new EmployeeResponse();
+
+        response.setEmpId(101L);
+        response.setEmpName("Srini");
+        response.setDepartment(department);
+
+        return response;
+    }
+}
+Response
+{
+  "empId": 101,
+  "empName": "Srini",
+  "department": {
+      "id": 1,
+      "name": "Information Technology"
+  }
+}
+Feign Client with Eureka
+Without Eureka:
+
+@FeignClient(
+    name="department-service",
+    url="http://localhost:8082"
+)
+With Eureka:
+
+@FeignClient(
+    name="DEPARTMENT-SERVICE"
+)
+No need to specify:
+
+localhost
+IP Address
+Port Number
+Feign asks the Service Registry and finds the service automatically.
+
+Employee-Service application.properties
+spring.application.name=employee-service
+
+eureka.client.service-url.defaultZone=
+http://localhost:8761/eureka
+Department-Service application.properties
+spring.application.name=department-service
+
+eureka.client.service-url.defaultZone=
+http://localhost:8761/eureka
+Complete Flow
+Employee Service
+      |
+      |
+Feign Client
+      |
+      V
+Eureka Server
+      |
+Find Department Service
+      |
+      V
+Department Service
+      |
+JSON Response
+      |
+      V
+Employee Service
+Feign vs RestTemplate
+Feature	RestTemplate	Feign Client
+Code Size	More	Less
+Readability	Moderate	Excellent
+Service Discovery	Manual	Automatic
+Load Balancing	Extra Config	Built-in with Eureka
+Maintenance	Difficult	Easy
+Feign vs WebClient
+Feature	Feign	WebClient
+Programming Style	Declarative	Reactive
+Learning Curve	Easy	Moderate
+Code Size	Less	More
+Best For	Microservice Communication	High Performance Reactive Apps
+Real-Time Example
+Employee Service
+Stores:
+
+Employee Information
+Department Service
+Stores:
+
+Department Information
+Project Service
+Stores:
+
+Project Information
+When employee details are requested:
+
+Employee Service
+      |
+      +--> Department Service
+      |
+      +--> Project Service
+Feign Clients fetch required data from other services and combine it into a single response.
+
+Interview Answer
+What is Feign Client?
+
+Feign Client is a declarative REST client provided by Spring Cloud OpenFeign that simplifies communication between microservices. Developers define an interface annotated with @FeignClient, and Spring automatically generates the implementation to make HTTP calls to other services.
+
+Advantages:
+
+Less boilerplate code
+
+Easy integration with Eureka Service Registry
+
+Automatic load balancing
+
+Cleaner and more maintainable code
+
+Better readability than RestTemplate
+
+Example
+@FeignClient(name = "DEPARTMENT-SERVICE")
+public interface DepartmentFeignClient {
+
+    @GetMapping("/departments/{id}")
+    Department getDepartmentById(
+            @PathVariable Long id);
+}
+This is the most common approach used in Spring Boot microservices for service-to-service communication.
+
+
+what is load balancing in spring boot
+
+What is Load Balancing in Spring Boot Microservices?
+Load Balancing is the process of distributing incoming requests across multiple instances of the same microservice to improve performance, scalability, and availability.
+
+Why Do We Need Load Balancing?
+Suppose you have only one Employee Service instance:
+
+Client
+   |
+   V
+Employee Service (8081)
+If 10,000 users send requests simultaneously:
+
+Client Requests
+      |
+      V
+Employee Service (8081)
+Problems:
+
+Server becomes overloaded
+
+Slow response time
+
+Application may crash
+
+Solution: Multiple Instances
+Run multiple instances of Employee Service:
+
+Employee Service Instance 1 -> 8081
+Employee Service Instance 2 -> 8082
+Employee Service Instance 3 -> 8083
+Now distribute requests among them.
+
+                Client
+                   |
+                   V
+           Load Balancer
+           /     |      \
+          /      |       \
+         V       V        V
+
+      8081     8082     8083
+This is called Load Balancing.
+
+Example
+Requests arrive:
+
+Request 1
+Request 2
+Request 3
+Request 4
+Request 5
+Request 6
+Load Balancer distributes them:
+
+Request 1 -> Instance 1
+Request 2 -> Instance 2
+Request 3 -> Instance 3
+Request 4 -> Instance 1
+Request 5 -> Instance 2
+Request 6 -> Instance 3
+No single server is overloaded.
+
+Benefits of Load Balancing
+1. High Availability
+If one instance fails:
+
+8081 -> DOWN
+8082 -> UP
+8083 -> UP
+Requests continue using available instances.
+
+2. Better Performance
+Traffic is shared among multiple servers.
+
+3. Scalability
+Add more instances when traffic increases.
+
+8081
+8082
+8083
+8084
+8085
+4. Fault Tolerance
+Application remains available even if one instance crashes.
+
+Load Balancing with Eureka
+Suppose three Employee Service instances are registered in the Service Registry:
+
+EMPLOYEE-SERVICE
+
+Instance 1 -> 8081
+Instance 2 -> 8082
+Instance 3 -> 8083
+Eureka knows all available instances.
+
+Spring Cloud LoadBalancer
+Modern Spring Boot uses:
+
+Spring Cloud LoadBalancer
+
+Dependency:
+
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+</dependency>
+Load Balancing with Feign Client
+@FeignClient(name = "EMPLOYEE-SERVICE")
+public interface EmployeeFeignClient {
+
+    @GetMapping("/employees")
+    List<Employee> getEmployees();
+}
+Flow:
+
+Feign Client
+      |
+      V
+Eureka Server
+      |
+      V
+Available Instances
+      |
+      V
+Choose One Instance
+Spring automatically selects an instance.
+
+Load Balancing with API Gateway
+Gateway Configuration:
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: employee-service
+          uri: lb://EMPLOYEE-SERVICE
+          predicates:
+            - Path=/employees/**
+Notice:
+
+lb://EMPLOYEE-SERVICE
+lb:// means:
+
+Use Load Balancer
+When requests arrive:
+
+GET /employees
+Gateway asks Eureka:
+
+Which Employee Service instance is available?
+Then forwards request to one instance.
+
+Round Robin Algorithm
+Most common strategy.
+
+Instances:
+
+8081
+8082
+8083
+Requests:
+
+Request 1 -> 8081
+Request 2 -> 8082
+Request 3 -> 8083
+Request 4 -> 8081
+Request 5 -> 8082
+Request 6 -> 8083
+This is called Round Robin Load Balancing.
+
+Real-Time Architecture
+                    Client
+                       |
+                       V
+                 API Gateway
+                       |
+                 Load Balancer
+                       |
+         +-------------+-------------+
+         |             |             |
+         V             V             V
+
+ Employee-1      Employee-2     Employee-3
+    8081            8082           8083
+Interview Questions
+What is Load Balancing?
+Load Balancing is the process of distributing incoming requests across multiple service instances to improve performance, scalability, and availability.
+
+Why is Load Balancing Required?
+Prevent server overload
+
+Improve response time
+
+Increase availability
+
+Provide fault tolerance
+
+What is Client-Side Load Balancing?
+In client-side load balancing, the client (Feign Client, API Gateway, etc.) gets the list of service instances from the Service Registry and chooses one instance to send the request to.
+
+Example:
+
+Feign Client
+      |
+      V
+Eureka
+      |
+      V
+Instance List
+      |
+      V
+Selected Instance
+What is the Difference Between Eureka and Load Balancer?
+Eureka	Load Balancer
+Maintains service registry	Distributes requests
+Provides service discovery	Chooses service instance
+Knows available instances	Balances traffic
+Registry Server	Traffic Distributor
+Simple Interview Answer
+Load Balancing is a technique used in microservices to distribute requests across multiple instances of the same service. In Spring Boot, it is commonly implemented using Spring Cloud LoadBalancer together with a Service Registry like Netflix Eureka. This improves scalability, performance, fault tolerance, and high availability.
+
+
+
