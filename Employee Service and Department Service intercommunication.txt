@@ -1,0 +1,755 @@
+Project Structure
+department-service
+│
+├── dto
+│     ├── DepartmentRequest.java
+│     └── DepartmentResponse.java
+│
+└── mapper
+      └── DepartmentMapper.java
+1. DepartmentRequest.java
+
+Package: com.example.department.dto
+
+package com.example.department.dto;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class DepartmentRequest {
+
+    @NotBlank(message = "Department name is required")
+    @Size(max = 100, message = "Department name cannot exceed 100 characters")
+    private String departmentName;
+
+    @NotBlank(message = "Department code is required")
+    @Size(max = 20, message = "Department code cannot exceed 20 characters")
+    private String departmentCode;
+
+    @NotBlank(message = "Department head is required")
+    @Size(max = 100, message = "Department head cannot exceed 100 characters")
+    private String departmentHead;
+
+}
+2. DepartmentResponse.java
+
+Package: com.example.department.dto
+
+package com.example.department.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class DepartmentResponse {
+
+    private Long departmentId;
+
+    private String departmentName;
+
+    private String departmentCode;
+
+    private String departmentHead;
+
+}
+3. DepartmentMapper.java
+
+Package: com.example.department.mapper
+
+package com.example.department.mapper;
+
+import com.example.department.dto.DepartmentRequest;
+import com.example.department.dto.DepartmentResponse;
+import com.example.department.entity.Department;
+
+public class DepartmentMapper {
+
+    private DepartmentMapper() {
+        // Prevent object creation
+    }
+
+    /**
+     * Convert Request DTO -> Entity
+     */
+    public static Department toEntity(DepartmentRequest request) {
+
+        if (request == null) {
+            return null;
+        }
+
+        Department department = new Department();
+
+        department.setDepartmentName(request.getDepartmentName());
+        department.setDepartmentCode(request.getDepartmentCode());
+        department.setDepartmentHead(request.getDepartmentHead());
+
+        return department;
+    }
+
+    /**
+     * Convert Entity -> Response DTO
+     */
+    public static DepartmentResponse toResponse(Department department) {
+
+        if (department == null) {
+            return null;
+        }
+
+        return DepartmentResponse.builder()
+                .departmentId(department.getDepartmentId())
+                .departmentName(department.getDepartmentName())
+                .departmentCode(department.getDepartmentCode())
+                .departmentHead(department.getDepartmentHead())
+                .build();
+    }
+
+}
+Entity Used by Mapper
+@Entity
+@Table(name = "departments")
+public class Department {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long departmentId;
+
+    private String departmentName;
+
+    private String departmentCode;
+
+    private String departmentHead;
+
+    // Getters and Setters
+}
+Data Flow
+Client Request (JSON)
+        │
+        ▼
+DepartmentRequest DTO
+        │
+        ▼
+DepartmentMapper.toEntity()
+        │
+        ▼
+Department Entity
+        │
+        ▼
+DepartmentRepository
+        │
+        ▼
+MySQL Database
+        │
+        ▼
+Department Entity
+        │
+        ▼
+DepartmentMapper.toResponse()
+        │
+        ▼
+DepartmentResponse DTO
+        │
+        ▼
+Client Response (JSON)
+Example Request
+{
+    "departmentName": "Information Technology",
+    "departmentCode": "IT001",
+    "departmentHead": "Ramesh Kumar"
+}
+Example Response
+{
+    "departmentId": 1,
+    "departmentName": "Information Technology",
+    "departmentCode": "IT001",
+    "departmentHead": "Ramesh Kumar"
+}
+Why Use DTOs?
+Entity	DTO
+Represents the database table	Represents API request/response
+Contains JPA annotations	No database annotations
+May include internal fields	Exposes only required fields
+Used by Repository	Used by Controller and Service
+
+Benefits:
+
+Better security (don't expose entity internals)
+Easier API evolution
+Clear separation between persistence and API layers
+Widely used in enterprise applications
+
+
+
+
+
+
+
+
+
+Employee Service Package Structure
+employee-service
+│
+├── dto
+│     ├── EmployeeRequest.java
+│     ├── EmployeeResponse.java
+│     ├── DepartmentResponse.java
+│     └── EmployeeDepartmentResponse.java
+│
+└── mapper
+      └── EmployeeMapper.java
+1. EmployeeRequest.java
+
+Package: com.example.employee.dto
+
+package com.example.employee.dto;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class EmployeeRequest {
+
+    @NotBlank(message = "Employee name is required")
+    private String employeeName;
+
+    @Email(message = "Invalid email format")
+    @NotBlank(message = "Email is required")
+    private String email;
+
+    @NotNull(message = "Salary is required")
+    @Min(value = 1000, message = "Salary should be greater than 1000")
+    private Double salary;
+
+    @NotNull(message = "Department Id is required")
+    private Long departmentId;
+}
+2. EmployeeResponse.java
+
+Package: com.example.employee.dto
+
+package com.example.employee.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class EmployeeResponse {
+
+    private Long employeeId;
+
+    private String employeeName;
+
+    private String email;
+
+    private Double salary;
+
+    private Long departmentId;
+
+}
+3. DepartmentResponse.java
+
+This DTO represents the response received from the Department Service through OpenFeign.
+
+Package: com.example.employee.dto
+
+package com.example.employee.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class DepartmentResponse {
+
+    private Long departmentId;
+
+    private String departmentName;
+
+    private String departmentCode;
+
+    private String departmentHead;
+
+}
+4. EmployeeDepartmentResponse.java
+
+This DTO combines Employee and Department details.
+
+Package: com.example.employee.dto
+
+package com.example.employee.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class EmployeeDepartmentResponse {
+
+    private EmployeeResponse employee;
+
+    private DepartmentResponse department;
+
+}
+5. EmployeeMapper.java
+
+Package: com.example.employee.mapper
+
+package com.example.employee.mapper;
+
+import com.example.employee.dto.EmployeeRequest;
+import com.example.employee.dto.EmployeeResponse;
+import com.example.employee.entity.Employee;
+
+public class EmployeeMapper {
+
+    private EmployeeMapper() {
+    }
+
+    /**
+     * Convert Request DTO to Entity
+     */
+    public static Employee toEntity(EmployeeRequest request) {
+
+        if (request == null) {
+            return null;
+        }
+
+        Employee employee = new Employee();
+
+        employee.setEmployeeName(request.getEmployeeName());
+        employee.setEmail(request.getEmail());
+        employee.setSalary(request.getSalary());
+        employee.setDepartmentId(request.getDepartmentId());
+
+        return employee;
+    }
+
+    /**
+     * Convert Entity to Response DTO
+     */
+    public static EmployeeResponse toResponse(Employee employee) {
+
+        if (employee == null) {
+            return null;
+        }
+
+        return EmployeeResponse.builder()
+                .employeeId(employee.getEmployeeId())
+                .employeeName(employee.getEmployeeName())
+                .email(employee.getEmail())
+                .salary(employee.getSalary())
+                .departmentId(employee.getDepartmentId())
+                .build();
+    }
+}
+Employee Entity
+@Entity
+@Table(name = "employees")
+public class Employee {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long employeeId;
+
+    private String employeeName;
+
+    private String email;
+
+    private Double salary;
+
+    // Foreign key reference to Department Service
+    private Long departmentId;
+}
+DTO Flow
+POST /api/employees
+        │
+        ▼
+EmployeeRequest
+        │
+        ▼
+EmployeeMapper.toEntity()
+        │
+        ▼
+Employee Entity
+        │
+        ▼
+Repository
+        │
+        ▼
+MySQL
+        │
+        ▼
+Employee Entity
+        │
+        ▼
+EmployeeMapper.toResponse()
+        │
+        ▼
+EmployeeResponse
+Feign Communication Flow
+EmployeeService
+       │
+       ▼
+DepartmentFeignClient
+       │
+       ▼
+Department Service
+       │
+       ▼
+DepartmentResponse
+       │
+       ▼
+EmployeeDepartmentResponse
+Final Response
+{
+  "employee": {
+    "employeeId": 1,
+    "employeeName": "Srini",
+    "email": "srini@gmail.com",
+    "salary": 70000,
+    "departmentId": 1
+  },
+  "department": {
+    "departmentId": 1,
+    "departmentName": "Information Technology",
+    "departmentCode": "IT001",
+    "departmentHead": "Ramesh Kumar"
+  }
+}
+✅ Lesson 2 Completed
+
+You now have:
+
+EmployeeRequest.java
+EmployeeResponse.java
+DepartmentResponse.java
+EmployeeDepartmentResponse.java
+EmployeeMapper.java
+
+
+
+
+
+
+
+
+
+Lesson 3 – OpenFeign Communication
+Architecture
+                    API Gateway
+                         │
+                         ▼
+                Employee Service
+                         │
+            OpenFeign Client Call
+                         │
+                         ▼
+               Department Service
+                         │
+                         ▼
+                    MySQL Database
+
+In our project:
+
+Employee Service → Calls Department Service
+Department Service → Does NOT call Employee Service
+
+
+
+Step 1: Add OpenFeign Dependency
+
+In employee-service, add:
+
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-openfeign</artifactId>
+</dependency>
+Step 2: Enable Feign
+EmployeeServiceApplication.java
+package com.example.employee;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+
+@SpringBootApplication
+@EnableFeignClients
+public class EmployeeServiceApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(EmployeeServiceApplication.class, args);
+    }
+
+}
+Step 3: Create Feign Package
+employee-service
+
+feign
+     DepartmentFeignClient.java
+Step 4: DepartmentFeignClient.java
+package com.example.employee.feign;
+
+import com.example.employee.dto.DepartmentResponse;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.*;
+
+@FeignClient(name = "DEPARTMENT-SERVICE")
+public interface DepartmentFeignClient {
+
+    @GetMapping("/api/departments/{id}")
+    DepartmentResponse getDepartmentById(
+            @PathVariable("id") Long id);
+
+}
+Why name = "DEPARTMENT-SERVICE"?
+
+Because in department-service:
+
+spring.application.name=DEPARTMENT-SERVICE
+
+Eureka registers the service with this name.
+
+Employee Service asks Eureka:
+
+"Where is DEPARTMENT-SERVICE?"
+
+Eureka responds with something like:
+
+localhost:8082
+
+Feign then automatically calls it.
+
+Step 5: Inject Feign Client
+
+Inside EmployeeServiceImpl
+
+@Service
+@RequiredArgsConstructor
+public class EmployeeServiceImpl
+        implements EmployeeService {
+
+    private final EmployeeRepository repository;
+
+    private final DepartmentFeignClient departmentFeignClient;
+
+}
+
+Spring injects the implementation automatically.
+
+Step 6: Call Department Service
+DepartmentResponse department =
+        departmentFeignClient.getDepartmentById(
+                employee.getDepartmentId());
+
+No URL.
+
+No RestTemplate.
+
+No WebClient.
+
+Just one method call.
+
+Step 7: Build Combined Response
+Employee employee =
+        repository.findById(id)
+                .orElseThrow(...);
+
+DepartmentResponse department =
+        departmentFeignClient.getDepartmentById(
+                employee.getDepartmentId());
+
+EmployeeDepartmentResponse response =
+        EmployeeDepartmentResponse.builder()
+                .employee(
+                        EmployeeMapper.toResponse(employee))
+                .department(department)
+                .build();
+
+return response;
+Step 8: Employee Controller
+@GetMapping("/{id}/department")
+public ResponseEntity<EmployeeDepartmentResponse>
+getEmployeeWithDepartment(
+        @PathVariable Long id){
+
+    return ResponseEntity.ok(
+            employeeService.getEmployeeWithDepartment(id));
+}
+
+API
+
+GET /api/employees/1/department
+Complete Flow
+Client
+
+↓
+
+GET /api/employees/1/department
+
+↓
+
+API Gateway
+
+↓
+
+Employee Controller
+
+↓
+
+Employee Service
+
+↓
+
+EmployeeRepository
+
+↓
+
+Employee Entity
+
+↓
+
+DepartmentFeignClient
+
+↓
+
+Eureka Server
+
+↓
+
+Department Service
+
+↓
+
+DepartmentRepository
+
+↓
+
+Department Entity
+
+↓
+
+DepartmentResponse
+
+↓
+
+EmployeeDepartmentResponse
+
+↓
+
+API Gateway
+
+↓
+
+Client
+What Happens Internally?
+
+Suppose:
+
+Employee Table
+
+employeeId	employeeName	departmentId
+1	Srini	101
+
+Department Table
+
+departmentId	departmentName
+101	IT
+
+Employee Service only stores:
+
+employeeId
+
+employeeName
+
+departmentId
+
+Department Service stores:
+
+departmentId
+
+departmentName
+
+departmentCode
+
+departmentHead
+
+Employee Service fetches department details only when needed using Feign.
+
+Final JSON
+{
+  "employee": {
+    "employeeId": 1,
+    "employeeName": "Srini",
+    "email": "srini@gmail.com",
+    "salary": 70000,
+    "departmentId": 101
+  },
+  "department": {
+    "departmentId": 101,
+    "departmentName": "IT",
+    "departmentCode": "IT001",
+    "departmentHead": "Ramesh Kumar"
+  }
+}
+Why OpenFeign Instead of RestTemplate?
+RestTemplate	OpenFeign
+Manual HTTP calls	Declarative interface
+More boilerplate	Less code
+Manual URL management	Uses Eureka service names
+Harder to maintain	Cleaner and easier to test
+Deprecated for new development	Recommended for Spring Cloud microservices
+Enterprise Flow
+                 Client
+                    │
+                    ▼
+            API Gateway (8080)
+                    │
+        ┌───────────┴───────────┐
+        ▼                       ▼
+Employee Service          Department Service
+        │
+        │ OpenFeign
+        ▼
+Department Service
+        │
+        ▼
+Department Database
+Lesson 3 Completed ✅
+
+You now understand:
+
+✅ What OpenFeign is
+✅ How to create a @FeignClient
+✅ How Eureka resolves service names
+✅ How Employee Service calls Department Service
+✅ How to combine data from two microservices
+✅ How the API Gateway fits into the request flow
+
