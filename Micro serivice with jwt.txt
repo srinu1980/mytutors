@@ -1,0 +1,521 @@
+Since your Auth Service is already working (Register → Login → JWT Token Generation), the next step is to secure the Employee Service by validating the JWT sent by the client.
+
+The flow is:
+
+Client
+   │
+   │ Login
+   ▼
+Auth Service
+   │
+   │ Returns JWT Token
+   ▼
+Client
+   │
+   │ Authorization: Bearer <JWT>
+   ▼
+Employee Service
+   │
+   │ Validate JWT
+   ▼
+SecurityContext
+   │
+   ▼
+Employee APIs
+
+
+
+
+Option 1 (Recommended): Validate JWT in API Gateway
+
+If you're using Spring Cloud Gateway, the recommended architecture is:
+
+Client
+   │
+   ▼
+API Gateway
+   │
+   ├── Validate JWT
+   ├── Reject invalid tokens
+   └── Forward request
+           │
+           ▼
+      Employee Service
+
+In this approach:
+
+Auth Service generates JWT.
+API Gateway validates the JWT.
+Employee Service trusts requests coming through the gateway.
+
+This is the most common microservices pattern.
+
+
+
+The flow looks like this:
+
+                    +----------------+
+                    |     Client     |
+                    +-------+--------+
+                            |
+                 Login (/auth/login)
+                            |
+                            v
+                  +------------------+
+                  |   Auth Service   |
+                  | Generate JWT     |
+                  +------------------+
+                            |
+                  JWT Token Returned
+                            |
+                            v
+                    +----------------+
+                    |     Client     |
+                    +-------+--------+
+                            |
+      Authorization: Bearer <JWT>
+                            |
+                            v
+                +----------------------+
+                |     API Gateway      |
+                | Validate JWT         |
+                | Extract Username     |
+                | Reject Invalid Token |
+                +----------+-----------+
+                           |
+                           v
+                 +--------------------+
+                 |  Employee Service  |
+                 +--------------------+
+
+
+
+
+
+Step 1: API Gateway Dependencies
+
+In pom.xml:
+
+<dependencies>
+
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-gateway-server-webflux</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-api</artifactId>
+        <version>0.12.7</version>
+    </dependency>
+
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-impl</artifactId>
+        <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-jackson</artifactId>
+        <scope>runtime</scope>
+    </dependency>
+
+</dependencies>
+
+
+
+Step 2: Create JwtService
+
+Use the same secret key that your Auth Service uses.
+
+Example methods:
+
+String extractUsername(String token);
+
+boolean validateToken(String token);
+
+boolean isTokenExpired(String token);
+Step 3: Create JwtAuthenticationFilter
+
+Since Gateway uses WebFlux, create a WebFilter instead of OncePerRequestFilter.
+
+@Component
+public class JwtAuthenticationFilter implements WebFilter {
+
+    @Autowired
+    private JwtService jwtService;
+
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange,
+                             WebFilterChain chain) {
+
+        String header =
+                exchange.getRequest()
+                        .getHeaders()
+                        .getFirst(HttpHeaders.AUTHORIZATION);
+
+        if (header == null || !header.startsWith("Bearer ")) {
+            return chain.filter(exchange);
+        }
+
+        String token = header.substring(7);
+
+        if (!jwtService.validateToken(token)) {
+            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+            return exchange.getResponse().setComplete();
+        }
+
+        return chain.filter(exchange);
+    }
+}
+Step 4: SecurityConfig
+@Configuration
+@EnableWebFluxSecurity
+public class SecurityConfig {
+
+    @Bean
+    SecurityWebFilterChain springSecurityFilterChain(
+            ServerHttpSecurity http,
+            JwtAuthenticationFilter jwtFilter) {
+
+        return http
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+
+                .authorizeExchange(exchange -> exchange
+                        .pathMatchers("/auth/**")
+                        .permitAll()
+                        .anyExchange()
+                        .authenticated())
+
+                .addFilterAt(jwtFilter,
+                        SecurityWebFiltersOrder.AUTHENTICATION)
+
+                .build();
+    }
+}
+Step 5: Gateway Routes
+
+Example application.yml:
+
+spring:
+  cloud:
+    gateway:
+      routes:
+
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/**
+
+        - id: employee-service
+          uri: lb://EMPLOYEE-SERVICE
+          predicates:
+            - Path=/employees/**
+Step 6: Request Flow
+POST /auth/login
+
+↓
+
+Token Returned
+
+↓
+
+GET /employees
+
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
+
+Gateway validates the JWT:
+
+✅ Valid token → forwards request to Employee Service.
+❌ Invalid or expired token → returns 401 Unauthorized.
+❌ Missing token (for protected endpoints) → returns 401 Unauthorized.
+
+
+
+Recommended Architecture
+============================
+
+For an enterprise Spring Boot 4.1 microservices application:
+
+Auth Service: Register users, authenticate users, generate JWT.
+API Gateway: Validate JWT and protect routes.
+Employee Service: Business logic only (doesn't need to validate JWT again unless you require defense-in-depth).
+Service Discovery (if used): Route requests between services.
+
+This is the typical pattern used in Spring Cloud Gateway–based microservices.
+
+
+
+Employee-service
+====================
+1. Add Dependencies
+
+pom.xml
+
+2. JwtService
+
+Use the same secret key that Auth Service uses.
+
+3. CustomUserDetailsService
+4. JwtAuthenticationFilter
+5. SecurityConfig (Spring Boot 4.1)
+6. Test the Employee API
+Login to Auth Service
+
+Get JWT token:
+
+POST /auth/login
+
+Response → JWT Token
+
+Call Employee Service
+
+GET /employees
+
+Authorization: Bearer <token>
+
+
+
+
+
+
+==========================
+
+Project Structure
+employee-service
+│
+├── config
+│   └── SecurityConfig.java
+│
+├── filter
+│   └── JwtAuthenticationFilter.java
+│
+├── service
+│   ├── JwtService.java
+│   └── CustomUserDetailsService.java
+│
+├── entity
+│   └── User.java
+│
+├── repository
+│   └── UserRepository.java
+│
+└── controller
+    └── EmployeeController.java
+1. JwtService
+
+Use the same secret key as the Auth Service.
+
+@Service
+public class JwtService {
+
+    @Value("${jwt.secret}")
+    private String secret;
+
+    private SecretKey getKey() {
+        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public String extractUsername(String token) {
+        return Jwts.parser()
+                .verifyWith(getKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+    }
+
+    public boolean validateToken(String token, UserDetails userDetails) {
+
+        String username = extractUsername(token);
+
+        return username.equals(userDetails.getUsername())
+                && !isTokenExpired(token);
+    }
+
+    public boolean isTokenExpired(String token) {
+
+        Date expiration = Jwts.parser()
+                .verifyWith(getKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getExpiration();
+
+        return expiration.before(new Date());
+    }
+}
+2. JwtAuthenticationFilter
+@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private final JwtService jwtService;
+    private final CustomUserDetailsService userDetailsService;
+
+    public JwtAuthenticationFilter(
+            JwtService jwtService,
+            CustomUserDetailsService userDetailsService) {
+
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
+    }
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
+
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String token = authHeader.substring(7);
+
+        String username = jwtService.extractUsername(token);
+
+        if (username != null &&
+            SecurityContextHolder.getContext().getAuthentication() == null) {
+
+            UserDetails userDetails =
+                    userDetailsService.loadUserByUsername(username);
+
+            if (jwtService.validateToken(token, userDetails)) {
+
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities());
+
+                authentication.setDetails(
+                        new WebAuthenticationDetailsSource()
+                                .buildDetails(request));
+
+                SecurityContextHolder.getContext()
+                        .setAuthentication(authentication);
+            }
+        }
+
+        filterChain.doFilter(request, response);
+    }
+}
+3. SecurityConfig
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtFilter;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtFilter) {
+        this.jwtFilter = jwtFilter;
+    }
+
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http)
+            throws Exception {
+
+        http
+
+            .csrf(AbstractHttpConfigurer::disable)
+
+            .sessionManagement(session ->
+                    session.sessionCreationPolicy(
+                            SessionCreationPolicy.STATELESS))
+
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/employee/public/**")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
+
+            .addFilterBefore(
+                    jwtFilter,
+                    UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}
+4. application.properties
+jwt.secret=your-256-bit-secret-key-used-in-auth-service
+5. Request Flow
+Client
+   │
+   │ Login
+   ▼
+Auth Service
+   │
+   │ JWT Generated
+   ▼
+Client
+   │
+   │ Authorization: Bearer eyJhbGc...
+   ▼
+Employee Service
+   │
+   ├── JwtAuthenticationFilter
+   ├── Extract Token
+   ├── Validate Signature
+   ├── Check Expiration
+   ├── Load User
+   └── Set SecurityContext
+   ▼
+EmployeeController
+6. Testing
+Login
+POST /auth/login
+
+Response:
+
+eyJhbGciOiJIUzI1NiJ9...
+Access Employee API
+GET /employees
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
+
+Method-Level Security (Recommended)
+
+Enable method security:
+
+@Configuration
+@EnableMethodSecurity
+public class SecurityConfig {
+}
+
+Then secure methods directly:
+
+@RestController
+@RequestMapping("/employee")
+public class EmployeeController {
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public String deleteEmployee(@PathVariable Long id) {
+        return "Deleted";
+    }
+
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @GetMapping("/{id}")
+    public String getEmployee(@PathVariable Long id) {
+        return "Employee Details";
+    }
+}
+
+This keeps authorization rules close to the business logic and is generally easier to maintain.
+
+
+
+

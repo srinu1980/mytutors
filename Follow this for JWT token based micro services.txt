@@ -1,0 +1,317 @@
+Based on all our previous discussions, I recommend building the project in the following order. This architecture is close to what many enterprise Spring Boot applications use.
+
+                     Client
+                        │
+                        ▼
+                 API Gateway (JWT Validation)
+                        │
+          ┌─────────────┴─────────────┐
+          ▼                           ▼
+    Auth Service                Employee Service
+(Login/Register/JWT)           (Business APIs)
+          │
+          └─────────────┐
+                        ▼
+                  Eureka Server
+Technology Stack
+Technology	Version
+Spring Boot	4.1.0
+Java	21
+Spring Security	7.x
+Spring Cloud Gateway	Latest compatible with Boot 4.1
+Eureka Server	Spring Cloud Netflix
+JWT	JJWT 0.12.x
+Database	MySQL
+JPA	Spring Data JPA
+Build Tool	Maven
+Project Structure
+microservices-parent
+
+│
+├── eureka-server
+│
+├── api-gateway
+│
+├── auth-service
+│
+├── employee-service
+│
+└── common-security (optional but recommended)
+Module 1 : Eureka Server
+Responsibilities
+Service Registry
+Service Discovery
+
+Classes
+
+EurekaServerApplication
+
+Configuration
+
+application.properties
+
+No Security
+
+Module 2 : API Gateway
+
+Responsibilities
+
+Route requests
+Validate JWT
+Forward requests
+Block unauthorized requests
+
+Packages
+
+config
+
+filter
+
+service
+
+Classes
+
+ApiGatewayApplication
+
+SecurityConfig
+
+JwtAuthenticationFilter
+
+JwtService
+
+Configuration
+
+application.properties
+
+Routes
+
+/auth/**
+
+/employees/**
+Module 3 : Auth Service
+
+Responsibilities
+
+Register User
+Login User
+Generate JWT
+Password Encryption
+
+Packages
+
+config
+
+controller
+
+dto
+
+entity
+
+repository
+
+service
+
+security
+
+exception
+
+Classes
+
+AuthServiceApplication
+
+SecurityConfig
+
+AuthenticationService
+
+AuthController
+
+JwtService
+
+CustomUserDetailsService
+
+User
+
+Role
+
+UserRepository
+
+LoginRequest
+
+RegisterRequest
+
+AuthResponse
+
+GlobalExceptionHandler
+
+Database
+
+users
+
+JWT Payload
+
+Username
+
+Roles
+
+Expiration
+Module 4 : Employee Service
+
+Responsibilities
+
+CRUD Employee
+Validate JWT
+Role Authorization
+
+Packages
+
+config
+
+controller
+
+entity
+
+repository
+
+service
+
+filter
+
+security
+
+Classes
+
+EmployeeServiceApplication
+
+SecurityConfig
+
+JwtAuthenticationFilter
+
+JwtService
+
+EmployeeController
+
+EmployeeService
+
+EmployeeRepository
+
+Employee
+
+Database
+
+employees
+Security Responsibilities
+Auth Service
+
+✔ Login
+
+✔ Register
+
+✔ Generate JWT
+
+✔ AuthenticationManager
+
+✔ DaoAuthenticationProvider
+
+✔ BCrypt
+
+API Gateway
+
+✔ Validate JWT
+
+✔ Reject Invalid Token
+
+✔ Forward Request
+
+Employee Service
+
+✔ Validate JWT Again
+
+✔ ROLE_USER
+
+✔ ROLE_ADMIN
+
+✔ Business Logic
+
+Flow
+POST /auth/register
+        │
+        ▼
+Store User
+        │
+        ▼
+
+POST /auth/login
+        │
+        ▼
+Generate JWT
+        │
+        ▼
+
+Client Receives JWT
+        │
+        ▼
+
+GET /employees
+
+Authorization: Bearer Token
+        │
+        ▼
+
+API Gateway
+
+Validate JWT
+        │
+        ▼
+
+Employee Service
+
+Validate JWT Again
+        │
+        ▼
+
+SecurityContext
+        │
+        ▼
+
+EmployeeController
+Roles
+ROLE_ADMIN
+
+ROLE_USER
+
+Authorization
+
+/admin/**
+
+ROLE_ADMIN
+
+
+/user/**
+
+ROLE_USER
+
+ROLE_ADMIN
+Final Project Size
+
+Approximately:
+
+Eureka Server
+≈ 2 classes
+
+API Gateway
+≈ 6 classes
+
+Auth Service
+≈ 20 classes
+
+Employee Service
+≈ 15 classes
+
+Total
+≈ 40–45 classes
+I recommend building it module by module:
+Eureka Server
+API Gateway
+Auth Service (JWT generation)
+Employee Service (JWT validation + role-based authorization)
+End-to-end integration and testing
