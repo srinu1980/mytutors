@@ -1,0 +1,2114 @@
+Admins can be created separately.
+
+user.setRole(Role.ROLE_ADMIN);
+Step 4: Add Role to JWT
+
+Generate the token with role information.
+
+public String generateToken(User user) {
+
+    return Jwts.builder()
+
+            .subject(user.getUsername())
+
+            .claim("role", user.getRole().name())
+
+            .issuedAt(new Date())
+
+            .expiration(new Date(System.currentTimeMillis()+86400000))
+
+            .signWith(secretKey)
+
+            .compact();
+
+}
+
+JWT Payload
+
+{
+   "sub":"john",
+
+   "role":"ROLE_ADMIN",
+
+   "exp":1783456789
+}
+Step 5: Extract Role
+public Claims extractClaims(String token){
+
+    return Jwts.parser()
+
+            .verifyWith(secretKey)
+
+            .build()
+
+            .parseSignedClaims(token)
+
+            .getPayload();
+}
+
+Retrieve the role:
+
+String role = claims.get("role", String.class);
+Step 6: JwtAuthenticationFilter
+
+Create an authenticated user with authorities.
+
+String username = jwtService.extractUsername(token);
+
+String role = jwtService.extractRole(token);
+
+List<GrantedAuthority> authorities =
+        List.of(new SimpleGrantedAuthority(role));
+
+UsernamePasswordAuthenticationToken authentication =
+        new UsernamePasswordAuthenticationToken(
+                username,
+                null,
+                authorities);
+
+SecurityContextHolder.getContext()
+        .setAuthentication(authentication);
+
+This makes the role available to Spring Security.
+
+Step 7: SecurityConfig
+@Bean
+SecurityFilterChain securityFilterChain(HttpSecurity http)
+        throws Exception {
+
+    http
+
+        .csrf(AbstractHttpConfigurer::disable)
+
+        .sessionManagement(session ->
+            session.sessionCreationPolicy(
+                    SessionCreationPolicy.STATELESS))
+
+        .authorizeHttpRequests(auth -> auth
+
+            .requestMatchers("/employees/admin/**")
+
+            .hasRole("ADMIN")
+
+            .requestMatchers("/employees/user/**")
+
+            .hasAnyRole("USER","ADMIN")
+
+            .anyRequest()
+
+            .authenticated()
+
+        )
+
+        .addFilterBefore(jwtFilter,
+                UsernamePasswordAuthenticationFilter.class);
+
+    return http.build();
+}
+
+Important: hasRole("ADMIN") automatically checks for the authority ROLE_ADMIN.
+
+Step 8: Controller
+@RestController
+@RequestMapping("/employees")
+public class EmployeeController {
+
+    @GetMapping("/admin/all")
+    public List<Employee> getAllEmployees() {
+
+        return service.findAll();
+
+    }
+
+    @PostMapping("/admin/save")
+    public Employee save(Employee employee) {
+
+        return service.save(employee);
+
+    }
+
+    @GetMapping("/user/profile")
+    public Employee profile() {
+
+        return service.profile();
+
+    }
+
+}
+Endpoint Access
+Endpoint	ROLE_ADMIN	ROLE_USER
+GET /employees/admin/all	✅	❌
+POST /employees/admin/save	✅	❌
+GET /employees/user/profile	✅	✅
+Method-Level Security (Recommended)
+
+Enable method security:
+
+@Configuration
+@EnableMethodSecurity
+public class SecurityConfig {
+}
+
+Then annotate methods:
+
+@PreAuthorize("hasRole('ADMIN')")
+@GetMapping("/admin/all")
+public List<Employee> getAll() {
+    return service.findAll();
+}
+@PreAuthorize("hasAnyRole('ADMIN','USER')")
+@GetMapping("/profile")
+public Employee profile() {
+    return service.profile();
+}
+
+This keeps authorization rules close to the business logic and is commonly used in enterprise applications.
+
+Complete Request Flow
+Register
+    │
+    ▼
+ROLE_USER assigned
+    │
+    ▼
+Login
+    │
+    ▼
+JWT Generated
+    │
+    ▼
+{
+   sub : "john",
+   role : "ROLE_ADMIN"
+}
+    │
+    ▼
+API Gateway
+Validate JWT
+    │
+    ▼
+Employee Service
+JwtAuthenticationFilter
+    │
+    ▼
+SecurityContext
+    │
+    ▼
+Spring Security
+    │
+    ▼
+@PreAuthorize
+    │
+    ▼
+Controller
+Enterprise Best Practice
+
+For your Spring Boot 4.1 Microservices project (auth-service, api-gateway, employee-service, department-service), I recommend:
+
+Auth Service: Authenticate users and generate JWTs with username, roles, and optional permissions as claims.
+API Gateway: Validate JWTs and forward authenticated requests.
+Each Microservice: Validate JWTs independently and enforce authorization using @EnableMethodSecurity and @PreAuthorize.
+Shared Module (common-security): Place reusable components such as JwtService, JwtAuthenticationFilter, JwtConstants, and security utilities in a common library to avoid duplication across services. This is a common enterprise pattern for maintaining consistent security behavior.
+
+
+Module 1: Introduction to Node.js
+
+This module introduces the fundamentals of Node.js, its architecture, installation, and basic execution. It is designed for beginners, especially those coming from a Java background.
+
+Learning Objectives
+
+By the end of this module, you will be able to:
+
+Understand what Node.js is.
+Explain why Node.js is popular.
+Understand the Event Loop architecture.
+Differentiate synchronous and asynchronous programming.
+Install Node.js and npm.
+Run your first Node.js program.
+1. What is Node.js?
+
+Node.js is an open-source, cross-platform JavaScript runtime environment that allows JavaScript to run outside a web browser.
+
+Traditionally:
+
+JavaScript was used only in browsers.
+Node.js allows JavaScript to be used for backend development.
+
+Examples of applications built with Node.js:
+
+REST APIs
+Real-time chat applications
+Streaming services
+Microservices
+Web servers
+Command-line tools
+2. Why Node.js?
+Advantages
+Fast execution using Google's V8 JavaScript Engine.
+Event-driven architecture.
+Non-blocking I/O operations.
+Highly scalable.
+Lightweight.
+Cross-platform.
+Large npm ecosystem.
+Excellent for REST APIs and microservices.
+3. Node.js Architecture
+              Client Request
+                     │
+                     ▼
+              Node.js Runtime
+                     │
+                     ▼
+              Event Loop
+                     │
+          ┌──────────┴──────────┐
+          │                     │
+          ▼                     ▼
+    File System            Database
+          │                     │
+          └──────────┬──────────┘
+                     │
+                     ▼
+              Response to Client
+
+Unlike traditional servers, Node.js uses an event loop to manage many client requests efficiently.
+
+4. V8 JavaScript Engine
+
+Node.js uses the V8 JavaScript Engine, originally developed by Google for Chrome.
+
+Responsibilities:
+
+Compiles JavaScript into machine code.
+Executes JavaScript efficiently.
+Optimizes performance using Just-In-Time (JIT) compilation.
+5. Event-Driven Programming
+
+Instead of waiting for one task to complete before starting another, Node.js responds to events.
+
+Example:
+
+User sends an HTTP request.
+Event Loop receives the request.
+Executes the callback when the task completes.
+Sends the response.
+
+This allows Node.js to handle many requests concurrently.
+
+6. Single Threaded Event Loop
+
+Although Java developers often think in terms of multiple request-handling threads, Node.js works differently.
+
+Requests
+
+   R1
+   R2
+   R3
+   R4
+
+      │
+      ▼
+
++----------------------+
+|     Event Loop       |
++----------------------+
+
+      │
+
+ Executes callbacks asynchronously
+
+Important: Node.js uses a single-threaded event loop for JavaScript execution, while delegating many I/O operations (such as file and network operations) to the underlying system so they don't block the event loop.
+
+7. Synchronous Programming
+
+Tasks execute one after another.
+
+Example:
+
+console.log("Start");
+
+console.log("Learning Node");
+
+console.log("End");
+
+Output:
+
+Start
+Learning Node
+End
+
+Each statement waits for the previous one to finish.
+
+8. Asynchronous Programming
+
+Some operations (such as timers or file reads) don't block the program.
+
+Example:
+
+console.log("Start");
+
+setTimeout(() => {
+    console.log("Learning Node");
+}, 2000);
+
+console.log("End");
+
+Output:
+
+Start
+End
+Learning Node
+
+The timer runs in the background while the program continues.
+
+9. Blocking vs Non-Blocking
+Blocking
+Task 1
+ ↓
+Task 2
+ ↓
+Task 3
+
+The next task waits until the current task finishes.
+
+Non-Blocking
+Task 1 --------┐
+               │
+Task 2 --------┼── Execute independently
+               │
+Task 3 --------┘
+
+Node.js uses non-blocking I/O for operations like file access and network requests, improving scalability.
+
+10. Installing Node.js
+Download Node.js from the official website.
+Install using the default options.
+Verify the installation.
+
+Commands:
+
+node -v
+
+Example:
+
+v24.x.x
+
+Check npm:
+
+npm -v
+
+Example:
+
+11.x.x
+11. What is npm?
+
+npm (Node Package Manager) is used to:
+
+Install packages
+Manage dependencies
+Run scripts
+Publish packages
+
+Example:
+
+npm install express
+12. What is npx?
+
+npx executes packages without requiring a global installation.
+
+Example:
+
+npx create-react-app my-app
+13. Your First Node.js Program
+
+Create a file named app.js.
+
+console.log("Welcome to Node.js");
+
+Run it:
+
+node app.js
+
+Output:
+
+Welcome to Node.js
+14. REPL (Read-Eval-Print Loop)
+
+Start the interactive shell:
+
+node
+
+Example:
+
+> 10 + 20
+30
+
+> "Hello"
+'Hello'
+
+Exit:
+
+.exit
+15. Creating a Simple HTTP Server
+const http = require("http");
+
+const server = http.createServer((req, res) => {
+    res.write("Welcome to Node.js");
+    res.end();
+});
+
+server.listen(3000, () => {
+    console.log("Server running on port 3000");
+});
+
+Open your browser and visit:
+
+http://localhost:3000
+
+You should see:
+
+Welcome to Node.js
+Interview Questions
+What is Node.js?
+Is Node.js a programming language?
+What is the V8 JavaScript Engine?
+Explain the Event Loop.
+What is non-blocking I/O?
+What is npm?
+What is the difference between npm and npx?
+Explain synchronous vs asynchronous programming.
+What is REPL?
+Why is Node.js considered scalable?
+Summary
+Node.js is a JavaScript runtime for backend development.
+It uses the V8 engine for fast execution.
+Its event-driven, non-blocking architecture makes it suitable for scalable applications.
+npm manages packages, while npx runs packages.
+You can create HTTP servers and REST APIs with Node.js, forming the foundation for frameworks like Express.js.
+
+Next Module: JavaScript Essentials for Node.js (ES6 Features), where you'll learn variables, functions, objects, arrays, promises, async/await, and modules before building Express applications.
+
+Module 2: JavaScript Essentials for Node.js
+Module 2: JavaScript Essentials for Node.js (ES6+)
+
+This module covers the JavaScript concepts required for Node.js development. Since Node.js runs JavaScript, a strong understanding of modern JavaScript (ES6+) is essential.
+
+Learning Objectives
+
+After completing this module, you will be able to:
+
+Work with variables and data types.
+Use operators and control statements.
+Create functions and arrow functions.
+Work with objects and arrays.
+Use template literals.
+Understand destructuring.
+Use the spread and rest operators.
+Understand callbacks, promises, and async/await.
+1. Variables
+
+JavaScript provides three ways to declare variables.
+
+var
+var name = "John";
+console.log(name);
+
+Problems with var:
+
+Function-scoped
+Can be redeclared
+Can cause unexpected behavior
+let
+let age = 25;
+
+age = 26;
+
+console.log(age);
+Block scope
+Can be updated
+Cannot be redeclared in the same scope
+const
+const PI = 3.14;
+
+console.log(PI);
+Block scope
+Cannot be reassigned
+Preferred for values that don't change
+2. Data Types
+Primitive Types
+let id = 100;
+
+let name = "John";
+
+let isActive = true;
+
+let salary = 25000.50;
+
+let value = null;
+
+let city;
+
+let uniqueId = Symbol("id");
+
+let bigNumber = 12345678901234567890n;
+3. Operators
+Arithmetic
+let a = 20;
+let b = 10;
+
+console.log(a + b);
+
+console.log(a - b);
+
+console.log(a * b);
+
+console.log(a / b);
+
+console.log(a % b);
+Comparison
+console.log(10 == "10");
+
+console.log(10 === "10");
+
+console.log(10 != 20);
+
+console.log(10 > 5);
+
+Difference:
+
+== compares values only.
+=== compares both value and type (recommended).
+Logical
+console.log(true && false);
+
+console.log(true || false);
+
+console.log(!true);
+4. Conditional Statements
+if
+let marks = 80;
+
+if (marks >= 35) {
+    console.log("Pass");
+}
+if-else
+let age = 17;
+
+if (age >= 18) {
+    console.log("Eligible");
+} else {
+    console.log("Not Eligible");
+}
+switch
+let day = 2;
+
+switch (day) {
+
+    case 1:
+        console.log("Monday");
+        break;
+
+    case 2:
+        console.log("Tuesday");
+        break;
+
+    default:
+        console.log("Holiday");
+}
+5. Loops
+for
+for (let i = 1; i <= 5; i++) {
+    console.log(i);
+}
+while
+let i = 1;
+
+while (i <= 5) {
+    console.log(i);
+    i++;
+}
+for...of
+const numbers = [10, 20, 30];
+
+for (const number of numbers) {
+    console.log(number);
+}
+for...in
+const employee = {
+    id: 1,
+    name: "John"
+};
+
+for (const key in employee) {
+    console.log(key, employee[key]);
+}
+6. Functions
+Normal Function
+function add(a, b) {
+    return a + b;
+}
+
+console.log(add(10, 20));
+Function Expression
+const multiply = function(a, b) {
+    return a * b;
+};
+
+console.log(multiply(5, 4));
+Arrow Function
+const add = (a, b) => {
+    return a + b;
+};
+
+console.log(add(5, 10));
+
+Short form:
+
+const square = n => n * n;
+7. Template Literals
+
+Instead of:
+
+let name = "John";
+
+console.log("Welcome " + name);
+
+Use:
+
+let name = "John";
+
+console.log(`Welcome ${name}`);
+8. Objects
+const employee = {
+
+    id: 101,
+
+    name: "David",
+
+    salary: 45000
+
+};
+
+console.log(employee.name);
+
+Add a property:
+
+employee.department = "IT";
+9. Arrays
+const numbers = [10, 20, 30, 40];
+
+console.log(numbers[0]);
+Common Methods
+numbers.push(50);
+
+numbers.pop();
+
+numbers.shift();
+
+numbers.unshift(5);
+10. Array Functions
+map()
+const numbers = [1, 2, 3];
+
+const result = numbers.map(num => num * 2);
+
+console.log(result);
+
+Output:
+
+[2, 4, 6]
+filter()
+const numbers = [10, 20, 30, 40];
+
+const result = numbers.filter(n => n > 20);
+
+console.log(result);
+
+Output:
+
+[30, 40]
+find()
+const employees = [
+
+    {id:1,name:"John"},
+
+    {id:2,name:"David"}
+
+];
+
+const emp = employees.find(e => e.id === 2);
+
+console.log(emp);
+reduce()
+const numbers = [10,20,30];
+
+const sum = numbers.reduce((a,b)=>a+b,0);
+
+console.log(sum);
+11. Destructuring
+Object
+const employee = {
+
+    id:101,
+
+    name:"John"
+
+};
+
+const {id,name} = employee;
+
+console.log(id);
+
+console.log(name);
+Array
+const colors = ["Red","Green","Blue"];
+
+const [first,second] = colors;
+
+console.log(first);
+12. Spread Operator (...)
+const arr1 = [1,2];
+
+const arr2 = [...arr1,3,4];
+
+console.log(arr2);
+
+Output:
+
+[1,2,3,4]
+13. Rest Operator (...)
+function sum(...numbers){
+
+    return numbers.reduce((a,b)=>a+b);
+
+}
+
+console.log(sum(10,20,30));
+14. Default Parameters
+function greet(name="Guest"){
+
+    console.log(name);
+
+}
+
+greet();
+
+greet("John");
+15. Callbacks
+function greet(name,callback){
+
+    console.log("Hello "+name);
+
+    callback();
+
+}
+
+greet("John",()=>{
+
+    console.log("Welcome");
+
+});
+16. Promises
+const promise = new Promise((resolve,reject)=>{
+
+    let success=true;
+
+    if(success){
+
+        resolve("Success");
+
+    }else{
+
+        reject("Failed");
+
+    }
+
+});
+
+promise
+.then(result=>console.log(result))
+.catch(error=>console.log(error));
+17. Async / Await
+async function getData(){
+
+    return "Node.js";
+
+}
+
+async function display(){
+
+    const result=await getData();
+
+    console.log(result);
+
+}
+
+display();
+18. Optional Chaining
+const employee = {
+
+    name:"John"
+
+};
+
+console.log(employee.address?.city);
+
+Output:
+
+undefined
+
+No error is thrown if address is missing.
+
+19. Nullish Coalescing
+let name = null;
+
+console.log(name ?? "Guest");
+
+Output:
+
+Guest
+Interview Questions
+What is the difference between var, let, and const?
+What is the difference between == and ===?
+Explain arrow functions.
+What is destructuring?
+Explain the spread operator.
+Explain the rest operator.
+What is a callback?
+What is a Promise?
+What is async/await?
+What is optional chaining?
+Java vs JavaScript Comparison
+Java	JavaScript
+int age = 25;	let age = 25;
+Class-based	Prototype-based
+Multithreaded	Single-threaded event loop
+Strongly typed	Dynamically typed
+Methods	Functions
+Streams	map(), filter(), reduce()
+null	null and undefined
+Mini Assignment
+
+Create a simple Employee object and:
+
+Store employee details.
+Use destructuring to extract properties.
+Use template literals to print the details.
+Create an array of employees.
+Use filter() to list employees with a salary greater than 50,000.
+Use map() to convert employee names to uppercase.
+Use reduce() to calculate the total salary.
+
+This module provides the JavaScript foundation you'll use throughout Node.js development.
+
+Next Module: Module 3 – Node.js Modules, npm, and Package Management, where you'll learn how to organize code into reusable modules, import/export functionality, and manage dependencies with npm.
+
+JavaScript ES6, npm, Modules
+Module 3: JavaScript ES6, npm, and Modules (Node.js)
+
+This module focuses on modern JavaScript features used in Node.js, package management with npm, and creating reusable code using modules.
+
+Learning Objectives
+
+After completing this module, you will be able to:
+
+Understand ES6 features used in Node.js
+Create and use JavaScript modules
+Understand CommonJS and ES Modules
+Install and manage packages using npm
+Create a Node.js project
+Understand package.json
+1. What is ES6?
+
+ES6 (ECMAScript 2015) introduced many features that make JavaScript cleaner and more powerful.
+
+Some important ES6 features:
+
+let and const
+Arrow Functions
+Template Literals
+Destructuring
+Default Parameters
+Rest Operator
+Spread Operator
+Classes
+Modules
+Promises
+2. Classes
+
+Unlike Java, JavaScript classes are syntactic sugar over prototypes.
+
+class Employee {
+
+    constructor(id, name, salary) {
+        this.id = id;
+        this.name = name;
+        this.salary = salary;
+    }
+
+    display() {
+        console.log(this.id);
+        console.log(this.name);
+        console.log(this.salary);
+    }
+}
+
+const emp = new Employee(101, "John", 50000);
+
+emp.display();
+
+Output
+
+101
+John
+50000
+3. Inheritance
+class Person {
+
+    constructor(name) {
+        this.name = name;
+    }
+
+}
+
+class Employee extends Person {
+
+    constructor(name, salary) {
+
+        super(name);
+
+        this.salary = salary;
+
+    }
+
+}
+
+const emp = new Employee("David", 60000);
+
+console.log(emp.name);
+
+console.log(emp.salary);
+4. Modules
+
+Large applications are divided into multiple files.
+
+Benefits
+
+Reusability
+Maintainability
+Better organization
+5. CommonJS Modules
+
+Node.js traditionally uses CommonJS.
+
+math.js
+function add(a, b) {
+
+    return a + b;
+
+}
+
+function subtract(a, b) {
+
+    return a - b;
+
+}
+
+module.exports = {
+
+    add,
+
+    subtract
+
+};
+app.js
+const math = require("./math");
+
+console.log(math.add(10,20));
+
+console.log(math.subtract(30,10));
+
+Output
+
+30
+20
+6. Export Individual Functions
+exports.add = (a,b)=>a+b;
+
+exports.multiply = (a,b)=>a*b;
+
+Import
+
+const math = require("./math");
+
+console.log(math.multiply(5,4));
+7. ES Modules (Modern JavaScript)
+
+Enable ES Modules by adding:
+
+{
+  "type":"module"
+}
+
+to package.json.
+
+math.js
+export function add(a,b){
+
+    return a+b;
+
+}
+
+export function multiply(a,b){
+
+    return a*b;
+
+}
+app.js
+import { add, multiply } from "./math.js";
+
+console.log(add(10,20));
+
+console.log(multiply(5,5));
+CommonJS vs ES Modules
+CommonJS	ES Modules
+require()	import
+module.exports	export
+Default in older Node.js	Standard JavaScript module system
+Synchronous loading	Static imports
+8. npm (Node Package Manager)
+
+npm is the default package manager for Node.js.
+
+It is used to:
+
+Install packages
+Update packages
+Remove packages
+Manage dependencies
+Run project scripts
+
+Check version:
+
+npm -v
+9. Create a Node.js Project
+
+Create a folder:
+
+mkdir employee-app
+
+Move into it:
+
+cd employee-app
+
+Initialize the project:
+
+npm init
+
+Or use defaults:
+
+npm init -y
+10. package.json
+
+After initialization:
+
+{
+  "name":"employee-app",
+  "version":"1.0.0",
+  "description":"",
+  "main":"app.js",
+  "scripts":{
+      "start":"node app.js"
+  }
+}
+
+Important fields:
+
+Field	Description
+name	Project name
+version	Project version
+main	Entry point
+scripts	Commands
+dependencies	Required packages
+11. Install Packages
+
+Install Express:
+
+npm install express
+
+Shortcut:
+
+npm i express
+
+Install multiple packages:
+
+npm install express mongoose dotenv
+12. Install Development Dependency
+npm install nodemon --save-dev
+
+Development dependencies are only needed during development.
+
+13. Dependencies
+
+Example:
+
+"dependencies":{
+
+   "express":"^5.0.0"
+
+}
+14. Dev Dependencies
+"devDependencies":{
+
+   "nodemon":"^3.1.0"
+
+}
+15. package-lock.json
+
+Purpose:
+
+Locks package versions.
+Ensures everyone installs the same dependency versions.
+Improves reproducible builds.
+16. node_modules
+
+Contains all installed packages.
+
+Example:
+
+node_modules/
+
+express/
+
+mongoose/
+
+lodash/
+
+Do not commit node_modules to Git. Instead, commit package.json and package-lock.json.
+
+17. npm Scripts
+"scripts":{
+
+   "start":"node app.js",
+
+   "dev":"nodemon app.js"
+
+}
+
+Run:
+
+npm start
+
+or
+
+npm run dev
+18. Install Nodemon
+npm install --save-dev nodemon
+
+Run:
+
+npx nodemon app.js
+
+Nodemon automatically restarts the application when files change.
+
+19. Global Installation
+npm install -g nodemon
+
+Check:
+
+nodemon -v
+20. Practical Example
+
+Project Structure
+
+employee-app
+
+│
+
+app.js
+
+math.js
+
+package.json
+
+math.js
+
+function add(a,b){
+
+    return a+b;
+
+}
+
+module.exports={add};
+
+app.js
+
+const math=require("./math");
+
+console.log(math.add(100,200));
+
+Run
+
+node app.js
+
+Output
+
+300
+Mini Exercise
+
+Create a project named employee-management.
+
+Create:
+
+employee.js
+department.js
+app.js
+
+Implement:
+
+Export employee details.
+Export department details.
+Import both into app.js.
+Display all details.
+Interview Questions
+What is ES6?
+What are JavaScript modules?
+What is the difference between CommonJS and ES Modules?
+What is npm?
+What is package.json?
+What is package-lock.json?
+What is the purpose of node_modules?
+What is nodemon?
+Explain require() and module.exports.
+What is the difference between dependencies and devDependencies?
+Java vs Node.js Comparison
+Java	Node.js
+Package	Module
+Maven/Gradle	npm
+pom.xml	package.json
+JAR dependencies	npm packages
+import	require() / import
+Maven Repository	npm Registry
+Main class	Entry file (app.js or server.js)
+Enterprise Project Structure (Express.js)
+employee-management
+
+├── node_modules
+├── src
+│   ├── config
+│   ├── controllers
+│   ├── routes
+│   ├── services
+│   ├── models
+│   ├── middleware
+│   ├── utils
+│   └── app.js
+├── package.json
+├── package-lock.json
+└── .env
+
+This structure is commonly used for Node.js REST API applications and will be the foundation for building Express.js services with authentication, databases, and CRUD operations.
+
+
+1. What is Bootstrap?
+
+Bootstrap is a free, open-source front-end framework developed by Twitter.
+
+It includes:
+
+CSS styles
+Responsive Grid System
+Pre-built UI Components
+JavaScript Components
+Utility Classes
+
+Bootstrap helps developers build attractive, responsive websites without writing extensive CSS.
+
+2. Features of Bootstrap
+Mobile-first design
+Responsive layout
+Easy to learn
+Ready-made UI components
+Cross-browser compatibility
+Customizable
+Rich documentation
+Large community support
+3. Advantages of Bootstrap
+Faster web development
+Consistent UI design
+Responsive on all devices
+Less custom CSS
+Easy integration with JavaScript frameworks like React and Angular
+4. Bootstrap Versions
+Version	Features
+Bootstrap 3	Mobile-first, basic components
+Bootstrap 4	Flexbox support
+Bootstrap 5	No jQuery dependency, improved utilities
+
+Bootstrap 5 is the recommended version for new projects.
+
+5. Adding Bootstrap
+Option 1: CDN (Recommended for Learning)
+
+Add the following inside the <head> section:
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+Before the closing </body> tag:
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+Option 2: Using npm
+npm install bootstrap
+6. Basic HTML Page
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Bootstrap Demo</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <h1 class="text-primary">Welcome to Bootstrap</h1>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
+7. Containers
+
+Bootstrap provides containers to align content.
+
+Fixed Container
+<div class="container">
+
+    Welcome
+
+</div>
+Full Width Container
+<div class="container-fluid">
+
+    Welcome
+
+</div>
+8. Bootstrap Grid System
+
+Bootstrap divides the screen into 12 columns.
+
+|1|2|3|4|5|6|7|8|9|10|11|12|
+
+Example:
+
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-6">
+            Left
+        </div>
+
+        <div class="col-6">
+            Right
+        </div>
+
+    </div>
+
+</div>
+
+Output:
+
+-------------------------
+| Left | Right |
+-------------------------
+9. Responsive Columns
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-md-4">
+            Column 1
+        </div>
+
+        <div class="col-md-4">
+            Column 2
+        </div>
+
+        <div class="col-md-4">
+            Column 3
+        </div>
+
+    </div>
+
+</div>
+
+On desktop, three columns appear side by side. On smaller screens, they automatically stack.
+
+10. Typography
+<h1>Heading 1</h1>
+
+<h2>Heading 2</h2>
+
+<p class="lead">This is a lead paragraph.</p>
+11. Text Colors
+<p class="text-primary">Primary</p>
+
+<p class="text-success">Success</p>
+
+<p class="text-danger">Danger</p>
+
+<p class="text-warning">Warning</p>
+
+<p class="text-info">Info</p>
+12. Background Colors
+<div class="bg-primary text-white p-3">
+
+    Welcome
+
+</div>
+13. Buttons
+<button class="btn btn-primary">Save</button>
+
+<button class="btn btn-success">Submit</button>
+
+<button class="btn btn-danger">Delete</button>
+
+<button class="btn btn-warning">Edit</button>
+14. Spacing Utilities
+
+Margin:
+
+<div class="m-3">
+    Margin
+</div>
+
+Padding:
+
+<div class="p-4">
+    Padding
+</div>
+
+Examples:
+
+m-2 → Margin
+mt-3 → Margin Top
+mb-3 → Margin Bottom
+ms-2 → Margin Start (Left)
+me-2 → Margin End (Right)
+p-3 → Padding
+15. Images
+
+Responsive image:
+
+<img src="image.jpg" class="img-fluid">
+
+Rounded image:
+
+<img src="image.jpg" class="rounded">
+
+Circle image:
+
+<img src="image.jpg" class="rounded-circle">
+16. Cards
+<div class="card" style="width:300px">
+
+    <div class="card-body">
+
+        <h5 class="card-title">
+            Employee
+        </h5>
+
+        <p class="card-text">
+            Java Developer
+        </p>
+
+        <button class="btn btn-primary">
+            View
+        </button>
+
+    </div>
+
+</div>
+17. Forms
+<form>
+
+<div class="mb-3">
+
+<label>Name</label>
+
+<input type="text"
+class="form-control">
+
+</div>
+
+<button class="btn btn-success">
+
+Submit
+
+</button>
+
+</form>
+18. Tables
+<table class="table table-striped">
+
+<tr>
+
+<th>ID</th>
+
+<th>Name</th>
+
+</tr>
+
+<tr>
+
+<td>101</td>
+
+<td>John</td>
+
+</tr>
+
+</table>
+19. Alerts
+<div class="alert alert-success">
+
+Employee Saved Successfully
+
+</div>
+20. Navigation Bar
+<nav class="navbar navbar-dark bg-dark">
+
+<div class="container">
+
+<a class="navbar-brand">
+
+Employee Management
+
+</a>
+
+</div>
+
+</nav>
+Mini Project
+
+Create a simple Employee Registration Page containing:
+
+Navigation Bar
+Registration Form
+Submit Button
+Employee Details Table
+Footer
+
+Use Bootstrap classes only, with minimal custom CSS.
+
+Interview Questions
+What is Bootstrap?
+What are the advantages of Bootstrap?
+What is a responsive web design?
+Explain the Bootstrap Grid System.
+What is the difference between container and container-fluid?
+What are Bootstrap utility classes?
+What is img-fluid?
+What is the purpose of form-control?
+What is the difference between btn-primary and btn-success?
+Does Bootstrap 5 require jQuery?
+Java Web vs Bootstrap
+Traditional HTML/CSS	Bootstrap
+Manual CSS	Ready-made CSS classes
+Custom layout	Grid System
+Custom buttons	btn btn-primary
+Custom forms	form-control
+Media queries	Built-in responsive design
+More development time	Faster development
+Summary
+Bootstrap is a CSS framework for building responsive websites.
+It provides a 12-column grid system, utility classes, and reusable UI components.
+Bootstrap 5 is the latest major version and does not require jQuery.
+It is widely used with Spring Boot, React, Angular, and other frontend frameworks to create professional-looking user interfaces quickly.
+
+Next Module: Bootstrap Grid System and Responsive Layout, where you'll learn breakpoints, rows, columns, nesting, offsets, ordering, and build responsive dashboards and forms.
+
+Module 2: Bootstrap Grid System and Responsive Layout
+
+The Bootstrap Grid System is the foundation of responsive web design. It allows you to create layouts that automatically adjust to different screen sizes such as mobiles, tablets, laptops, and desktops.
+
+Learning Objectives
+
+By the end of this module, you will be able to:
+
+Understand the Bootstrap Grid System
+Use containers, rows, and columns
+Create responsive layouts
+Use Bootstrap breakpoints
+Offset and reorder columns
+Nest grids
+Build responsive forms and dashboards
+1. What is the Bootstrap Grid System?
+
+Bootstrap uses a 12-column responsive grid.
+
+---------------------------------------------------
+| 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |10 |11 |12 |
+---------------------------------------------------
+
+You can combine columns to total 12.
+
+Examples:
+
+12 = Full Width
+6 + 6 = Two Equal Columns
+4 + 4 + 4 = Three Equal Columns
+3 + 3 + 3 + 3 = Four Equal Columns
+8 + 4 = Main Content + Sidebar
+2. Grid Structure
+
+Every Bootstrap grid follows this structure:
+
+<div class="container">
+
+    <div class="row">
+
+        <div class="col">
+            Column
+        </div>
+
+    </div>
+
+</div>
+container → Main wrapper
+row → Horizontal group of columns
+col → Grid column
+3. Equal Width Columns
+<div class="container">
+
+    <div class="row">
+
+        <div class="col bg-primary text-white">
+            Column 1
+        </div>
+
+        <div class="col bg-success text-white">
+            Column 2
+        </div>
+
+    </div>
+
+</div>
+
+Output:
+
+-------------------------
+| Column 1 | Column 2 |
+-------------------------
+4. Fixed Width Columns
+<div class="container">
+
+<div class="row">
+
+<div class="col-4 bg-info">
+
+Left
+
+</div>
+
+<div class="col-8 bg-warning">
+
+Right
+
+</div>
+
+</div>
+
+</div>
+
+Output:
+
+-------------------------------
+| Left | Right               |
+| 4    | 8 Columns           |
+-------------------------------
+5. Responsive Breakpoints
+
+Bootstrap provides predefined breakpoints.
+
+Breakpoint	Screen Size
+col-	Extra Small (<576px)
+col-sm-	≥576px
+col-md-	≥768px
+col-lg-	≥992px
+col-xl-	≥1200px
+col-xxl-	≥1400px
+
+Example:
+
+<div class="col-md-6">
+
+Content
+
+</div>
+
+Behavior:
+
+Mobile → Full width
+Tablet/Desktop → Half width
+6. Responsive Example
+<div class="container">
+
+<div class="row">
+
+<div class="col-md-4 bg-primary text-white">
+
+Employee
+
+</div>
+
+<div class="col-md-4 bg-success text-white">
+
+Department
+
+</div>
+
+<div class="col-md-4 bg-danger text-white">
+
+Salary
+
+</div>
+
+</div>
+
+</div>
+
+Desktop:
+
+--------------------------------------------
+| Employee | Department | Salary |
+--------------------------------------------
+
+Mobile:
+
+-------------
+| Employee |
+-------------
+| Department |
+-------------
+| Salary |
+-------------
+7. Nested Grid
+
+A column can contain another row.
+
+<div class="container">
+
+<div class="row">
+
+<div class="col-8">
+
+<div class="row">
+
+<div class="col-6">
+
+Left
+
+</div>
+
+<div class="col-6">
+
+Right
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-4">
+
+Sidebar
+
+</div>
+
+</div>
+
+</div>
+8. Offset Columns
+
+Move columns to the right.
+
+<div class="row">
+
+<div class="col-4 offset-4">
+
+Centered
+
+</div>
+
+</div>
+
+Output:
+
+-------------------------
+|     Centered     |
+-------------------------
+9. Column Ordering
+<div class="row">
+
+<div class="col order-2">
+
+Second
+
+</div>
+
+<div class="col order-1">
+
+First
+
+</div>
+
+</div>
+
+Output:
+
+First
+Second
+10. Alignment
+Horizontal Alignment
+<div class="row justify-content-center">
+
+<div class="col-4">
+
+Content
+
+</div>
+
+</div>
+
+Options:
+
+justify-content-start
+justify-content-center
+justify-content-end
+justify-content-between
+justify-content-around
+Vertical Alignment
+<div class="row align-items-center" style="height:200px;">
+
+<div class="col">
+
+Center
+
+</div>
+
+</div>
+
+Options:
+
+align-items-start
+align-items-center
+align-items-end
+11. Gutters
+
+Space between columns.
+
+<div class="row g-4">
+
+<div class="col">
+
+One
+
+</div>
+
+<div class="col">
+
+Two
+
+</div>
+
+</div>
+12. Responsive Images
+<img src="employee.jpg"
+
+class="img-fluid rounded">
+
+Classes:
+
+img-fluid
+rounded
+rounded-circle
+img-thumbnail
+13. Responsive Table
+<div class="table-responsive">
+
+<table class="table table-bordered table-striped">
+
+<tr>
+
+<th>ID</th>
+
+<th>Name</th>
+
+<th>Department</th>
+
+</tr>
+
+<tr>
+
+<td>101</td>
+
+<td>John</td>
+
+<td>IT</td>
+
+</tr>
+
+</table>
+
+</div>
+14. Responsive Form
+<div class="container">
+
+<form>
+
+<div class="row">
+
+<div class="col-md-6">
+
+<input
+class="form-control"
+placeholder="First Name">
+
+</div>
+
+<div class="col-md-6">
+
+<input
+class="form-control"
+placeholder="Last Name">
+
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+Desktop:
+
+-------------------------------
+| First Name | Last Name |
+-------------------------------
+
+Mobile:
+
+-------------
+| First Name |
+-------------
+| Last Name |
+-------------
+15. Mini Dashboard Layout
+<div class="container">
+
+<div class="row">
+
+<div class="col-md-3">
+
+Menu
+
+</div>
+
+<div class="col-md-9">
+
+Content
+
+</div>
+
+</div>
+
+</div>
+
+Output:
+
+-------------------------------------
+| Menu | Main Dashboard |
+-------------------------------------
+16. Employee Dashboard Example
+<div class="container mt-4">
+
+<div class="row">
+
+<div class="col-md-4">
+
+<div class="card">
+
+<div class="card-body">
+
+Employees
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card">
+
+<div class="card-body">
+
+Departments
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card">
+
+<div class="card-body">
+
+Projects
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+Mini Project
+
+Build a Responsive Employee Dashboard with:
+
+Navigation Bar
+Sidebar
+Dashboard Cards
+Employee Table
+Registration Form
+Footer
+
+The page should work properly on:
+
+Mobile
+Tablet
+Laptop
+Desktop
+Interview Questions
+What is the Bootstrap Grid System?
+Why does Bootstrap use 12 columns?
+What is the difference between container and container-fluid?
+What is a Bootstrap breakpoint?
+Explain col-sm, col-md, and col-lg.
+What is offset in Bootstrap?
+What is nesting in the Bootstrap Grid?
+What are gutters?
+What is table-responsive?
+How do you create a responsive form using Bootstrap?
