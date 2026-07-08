@@ -1,0 +1,2535 @@
+
+Module 1: Introduction to Node.js
+
+Session 1: What is Node.js?
+
+Learning Objectives
+
+Understand why Node.js was created.
+
+Understand server-side JavaScript.
+
+Know where Node.js is used.
+
+Topics
+
+History of JavaScript
+
+Browser JavaScript vs Server-side JavaScript
+
+What is Node.js?
+
+Why Node.js?
+
+Features of Node.js
+
+Advantages
+
+Limitations
+
+Companies using Node.js
+
+Explain with Diagram
+Browser
+
+HTML
+CSS
+JavaScript
+
+↓
+
+Request
+
+↓
+
+Node.js Server
+
+↓
+
+Database
+
+↓
+
+Response
+Real-Time Examples
+Netflix
+
+PayPal
+
+Uber
+
+LinkedIn
+
+Walmart
+
+Explain why these companies chose Node.js:
+
+High performance
+
+Non-blocking
+
+Handles thousands of users
+
+Session 2: Install Node.js
+Install
+Download Node.js
+
+Install LTS version
+
+Explain
+
+node -v
+
+npm -v
+Difference:
+
+Node
+
+Runtime Environment
+
+NPM
+
+Package Manager
+
+Session 3: VS Code Setup
+Install
+
+VS Code
+
+Node.js Extension Pack
+
+Prettier
+
+ESLint
+
+Create Project
+
+NodeTraining
+
+│
+├── app.js
+├── package.json
+└── node_modules
+Session 4: Running First Program
+console.log("Welcome to Node.js");
+Run
+
+node app.js
+Output
+
+Welcome to Node.js
+Explain execution flow.
+
+Module 2: JavaScript Refresher for Node.js
+Topics
+
+var
+
+let
+
+const
+
+Arrow Functions
+
+Template Literals
+
+Objects
+
+Arrays
+
+Destructuring
+
+Spread Operator
+
+Rest Operator
+
+Default Parameters
+
+Callbacks
+
+Promises
+
+Async/Await
+
+Practice Programs
+
+Sum of two numbers
+
+Largest number
+
+Prime number
+
+Factorial
+
+Fibonacci
+
+Array operations
+
+Object operations
+
+Module 3: Node.js Architecture
+Most Important Topic
+
+Explain
+
+Client
+
+↓
+
+HTTP Request
+
+↓
+
+Event Loop
+
+↓
+
+Node.js Runtime
+
+↓
+
+OS
+
+↓
+
+Response
+Topics
+
+Single Thread
+
+Multi Thread
+
+Event Loop
+
+Call Stack
+
+Callback Queue
+
+Event Queue
+
+Non-blocking I/O
+
+Blocking I/O
+
+Example
+
+console.log("Start");
+
+setTimeout(() => {
+    console.log("Middle");
+},2000);
+
+console.log("End");
+Output
+
+Start
+End
+Middle
+Explain Event Loop.
+
+Module 4: REPL
+Explain
+
+node
+Commands
+
+2+3
+
+10*20
+
+var x=10
+
+x
+Exit
+
+.exit
+Module 5: Modules
+Topics
+
+What is Module?
+
+Built-in Module
+
+Custom Module
+
+Third-party Module
+
+Create
+
+math.js
+function add(a,b){
+return a+b;
+}
+
+module.exports=add;
+app.js
+
+const add=require('./math');
+
+console.log(add(10,20));
+Module 6: NPM
+Explain
+
+npm init
+
+npm init -y
+package.json
+
+Explain every property
+
+name
+
+version
+
+description
+
+main
+
+scripts
+
+dependencies
+
+author
+
+license
+Install Package
+
+npm install express
+
+npm install lodash
+Install Dev Dependency
+
+npm install nodemon --save-dev
+Module 7: File System (fs)
+Topics
+
+Read File
+
+Write File
+
+Append
+
+Delete
+
+Rename
+
+Example
+
+const fs=require('fs');
+
+fs.writeFileSync("demo.txt","Hello");
+Module 8: Path Module
+Topics
+
+dirname
+
+basename
+
+extname
+
+join
+
+resolve
+Module 9: OS Module
+Topics
+
+hostname
+
+platform
+
+cpus
+
+freemem
+
+totalmem
+Module 10: Events
+Explain EventEmitter
+
+const EventEmitter=require('events');
+Create Event
+
+Trigger Event
+
+Listen Event
+
+Module 11: HTTP Module
+Create Server
+
+const http=require('http');
+
+http.createServer((req,res)=>{
+
+res.write("Welcome");
+
+res.end();
+
+}).listen(3000);
+Open
+
+http://localhost:3000
+Module 12: Express.js
+Why Express?
+
+Install
+
+npm install express
+Create Server
+
+Routes
+
+GET
+
+POST
+
+PUT
+
+DELETE
+Module 13: Middleware
+Explain
+
+Request
+
+↓
+
+Middleware
+
+↓
+
+Controller
+
+↓
+
+Response
+Create Custom Middleware
+
+Application Middleware
+
+Router Middleware
+
+Module 14: REST API
+Create APIs
+
+GET /employees
+
+GET /employees/{id}
+
+POST /employees
+
+PUT /employees/{id}
+
+DELETE /employees/{id}
+Test using
+
+Postman
+
+Thunder Client
+
+Module 15: Express Router
+Create
+
+routes
+
+controllers
+
+services
+Folder Structure
+
+project
+
+controllers
+
+routes
+
+services
+
+models
+
+package.json
+
+server.js
+Module 16: MongoDB Basics
+Topics
+
+Install MongoDB
+
+Compass
+
+Database
+
+Collection
+
+Document
+
+Connect Node.js
+
+Using
+
+mongoose
+CRUD
+
+Insert
+
+Update
+
+Delete
+
+Find
+
+Module 17: Authentication
+Topics
+
+Login
+
+Register
+
+Password Hashing
+
+JWT Token
+
+Packages
+
+bcrypt
+
+jsonwebtoken
+Module 18: Async Programming
+Topics
+
+Callback
+
+Promise
+
+Async
+
+Await
+
+Difference between synchronous and asynchronous programming.
+
+Module 19: Error Handling
+Try Catch
+
+Custom Error
+
+Express Error Middleware
+
+Module 20: Mini Project
+Employee Management System
+
+Features
+
+Login
+
+Register
+
+Add Employee
+
+Update Employee
+
+Delete Employee
+
+Search Employee
+
+JWT Authentication
+
+MongoDB Integration
+
+Module 21: Best Practices
+MVC Architecture
+
+Environment Variables (.env)
+
+Logging
+
+Validation
+
+Error Handling
+
+Folder Structure
+
+Reusable Code
+
+Security Practices
+
+Suggested 10-Day Training Schedule
+Day	Topics
+Day 1	Introduction, Installation, First Program
+Day 2	JavaScript Refresher (ES6)
+Day 3	Node.js Architecture, Event Loop, REPL
+Day 4	Modules, NPM, File System, Path, OS
+Day 5	Events, HTTP Module
+Day 6	Express.js, Routing, Middleware
+Day 7	REST APIs, Postman, Project Structure
+Day 8	MongoDB, Mongoose, CRUD Operations
+Day 9	JWT Authentication, Password Hashing, Error Handling
+Day 10	Employee Management Mini Project and Best Practices
+Teaching Tips for Freshers
+Begin each session by revising the previous day's concepts for 10–15 minutes.
+
+Explain concepts with diagrams before writing code.
+
+Write all examples live instead of pasting code.
+
+After each module, give one coding exercise for individual practice.
+
+End every session with a short quiz (5–10 questions) and a small assignment to reinforce learning.
+
+This sequence gradually builds from JavaScript fundamentals to creating a secure Node.js REST API, making it well-suited for freshers entering backend development.
+
+
+Module 1: Introduction to Node.js
+
+Module 1: Introduction to Node.js (Corporate Training – Freshers)
+Duration: 2–3 Hours
+Audience: Freshers / Beginners
+Prerequisites: Basic JavaScript knowledge (variables, functions, loops)
+
+Learning Objectives
+By the end of this module, learners will be able to:
+
+Understand what Node.js is.
+
+Explain why Node.js was developed.
+
+Differentiate between Browser JavaScript and Node.js.
+
+Install Node.js and verify the installation.
+
+Execute their first Node.js program.
+
+Understand the role of NPM.
+
+Use the Node.js REPL.
+
+Agenda
+Introduction to JavaScript
+
+Why Node.js?
+
+What is Node.js?
+
+Features of Node.js
+
+Node.js Architecture (High Level)
+
+Where is Node.js Used?
+
+Installing Node.js
+
+Understanding NPM
+
+Running the First Node.js Program
+
+Introduction to REPL
+
+Hands-on Exercise
+
+Interview Questions
+
+1. Introduction to JavaScript
+Ask learners:
+Which language is used to make web pages interactive?
+
+Answer: JavaScript
+
+Initially, JavaScript was designed to run only inside web browsers.
+
+Example:
+
+Form Validation
+
+Button Click Events
+
+Image Slider
+
+Menu Navigation
+
+Example:
+
+alert("Welcome");
+This code runs inside a browser.
+
+Problem Before Node.js
+Before Node.js:
+
+HTML → UI
+
+CSS → Styling
+
+JavaScript → Browser only
+
+Backend → Java, PHP, Python, .NET
+
+Developers had to learn two languages:
+
+Frontend → JavaScript
+
+Backend → Java/PHP
+
+This increased development time.
+
+Why Node.js?
+Ryan Dahl introduced Node.js in 2009.
+
+Goal
+Use JavaScript on the server.
+
+Now developers can use:
+
+Frontend → JavaScript
+
+Backend → JavaScript
+
+One language for full-stack development.
+
+What is Node.js?
+Definition:
+
+Node.js is an open-source, cross-platform, JavaScript runtime environment that allows JavaScript to run outside the browser, especially on the server.
+
+Simple Definition
+Node.js allows JavaScript to run on the server.
+
+What is Runtime Environment?
+A Runtime Environment provides everything required to execute a program.
+
+Node.js runtime includes:
+
+JavaScript Engine (V8)
+
+Memory Management
+
+File System Access
+
+Networking APIs
+
+Process Management
+
+Browser JavaScript vs Node.js
+Browser JavaScript	Node.js
+Runs inside browser	Runs outside browser
+Manipulates HTML	Works with files
+Uses DOM	No DOM
+Uses Window object	No Window object
+Cannot access OS files directly	Can access files
+Used for UI	Used for Backend
+Example
+Browser:
+
+document.getElementById("name");
+Works only in browser.
+
+Node.js
+
+const fs = require("fs");
+Works only in Node.js.
+
+Features of Node.js
+1. Open Source
+Free to use.
+
+2. Cross Platform
+Runs on
+
+Windows
+
+Linux
+
+macOS
+
+3. Fast
+Uses Google's V8 JavaScript Engine.
+
+V8 converts JavaScript into machine code for faster execution.
+
+4. Event Driven
+Works based on events.
+
+Example
+
+Button Click
+
+File Upload
+
+HTTP Request
+
+5. Non-blocking I/O
+Node.js doesn't wait for one operation to finish before starting another.
+
+This enables handling many requests efficiently.
+
+6. Single Threaded
+Uses one main thread with an Event Loop to process many requests.
+
+Explain:
+
+"Single thread does not mean it can handle only one user. It uses asynchronous processing to serve many users concurrently."
+
+High-Level Architecture
+Client
+
+↓
+
+HTTP Request
+
+↓
+
+Node.js Server
+
+↓
+
+Event Loop
+
+↓
+
+Operating System
+
+↓
+
+Database/File
+
+↓
+
+Response
+Explain the flow:
+
+Client sends request.
+
+Node.js receives it.
+
+Event Loop manages tasks.
+
+If a task takes time (e.g., database or file), Node.js delegates it.
+
+When complete, the response is sent back.
+
+Advantages of Node.js
+Fast
+
+Lightweight
+
+Scalable
+
+Easy to learn
+
+Large package ecosystem (NPM)
+
+Excellent for APIs
+
+Excellent for Microservices
+
+Suitable for Real-Time Applications
+
+Limitations
+Not ideal for CPU-intensive tasks.
+
+Heavy calculations can block the Event Loop.
+
+Large computations may require worker threads or separate services.
+
+Where is Node.js Used?
+REST APIs
+
+Microservices
+
+Chat Applications
+
+Online Games
+
+Video Streaming
+
+Real-Time Dashboards
+
+IoT Applications
+
+E-commerce Platforms
+
+Companies Using Node.js
+Examples include:
+
+Netflix
+
+PayPal
+
+LinkedIn
+
+Uber
+
+Walmart
+
+NASA
+
+Explain that these companies benefit from Node.js for handling many simultaneous users with good performance.
+
+Installing Node.js
+Step 1
+Download Node.js (LTS version).
+
+Step 2
+Install using default options.
+
+Step 3
+Open Terminal or Command Prompt.
+
+Verify installation.
+
+node -v
+Example Output
+
+v24.x.x
+Verify npm.
+
+npm -v
+Example Output
+
+11.x.x
+What is NPM?
+NPM = Node Package Manager
+
+It helps developers:
+
+Install libraries
+
+Update libraries
+
+Remove libraries
+
+Manage project dependencies
+
+Example:
+
+npm install express
+Create First Project
+NodeTraining/
+
+    app.js
+Create file:
+
+app.js
+First Node.js Program
+console.log("Welcome to Node.js");
+Run:
+
+node app.js
+Output
+
+Welcome to Node.js
+Explain:
+
+console.log() prints output to the terminal.
+
+node app.js executes the JavaScript file.
+
+Understanding REPL
+REPL stands for:
+
+Read
+
+Evaluate
+
+Print
+
+Loop
+
+Start REPL:
+
+node
+Try:
+
+2 + 3
+Output:
+
+5
+Variables:
+
+let name = "Srini";
+name
+Output:
+
+Srini
+Exit:
+
+.exit
+or press:
+
+Ctrl + C
+(twice)
+
+Hands-on Exercise
+Exercise 1
+Print your name.
+
+console.log("My Name is Ravi");
+Exercise 2
+Print your age.
+
+console.log(22);
+Exercise 3
+Print multiple lines.
+
+console.log("Welcome");
+console.log("Node.js");
+console.log("Training");
+Exercise 4
+Declare variables.
+
+let name = "Ravi";
+let age = 22;
+
+console.log(name);
+console.log(age);
+Summary
+At the end of this module, learners should know:
+
+What Node.js is.
+
+Why Node.js was created.
+
+Browser JavaScript vs. Node.js.
+
+Key features of Node.js.
+
+Basic architecture.
+
+Installing Node.js.
+
+Using npm.
+
+Running the first Node.js program.
+
+Using the REPL.
+
+Interview Questions
+What is Node.js?
+
+Is Node.js a programming language?
+
+Who created Node.js, and in which year?
+
+What is the V8 JavaScript Engine?
+
+What is the difference between Browser JavaScript and Node.js?
+
+What is npm?
+
+What is REPL?
+
+Why is Node.js considered fast?
+
+What is meant by non-blocking I/O?
+
+Name some real-world applications of Node.js.
+
+This module establishes the foundation for the rest of the course. The next module can focus on JavaScript ES6 Essentials for Node.js, ensuring learners are comfortable with the language features most commonly used in Node.js development.
+
+
+module 2
+
+Module 2: JavaScript Essentials for Node.js (ES6+)
+Duration: 5–6 Hours (1 Day)
+Audience: Freshers
+Prerequisites: Module 1 – Introduction to Node.js
+
+Trainer Tip: Before writing Node.js applications, ensure learners are comfortable with modern JavaScript (ES6+). Most Node.js codebases use these features extensively.
+
+Learning Objectives
+By the end of this module, learners will be able to:
+
+Understand ES6+ features used in Node.js.
+
+Work with variables and data types.
+
+Use functions, arrow functions, and template literals.
+
+Create and manipulate arrays and objects.
+
+Use destructuring, spread, and rest operators.
+
+Understand callbacks, promises, and async/await.
+
+Write clean, modern JavaScript code.
+
+Session 1: Variables
+Introduction
+JavaScript provides three ways to declare variables:
+
+var
+
+let
+
+const
+
+var
+var name = "John";
+console.log(name);
+Characteristics
+Function scoped
+
+Can be redeclared
+
+Can be updated
+
+let
+let age = 25;
+console.log(age);
+Characteristics
+Block scoped
+
+Cannot be redeclared
+
+Can be updated
+
+const
+const country = "India";
+console.log(country);
+Characteristics
+Block scoped
+
+Cannot be redeclared
+
+Cannot be reassigned
+
+Interview Question
+Which variable declaration is recommended?
+
+Answer:
+
+Use const by default.
+
+Use let when the value changes.
+
+Avoid var in modern applications.
+
+Session 2: Data Types
+Primitive Types
+Number
+
+String
+
+Boolean
+
+Undefined
+
+Null
+
+BigInt
+
+Symbol
+
+Example
+
+let id = 100;
+let name = "Srini";
+let active = true;
+
+console.log(typeof id);
+console.log(typeof name);
+console.log(typeof active);
+Session 3: Operators
+Arithmetic Operators
+
+let a = 20;
+let b = 10;
+
+console.log(a + b);
+console.log(a - b);
+console.log(a * b);
+console.log(a / b);
+Comparison Operators
+
+console.log(10 > 5);
+console.log(10 < 5);
+console.log(10 == "10");
+console.log(10 === "10");
+Explain
+== → compares value only
+
+=== → compares value and data type
+
+Session 4: Conditional Statements
+if
+let age = 20;
+
+if(age >= 18){
+    console.log("Eligible");
+}
+if...else
+if(age >=18){
+    console.log("Adult");
+}else{
+    console.log("Minor");
+}
+switch
+let day = 2;
+
+switch(day){
+case 1:
+console.log("Monday");
+break;
+
+case 2:
+console.log("Tuesday");
+break;
+
+default:
+console.log("Invalid");
+}
+Session 5: Loops
+For Loop
+
+for(let i=1;i<=5;i++){
+console.log(i);
+}
+While Loop
+
+let i=1;
+
+while(i<=5){
+console.log(i);
+i++;
+}
+for...of
+
+const numbers=[10,20,30];
+
+for(const n of numbers){
+console.log(n);
+}
+Session 6: Functions
+Traditional Function
+
+function add(a,b){
+return a+b;
+}
+
+console.log(add(10,20));
+Function Expression
+
+const multiply=function(a,b){
+return a*b;
+};
+
+console.log(multiply(5,4));
+Session 7: Arrow Functions
+Traditional
+
+function square(x){
+return x*x;
+}
+Arrow
+
+const square=(x)=>{
+return x*x;
+};
+
+console.log(square(5));
+Short Form
+
+const square=x=>x*x;
+Explain Advantages
+Less code
+
+Cleaner syntax
+
+Commonly used in Node.js
+
+Preserves lexical this
+
+Session 8: Template Literals
+Old Style
+
+let name="John";
+
+console.log("Welcome "+name);
+Modern Style
+
+let name="John";
+
+console.log(`Welcome ${name}`);
+Session 9: Arrays
+Create Array
+
+const fruits=["Apple","Orange","Banana"];
+Access
+
+console.log(fruits[0]);
+Methods
+
+fruits.push("Mango");
+fruits.pop();
+fruits.shift();
+fruits.unshift("Kiwi");
+Loop
+
+for(const fruit of fruits){
+console.log(fruit);
+}
+Session 10: Objects
+const employee={
+id:101,
+name:"Ravi",
+salary:50000
+};
+
+console.log(employee.name);
+Add Property
+
+employee.city="Hyderabad";
+Update
+
+employee.salary=60000;
+Session 11: Destructuring
+Array
+
+const colors=["Red","Green","Blue"];
+
+const [first,second]=colors;
+
+console.log(first);
+console.log(second);
+Object
+
+const student={
+id:1,
+name:"Anil"
+};
+
+const {id,name}=student;
+
+console.log(id);
+console.log(name);
+Session 12: Spread Operator (...)
+const arr1=[10,20];
+
+const arr2=[...arr1,30,40];
+
+console.log(arr2);
+Object Example
+
+const emp={
+name:"Ravi"
+};
+
+const details={
+...emp,
+city:"Hyderabad"
+};
+
+console.log(details);
+Session 13: Rest Operator (...)
+function total(...numbers){
+
+let sum=0;
+
+for(const n of numbers){
+sum+=n;
+}
+
+return sum;
+}
+
+console.log(total(10,20,30,40));
+Session 14: Default Parameters
+function greet(name="Guest"){
+console.log(`Welcome ${name}`);
+}
+
+greet();
+greet("Srini");
+Session 15: Callbacks
+function display(name){
+console.log(name);
+}
+
+function process(callback){
+callback("Node.js");
+}
+
+process(display);
+Explain
+A callback is a function passed as an argument to another function.
+
+Session 16: Promises
+const promise=new Promise((resolve,reject)=>{
+
+const success=true;
+
+if(success)
+resolve("Success");
+
+else
+reject("Failed");
+
+});
+
+promise
+.then(result=>console.log(result))
+.catch(error=>console.log(error));
+Session 17: Async/Await
+function fetchData(){
+
+return Promise.resolve("Node.js Training");
+}
+
+async function display(){
+
+const data=await fetchData();
+
+console.log(data);
+
+}
+
+display();
+Explain:
+
+async makes a function asynchronous.
+
+await pauses execution until the Promise resolves.
+
+Session 18: Array Methods (Very Important)
+map()
+const numbers=[1,2,3,4];
+
+const squares=numbers.map(n=>n*n);
+
+console.log(squares);
+filter()
+const numbers=[10,15,20,25];
+
+const even=numbers.filter(n=>n%2===0);
+
+console.log(even);
+find()
+const numbers=[10,20,30];
+
+const value=numbers.find(n=>n>15);
+
+console.log(value);
+reduce()
+const numbers=[10,20,30];
+
+const total=numbers.reduce((sum,n)=>sum+n,0);
+
+console.log(total);
+Hands-on Exercises
+Print numbers from 1 to 20.
+
+Find the largest of three numbers.
+
+Check whether a number is even or odd.
+
+Reverse a string.
+
+Find the factorial of a number.
+
+Calculate the sum of an array.
+
+Create an employee object and print its properties.
+
+Use map() to calculate the square of numbers.
+
+Use filter() to display even numbers.
+
+Use reduce() to calculate the total salary of employees.
+
+Mini Assignment
+Develop a Student Management Program using JavaScript.
+
+Each student should have:
+
+ID
+
+Name
+
+Course
+
+Marks
+
+Implement functions to:
+
+Add a student
+
+Display all students
+
+Find a student by ID
+
+Calculate the average marks
+
+Display students with marks greater than 75
+
+Summary
+At the end of this module, learners should be comfortable with:
+
+Variables (let, const)
+
+Data types
+
+Operators
+
+Conditional statements
+
+Loops
+
+Functions
+
+Arrow functions
+
+Template literals
+
+Arrays and objects
+
+Destructuring
+
+Spread and rest operators
+
+Callbacks
+
+Promises
+
+Async/await
+
+Array methods (map, filter, find, reduce)
+
+These are the core JavaScript concepts used daily in Node.js applications and are essential before moving to built-in Node.js modules and server-side development.
+
+
+module 3
+
+Module 3: Node.js Architecture & Core Concepts
+Duration: 5–6 Hours (1 Day)
+Audience: Freshers
+Prerequisites: Module 1 & Module 2
+
+Trainer Tip: This is the most important theory module in Node.js. Freshers often struggle with the Event Loop, so use diagrams and live coding to explain each concept.
+
+Learning Objectives
+By the end of this module, learners will be able to:
+
+Understand the Node.js architecture.
+
+Explain the V8 JavaScript Engine.
+
+Understand the Event Loop.
+
+Differentiate between synchronous and asynchronous programming.
+
+Explain blocking and non-blocking I/O.
+
+Understand callbacks and asynchronous execution.
+
+Explain how Node.js handles multiple client requests.
+
+Agenda
+Node.js Architecture
+
+V8 JavaScript Engine
+
+Single Thread vs Multi Thread
+
+Event-Driven Architecture
+
+Event Loop
+
+Synchronous vs Asynchronous Programming
+
+Blocking vs Non-Blocking I/O
+
+Callback Queue
+
+Thread Pool
+
+Real-Time Examples
+
+Hands-on Exercises
+
+Interview Questions
+
+Session 1: Node.js Architecture
+What happens when a client sends a request?
+        Client
+           │
+           │ HTTP Request
+           ▼
++------------------------+
+|      Node.js Server    |
++------------------------+
+           │
+           ▼
++------------------------+
+|      Event Loop        |
++------------------------+
+           │
+           ▼
++------------------------+
+|     Thread Pool        |
+| (File System, Network) |
++------------------------+
+           │
+           ▼
+ Database / File System
+           │
+           ▼
+       HTTP Response
+Explanation
+Client sends a request.
+
+Node.js receives it.
+
+Event Loop checks whether the task is synchronous or asynchronous.
+
+Long-running tasks are delegated to the Thread Pool.
+
+Once completed, the Event Loop sends the response back to the client.
+
+Session 2: V8 JavaScript Engine
+What is V8?
+The V8 JavaScript Engine is developed by Google.
+
+It converts JavaScript code directly into machine code, making execution very fast.
+
+Features
+High performance
+
+JIT (Just-In-Time) compilation
+
+Automatic memory management
+
+Garbage Collection
+
+Interview Question
+Why is Node.js fast?
+
+Answer:
+
+Uses the V8 JavaScript Engine.
+
+Uses an Event Loop.
+
+Uses non-blocking I/O.
+
+Session 3: Single Thread vs Multi Thread
+Single Thread
+One thread executes JavaScript code.
+
+Task 1
+ ↓
+Task 2
+ ↓
+Task 3
+Node.js uses a single main JavaScript thread.
+
+Multi Thread
+Multiple threads execute tasks simultaneously.
+
+Thread 1 → Task A
+
+Thread 2 → Task B
+
+Thread 3 → Task C
+Examples:
+
+Java
+
+C#
+
+C++
+
+Important Interview Question
+Is Node.js single-threaded?
+
+Answer:
+
+JavaScript execution is single-threaded, but Node.js uses a background thread pool (via libuv) for certain operations like file system access, DNS lookups, and some cryptographic tasks. This is why it can efficiently handle many concurrent requests.
+
+Session 4: Event-Driven Architecture
+Everything in Node.js happens through events.
+
+Examples:
+
+Login
+
+Button Click
+
+File Upload
+
+HTTP Request
+
+Database Response
+
+Example
+
+console.log("Application Started");
+When a request comes in:
+
+Request
+
+↓
+
+Event Generated
+
+↓
+
+Event Loop
+
+↓
+
+Process Request
+
+↓
+
+Response
+Session 5: Event Loop
+What is the Event Loop?
+The Event Loop continuously checks whether asynchronous operations have completed. When they finish, it schedules their callbacks for execution.
+
+Event Loop Diagram
+               +------------------+
+               |    Call Stack    |
+               +------------------+
+                        │
+                        ▼
+               +------------------+
+               |    Event Loop    |
+               +------------------+
+                        │
+                        ▼
+              Callback Queue
+                        │
+                        ▼
+              Execute Callback
+Session 6: Understanding the Event Loop
+Example
+
+console.log("Start");
+
+setTimeout(() => {
+    console.log("Middle");
+}, 2000);
+
+console.log("End");
+Output
+
+Start
+End
+Middle
+Explain Line by Line
+Step 1
+console.log("Start");
+Printed immediately.
+
+Step 2
+setTimeout()
+Timer starts.
+
+The callback is registered and control returns immediately.
+
+Step 3
+console.log("End");
+Printed immediately.
+
+Step 4
+After 2 seconds
+
+The callback becomes ready and is placed into the callback queue. When the call stack is empty, the Event Loop moves it to the stack for execution.
+
+Final Output
+
+Start
+End
+Middle
+Session 7: Synchronous Programming
+Tasks execute one after another.
+
+Example
+
+console.log("A");
+console.log("B");
+console.log("C");
+Output
+
+A
+B
+C
+Session 8: Asynchronous Programming
+Example
+
+console.log("Start");
+
+setTimeout(() => {
+    console.log("Node");
+},3000);
+
+console.log("Finish");
+Output
+
+Start
+Finish
+Node
+Explain
+Node.js does not wait for the timer to complete.
+
+Session 9: Blocking I/O
+Suppose reading a large file.
+
+Read File
+
+↓
+
+Wait
+
+↓
+
+Continue
+Everything waits.
+
+Session 10: Non-Blocking I/O
+Read File
+
+↓
+
+Continue Other Work
+
+↓
+
+File Completed
+
+↓
+
+Process Result
+Node.js can continue processing other requests while waiting for I/O operations.
+
+Session 11: Real-Time Example
+Imagine a restaurant.
+
+Blocking
+One waiter serves one customer completely before moving to the next.
+
+Customers wait in line.
+
+Non-Blocking
+The waiter takes multiple orders, submits them to the kitchen, and serves completed orders as they are ready.
+
+This is similar to how Node.js handles many I/O-bound requests.
+
+Session 12: Thread Pool
+Node.js uses libuv.
+
+Thread Pool handles:
+
+File System
+
+DNS
+
+Compression
+
+Encryption
+
+Some database/network operations
+
+Default size:
+
+4 Threads
+Can be increased if needed.
+
+Session 13: Request Flow
+Client
+
+↓
+
+Express Server
+
+↓
+
+Route
+
+↓
+
+Controller
+
+↓
+
+Database
+
+↓
+
+Controller
+
+↓
+
+Response
+Session 14: Live Coding Demo
+Example
+
+console.log("Program Started");
+
+setTimeout(() => {
+    console.log("Task Completed");
+},5000);
+
+console.log("Program Finished");
+Expected Output
+
+Program Started
+Program Finished
+Task Completed
+Ask learners:
+
+Why wasn't "Task Completed" printed first?
+
+Answer:
+
+Because setTimeout() is asynchronous.
+
+Session 15: Another Demo
+console.log("1");
+
+setTimeout(() => {
+    console.log("2");
+},0);
+
+console.log("3");
+Output
+
+1
+3
+2
+Explain:
+
+Even with a delay of 0, the callback runs only after the current call stack becomes empty.
+
+Hands-on Exercises
+Exercise 1
+Predict the output.
+
+console.log("A");
+
+setTimeout(()=>{
+console.log("B");
+},1000);
+
+console.log("C");
+Exercise 2
+Predict the output.
+
+console.log("Start");
+
+setTimeout(()=>{
+console.log("Node");
+},0);
+
+console.log("End");
+Exercise 3
+Write a program that prints:
+
+Welcome
+Learning Node.js
+Completed
+using setTimeout().
+
+Exercise 4
+Create two timers:
+
+setTimeout(()=>{
+
+console.log("First");
+
+},3000);
+
+setTimeout(()=>{
+
+console.log("Second");
+
+},1000);
+Ask learners to predict the output before running the program.
+
+Best Practices
+Avoid blocking operations on the main thread.
+
+Use asynchronous APIs whenever possible.
+
+Keep callbacks small and readable.
+
+Prefer async/await over deeply nested callbacks.
+
+Understand the Event Loop before building APIs.
+
+Summary
+At the end of this module, learners should understand:
+
+Node.js Architecture
+
+V8 Engine
+
+Event Loop
+
+Single-threaded execution model
+
+Thread Pool
+
+Callback Queue
+
+Synchronous programming
+
+Asynchronous programming
+
+Blocking vs Non-Blocking I/O
+
+Request processing flow
+
+Interview Questions
+What is the Event Loop?
+
+Why is Node.js considered fast?
+
+What is the V8 JavaScript Engine?
+
+Is Node.js single-threaded or multi-threaded?
+
+What is the difference between synchronous and asynchronous programming?
+
+What is blocking I/O?
+
+What is non-blocking I/O?
+
+What is the purpose of the Thread Pool?
+
+Explain the output of a setTimeout() example.
+
+Why is Node.js suitable for APIs and real-time applications?
+
+Next Module (Module 4): Node.js Modules & NPM — covering CommonJS modules, creating custom modules, built-in modules (fs, path, os), package.json, npm commands, and dependency management.
+
+
+module 4
+
+Module 4: Node.js Modules & NPM (Node Package Manager)
+Duration: 5–6 Hours (1 Day)
+Audience: Freshers
+Prerequisites: Module 1, Module 2, Module 3
+
+Trainer Tip: This is the first hands-on module where learners begin organizing code into reusable modules. Emphasize the importance of modular programming and package management.
+
+Learning Objectives
+By the end of this module, learners will be able to:
+
+Understand what a module is.
+
+Differentiate between Built-in, Local, and Third-party modules.
+
+Create and import custom modules.
+
+Use module.exports and require().
+
+Understand the purpose of npm.
+
+Create a package.json file.
+
+Install and manage packages.
+
+Use nodemon for automatic application restart.
+
+Agenda
+What is a Module?
+
+Types of Modules
+
+Creating Custom Modules
+
+Exporting and Importing Modules
+
+CommonJS Module System
+
+Introduction to NPM
+
+package.json
+
+Installing Packages
+
+Local vs Global Packages
+
+package-lock.json
+
+nodemon
+
+Hands-on Exercises
+
+Interview Questions
+
+Session 1: What is a Module?
+Definition
+A Module is a reusable JavaScript file that contains related code (functions, variables, classes, or objects) and can be imported into other files.
+
+Benefits
+Code Reusability
+
+Easy Maintenance
+
+Better Organization
+
+Reduced Duplication
+
+Improved Readability
+
+Example Without Modules
+function add(a,b){
+    return a+b;
+}
+
+function subtract(a,b){
+    return a-b;
+}
+
+function multiply(a,b){
+    return a*b;
+}
+
+function divide(a,b){
+    return a/b;
+}
+Everything is in one file.
+
+Example With Modules
+Project
+
+│── app.js
+│── math.js
+│── employee.js
+│── student.js
+Each file has a separate responsibility.
+
+Session 2: Types of Modules
+1. Built-in Modules
+Provided by Node.js.
+
+Examples:
+
+fs
+
+path
+
+os
+
+http
+
+events
+
+url
+
+crypto
+
+2. Local (Custom) Modules
+Modules created by the developer.
+
+Example
+
+math.js
+employee.js
+student.js
+3. Third-party Modules
+Installed using npm.
+
+Examples
+
+express
+
+mongoose
+
+axios
+
+dotenv
+
+jsonwebtoken
+
+Session 3: Creating a Custom Module
+Project Structure
+NodeTraining/
+
+│── app.js
+│── math.js
+math.js
+function add(a,b){
+    return a+b;
+}
+
+module.exports = add;
+app.js
+const add = require("./math");
+
+console.log(add(10,20));
+Output
+30
+Session 4: Export Multiple Functions
+math.js
+function add(a,b){
+    return a+b;
+}
+
+function subtract(a,b){
+    return a-b;
+}
+
+function multiply(a,b){
+    return a*b;
+}
+
+module.exports = {
+    add,
+    subtract,
+    multiply
+};
+app.js
+const math = require("./math");
+
+console.log(math.add(20,10));
+
+console.log(math.subtract(20,10));
+
+console.log(math.multiply(20,10));
+Output
+30
+
+10
+
+200
+Session 5: Import Using Destructuring
+Instead of:
+
+const math = require("./math");
+
+console.log(math.add(10,20));
+Use:
+
+const {add, subtract, multiply} = require("./math");
+
+console.log(add(10,20));
+
+console.log(subtract(20,5));
+
+console.log(multiply(10,5));
+Session 6: Understanding module.exports
+Every JavaScript file is treated as a separate module.
+
+To make code available to other files:
+
+module.exports = value;
+To use exported code:
+
+const value = require("./moduleName");
+Session 7: Built-in Modules
+Importing a built-in module:
+
+const os = require("os");
+No installation required because it comes with Node.js.
+
+Session 8: Introduction to NPM
+What is NPM?
+NPM (Node Package Manager) is the default package manager for Node.js.
+
+It helps developers:
+
+Install libraries
+
+Update libraries
+
+Remove libraries
+
+Manage dependencies
+
+Share packages
+
+Check Version
+npm -v
+Session 9: Creating a Node Project
+Create a new folder.
+
+EmployeeProject
+Initialize the project.
+
+npm init
+The command asks for:
+
+Package Name
+
+Version
+
+Description
+
+Entry Point
+
+Author
+
+License
+
+Quick Initialization
+npm init -y
+Creates the project with default values.
+
+Session 10: Understanding package.json
+Example
+
+{
+  "name": "employeeproject",
+  "version": "1.0.0",
+  "description": "Node.js Training",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "Srini",
+  "license": "ISC"
+}
+Explain Every Property
+Property	Description
+name	Project name
+version	Project version
+description	Project description
+main	Entry file
+scripts	Commands to execute
+author	Developer
+license	Project license
+dependencies	Runtime packages
+devDependencies	Development packages
+Session 11: Installing Packages
+Install Express
+npm install express
+Shortcut
+
+npm i express
+Install Multiple Packages
+npm install express mongoose dotenv
+Install Specific Version
+npm install express@5
+Session 12: Installing Development Dependencies
+Development packages are required only during development.
+
+Example
+
+npm install nodemon --save-dev
+or
+
+npm i -D nodemon
+Session 13: Local vs Global Installation
+Local Installation
+npm install express
+Available only inside the current project.
+
+Global Installation
+npm install -g nodemon
+Available system-wide.
+
+Session 14: Understanding package-lock.json
+Automatically generated after installing packages.
+
+Purpose:
+
+Locks dependency versions
+
+Ensures consistent installations
+
+Improves installation speed
+
+Do not edit this file manually.
+
+Session 15: Understanding node_modules
+Contains all installed packages.
+
+Example
+
+node_modules/
+
+express/
+
+body-parser/
+
+accepts/
+
+...
+Do not modify these files directly.
+
+Session 16: Running Application
+Instead of:
+
+node app.js
+Add a script in package.json.
+
+"scripts":{
+"start":"node app.js"
+}
+Run:
+
+npm start
+Session 17: Using nodemon
+Without nodemon:
+
+Every code change requires restarting the server manually.
+
+With nodemon:
+
+npx nodemon app.js
+or, if installed globally:
+
+nodemon app.js
+The server automatically restarts whenever a file changes.
+
+Session 18: Practical Example
+Project Structure
+Calculator
+
+│── app.js
+
+│── calculator.js
+
+│── package.json
+calculator.js
+function add(a,b){
+    return a+b;
+}
+
+function subtract(a,b){
+    return a-b;
+}
+
+module.exports = {
+    add,
+    subtract
+};
+app.js
+const {add, subtract} = require("./calculator");
+
+console.log(add(100,50));
+
+console.log(subtract(100,25));
+Output
+
+150
+
+75
+Hands-on Exercises
+Exercise 1
+Create a math.js module.
+
+Functions:
+
+add()
+
+subtract()
+
+multiply()
+
+divide()
+
+Exercise 2
+Import all functions into app.js.
+
+Display the results.
+
+Exercise 3
+Create an employee.js module.
+
+Employee object:
+
+{
+id:101,
+name:"Ravi",
+salary:50000
+}
+Display the employee details.
+
+Exercise 4
+Initialize a new Node.js project using:
+
+npm init -y
+Exercise 5
+Install:
+
+express
+
+dotenv
+
+nodemon
+
+Verify that the packages appear in package.json.
+
+Best Practices
+One module should have one responsibility.
+
+Use meaningful file names.
+
+Avoid duplicate code.
+
+Install only the packages you need.
+
+Commit package.json and package-lock.json to version control.
+
+Do not commit the node_modules folder (use .gitignore).
+
+Summary
+At the end of this module, learners should understand:
+
+What a module is
+
+Types of modules
+
+Custom modules
+
+module.exports
+
+require()
+
+Built-in modules
+
+npm
+
+package.json
+
+package-lock.json
+
+node_modules
+
+Installing packages
+
+Local vs global installation
+
+nodemon
+
+Interview Questions
+What is a module in Node.js?
+
+What are the different types of modules?
+
+What is the difference between a built-in module and a third-party module?
+
+What is module.exports?
+
+What is the purpose of require()?
+
+What is npm?
+
+What is the purpose of package.json?
+
+What is the difference between dependencies and devDependencies?
+
+What is package-lock.json?
+
+Why do we use nodemon?
+
+What is the difference between local and global package installation?
+
+Why should node_modules not be committed to Git?
+
+Mini Project (End of Module)
+Build a Student Utility Application with the following structure:
+
+student-app/
+│── app.js
+│── student.js
+│── marks.js
+│── package.json
+Requirements:
+
+student.js: Export student details.
+
+marks.js: Export functions to calculate total, average, and grade.
+
+app.js: Import both modules and display a complete student report.
+
+This project reinforces module creation, exporting/importing, and project organization, preparing learners for the next module on File System (fs), path, and other built-in Node.js modules.
+
