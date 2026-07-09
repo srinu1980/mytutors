@@ -1,0 +1,3095 @@
+
+
+
+Generate micro service with jwt security with spring boot 4.1 version with basic example
+
+Below is a Spring Boot 4.1 + Spring Security + JWT + Microservices basic architecture suitable for corporate training. This example contains 4 microservices:
+
+Eureka Server
+
+API Gateway
+
+Auth Service (JWT Authentication)
+
+Employee Service (Protected REST APIs)
+
+Project Structure
+microservices-jwt-demo
+
+├── eureka-server
+├── api-gateway
+├── auth-service
+└── employee-service
+Technologies
+Spring Boot 4.1
+
+Spring Cloud 2025.x
+
+Spring Security 7
+
+Spring Cloud Gateway
+
+Spring Data JPA
+
+MySQL
+
+JWT (jjwt 0.12.x)
+
+Lombok
+
+Eureka Server
+
+Maven
+
+Architecture
+                Client
+                   |
+                   |
+            API Gateway :8080
+          /                     \
+         /                       \
+ Auth Service :8081         Employee Service :8082
+        |                           |
+        |                           |
+     MySQL                      MySQL
+
+             |
+        Eureka Server
+            :8761
+Module 1 : Eureka Server
+Dependency
+Spring Boot Starter Web
+
+Spring Cloud Netflix Eureka Server
+Main Class
+@SpringBootApplication
+@EnableEurekaServer
+public class EurekaServerApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(EurekaServerApplication.class,args);
+    }
+
+}
+application.properties
+
+server.port=8761
+
+spring.application.name=eureka-server
+
+eureka.client.register-with-eureka=false
+eureka.client.fetch-registry=false
+Run
+
+http://localhost:8761
+Module 2 : API Gateway
+Dependencies
+
+Gateway
+Eureka Discovery
+Security
+application.properties
+
+server.port=8080
+
+spring.application.name=api-gateway
+
+spring.cloud.gateway.server.webflux.routes[0].id=auth-service
+spring.cloud.gateway.server.webflux.routes[0].uri=lb://AUTH-SERVICE
+spring.cloud.gateway.server.webflux.routes[0].predicates[0]=Path=/auth/**
+
+spring.cloud.gateway.server.webflux.routes[1].id=employee-service
+spring.cloud.gateway.server.webflux.routes[1].uri=lb://EMPLOYEE-SERVICE
+spring.cloud.gateway.server.webflux.routes[1].predicates[0]=Path=/employees/**
+Gateway Filter
+
+JwtAuthenticationFilter
+Responsibilities
+
+Read JWT
+Validate JWT
+Forward Request
+Reject Invalid Token
+Module 3 : Auth Service
+Dependencies
+
+Web
+JPA
+Security
+JWT
+MySQL
+Lombok
+Entity
+@Entity
+public class User {
+
+@Id
+@GeneratedValue
+private Long id;
+
+private String username;
+
+private String password;
+
+private String role;
+
+}
+Repository
+
+public interface UserRepository
+extends JpaRepository<User,Long>{
+
+Optional<User> findByUsername(String username);
+
+}
+JWT Service
+Methods
+
+generateToken()
+
+validateToken()
+
+extractUsername()
+
+isTokenExpired()
+SecurityConfig
+@Bean
+SecurityFilterChain securityFilterChain(HttpSecurity http)
+Permit
+
+/auth/login
+
+/auth/register
+Secure
+
+Any Other API
+Authentication API
+Register
+POST
+
+/auth/register
+Request
+
+{
+"username":"admin",
+"password":"admin123",
+"role":"ADMIN"
+}
+Login
+POST
+
+/auth/login
+Request
+
+{
+"username":"admin",
+"password":"admin123"
+}
+Response
+
+{
+"token":"eyJhbGc..."
+}
+Module 4 : Employee Service
+Dependencies
+
+Web
+JPA
+Security
+JWT
+MySQL
+Entity
+
+@Entity
+public class Employee{
+
+@Id
+@GeneratedValue
+private Long id;
+
+private String name;
+
+private String department;
+
+private Double salary;
+
+}
+Repository
+
+public interface EmployeeRepository
+extends JpaRepository<Employee,Long>{
+
+}
+Service
+
+findAll()
+
+findById()
+
+save()
+
+update()
+
+delete()
+Controller
+
+@RestController
+
+@RequestMapping("/employees")
+APIs
+
+GET /employees
+
+GET /employees/{id}
+
+POST /employees
+
+PUT /employees/{id}
+
+DELETE /employees/{id}
+JWT Filter
+Every request
+
+Authorization
+
+Bearer eyJhbGc....
+↓
+
+Extract Token
+
+↓
+
+Validate Token
+
+↓
+
+Load User
+
+↓
+
+Set Authentication
+
+↓
+
+Continue Filter Chain
+
+API Flow
+Client
+
+↓
+
+POST /auth/login
+
+↓
+
+Auth Service
+
+↓
+
+JWT Generated
+
+↓
+
+Client receives JWT
+
+↓
+
+Client
+
+↓
+
+GET /employees
+
+Authorization:
+Bearer Token
+
+↓
+
+API Gateway
+
+↓
+
+JWT Validation
+
+↓
+
+Employee Service
+
+↓
+
+Response
+Security Flow
+Login
+
+↓
+
+Username + Password
+
+↓
+
+AuthenticationManager
+
+↓
+
+UserDetailsService
+
+↓
+
+Database
+
+↓
+
+Password Match
+
+↓
+
+Generate JWT
+
+↓
+
+Client
+Folder Structure
+auth-service
+
+controller
+
+service
+
+repository
+
+entity
+
+dto
+
+config
+
+security
+
+jwt
+
+exception
+Employee Service
+
+controller
+
+service
+
+repository
+
+entity
+
+dto
+
+config
+
+security
+Common JWT Classes
+JwtService
+
+JwtAuthenticationFilter
+
+JwtAuthenticationEntryPoint
+
+CustomUserDetailsService
+
+SecurityConfig
+
+JwtConstants
+API Testing
+Register
+POST
+
+/auth/register
+↓
+
+Login
+POST
+
+/auth/login
+↓
+
+Copy JWT
+
+↓
+
+Employee APIs
+GET
+
+/employees
+Header
+
+Authorization
+
+Bearer eyJhbGc...
+Microservice Communication
+Client
+   |
+API Gateway
+   |
+-------------------------
+|                       |
+Auth Service      Employee Service
+        |
+     JWT Token
+Learning Path
+Create the Eureka Server.
+
+Register the API Gateway, Auth Service, and Employee Service with Eureka.
+
+Implement user registration and login in the Auth Service.
+
+Generate and validate JWT tokens.
+
+Configure the API Gateway to validate JWTs before forwarding requests.
+
+Secure the Employee Service using Spring Security.
+
+Test the complete flow using Postman:
+
+Register a user.
+
+Log in to obtain a JWT.
+
+Access protected Employee APIs with the Authorization: Bearer <token> header.
+
+This basic project forms a solid foundation before adding more advanced features such as role-based authorization (ROLE_ADMIN, ROLE_USER), refresh tokens, centralized configuration, distributed tracing, circuit breakers, and inter-service communication with OpenFeign.
+
+
+generate code for Common JWT Classes
+
+Yes. For a Spring Boot 4.1 + Spring Security 7 + Microservices project, the common JWT module should be reusable by all microservices (API Gateway, Employee Service, Department Service, etc.).
+
+Common Security Module Structure
+common-security
+│
+├── config
+│     └── SecurityConfig.java
+│
+├── jwt
+│     ├── JwtService.java
+│     ├── JwtAuthenticationFilter.java
+│     ├── JwtAuthenticationEntryPoint.java
+│     ├── JwtConstants.java
+│     └── JwtAuthenticationToken.java (Optional)
+│
+├── service
+│     └── CustomUserDetailsService.java
+│
+├── util
+│     └── SecurityUtils.java
+│
+└── dto
+      └── JwtUser.java
+Classes to Implement
+1. JwtConstants.java
+Contains:
+
+Secret Key
+
+Expiration Time
+
+Header Name
+
+Bearer Prefix
+
+public final class JwtConstants {
+
+    public static final String SECRET_KEY =
+            "Your256BitSecretKeyForJwtAuthentication123456789";
+
+    public static final long EXPIRATION =
+            86400000;
+
+    public static final String HEADER =
+            "Authorization";
+
+    public static final String PREFIX =
+            "Bearer ";
+
+    private JwtConstants() {
+    }
+
+}
+2. JwtService.java
+Responsibilities
+
+Generate Token
+
+Validate Token
+
+Extract Username
+
+Extract Roles
+
+Check Expiration
+
+Methods
+
+generateToken()
+
+extractUsername()
+
+extractRole()
+
+validateToken()
+
+isTokenExpired()
+3. JwtAuthenticationFilter.java
+Responsibilities
+
+Read Authorization Header
+
+Remove Bearer Prefix
+
+Validate JWT
+
+Set Authentication
+
+Continue Filter Chain
+
+Flow
+
+Request
+
+↓
+
+Authorization Header
+
+↓
+
+Extract JWT
+
+↓
+
+Validate JWT
+
+↓
+
+Load User
+
+↓
+
+SecurityContextHolder
+
+↓
+
+Next Filter
+4. CustomUserDetailsService.java
+Responsibilities
+
+Load User By Username
+
+↓
+
+Database
+
+↓
+
+Convert to UserDetails
+
+↓
+
+Return UserDetails
+5. JwtAuthenticationEntryPoint.java
+Handles
+
+401 Unauthorized
+
+Invalid Token
+
+Missing Token
+
+Expired Token
+Returns
+
+{
+  "status":401,
+  "message":"Unauthorized"
+}
+6. SecurityConfig.java
+Responsibilities
+
+Disable CSRF
+
+Stateless Session
+
+Password Encoder
+
+AuthenticationManager
+
+JWT Filter
+
+Public URLs
+
+Secure Remaining APIs
+
+Public APIs
+
+/auth/login
+
+/auth/register
+
+/swagger-ui/**
+
+/v3/api-docs/**
+Secure
+
+Any Other Request
+7. SecurityUtils.java
+Helper Methods
+
+Current Username
+
+Current User
+
+Current Roles
+
+Is Authenticated
+
+Has Role()
+JWT Request Flow
+Client
+
+↓
+
+Login
+
+↓
+
+JWT Generated
+
+↓
+
+Bearer Token
+
+↓
+
+Gateway Filter
+
+↓
+
+Validate
+
+↓
+
+Employee Service
+
+↓
+
+Controller
+Required Maven Dependencies
+spring-boot-starter-security
+
+spring-boot-starter-web
+
+spring-security-oauth2-jose
+
+jjwt-api
+
+jjwt-impl
+
+jjwt-jackson
+
+lombok
+Integration Order
+Step-1
+JwtConstants
+
+↓
+
+Step-2
+JwtService
+
+↓
+
+Step-3
+CustomUserDetailsService
+
+↓
+
+Step-4
+JwtAuthenticationFilter
+
+↓
+
+Step-5
+SecurityConfig
+
+↓
+
+Step-6
+AuthController
+
+↓
+
+Step-7
+Employee Service Security
+
+↓
+
+Step-8
+Gateway JWT Filter
+Recommendation
+Since you're building a complete Spring Boot 4.1 microservices project for training, the next step is to implement these classes as fully working, production-ready code (compatible with Spring Security 7 and JJWT 0.12.x), rather than skeletons. That includes:
+
+JwtService.java (full implementation)
+
+JwtAuthenticationFilter.java
+
+SecurityConfig.java
+
+CustomUserDetailsService.java
+
+JwtAuthenticationEntryPoint.java
+
+SecurityUtils.java
+
+Maven pom.xml dependencies
+
+application.properties JWT configuration
+
+This results in a reusable common-security module that can be shared across all your microservices.
+
+
+JwtService.java implement code
+
+Below is a production-ready JwtService.java compatible with Spring Boot 4.1, Spring Security 7, and JJWT 0.12.x.
+
+Note: This implementation assumes you store the JWT secret and expiration in application.properties.
+
+JwtService.java
+package com.example.common.security.jwt;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
+import io.jsonwebtoken.io.Decoders;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+
+import javax.crypto.SecretKey;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+@Service
+public class JwtService {
+
+    @Value("${jwt.secret}")
+    private String secret;
+
+    @Value("${jwt.expiration}")
+    private long jwtExpiration;
+
+    /**
+     * Generate JWT Token
+     */
+    public String generateToken(UserDetails userDetails) {
+
+        Map<String, Object> claims = new HashMap<>();
+
+        Collection<? extends GrantedAuthority> authorities =
+                userDetails.getAuthorities();
+
+        claims.put("roles",
+                authorities.stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList()));
+
+        return createToken(claims, userDetails.getUsername());
+    }
+
+    /**
+     * Create JWT Token
+     */
+    private String createToken(Map<String, Object> claims,
+                               String username) {
+
+        return Jwts.builder()
+                .claims(claims)
+                .subject(username)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .signWith(getSigningKey())
+                .compact();
+    }
+
+    /**
+     * Extract Username
+     */
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    /**
+     * Extract Expiration
+     */
+    public Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
+    }
+
+    /**
+     * Extract Roles
+     */
+    @SuppressWarnings("unchecked")
+    public Collection<String> extractRoles(String token) {
+
+        Claims claims = extractAllClaims(token);
+
+        return claims.get("roles", Collection.class);
+    }
+
+    /**
+     * Generic Claim Extractor
+     */
+    public <T> T extractClaim(String token,
+                              Function<Claims, T> resolver) {
+
+        Claims claims = extractAllClaims(token);
+
+        return resolver.apply(claims);
+    }
+
+    /**
+     * Validate Token
+     */
+    public boolean validateToken(String token,
+                                 UserDetails userDetails) {
+
+        final String username = extractUsername(token);
+
+        return username.equals(userDetails.getUsername())
+                && !isTokenExpired(token);
+    }
+
+    /**
+     * Check Expiration
+     */
+    public boolean isTokenExpired(String token) {
+
+        return extractExpiration(token).before(new Date());
+    }
+
+    /**
+     * Parse JWT
+     */
+    private Claims extractAllClaims(String token) {
+
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    /**
+     * Signing Key
+     */
+    private SecretKey getSigningKey() {
+
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    /**
+     * Validate JWT Structure
+     */
+    public boolean isValid(String token) {
+
+        try {
+
+            extractAllClaims(token);
+
+            return true;
+
+        } catch (JwtException | IllegalArgumentException ex) {
+
+            return false;
+        }
+    }
+
+}
+application.properties
+# JWT Secret (Base64 encoded 256-bit key)
+jwt.secret=VGhpc0lzQVN1cGVyU2VjcmV0S2V5Rm9ySldUU3ByaW5nQm9vdDQxQXBwbGljYXRpb24xMjM0NTY=
+
+# 24 Hours
+jwt.expiration=86400000
+Required Maven Dependencies
+<!-- Spring Security -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+
+<!-- JWT -->
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-api</artifactId>
+    <version>0.12.7</version>
+</dependency>
+
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-impl</artifactId>
+    <version>0.12.7</version>
+    <scope>runtime</scope>
+</dependency>
+
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-jackson</artifactId>
+    <version>0.12.7</version>
+    <scope>runtime</scope>
+</dependency>
+Features Included
+✅ Spring Boot 4.1 compatible
+
+✅ Spring Security 7 compatible
+
+✅ JJWT 0.12.x API
+
+✅ Generates JWT with username and roles
+
+✅ Extracts username and roles
+
+✅ Validates token and expiration
+
+✅ Uses HMAC SHA-256 signing
+
+✅ Stateless and suitable for reuse in a common-security module
+
+The next class to implement is typically JwtAuthenticationFilter.java, which reads the Authorization: Bearer <token> header, validates the JWT using this JwtService, and populates the Spring Security SecurityContext.
+
+
+JwtAuthenticationFilter.java
+
+Below is a production-ready JwtAuthenticationFilter.java for Spring Boot 4.1, Spring Security 7, and JJWT 0.12.x. It works with the JwtService implementation provided earlier.
+
+JwtAuthenticationFilter.java
+package com.example.common.security.jwt;
+
+import java.io.IOException;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.lang.NonNull;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+@Component
+@RequiredArgsConstructor
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
+
+    @Override
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain)
+            throws ServletException, IOException {
+
+        // Read Authorization Header
+        String authHeader = request.getHeader("Authorization");
+
+        // Header not present or invalid
+        if (!StringUtils.hasText(authHeader)
+                || !authHeader.startsWith("Bearer ")) {
+
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // Extract JWT
+        String token = authHeader.substring(7);
+
+        try {
+
+            // Extract Username
+            String username = jwtService.extractUsername(token);
+
+            if (username != null
+                    && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+                // Load User
+                UserDetails userDetails =
+                        userDetailsService.loadUserByUsername(username);
+
+                // Validate Token
+                if (jwtService.validateToken(token, userDetails)) {
+
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails,
+                                    null,
+                                    userDetails.getAuthorities());
+
+                    authentication.setDetails(
+                            new WebAuthenticationDetailsSource()
+                                    .buildDetails(request));
+
+                    SecurityContextHolder.getContext()
+                            .setAuthentication(authentication);
+                }
+            }
+
+        } catch (Exception ex) {
+
+            // Clear Security Context if token is invalid
+            SecurityContextHolder.clearContext();
+        }
+
+        filterChain.doFilter(request, response);
+    }
+}
+Filter Execution Flow
+Incoming Request
+        │
+        ▼
+Authorization Header
+        │
+        ▼
+Bearer eyJhbGciOiJIUzI1Ni...
+        │
+        ▼
+Extract JWT Token
+        │
+        ▼
+JwtService.extractUsername()
+        │
+        ▼
+Load UserDetails
+        │
+        ▼
+JwtService.validateToken()
+        │
+        ▼
+Create UsernamePasswordAuthenticationToken
+        │
+        ▼
+SecurityContextHolder
+        │
+        ▼
+Controller
+Register the Filter in SecurityConfig
+@Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+    http
+        .csrf(csrf -> csrf.disable())
+        .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/auth/**").permitAll()
+                .anyRequest().authenticated())
+        .addFilterBefore(
+                jwtAuthenticationFilter,
+                UsernamePasswordAuthenticationFilter.class);
+
+    return http.build();
+}
+Required Beans
+Make sure these beans are available in your application:
+
+@Bean
+public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+}
+
+@Bean
+public AuthenticationManager authenticationManager(
+        AuthenticationConfiguration configuration) throws Exception {
+
+    return configuration.getAuthenticationManager();
+}
+Recommended Project Structure
+common-security
+│
+├── jwt
+│     ├── JwtService.java
+│     ├── JwtAuthenticationFilter.java
+│     ├── JwtAuthenticationEntryPoint.java
+│     └── JwtConstants.java
+│
+├── config
+│     └── SecurityConfig.java
+│
+└── service
+      └── CustomUserDetailsService.java
+This filter is reusable across your Auth Service, Employee Service, Department Service, and other protected microservices.
+
+The next class to implement is SecurityConfig.java, which wires together this filter, stateless session management, public endpoints, and role-based authorization for Spring Security 7.
+
+
+JwtAuthenticationEntryPoint.java
+
+Below is a production-ready JwtAuthenticationEntryPoint.java compatible with Spring Boot 4.1 and Spring Security 7.
+
+The JwtAuthenticationEntryPoint is invoked whenever an unauthenticated user attempts to access a protected resource. It returns a 401 Unauthorized response with a JSON body instead of the default HTML error page.
+
+JwtAuthenticationEntryPoint.java
+package com.example.common.security.jwt;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+@Component
+public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Override
+    public void commence(HttpServletRequest request,
+                         HttpServletResponse response,
+                         AuthenticationException authException)
+            throws IOException, ServletException {
+
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+
+        Map<String, Object> error = new LinkedHashMap<>();
+        error.put("timestamp", LocalDateTime.now());
+        error.put("status", HttpServletResponse.SC_UNAUTHORIZED);
+        error.put("error", "Unauthorized");
+        error.put("message", authException.getMessage());
+        error.put("path", request.getRequestURI());
+
+        objectMapper.writeValue(response.getOutputStream(), error);
+    }
+}
+Register it in SecurityConfig
+http
+    .exceptionHandling(ex -> ex
+        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+    );
+Example Response
+If a request is sent without a valid JWT:
+
+Request
+
+GET /employees
+Authorization: Bearer invalid-token
+Response
+
+{
+  "timestamp": "2026-07-09T21:30:15.123",
+  "status": 401,
+  "error": "Unauthorized",
+  "message": "Full authentication is required to access this resource",
+  "path": "/employees"
+}
+Request Flow
+Client Request
+      │
+      ▼
+JWT Filter
+      │
+      ▼
+Token Missing / Invalid / Expired
+      │
+      ▼
+JwtAuthenticationEntryPoint
+      │
+      ▼
+HTTP 401 Unauthorized (JSON Response)
+Next Class
+The next recommended implementation is SecurityConfig.java for Spring Security 7, which will configure:
+
+SecurityFilterChain
+
+AuthenticationManager
+
+PasswordEncoder
+
+DaoAuthenticationProvider
+
+JwtAuthenticationFilter
+
+JwtAuthenticationEntryPoint
+
+Public and protected endpoints
+
+Role-based authorization (ROLE_ADMIN, ROLE_USER)
+
+
+ JwtConstants.java
+
+Below is a production-ready JwtConstants.java for Spring Boot 4.1, Spring Security 7, and JJWT 0.12.x.
+
+Rather than hardcoding sensitive values (such as the secret key), keep them in application.properties. This class contains only constant values used throughout the application.
+
+JwtConstants.java
+package com.example.common.security.jwt;
+
+public final class JwtConstants {
+
+    private JwtConstants() {
+        // Prevent instantiation
+    }
+
+    /**
+     * HTTP Header
+     */
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+
+    /**
+     * JWT Prefix
+     */
+    public static final String TOKEN_PREFIX = "Bearer ";
+
+    /**
+     * JWT Claim Names
+     */
+    public static final String ROLES = "roles";
+
+    public static final String USERNAME = "username";
+
+    /**
+     * Public URLs
+     */
+    public static final String[] PUBLIC_URLS = {
+            "/auth/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/v3/api-docs/**",
+            "/actuator/health"
+    };
+
+}
+application.properties
+Store the JWT configuration outside the Java code:
+
+# ==========================
+# JWT Configuration
+# ==========================
+
+# Base64-encoded 256-bit secret key
+jwt.secret=VGhpc0lzQVN1cGVyU2VjcmV0S2V5Rm9ySldUU3ByaW5nQm9vdDQxQXBwbGljYXRpb24xMjM0NTY=
+
+# Token validity (24 hours)
+jwt.expiration=86400000
+Usage Examples
+In JwtAuthenticationFilter
+String authHeader = request.getHeader(JwtConstants.AUTHORIZATION_HEADER);
+
+if (authHeader == null ||
+    !authHeader.startsWith(JwtConstants.TOKEN_PREFIX)) {
+
+    filterChain.doFilter(request, response);
+    return;
+}
+
+String token = authHeader.substring(JwtConstants.TOKEN_PREFIX.length());
+In JwtService
+claims.put(
+    JwtConstants.ROLES,
+    userDetails.getAuthorities()
+               .stream()
+               .map(GrantedAuthority::getAuthority)
+               .toList()
+);
+In SecurityConfig
+.authorizeHttpRequests(auth -> auth
+    .requestMatchers(JwtConstants.PUBLIC_URLS).permitAll()
+    .anyRequest().authenticated()
+)
+Why this design?
+Keeps configuration (jwt.secret, jwt.expiration) in external properties.
+
+Keeps reusable constants in one place.
+
+Avoids hardcoding secrets in source code.
+
+Makes the common-security module reusable across multiple microservices.
+
+Your reusable common-security module can now contain:
+
+common-security
+├── JwtConstants.java
+├── JwtService.java
+├── JwtAuthenticationFilter.java
+├── JwtAuthenticationEntryPoint.java
+├── SecurityUtils.java
+├── SecurityConfig.java
+└── CustomUserDetailsService.java
+This structure is well suited for sharing the same JWT security implementation across your Auth, Employee, Department, and other microservices.
+
+
+SecurityUtils.java
+
+Below is a production-ready SecurityUtils.java for Spring Boot 4.1 and Spring Security 7. It provides utility methods to access the currently authenticated user and their roles from the SecurityContext.
+
+SecurityUtils.java
+
+SecurityUtils.java
+
+Below is a reusable SecurityUtils.java implementation compatible with Spring Boot 4.1 and Spring Security 7.
+
+SecurityUtils.java
+package com.example.common.security.util;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+
+public final class SecurityUtils {
+
+    private SecurityUtils() {
+    }
+
+    /**
+     * Returns the current Authentication object.
+     */
+    public static Authentication getAuthentication() {
+        return SecurityContextHolder.getContext().getAuthentication();
+    }
+
+    /**
+     * Returns true if the current user is authenticated.
+     */
+    public static boolean isAuthenticated() {
+
+        Authentication authentication = getAuthentication();
+
+        return authentication != null
+                && authentication.isAuthenticated()
+                && !(authentication instanceof AnonymousAuthenticationToken);
+    }
+
+    /**
+     * Returns the currently logged-in username.
+     */
+    public static Optional<String> getCurrentUsername() {
+
+        Authentication authentication = getAuthentication();
+
+        if (authentication == null) {
+            return Optional.empty();
+        }
+
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof UserDetails userDetails) {
+            return Optional.of(userDetails.getUsername());
+        }
+
+        if (principal instanceof String username
+                && !"anonymousUser".equalsIgnoreCase(username)) {
+            return Optional.of(username);
+        }
+
+        return Optional.empty();
+    }
+
+    /**
+     * Returns the logged-in UserDetails object.
+     */
+    public static Optional<UserDetails> getCurrentUser() {
+
+        Authentication authentication = getAuthentication();
+
+        if (authentication == null) {
+            return Optional.empty();
+        }
+
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof UserDetails userDetails) {
+            return Optional.of(userDetails);
+        }
+
+        return Optional.empty();
+    }
+
+    /**
+     * Returns all user roles.
+     */
+    public static Collection<String> getCurrentRoles() {
+
+        Authentication authentication = getAuthentication();
+
+        if (authentication == null) {
+            return Collections.emptyList();
+        }
+
+        return authentication.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Checks whether the current user has the given role.
+     *
+     * Example:
+     * hasRole("ROLE_ADMIN")
+     */
+    public static boolean hasRole(String role) {
+
+        Authentication authentication = getAuthentication();
+
+        if (authentication == null) {
+            return false;
+        }
+
+        return authentication.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(role::equals);
+    }
+
+    /**
+     * Returns true if the current user has any of the supplied roles.
+     */
+    public static boolean hasAnyRole(String... roles) {
+
+        for (String role : roles) {
+            if (hasRole(role)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns true if the current user is an ADMIN.
+     */
+    public static boolean isAdmin() {
+        return hasRole("ROLE_ADMIN");
+    }
+
+    /**
+     * Returns true if the current user is a USER.
+     */
+    public static boolean isUser() {
+        return hasRole("ROLE_USER");
+    }
+
+}
+Example Usage
+Get Logged-in Username
+String username = SecurityUtils.getCurrentUsername()
+        .orElse("Unknown");
+Check Current User Role
+if (SecurityUtils.hasRole("ROLE_ADMIN")) {
+    // Admin logic
+}
+Get Current User
+UserDetails user = SecurityUtils.getCurrentUser()
+        .orElseThrow();
+Get All Roles
+Collection<String> roles = SecurityUtils.getCurrentRoles();
+Check Authentication
+if (SecurityUtils.isAuthenticated()) {
+    System.out.println("User is logged in");
+}
+Typical common-security Module Structure
+common-security
+│
+├── config
+│   └── SecurityConfig.java
+│
+├── jwt
+│   ├── JwtService.java
+│   ├── JwtAuthenticationFilter.java
+│   ├── JwtAuthenticationEntryPoint.java
+│   └── JwtConstants.java
+│
+├── service
+│   └── CustomUserDetailsService.java
+│
+└── util
+    └── SecurityUtils.java
+This implementation is reusable across all of your microservices, allowing controllers and services to retrieve the current authenticated user and perform role checks without directly interacting with SecurityContextHolder in every class.
+
+
+I am confusing this security in micro services. Is it possible one by one micro services with all classes with code.  No need to generate service registry and api gateway. Just only how to perform jwt security with only two end points like GetMapping and PostMapping enough.
+
+Yes, and that is actually the best way to learn it.
+
+Many developers get confused because tutorials mix Microservices + JWT + API Gateway + Eureka + Config Server + Roles all at once. Instead, build the security layer in stages.
+
+I recommend this learning path.
+
+Phase 1 (Start Here) - One Secure Microservice Only
+Don't think about Gateway or Eureka.
+
+Create only one Spring Boot 4.1 application.
+
+Project:
+
+employee-service
+Only two APIs:
+
+POST /auth/login
+
+GET /employees
+Flow:
+
+Client
+   │
+   │ POST /auth/login
+   ▼
+Generate JWT
+   │
+Return Token
+   │
+Client
+   │
+Authorization: Bearer token
+   ▼
+GET /employees
+   │
+Jwt Filter
+   │
+Validate Token
+   │
+Controller
+Nothing else.
+
+We won't use
+❌ Eureka
+
+❌ API Gateway
+
+❌ Feign Client
+
+❌ Config Server
+
+❌ Refresh Token
+
+❌ Redis
+
+❌ OAuth2
+
+Only JWT.
+
+Project Structure
+employee-service
+
+controller
+    AuthController
+    EmployeeController
+
+service
+    AuthService
+
+security
+    JwtService
+    JwtAuthenticationFilter
+    SecurityConfig
+    JwtAuthenticationEntryPoint
+    JwtConstants
+
+entity
+    User
+
+repository
+    UserRepository
+
+dto
+    LoginRequest
+    LoginResponse
+Only around 10 classes.
+
+Database
+One table only.
+
+users
+
+id
+
+username
+
+password
+Insert one user manually.
+
+username
+
+admin
+
+password
+
+admin123
+Password will be BCrypt encoded.
+
+API 1
+Login
+
+POST
+
+/auth/login
+Request
+
+{
+   "username":"admin",
+   "password":"admin123"
+}
+Response
+
+{
+   "token":"eyJhbGc..."
+}
+API 2
+GET
+
+/employees
+Header
+
+Authorization
+
+Bearer eyJhbGc...
+Response
+
+[
+   {
+      "id":1,
+      "name":"Ramesh"
+   }
+]
+Security Flow
+Login Request
+
+↓
+
+AuthenticationManager
+
+↓
+
+UserDetailsService
+
+↓
+
+Database
+
+↓
+
+Password Match
+
+↓
+
+JwtService
+
+↓
+
+Generate Token
+Next request
+
+GET /employees
+
+↓
+
+Jwt Filter
+
+↓
+
+Validate JWT
+
+↓
+
+Set Authentication
+
+↓
+
+EmployeeController
+Classes We'll Build (One by One)
+pom.xml
+
+application.properties
+
+User Entity
+
+UserRepository
+
+LoginRequest
+
+LoginResponse
+
+CustomUserDetailsService
+
+JwtService
+
+JwtAuthenticationFilter
+
+JwtAuthenticationEntryPoint
+
+SecurityConfig
+
+AuthService
+
+AuthController
+
+EmployeeController
+
+Each class will be fully explained before moving to the next one.
+
+Phase 2
+After you completely understand the single application, we'll convert it into microservices.
+
+Auth Service
+
+↓
+
+Employee Service
+Only then will we introduce Gateway.
+
+Phase 3
+Finally, we'll add:
+
+API Gateway
+
+JWT Validation in Gateway
+
+Eureka
+
+Multiple Services
+
+Role-based Authorization (ROLE_ADMIN, ROLE_USER)
+
+This is the approach I recommend for your corporate training.
+Since you're teaching freshers, we can build one complete Spring Boot 4.1 project from scratch, writing every class line by line and explaining why it is needed. Once that is working, converting it into microservices becomes straightforward because the JWT concepts remain the same—the only change is where authentication and token validation happen.
+
+This approach is much easier to understand than starting with a full microservices architecture.
+
+
+Ok, continue
+
+Excellent. This is exactly how I teach corporate batches. We will not skip a single class and we'll build a working project.
+
+Goal: Spring Boot 4.1 + Spring Security 7 + JWT
+Project: Employee Service (Single Application)
+APIs: Login & Get Employees
+
+Step 1: Create Project
+Dependencies
+Spring Web
+
+Spring Security
+
+Spring Data JPA
+
+MySQL Driver
+
+Validation
+
+Lombok
+
+JWT (jjwt)
+
+Spring Boot DevTools (Optional)
+
+Project Structure
+employee-service
+│
+├── controller
+│     AuthController
+│     EmployeeController
+│
+├── dto
+│     LoginRequest
+│     LoginResponse
+│
+├── entity
+│     User
+│
+├── repository
+│     UserRepository
+│
+├── service
+│     AuthService
+│     CustomUserDetailsService
+│
+├── security
+│     JwtService
+│     JwtAuthenticationFilter
+│     JwtAuthenticationEntryPoint
+│     SecurityConfig
+│
+└── EmployeeServiceApplication
+Step 2: Database
+Create a database.
+
+CREATE DATABASE employee_db;
+Step 3: application.properties
+# =========================
+# Server
+# =========================
+server.port=8080
+
+spring.application.name=employee-service
+
+# =========================
+# Database
+# =========================
+spring.datasource.url=jdbc:mysql://localhost:3306/employee_db
+spring.datasource.username=root
+spring.datasource.password=root
+
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# =========================
+# Hibernate
+# =========================
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+# =========================
+# JWT
+# =========================
+jwt.secret=VGhpc0lzQVN1cGVyU2VjcmV0S2V5Rm9ySldUU3ByaW5nQm9vdDQxQXBwbGljYXRpb24xMjM0NTY=
+jwt.expiration=86400000
+Project should start successfully.
+
+Step 4: Create User Entity
+package com.example.employee.entity;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name="users")
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable=false, unique=true)
+    private String username;
+
+    @Column(nullable=false)
+    private String password;
+
+    // Constructors
+    public User() {
+    }
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    // Getters & Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id=id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username=username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password=password;
+    }
+}
+What is this Entity?
+This table stores application users.
+
+id	username	password
+1	admin	BCrypt Password
+Notice that we never store the plain-text password.
+
+Step 5: UserRepository
+package com.example.employee.repository;
+
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.employee.entity.User;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+
+    Optional<User> findByUsername(String username);
+
+}
+Why do we need it?
+During login:
+
+admin
+↓
+
+Repository executes
+
+findByUsername("admin")
+↓
+
+Returns User object.
+
+Step 6: Insert One User
+After we configure Spring Security, we'll store an encrypted password.
+
+Example:
+
+Username	Password
+admin	BCrypt(admin123)
+Stop here for Module 1
+At this point you have:
+
+✅ Spring Boot project
+
+✅ Database configuration
+
+✅ User entity
+
+✅ User repository
+
+No security yet.
+
+Next Module (Module 2 – First Login)
+In the next step, we'll implement only the login flow:
+
+LoginRequest
+
+LoginResponse
+
+CustomUserDetailsService
+
+SecurityConfig
+
+PasswordEncoder
+
+AuthenticationManager
+
+AuthService
+
+AuthController
+
+We'll first make login work without JWT generation, just to understand Spring Security authentication. Once that's clear, we'll add JWT in the following module. This incremental approach makes the entire security flow much easier to understand.
+
+
+Next Module (Module 2 – First Login)
+
+Perfect. This is the most important module. Don't think about JWT yet. First, understand how Spring Security authenticates a user.
+
+Module 2 – First Login (Without JWT)
+Goal
+Implement only one API:
+
+POST /auth/login
+If the username and password are correct:
+
+Login Successful
+If incorrect:
+
+Bad Credentials
+No JWT generation yet.
+
+Authentication Flow
+Client
+   |
+POST /auth/login
+   |
+   ▼
+AuthController
+   |
+   ▼
+AuthService
+   |
+   ▼
+AuthenticationManager
+   |
+   ▼
+DaoAuthenticationProvider
+   |
+   ▼
+CustomUserDetailsService
+   |
+   ▼
+UserRepository
+   |
+   ▼
+Database
+   |
+Password Match (BCrypt)
+   |
+   ▼
+Authentication Success
+Remember this flow. Once you understand it, JWT becomes easy.
+
+Step 1: LoginRequest.java
+package com.example.employee.dto;
+
+import jakarta.validation.constraints.NotBlank;
+
+public class LoginRequest {
+
+    @NotBlank
+    private String username;
+
+    @NotBlank
+    private String password;
+
+    public LoginRequest() {
+    }
+
+    public LoginRequest(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}
+Step 2: LoginResponse.java
+package com.example.employee.dto;
+
+public class LoginResponse {
+
+    private String message;
+
+    public LoginResponse() {
+    }
+
+    public LoginResponse(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+}
+Step 3: CustomUserDetailsService.java
+This class loads the user from the database.
+
+package com.example.employee.service;
+
+import com.example.employee.entity.User;
+import com.example.employee.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.*;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class CustomUserDetailsService implements UserDetailsService {
+
+    private final UserRepository userRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String username)
+            throws UsernameNotFoundException {
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("User not found"));
+
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername())
+                .password(user.getPassword())
+                .authorities("ROLE_USER")
+                .build();
+    }
+}
+What does this class do?
+Suppose the user enters:
+
+Username : admin
+Password : admin123
+Spring Security calls:
+
+loadUserByUsername("admin")
+Repository executes:
+
+findByUsername("admin")
+Returns:
+
+User
+username = admin
+password = $2a$10...
+Step 4: PasswordEncoder Bean
+We'll add this to SecurityConfig.
+
+@Bean
+public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+}
+Why?
+
+Database stores:
+
+$2a$10....
+User types:
+
+admin123
+BCrypt compares them securely.
+
+Step 5: AuthenticationManager Bean
+@Bean
+public AuthenticationManager authenticationManager(
+        AuthenticationConfiguration configuration)
+        throws Exception {
+
+    return configuration.getAuthenticationManager();
+}
+This is responsible for authenticating the username and password.
+
+Step 6: AuthService.java
+package com.example.employee.service;
+
+import com.example.employee.dto.LoginRequest;
+import com.example.employee.dto.LoginResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.*;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class AuthService {
+
+    private final AuthenticationManager authenticationManager;
+
+    public LoginResponse login(LoginRequest request) {
+
+        Authentication authentication =
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                request.getUsername(),
+                                request.getPassword()));
+
+        return new LoginResponse("Login Successful");
+    }
+}
+What happens here?
+This line:
+
+authenticationManager.authenticate(...)
+starts the complete Spring Security authentication process.
+
+Internally:
+
+AuthenticationManager
+      |
+      ▼
+DaoAuthenticationProvider
+      |
+      ▼
+CustomUserDetailsService
+      |
+      ▼
+Database
+      |
+      ▼
+BCrypt Password Check
+      |
+      ▼
+Authentication Success
+You don't need to write this logic yourself—Spring Security does it.
+
+Step 7: AuthController.java
+package com.example.employee.controller;
+
+import com.example.employee.dto.LoginRequest;
+import com.example.employee.dto.LoginResponse;
+import com.example.employee.service.AuthService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/auth")
+@RequiredArgsConstructor
+public class AuthController {
+
+    private final AuthService authService;
+
+    @PostMapping("/login")
+    public LoginResponse login(
+            @Valid @RequestBody LoginRequest request) {
+
+        return authService.login(request);
+    }
+}
+Test Using Postman
+Request
+POST /auth/login
+{
+  "username":"admin",
+  "password":"admin123"
+}
+Response:
+
+{
+  "message":"Login Successful"
+}
+Wrong password:
+
+{
+  "timestamp":"...",
+  "status":401,
+  "error":"Unauthorized"
+}
+What is Missing?
+We haven't created SecurityConfig yet.
+
+Without it:
+
+Spring Security doesn't know which URLs are public.
+
+AuthenticationManager won't use our CustomUserDetailsService.
+
+Password encoding won't be configured.
+
+Next Module (Module 3 – SecurityConfig)
+This is the heart of Spring Security. We'll implement:
+
+SecurityFilterChain
+
+PasswordEncoder
+
+DaoAuthenticationProvider
+
+AuthenticationManager
+
+Public endpoint (/auth/login)
+
+Protected endpoint (/employees)
+
+Insert a BCrypt user into the database
+
+After Module 3, your login API will be fully functional. In the following module, we'll generate a JWT after successful authentication and use it to secure the /employees endpoint.
+
+
+Next Module (Module 3 – SecurityConfig)
+
+Excellent. This is the heart of Spring Security. Once you understand this class, you'll understand about 70% of Spring Security.
+
+Module 3 – SecurityConfig
+Goal
+We want the following behavior:
+
+URL	Authentication
+POST /auth/login	❌ No Login Required
+GET /employees	✅ Login Required
+Spring Security Flow
+                Request
+                   |
+                   |
+           SecurityFilterChain
+                   |
+         -----------------------
+         |                     |
+   /auth/login          /employees
+      Permit All         Authenticate
+                              |
+                              |
+                  AuthenticationManager
+                              |
+                              |
+                 DaoAuthenticationProvider
+                              |
+                              |
+                CustomUserDetailsService
+                              |
+                              |
+                       UserRepository
+                              |
+                              |
+                         MySQL Database
+Step 1: Create SecurityConfig.java
+package com.example.employee.security;
+
+import com.example.employee.service.CustomUserDetailsService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+
+import org.springframework.security.config.http.SessionCreationPolicy;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+    private final CustomUserDetailsService userDetailsService;
+
+    /**
+     * Password Encoder
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+
+        return new BCryptPasswordEncoder();
+
+    }
+
+    /**
+     * Authentication Provider
+     */
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+
+        DaoAuthenticationProvider provider =
+                new DaoAuthenticationProvider();
+
+        provider.setUserDetailsService(userDetailsService);
+
+        provider.setPasswordEncoder(passwordEncoder());
+
+        return provider;
+    }
+
+    /**
+     * Authentication Manager
+     */
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration configuration)
+            throws Exception {
+
+        return configuration.getAuthenticationManager();
+
+    }
+
+    /**
+     * Security Filter Chain
+     */
+    @Bean
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http)
+            throws Exception {
+
+        http
+
+                .csrf(csrf -> csrf.disable())
+
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(
+                                SessionCreationPolicy.STATELESS))
+
+                .authorizeHttpRequests(auth -> auth
+
+                        .requestMatchers("/auth/login")
+                        .permitAll()
+
+                        .anyRequest()
+                        .authenticated()
+
+                )
+
+                .authenticationProvider(authenticationProvider());
+
+        return http.build();
+
+    }
+
+}
+What happens inside SecurityConfig?
+1️⃣ PasswordEncoder
+@Bean
+PasswordEncoder
+Suppose
+
+User entered
+
+admin123
+Database
+
+$2a$10$......
+BCrypt compares them.
+
+Without PasswordEncoder
+
+❌ Password never matches.
+
+2️⃣ DaoAuthenticationProvider
+This is the actual authentication engine.
+
+It connects
+
+Spring Security
+        |
+        |
+CustomUserDetailsService
+        |
+        |
+Database
+It performs
+
+Load User
+
+↓
+
+Read Password
+
+↓
+
+BCrypt Match
+
+↓
+
+Authentication Success
+3️⃣ AuthenticationManager
+When we write
+
+authenticationManager.authenticate(...)
+This object starts authentication.
+
+Internally
+
+AuthenticationManager
+
+↓
+
+DaoAuthenticationProvider
+
+↓
+
+CustomUserDetailsService
+
+↓
+
+Database
+4️⃣ SecurityFilterChain
+This tells Spring Security
+
+Which URLs are public?
+
+Which URLs are protected?
+Here
+
+.requestMatchers("/auth/login")
+
+.permitAll()
+means
+
+No login required
+But
+
+.anyRequest()
+
+.authenticated()
+means
+
+Everything else requires authentication.
+
+Request Flow
+Login Request
+
+POST /auth/login
+↓
+
+SecurityFilterChain
+↓
+
+permitAll()
+↓
+
+Controller
+Employee API
+
+GET /employees
+↓
+
+SecurityFilterChain
+↓
+
+authenticated()
+↓
+
+No Login
+
+↓
+
+401 Unauthorized
+
+Now Create EmployeeController
+package com.example.employee.controller;
+
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/employees")
+public class EmployeeController {
+
+    @GetMapping
+    public List<String> getEmployees() {
+
+        return List.of(
+                "John",
+                "David",
+                "Smith"
+        );
+
+    }
+
+}
+Test
+Login
+POST
+
+/auth/login
+Works
+
+Employee API
+GET
+
+/employees
+Response
+
+401 Unauthorized
+Why?
+
+Because we haven't introduced JWT yet.
+
+Spring Security is correctly protecting the endpoint, but since there is no authentication mechanism (like a session or JWT token) attached to the request, access is denied.
+
+What Have We Learned?
+You should now understand the responsibilities of each component:
+
+SecurityFilterChain
+        │
+        ▼
+Which URLs are public?
+Which URLs are protected?
+
+AuthenticationManager
+        │
+        ▼
+Starts authentication
+
+DaoAuthenticationProvider
+        │
+        ▼
+Validates username and password
+
+CustomUserDetailsService
+        │
+        ▼
+Loads user from the database
+
+PasswordEncoder
+        │
+        ▼
+Compares encrypted passwords
+At this stage, no JWT has been used yet. This is intentional so you understand Spring Security first.
+
+Next Module (Module 4 – Add JWT)
+Now we'll add JWT in the simplest possible way.
+
+We'll implement only these classes:
+
+JwtService
+
+JwtAuthenticationFilter
+
+Update AuthService to generate a token after successful login.
+
+Update SecurityConfig to register the JWT filter.
+
+Call GET /employees using Authorization: Bearer <token>.
+
+This is the point where the project changes from basic Spring Security to JWT-based authentication. After completing Module 4, you'll have a fully working JWT-secured REST API.
+
+
+Next Module (Module 4 – Add JWT)
+
+Excellent. Now we are at the real JWT implementation.
+
+From this module onwards, everything will make sense because you already understand how Spring Security authenticates users.
+
+Module 4 – Add JWT Authentication
+Goal
+After successful login,
+
+Instead of
+
+{
+   "message":"Login Successful"
+}
+we will return
+
+{
+   "token":"eyJhbGciOiJIUzI1NiJ9..."
+}
+Then
+
+GET /employees
+Authorization: Bearer eyJhbGc...
+will return data.
+
+New Flow
+                POST /auth/login
+                        │
+                        ▼
+              AuthenticationManager
+                        │
+                        ▼
+          DaoAuthenticationProvider
+                        │
+                        ▼
+         CustomUserDetailsService
+                        │
+                        ▼
+                UserRepository
+                        │
+                        ▼
+                 Password Match
+                        │
+                        ▼
+                 JwtService
+                        │
+                        ▼
+               Generate JWT Token
+                        │
+                        ▼
+                    Client
+                        │
+Authorization : Bearer Token
+                        │
+                        ▼
+         JwtAuthenticationFilter
+                        │
+                        ▼
+              Validate Token
+                        │
+                        ▼
+        SecurityContextHolder
+                        │
+                        ▼
+          EmployeeController
+We need only four changes
+Step 1
+Create
+
+JwtService
+Responsibilities
+
+Generate Token
+
+Extract Username
+
+Validate Token
+
+Check Expiration
+You already have this class.
+
+Step 2
+Modify LoginResponse
+
+Old
+
+public class LoginResponse {
+
+    private String message;
+
+}
+New
+
+public class LoginResponse {
+
+    private String token;
+
+    public LoginResponse() {
+    }
+
+    public LoginResponse(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+}
+Step 3
+Modify AuthService
+
+Old
+
+authenticationManager.authenticate(...);
+
+return new LoginResponse("Login Successful");
+New
+
+@Service
+@RequiredArgsConstructor
+public class AuthService {
+
+    private final AuthenticationManager authenticationManager;
+
+    private final CustomUserDetailsService userDetailsService;
+
+    private final JwtService jwtService;
+
+    public LoginResponse login(LoginRequest request) {
+
+        authenticationManager.authenticate(
+
+                new UsernamePasswordAuthenticationToken(
+
+                        request.getUsername(),
+
+                        request.getPassword()
+
+                )
+        );
+
+        UserDetails userDetails =
+                userDetailsService.loadUserByUsername(
+                        request.getUsername());
+
+        String token =
+                jwtService.generateToken(userDetails);
+
+        return new LoginResponse(token);
+
+    }
+
+}
+What changed?
+Earlier
+
+Login
+
+↓
+
+Success Message
+Now
+
+Login
+
+↓
+
+Generate JWT
+
+↓
+
+Return JWT
+Step 4
+Client receives
+
+{
+   "token":"eyJhbGc..."
+}
+Save this token.
+
+What happens when calling GET /employees?
+Request
+
+GET /employees
+Authorization: Bearer eyJhbGc...
+Without Jwt Filter
+
+Spring Security sees
+
+Protected API
+
+↓
+
+No Authentication
+
+↓
+
+401
+Because Spring doesn't know what the JWT is.
+
+Therefore we introduce
+JwtAuthenticationFilter
+Its job is
+
+Read Header
+
+↓
+
+Extract Token
+
+↓
+
+Validate Token
+
+↓
+
+Load User
+
+↓
+
+Create Authentication
+
+↓
+
+SecurityContextHolder
+
+↓
+
+Continue Request
+Internal Flow
+GET /employees
+
+↓
+
+Authorization Header
+
+↓
+
+Bearer eyJhbGc...
+
+↓
+
+JwtAuthenticationFilter
+
+↓
+
+jwtService.extractUsername()
+
+↓
+
+CustomUserDetailsService
+
+↓
+
+UserRepository
+
+↓
+
+Load User
+
+↓
+
+jwtService.validateToken()
+
+↓
+
+SecurityContextHolder
+
+↓
+
+EmployeeController
+Why SecurityContextHolder?
+Every controller checks
+
+Is User Logged In?
+Spring looks only here
+
+SecurityContextHolder
+If Authentication exists
+
+Authenticated User
+
+↓
+
+Controller Executes
+Otherwise
+
+401 Unauthorized
+Update SecurityConfig
+Earlier
+
+http.authenticationProvider(authenticationProvider());
+Now add
+
+.addFilterBefore(
+
+        jwtAuthenticationFilter,
+
+        UsernamePasswordAuthenticationFilter.class
+)
+Complete flow
+
+http
+
+.csrf(csrf -> csrf.disable())
+
+.sessionManagement(session ->
+        session.sessionCreationPolicy(
+                SessionCreationPolicy.STATELESS))
+
+.authorizeHttpRequests(auth -> auth
+
+.requestMatchers("/auth/login")
+
+.permitAll()
+
+.anyRequest()
+
+.authenticated())
+
+.authenticationProvider(authenticationProvider())
+
+.addFilterBefore(
+
+jwtAuthenticationFilter,
+
+UsernamePasswordAuthenticationFilter.class
+
+);
+Testing
+Login
+POST /auth/login
+Response
+
+{
+   "token":"eyJhbGc..."
+}
+Copy Token
+
+↓
+
+Call
+
+GET /employees
+Header
+
+Authorization
+
+Bearer eyJhbGc...
+Response
+
+[
+   "John",
+   "David",
+   "Smith"
+]
+What did JWT replace?
+Without JWT
+
+Client
+
+↓
+
+Login
+
+↓
+
+Session Created
+
+↓
+
+Server remembers User
+With JWT
+
+Client
+
+↓
+
+Login
+
+↓
+
+JWT Generated
+
+↓
+
+Client stores Token
+
+↓
+
+Every Request sends Token
+
+↓
+
+Server validates Token
+
+↓
+
+No Session
+That's why we configure:
+
+.sessionManagement(session ->
+    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+Congratulations 🎉
+At this point you have built a complete JWT-secured Spring Boot application with:
+
+✅ User authentication
+
+✅ BCrypt password verification
+
+✅ JWT token generation
+
+✅ JWT validation
+
+✅ Protected REST API (GET /employees)
+
+✅ Stateless authentication (no HTTP session)
+
+Before moving to microservices
+I recommend one more module where we trace a single login request line by line in the debugger, showing exactly which Spring Security class is invoked (SecurityFilterChain → AuthenticationManager → DaoAuthenticationProvider → CustomUserDetailsService → JwtService → JwtAuthenticationFilter → Controller). Once you see that execution flow, converting this application into Auth Service + Employee Service becomes much easier.
+
+

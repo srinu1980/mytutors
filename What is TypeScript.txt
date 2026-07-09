@@ -1,0 +1,1330 @@
+What is TypeScript?
+
+TypeScript is an open-source programming language developed by Microsoft.
+
+It is a superset of JavaScript, which means:
+
+Every JavaScript program is valid TypeScript.
+TypeScript adds additional features such as:
+Static Typing
+Interfaces
+Enums
+Generics
+Access Modifiers
+Decorators
+Better Tooling
+
+TypeScript code is compiled into JavaScript before it runs in the browser or Node.js.
+
+Why TypeScript?
+
+JavaScript is dynamically typed.
+
+Example:
+
+let age = 25;
+
+age = "Twenty Five";
+
+console.log(age);
+
+No error occurs until runtime.
+
+TypeScript catches this during compilation.
+
+let age: number = 25;
+
+age = "Twenty Five";
+
+Compilation Error:
+
+Type 'string' is not assignable to type 'number'.
+Why Companies Prefer TypeScript
+Early error detection
+Better code quality
+Easier debugging
+Excellent IDE support
+Code auto-completion
+Improved maintainability
+Refactoring support
+Scalable for enterprise applications
+
+Popular frameworks using TypeScript:
+
+Angular
+NestJS
+Ionic
+Deno
+
+TypeScript is also widely used with:
+
+React
+Node.js
+Express.js
+TypeScript Architecture
+TypeScript (.ts)
+        │
+        ▼
+ TypeScript Compiler (tsc)
+        │
+        ▼
+ JavaScript (.js)
+        │
+        ▼
+ Browser / Node.js
+Install Node.js
+
+Download and install Node.js.
+
+Verify installation:
+
+node -v
+
+npm -v
+
+Example Output:
+
+v24.x.x
+10.x.x
+Install TypeScript
+
+Global Installation
+
+npm install -g typescript
+
+Verify
+
+tsc -v
+
+Example
+
+Version 5.9.x
+Create First Project
+mkdir TypeScriptDemo
+
+cd TypeScriptDemo
+
+Create file
+
+app.ts
+First TypeScript Program
+let message: string = "Welcome to TypeScript";
+
+console.log(message);
+
+Compile
+
+tsc app.ts
+
+Generated
+
+app.js
+
+Run
+
+node app.js
+
+Output
+
+Welcome to TypeScript
+Compile Automatically
+tsc --watch
+
+Whenever the file changes, JavaScript is regenerated automatically.
+
+tsconfig.json
+
+Generate configuration
+
+tsc --init
+
+Creates
+
+tsconfig.json
+
+Sample:
+
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "strict": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src"
+  }
+}
+Advantages of TypeScript
+JavaScript	TypeScript
+Dynamic Typing	Static Typing
+Runtime Errors	Compile-time Errors
+Less IDE Support	Excellent IDE Support
+Difficult Refactoring	Easy Refactoring
+Less Maintainable	Highly Maintainable
+Small Projects	Enterprise Projects
+JavaScript vs TypeScript
+JavaScript
+let salary = 50000;
+
+salary = "Fifty Thousand";
+
+console.log(salary);
+
+Output
+
+Fifty Thousand
+TypeScript
+let salary: number = 50000;
+
+salary = "Fifty Thousand";
+
+Compilation Error
+
+Type 'string' is not assignable to type 'number'.
+TypeScript File Extensions
+Extension	Description
+.ts	TypeScript File
+.tsx	TypeScript with JSX (React)
+.js	JavaScript File
+Real-Time Applications
+
+TypeScript is commonly used in:
+
+Angular Applications
+React Applications
+Node.js REST APIs
+Enterprise Web Applications
+E-Commerce Systems
+Banking Applications
+Healthcare Systems
+Interview Questions
+1. What is TypeScript?
+
+TypeScript is an open-source, statically typed superset of JavaScript developed by Microsoft that compiles to JavaScript.
+
+2. Why use TypeScript?
+Static typing
+Better maintainability
+Compile-time error checking
+Improved IDE support
+Suitable for large-scale applications
+3. Is every JavaScript program valid TypeScript?
+
+Yes. JavaScript is a subset of TypeScript, so existing JavaScript code can generally be used in TypeScript projects.
+
+4. What is the TypeScript compiler?
+
+The TypeScript compiler (tsc) converts TypeScript (.ts) files into JavaScript (.js) files.
+
+5. What is tsconfig.json?
+
+tsconfig.json is the configuration file that controls how the TypeScript compiler compiles the project.
+
+Hands-on Exercise
+Install Node.js and TypeScript.
+Verify the installation using node -v, npm -v, and tsc -v.
+Create a project named TypeScriptDemo.
+Write a simple app.ts file that prints "Hello, TypeScript!".
+Compile it using tsc app.ts.
+Run the generated app.js using Node.js.
+Enable automatic compilation using tsc --watch.
+Module Summary
+
+In this module, you learned:
+
+What TypeScript is
+Why TypeScript is used
+TypeScript architecture
+Installing Node.js and TypeScript
+Writing and compiling your first TypeScript program
+Using tsconfig.json
+Differences between JavaScript and TypeScript
+Common interview questions and practical exercises
+
+Next Module: TypeScript Data Types, Variables, and Type Inference, where you'll learn about number, string, boolean, any, unknown, void, never, arrays, tuples, enums, and type aliases with practical examples.
+
+
+
+
+Module 2: TypeScript Data Types, Variables, and Type Inference
+Learning Objectives
+
+After completing this module, learners will be able to:
+
+Declare variables in TypeScript.
+Understand TypeScript data types.
+Use let, const, and var.
+Perform type inference.
+Work with arrays, tuples, and enums.
+Understand any, unknown, void, and never.
+What is a Data Type?
+
+A data type specifies the kind of value that a variable can store.
+
+Example:
+
+Number
+String
+Boolean
+Array
+Object
+Variable Declaration
+
+TypeScript supports three keywords:
+
+let
+const
+var
+Using let
+let name: string = "John";
+let age: number = 25;
+
+console.log(name);
+console.log(age);
+
+Output:
+
+John
+25
+Using const
+const PI: number = 3.14159;
+
+console.log(PI);
+
+Output:
+
+3.14159
+
+const variables cannot be reassigned.
+
+const PI = 3.14;
+
+PI = 5;
+
+Compilation Error:
+
+Cannot assign to 'PI' because it is a constant.
+Using var
+var city: string = "Hyderabad";
+
+console.log(city);
+
+Recommendation: Avoid var in modern TypeScript. Prefer let and const.
+
+Primitive Data Types
+Number
+let salary: number = 50000;
+
+console.log(salary);
+String
+let company: string = "OpenAI";
+
+console.log(company);
+Boolean
+let isActive: boolean = true;
+
+console.log(isActive);
+BigInt
+let population: bigint = 12345678901234567890n;
+
+console.log(population);
+Symbol
+const id = Symbol("employee");
+
+console.log(id);
+Type Inference
+
+TypeScript automatically determines the type.
+
+let course = "TypeScript";
+
+TypeScript infers:
+
+string
+
+Another example:
+
+let marks = 95;
+
+Inferred type:
+
+number
+Explicit Type
+let marks: number = 95;
+Arrays
+Number Array
+let numbers: number[] = [10, 20, 30, 40];
+
+console.log(numbers);
+String Array
+let cities: string[] = [
+    "Hyderabad",
+    "Chennai",
+    "Bangalore"
+];
+
+console.log(cities);
+Generic Array
+let employees: Array<string> = [
+    "John",
+    "David",
+    "Smith"
+];
+
+console.log(employees);
+Tuple
+
+A tuple stores a fixed number of elements with predefined types.
+
+let employee: [number, string];
+
+employee = [101, "Ramesh"];
+
+console.log(employee);
+
+Output:
+
+[101, "Ramesh"]
+Enum
+
+Enums define a set of named constants.
+
+enum Department {
+    HR,
+    IT,
+    SALES,
+    FINANCE
+}
+
+console.log(Department.IT);
+
+Output:
+
+1
+String Enum
+enum Role {
+    ADMIN = "ADMIN",
+    USER = "USER",
+    MANAGER = "MANAGER"
+}
+
+console.log(Role.ADMIN);
+
+Output:
+
+ADMIN
+Any
+
+The any type disables type checking.
+
+let value: any = 100;
+
+value = "Hello";
+
+value = true;
+
+console.log(value);
+
+Best Practice: Avoid any unless absolutely necessary.
+
+Unknown
+
+unknown is safer than any.
+
+let data: unknown = "Hello";
+
+if (typeof data === "string") {
+    console.log(data.toUpperCase());
+}
+Void
+
+Used for functions that do not return a value.
+
+function display(): void {
+    console.log("Welcome");
+}
+
+display();
+Never
+
+Represents functions that never successfully complete.
+
+function throwError(message: string): never {
+    throw new Error(message);
+}
+Null and Undefined
+let value1: null = null;
+
+let value2: undefined = undefined;
+
+With strict mode enabled, null and undefined must be handled explicitly.
+
+JavaScript vs TypeScript
+JavaScript
+let age = 25;
+
+age = "Twenty Five";
+
+console.log(age);
+
+Output:
+
+Twenty Five
+TypeScript
+let age: number = 25;
+
+age = "Twenty Five";
+
+Compilation Error:
+
+Type 'string' is not assignable to type 'number'.
+Real-Time Example
+let employeeId: number = 101;
+
+let employeeName: string = "Ramesh";
+
+let salary: number = 55000;
+
+let isPermanent: boolean = true;
+
+console.log(employeeId);
+console.log(employeeName);
+console.log(salary);
+console.log(isPermanent);
+Best Practices
+Use const by default.
+Use let only when values need to change.
+Avoid var.
+Avoid any.
+Prefer explicit types in public APIs.
+Use meaningful variable names.
+Interview Questions
+1. What is type inference?
+
+Type inference is the ability of TypeScript to automatically determine the type of a variable based on its assigned value.
+
+2. What is the difference between any and unknown?
+any disables type checking.
+unknown requires type checking before use, making it safer.
+3. What is a tuple?
+
+A tuple is an array with a fixed length and predefined element types.
+
+4. What is an enum?
+
+An enum is a collection of named constants used to improve code readability and maintainability.
+
+5. Which keyword should you prefer: let, const, or var?
+Use const whenever possible.
+Use let if the value changes.
+Avoid var in modern TypeScript.
+Hands-on Exercise
+Declare variables using let and const.
+Create examples using all primitive data types.
+Create an array of employee names.
+Create a tuple for employee details.
+Create an enum for user roles.
+Write a function returning void.
+Write a function returning never by throwing an error.
+Compare the behavior of any and unknown.
+Module Summary
+
+In this module, you learned:
+
+Variables (let, const, var)
+Primitive data types
+Type inference
+Arrays
+Tuples
+Enums
+any vs unknown
+void and never
+Best practices and interview questions
+Next Module: TypeScript Functions and ES6 Features
+
+You'll learn:
+
+Function declarations
+Optional parameters
+Default parameters
+Rest parameters
+Arrow functions
+Template literals
+Destructuring
+Spread and rest operators
+Modules (export and import) with practical examples.
+
+
+Module 3: TypeScript Functions and ES6 Features
+Learning Objectives
+
+After completing this module, learners will be able to:
+
+Create and use functions in TypeScript.
+Understand function parameters and return types.
+Use optional, default, and rest parameters.
+Write arrow functions.
+Use template literals.
+Apply destructuring and spread operators.
+Work with modules using export and import.
+What is a Function?
+
+A function is a reusable block of code that performs a specific task.
+
+Syntax
+function functionName(parameters): returnType {
+    // code
+}
+Function with No Parameters
+function greet(): void {
+    console.log("Welcome to TypeScript");
+}
+
+greet();
+
+Output:
+
+Welcome to TypeScript
+Function with Parameters
+function add(a: number, b: number): number {
+    return a + b;
+}
+
+let result = add(10, 20);
+
+console.log(result);
+
+Output:
+
+30
+Function Returning String
+function getCompany(): string {
+    return "OpenAI";
+}
+
+console.log(getCompany());
+
+Output:
+
+OpenAI
+Optional Parameters
+
+Use ? to make a parameter optional.
+
+function display(name: string, city?: string): void {
+
+    console.log(name);
+
+    console.log(city);
+
+}
+
+display("Ramesh");
+
+Output:
+
+Ramesh
+undefined
+Default Parameters
+function welcome(name: string = "Guest"): void {
+
+    console.log("Welcome " + name);
+
+}
+
+welcome();
+
+welcome("John");
+
+Output:
+
+Welcome Guest
+Welcome John
+Rest Parameters
+
+Rest parameters allow multiple values.
+
+function total(...numbers: number[]): number {
+
+    return numbers.reduce((sum, n) => sum + n, 0);
+
+}
+
+console.log(total(10,20));
+
+console.log(total(10,20,30));
+
+console.log(total(10,20,30,40));
+
+Output:
+
+30
+60
+100
+Anonymous Function
+const square = function(x: number): number {
+
+    return x * x;
+
+};
+
+console.log(square(5));
+
+Output:
+
+25
+Arrow Functions
+
+ES6 introduced Arrow Functions.
+
+const multiply = (a: number, b: number): number => {
+
+    return a * b;
+
+};
+
+console.log(multiply(5,4));
+
+Output:
+
+20
+Short Arrow Function
+const addition = (a: number, b: number) => a + b;
+
+console.log(addition(100,200));
+
+Output:
+
+300
+Template Literals
+
+Old JavaScript
+
+let name = "Ramesh";
+
+console.log("Welcome " + name);
+
+ES6
+
+let name = "Ramesh";
+
+console.log(`Welcome ${name}`);
+
+Output:
+
+Welcome Ramesh
+Multi-line Strings
+let message = `
+Welcome
+To
+TypeScript
+`;
+
+console.log(message);
+Destructuring Arrays
+let marks = [90,95,99];
+
+let [java, spring, react] = marks;
+
+console.log(java);
+
+console.log(spring);
+
+console.log(react);
+
+Output:
+
+90
+95
+99
+Object Destructuring
+const employee = {
+
+    id:101,
+
+    name:"Ramesh",
+
+    salary:50000
+
+};
+
+const {id,name,salary} = employee;
+
+console.log(id);
+
+console.log(name);
+
+console.log(salary);
+Spread Operator
+let first = [10,20];
+
+let second = [30,40];
+
+let numbers = [...first,...second];
+
+console.log(numbers);
+
+Output:
+
+[10,20,30,40]
+Copy Object
+const emp1 = {
+
+    id:101,
+
+    name:"John"
+
+};
+
+const emp2 = {
+
+    ...emp1,
+
+    salary:50000
+
+};
+
+console.log(emp2);
+Modules
+employee.ts
+export function display() {
+
+    console.log("Employee Module");
+
+}
+app.ts
+import { display } from "./employee";
+
+display();
+Export Default
+export default class Employee {
+
+}
+
+Import
+
+import Employee from "./Employee";
+Real-Time Example
+function calculateSalary(
+    basic: number,
+    hra: number,
+    da: number = 2000
+): number {
+
+    return basic + hra + da;
+
+}
+
+console.log(calculateSalary(30000,5000));
+
+console.log(calculateSalary(30000,5000,3000));
+
+Output:
+
+37000
+38000
+Best Practices
+Use arrow functions for callbacks and concise functions.
+Use template literals instead of string concatenation.
+Prefer const whenever possible.
+Use default parameters to avoid undefined values.
+Organize code into modules using export and import.
+Interview Questions
+1. What is the difference between a normal function and an arrow function?
+Normal functions have their own this context.
+Arrow functions inherit this from the surrounding scope.
+2. What are optional parameters?
+
+Optional parameters allow arguments to be omitted when calling a function. They are declared using ?.
+
+3. What are rest parameters?
+
+Rest parameters collect multiple arguments into a single array.
+
+4. What is the spread operator?
+
+The spread operator (...) expands elements from an array or properties from an object into another array or object.
+
+5. What are template literals?
+
+Template literals use backticks (`) and ${} placeholders to embed expressions within strings.
+
+Hands-on Exercise
+Create an add() function.
+Create a function with optional parameters.
+Create a function with default parameters.
+Create a function using rest parameters.
+Convert a normal function to an arrow function.
+Create an object and use destructuring.
+Merge two arrays using the spread operator.
+Create two TypeScript files and use export and import.
+Module Summary
+
+In this module, you learned:
+
+Function declarations
+Function return types
+Optional, default, and rest parameters
+Arrow functions
+Template literals
+Array and object destructuring
+Spread operator
+Modules (export and import)
+Best practices and interview questions
+Next Module: TypeScript Object-Oriented Programming (OOP)
+
+In the next module, you'll learn:
+
+Classes and Objects
+Constructors
+Access Modifiers (public, private, protected)
+Getters and Setters
+Inheritance
+Method Overriding
+Abstract Classes
+Interfaces
+Static Members
+Real-world OOP examples suitable for Angular and enterprise applications.
+
+
+Module 4: TypeScript Object-Oriented Programming (OOP)
+Learning Objectives
+
+After completing this module, learners will be able to:
+
+Understand Object-Oriented Programming (OOP) concepts.
+Create classes and objects.
+Use constructors.
+Work with access modifiers (public, private, protected, readonly).
+Implement inheritance and method overriding.
+Create abstract classes.
+Implement interfaces.
+Use static members.
+Apply OOP concepts in real-world applications.
+What is Object-Oriented Programming (OOP)?
+
+Object-Oriented Programming (OOP) is a programming paradigm that organizes code into objects, which contain properties (data) and methods (behavior).
+
+Four Pillars of OOP
+Encapsulation
+Inheritance
+Polymorphism
+Abstraction
+Class
+
+A class is a blueprint for creating objects.
+
+Syntax
+class ClassName {
+
+}
+Creating a Class
+class Employee {
+
+    id: number = 101;
+
+    name: string = "John";
+
+    display(): void {
+        console.log(this.id);
+        console.log(this.name);
+    }
+
+}
+
+const emp = new Employee();
+
+emp.display();
+Output
+101
+John
+Constructor
+
+A constructor initializes an object.
+
+class Employee {
+
+    id: number;
+    name: string;
+
+    constructor(id: number, name: string) {
+
+        this.id = id;
+        this.name = name;
+
+    }
+
+    display(): void {
+
+        console.log(this.id);
+        console.log(this.name);
+
+    }
+
+}
+
+const emp = new Employee(101, "Ramesh");
+
+emp.display();
+Output
+101
+Ramesh
+Parameter Properties (Short Syntax)
+
+Instead of writing multiple assignments:
+
+class Employee {
+
+    constructor(
+        public id: number,
+        public name: string,
+        public salary: number
+    ) {
+    }
+
+}
+
+const emp = new Employee(101, "John", 50000);
+
+console.log(emp);
+Access Modifiers
+Public (Default)
+
+Accessible everywhere.
+
+class Employee {
+
+    public name = "John";
+
+}
+
+const emp = new Employee();
+
+console.log(emp.name);
+Private
+
+Accessible only inside the class.
+
+class Employee {
+
+    private salary = 50000;
+
+}
+
+The following causes a compilation error:
+
+const emp = new Employee();
+
+console.log(emp.salary);
+Protected
+
+Accessible inside the class and its subclasses.
+
+class Person {
+
+    protected age = 30;
+
+}
+
+class Employee extends Person {
+
+    display() {
+        console.log(this.age);
+    }
+
+}
+Readonly
+
+Can only be assigned during declaration or in the constructor.
+
+class Employee {
+
+    readonly company = "ABC Ltd";
+
+}
+
+const emp = new Employee();
+
+console.log(emp.company);
+
+Attempting to change it results in a compilation error.
+
+Getters and Setters
+class Employee {
+
+    private salary = 50000;
+
+    get employeeSalary(): number {
+        return this.salary;
+    }
+
+    set employeeSalary(value: number) {
+        this.salary = value;
+    }
+
+}
+
+const emp = new Employee();
+
+emp.employeeSalary = 70000;
+
+console.log(emp.employeeSalary);
+Inheritance
+
+Inheritance allows one class to acquire the properties and methods of another.
+
+class Person {
+
+    display() {
+        console.log("Person Class");
+    }
+
+}
+
+class Employee extends Person {
+
+}
+
+const emp = new Employee();
+
+emp.display();
+Output
+Person Class
+Method Overriding
+class Person {
+
+    display() {
+        console.log("Person");
+    }
+
+}
+
+class Employee extends Person {
+
+    override display() {
+        console.log("Employee");
+    }
+
+}
+
+const emp = new Employee();
+
+emp.display();
+Output
+Employee
+super Keyword
+class Person {
+
+    constructor(public name: string) {
+    }
+
+}
+
+class Employee extends Person {
+
+    constructor(name: string) {
+        super(name);
+    }
+
+}
+
+const emp = new Employee("John");
+
+console.log(emp.name);
+Abstract Class
+
+An abstract class cannot be instantiated directly.
+
+abstract class Shape {
+
+    abstract area(): number;
+
+}
+
+class Circle extends Shape {
+
+    area(): number {
+        return 3.14 * 10 * 10;
+    }
+
+}
+
+const circle = new Circle();
+
+console.log(circle.area());
+Interface
+
+Interfaces define a contract that classes must implement.
+
+interface Employee {
+
+    id: number;
+
+    name: string;
+
+    display(): void;
+
+}
+
+class Manager implements Employee {
+
+    id = 101;
+
+    name = "John";
+
+    display(): void {
+        console.log(this.id);
+        console.log(this.name);
+    }
+
+}
+
+const manager = new Manager();
+
+manager.display();
+Multiple Interfaces
+interface Printable {
+
+    print(): void;
+
+}
+
+interface Scannable {
+
+    scan(): void;
+
+}
+
+class Printer implements Printable, Scannable {
+
+    print() {
+        console.log("Printing...");
+    }
+
+    scan() {
+        console.log("Scanning...");
+    }
+
+}
+Static Members
+
+Static members belong to the class, not individual objects.
+
+class Employee {
+
+    static company = "ABC Technologies";
+
+}
+
+console.log(Employee.company);
+Real-Time Example
+class BankAccount {
+
+    constructor(
+
+        public accountNumber: number,
+
+        public customerName: string,
+
+        private balance: number
+
+    ) {
+    }
+
+    deposit(amount: number): void {
+
+        this.balance += amount;
+
+    }
+
+    withdraw(amount: number): void {
+
+        this.balance -= amount;
+
+    }
+
+    getBalance(): number {
+
+        return this.balance;
+
+    }
+
+}
+
+const account = new BankAccount(
+    1001,
+    "Ramesh",
+    5000
+);
+
+account.deposit(2000);
+
+account.withdraw(1000);
+
+console.log(account.getBalance());
+Output
+6000
+Best Practices
+Use private for sensitive fields.
+Use readonly for values that should not change.
+Prefer interfaces for defining contracts.
+Use inheritance only when there is a true "is-a" relationship.
+Keep classes focused on a single responsibility.
+Interview Questions
+1. What is OOP?
+
+Object-Oriented Programming is a programming paradigm based on classes and objects that promotes code reusability and maintainability.
+
+2. What is the difference between a class and an object?
+Class: Blueprint or template.
+Object: Instance of a class.
+3. What is the difference between private and protected?
+private: Accessible only within the same class.
+protected: Accessible within the same class and derived classes.
+4. What is an interface?
+
+An interface defines a contract that implementing classes must follow.
+
+5. What is an abstract class?
+
+An abstract class cannot be instantiated directly and may contain abstract methods that subclasses must implement.
+
+Hands-on Exercise
+Create a Student class with a constructor.
+Use public, private, and readonly properties.
+Create a Person class and extend it with an Employee class.
+Override a method in the child class.
+Create an abstract class Vehicle and implement it in Car.
+Create an interface Payment and implement it in CreditCardPayment.
+Create a class with a static property and static method.
+Module Summary
+
+In this module, you learned:
+
+Classes and objects
+Constructors and parameter properties
+Access modifiers
+Getters and setters
+Inheritance
+Method overriding
+super keyword
+Abstract classes
+Interfaces
+Static members
+Real-world OOP examples
+Interview questions and exercises
+Next Module: Advanced TypeScript
+
+In the next module, you'll learn:
+
+Type Aliases
+Union Types
+Intersection Types
+Literal Types
+Generics
+Generic Constraints
+Utility Types (Partial, Pick, Omit, Readonly, Record)
+Type Assertions
+Optional Chaining (?.)
+Nullish Coalescing (??)
+Practical enterprise examples used in Angular, React, and Node.js development.
