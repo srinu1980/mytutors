@@ -1,0 +1,878 @@
+https://medium.com/@castonboyd/react-js-for-beginners-understanding-the-why-mastering-the-how-and-exploring-the-what-2082aad56052
+
+
+https://medium.com/@preciousvictory/a-step-by-step-guide-to-mastering-react-3284d401bf3
+
+
+
+https://javadzone.com/api-calls-in-react-with-axios-and-fetch/
+
+
+https://www.rameshfadatare.com/react-tutorial/react-functional-components/
+
+
+What is React JS?
+====================
+
+ReactJS is a popular front-end JavaScript library developers use to build user interfaces. 
+
+It is mainly used to handle the view layer of web and mobile applications that follow a component-based architecture. 
+
+Using ReactJS, developers can create reusable UI components that encapsulate the behavior and appearance of different parts of an application.
+
+It is used to create Single Page Applications.
+
+
+
+
+
+Core Features
+==================
+
+Virtual DOM: React updates only the changed parts of the DOM, resulting in faster rendering.
+
+One-Way Data Binding: Ensures predictable and easy to debug data flow.
+
+Component-Based Architecture: Breaks UI into reusable pieces, improving the code reusability and scalability.
+
+
+
+
+Install ReactJS
+================
+
+
+1. Create React App with Vite
+
+
+	npm create vite@latest my-react-app -- --template react
+
+
+2. Install Dependencies
+
+Navigate into your project directory and install required packages:
+
+	cd my-react-app
+	npm install
+
+3. Start the Development Server
+
+Run the development server:
+
+npm run dev
+
+
+
+
+ReactJs Features  :
+==================
+
+
+1. Components
+
+Components can be functional or class-based. 
+
+For beginners, functional components are easier to understand and use.
+
+
+
+Functional Components
+
+Functional components are JavaScript functions that return JSX. They are simpler and easier to write than class components.
+
+
+
+Example:
+
+
+
+import React from 'react';
+
+function Welcome() {
+  return <h1>Welcome to React!</h1>;
+}
+
+export default Welcome;
+
+
+
+
+
+
+Class Components
+
+Class components are ES6 classes that extend from React.Component. They have more features than functional components, such as lifecycle methods and state management, but are generally more complex.
+
+Example of a Class Component
+
+// src/Greeting.js
+
+import React, { Component } from 'react';
+
+class Greeting extends Component {
+  render() {
+    return <h1>Welcome to the React World!</h1>;
+  }
+}
+
+export default Greeting;
+
+
+
+
+
+// src/App.js
+
+import React from 'react';
+import Greeting from './Greeting';
+import './App.css';
+
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <Greeting />
+      </header>
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
+
+2. JSX
+JSX (JavaScript XML) is a syntax extension for JavaScript that allows you to write HTML-like code inside your JavaScript.
+
+Example:
+
+const element = <h1>Welcome to React!</h1>;
+
+
+
+3. Props and State
+
+Props: Short for properties, props are used to pass data to components.
+State: State is used to manage data within a component.
+
+
+
+
+
+
+
+
+// Greeting.js
+import React from 'react';
+
+function Greeting(props) {
+  return (
+    <div>
+      <h1>Hello, {props.name}!</h1>
+    </div>
+  );
+}
+
+export default Greeting;
+
+
+
+// App.js
+import React from 'react';
+import Greeting from './Greeting';
+
+function App() {
+  return (
+    <div>
+      <Greeting name="Amit" />
+      <Greeting name="Priya" />
+      <Greeting name="Ravi" />
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
+
+
+
+
+
+
+Example of Props:
+
+function Greeting(props) {
+  return <h1>Hello, {props.name}!</h1>;
+}
+
+<Greeting name="Alice" />
+
+
+Example of State:
+
+import { useState } from 'react';
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>
+        Click me
+      </button>
+    </div>
+  );
+}
+
+
+
+
+Essential React Concepts to Learn
+
+Component Lifecycle: Learn how components are mounted, updated, and unmounted.
+
+Hooks: Understand hooks like useState, useEffect, and useContext to manage state and side effects.
+
+Routing: Use React Router for navigation between pages.
+
+Styling: Experiment with CSS, CSS-in-JS, or libraries like Tailwind CSS.
+
+
+
+
+
+
+
+Using Arrow Functions
+===========================
+
+Create a New File for the Component: In the src directory, create a new file named GreetingArrow.js.
+
+// GreetingArrow.js
+import React from 'react';
+
+const GreetingArrow = (props) => {
+  return (
+    <div>
+      <h1>Hello, {props.name}!</h1>
+    </div>
+  );
+}
+
+export default GreetingArrow;
+
+Use the Component in App.js: Open src/App.js and modify the App component to use the GreetingArrow component:
+
+// App.js
+import React from 'react';
+import GreetingArrow from './GreetingArrow';
+
+function App() {
+  return (
+    <div>
+      <GreetingArrow name="Amit" />
+      <GreetingArrow name="Priya" />
+      <GreetingArrow name="Ravi" />
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
+
+
+
+
+
+What are Class Components?
+============================
+
+Class components are more complex than functional components. They are ES6 classes that extend from React.Component and can have their own state and lifecycle methods. 
+
+Class components are also known as stateful components because they can manage their own state.
+
+
+Class components are ES6 classes that return JSX.
+Class components (ES6 class) extend the Component class in React.
+Naming convention: Class Components always start with a capital letter.
+Class Component takes Props (in the constructor) if needed.
+Class component must have a render( ) method for returning JSX.
+
+
+
+
+// Counter.js
+import React, { Component } from 'react';
+
+class Counter extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: 0
+    };
+  }
+
+  increment = () => {
+    this.setState({ count: this.state.count + 1 });
+  };
+
+  render() {
+    return (
+      <div>
+        <h1>Count: {this.state.count}</h1>
+        <button onClick={this.increment}>Increment</button>
+      </div>
+    );
+  }
+}
+
+export default Counter;
+
+
+
+Use the Component in App.js: Open src/App.js and modify the App component to use the Counter component:
+
+// App.js
+import React from 'react';
+import Counter from './Counter';
+
+function App() {
+  return (
+    <div>
+      <Counter />
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
+Understanding State
+===============
+State is a built-in object in class components that allows components to create and manage their own data. State is managed within the component and can be updated using the setState method.
+
+
+
+Example:
+In the Counter component, we have a state object with a count property:
+
+this.state = {
+  count: 0
+};
+We update the state using the setState method:
+
+increment = () => {
+  this.setState({ count: this.state.count + 1 });
+};
+
+
+
+
+
+What is JSX?
+
+JSX is a syntax extension for JavaScript that allows you to write HTML-like code within your JavaScript. It makes writing and understanding the structure of React components easier and more intuitive. JSX produces React “elements” which are then rendered to the DOM.
+
+
+
+1. Elements: JSX elements are written using XML-like syntax.
+
+	const element = <h1>Hello, world!</h1>;
+
+
+
+
+2. Attributes: JSX attributes are similar to HTML attributes, but some attributes are written in camelCase (e.g., className instead of class).
+
+const element = <div className="container">Content</div>;
+
+
+
+3. Embedding Expressions: You can embed JavaScript expressions inside JSX by wrapping them in curly braces {}.
+
+const name = 'Amit';
+
+const element = <h1>Hello, {name}!</h1>;
+
+
+
+
+
+
+
+
+Conditional Rendering with JSX
+====================================
+
+You can use JavaScript conditional operators to conditionally render elements.
+
+Example:
+
+// App.js
+
+import React from 'react';
+
+function App() {
+  const isLoggedIn = true;
+  return (
+    <div>
+      {isLoggedIn ? <h1>Welcome back!</h1> : <h1>Please sign up.</h1>}
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
+
+
+Lists and Keys in JSX
+
+Rendering lists in React involves mapping over an array and returning a list of elements. 
+Each element in the list should have a unique key prop.
+
+
+// App.js
+import React from 'react';
+
+function App() {
+  const names = ['Amit', 'Priya', 'Ravi'];
+  return (
+    <ul>
+      {names.map((name, index) => (
+        <li key={index}>{name}</li>
+      ))}
+    </ul>
+  );
+}
+
+export default App;
+
+
+
+
+
+-------------------------------------------------
+
+Inserting a Large Block of HTML
+
+JSX can be used to insert large blocks of HTML in a readable manner. Instead of creating elements individually, you can use JSX to represent a whole block.
+
+Example:
+// App.js
+import React from 'react';
+
+function App() {
+  return (
+    <div>
+      <header>
+        <h1>Website Title</h1>
+        <nav>
+          <ul>
+            <li>Home</li>
+            <li>About</li>
+            <li>Contact</li>
+          </ul>
+        </nav>
+      </header>
+      <main>
+        <p>Welcome to the website!</p>
+      </main>
+      <footer>
+        <p>&copy; 2025 Company Name</p>
+      </footer>
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
+
+
+
+
+
+What is State?
+
+==================
+
+State is a built-in object in React components. 
+
+In the state object, we store property values that belong to the component. 
+When the state object changes, the component re-renders to reflect the new data. 
+The state object is modified with the setState() function in class components or the useState hook in functional components.
+
+
+
+Creating State in Class Components
+======================================
+
+
+// StudentManagement.js
+
+import React, { Component } from 'react';
+
+class StudentManagement extends Component {
+  constructor(props) {
+    super(props);
+
+    // Define the initial state
+    this.state = {
+      firstName: "Rahul",
+      lastName: "Dravid",
+      email: "rahul@outlook.com"
+    };
+  }
+
+
+  // Render the UI
+  render() {
+    return (
+      <div>
+        <h1>Student Management System</h1>
+        <p>First Name: {this.state.firstName}</p>
+        <p>Last Name: {this.state.lastName}</p>
+        <p>Email: {this.state.email}</p>
+      </div>
+    );
+  }
+}
+
+export default StudentManagement;
+
+
+
+
+
+
+Example:
+Add State Update Methods: Modify the StudentManagement component to include methods for updating the state:
+// StudentManagement.js
+import React, { Component } from 'react';
+
+class StudentManagement extends Component {
+  constructor(props) {
+    super(props);
+    // Define the initial state
+    this.state = {
+      firstName: "Ramesh",
+      lastName: "Fadatare",
+      email: "ramesh@javaguides.com"
+    };
+  }
+
+  // Method to update first name
+  updateFirstName = () => {
+    this.setState({ firstName: "Suresh" });
+  };
+
+  // Method to update last name
+  updateLastName = () => {
+    this.setState({ lastName: "Sharma" });
+  };
+
+  // Method to update email
+  updateEmail = () => {
+    this.setState({ email: "suresh@javaguides.com" });
+  };
+
+  // Render the UI
+  render() {
+    return (
+      <div>
+        <h1>Student Management System</h1>
+        <p>First Name: {this.state.firstName}</p>
+        <p>Last Name: {this.state.lastName}</p>
+        <p>Email: {this.state.email}</p>
+        <button onClick={this.updateFirstName}>Update First Name</button>
+        <button onClick={this.updateLastName}>Update Last Name</button>
+        <button onClick={this.updateEmail}>Update Email</button>
+      </div>
+    );
+  }
+}
+
+export default StudentManagement;
+
+
+
+
+// App.js
+import React from 'react';
+import StudentManagement from './StudentManagement';
+
+function App() {
+  return (
+    <div>
+      <StudentManagement />
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
+
+
+
+Using State in Functional Components with Hooks
+==================================================
+
+Creating State in Functional Components
+
+
+
+
+// StudentManagementHook.js
+import React, { useState } from 'react';
+
+function StudentManagementHook() {
+
+  // Declare state variables
+  const [firstName, setFirstName] = useState("Ramesh");
+  const [lastName, setLastName] = useState("Fadatare");
+  const [email, setEmail] = useState("ramesh@javaguides.com");
+
+
+  // Render the UI
+  return (
+    <div>
+      <h1>Student Management System</h1>
+      <p>First Name: {firstName}</p>
+      <p>Last Name: {lastName}</p>
+      <p>Email: {email}</p>
+
+    </div>
+  );
+}
+
+export default StudentManagementHook;
+
+
+
+
+
+Updating State in Functional Components
+===========================================
+
+// StudentManagementHook.js
+import React, { useState } from 'react';
+
+function StudentManagementHook() {
+  // Declare state variables
+  const [firstName, setFirstName] = useState("Ramesh");
+  const [lastName, setLastName] = useState("Fadatare");
+  const [email, setEmail] = useState("ramesh@javaguides.com");
+
+  // Render the UI
+  return (
+    <div>
+      <h1>Student Management System</h1>
+      <p>First Name: {firstName}</p>
+      <p>Last Name: {lastName}</p>
+      <p>Email: {email}</p>
+      <button onClick={() => setFirstName("Suresh")}>Update First Name</button>
+      <button onClick={() => setLastName("Sharma")}>Update Last Name</button>
+      <button onClick={() => setEmail("suresh@javaguides.com")}>Update Email</button>
+    </div>
+  );
+}
+
+export default StudentManagementHook;
+
+
+
+// App.js
+import React from 'react';
+import StudentManagementHook from './StudentManagementHook';
+
+function App() {
+  return (
+    <div>
+      <StudentManagementHook />
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
+
+State vs. Props
+
+
+State: Managed within the component, can be changed, and is used for data that changes over time.
+
+
+Props: Passed from parent to child components, read-only, and used for passing data and event handlers to child components.
+
+
+
+
+
+
+What is Destructuring?
+
+Destructuring is a JavaScript feature that allows you to extract values from arrays or properties from objects into distinct variables. It is a concise way to unpack values from arrays and objects.
+
+
+
+
+
+
+Destructuring Props in a Functional Component
+==============================================
+
+
+// UserProfile.js
+import React from 'react';
+
+function UserProfile({ firstName, lastName, email }) {
+  return (
+    <div>
+      <h1>User Profile</h1>
+      <p>First Name: {firstName}</p>
+      <p>Last Name: {lastName}</p>
+      <p>Email: {email}</p>
+    </div>
+  );
+}
+
+export default UserProfile;
+
+
+
+
+// App.js
+import React from 'react';
+import UserProfile from './UserProfile';
+
+function App() {
+  return (
+    <div>
+      <UserProfile firstName="Ramesh" lastName="Fadatare" email="ramesh@javaguides.com" />
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
+
+Destructuring Props in a Class Component
+===========================================
+
+
+// UserProfileClass.js
+import React, { Component } from 'react';
+
+class UserProfileClass extends Component {
+  render() {
+    const { firstName, lastName, email } = this.props;
+    return (
+      <div>
+        <h1>User Profile</h1>
+        <p>First Name: {firstName}</p>
+        <p>Last Name: {lastName}</p>
+        <p>Email: {email}</p>
+      </div>
+    );
+  }
+}
+
+export default UserProfileClass;
+
+
+
+
+
+
+
+Destructuring State in a Class Component
+=================================================
+
+
+// StudentDetails.js
+import React, { Component } from 'react';
+
+class StudentDetails extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      firstName: "Ramesh",
+      lastName: "Fadatare",
+      email: "ramesh@javaguides.com"
+    };
+  }
+
+  render() {
+    const { firstName, lastName, email } = this.state;
+    return (
+      <div>
+        <h1>Student Details</h1>
+        <p>First Name: {firstName}</p>
+        <p>Last Name: {lastName}</p>
+        <p>Email: {email}</p>
+      </div>
+    );
+  }
+}
+
+export default StudentDetails;
+
+
+
+
+
+Destructuring State in a Functional Component with Hooks
+==========================================================
+
+
+// StudentDetailsHook.js
+import React, { useState } from 'react';
+
+function StudentDetailsHook() {
+  const [student, setStudent] = useState({
+    firstName: "Ramesh",
+    lastName: "Fadatare",
+    email: "ramesh@javaguides.com"
+  });
+
+  const { firstName, lastName, email } = student;
+
+  return (
+    <div>
+      <h1>Student Details</h1>
+      <p>First Name: {firstName}</p>
+      <p>Last Name: {lastName}</p>
+      <p>Email: {email}</p>
+    </div>
+  );
+}
+
+export default StudentDetailsHook;
+
+
+

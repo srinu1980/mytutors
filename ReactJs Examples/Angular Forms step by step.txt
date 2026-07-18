@@ -1,0 +1,484 @@
+
+Example 1: Pipe without Parameters
+
+
+ to create a pipe in the angular
+
+ng g pipe gender
+
+
+
+app/gender.pipe.ts
+
+import { Pipe, PipeTransform } from '@angular/core';
+
+  
+
+@Pipe({
+
+  name: 'gender',
+
+  standalone: true
+
+})
+
+export class GenderPipe implements PipeTransform {
+
+  
+
+  transform(gender: any): string {
+
+    if(gender == 0){
+
+      return 'Male';
+
+    }
+
+    return 'Female';
+
+  }
+
+  
+
+}
+
+
+
+app/app.component.ts
+
+import { Component } from '@angular/core';
+
+import { CommonModule } from '@angular/common';
+
+  
+
+import { GenderPipe } from './gender.pipe';
+
+  
+
+@Component({
+
+  selector: 'app-root',
+
+  standalone: true,
+
+  imports: [CommonModule, GenderPipe],
+
+  templateUrl: './app.component.html',
+
+  styleUrls: ['./app.component.css']
+
+})
+
+export class AppComponent {
+
+  
+
+  persons = [
+
+    {
+
+      id: 1,
+
+      name: 'Hardik Savani',
+
+      gender: 0,
+
+      website: 'http://www.google.com'
+
+    },
+
+    {
+
+      id: 2,
+
+      name: 'Kajal Patel',
+
+      gender: 1,
+
+      website: 'facebook.com'
+
+    },
+
+    {
+
+      id: 3,
+
+      name: 'Harsukh Makawana',
+
+      gender: 0,
+
+      website: 'amazon.com'
+
+    }
+
+  ]
+
+    
+
+}
+
+
+
+app/app.component.html
+
+<div class="container">
+
+    <h1>Angular 17 Create Custom Pipe </h1>
+
+  
+
+    <!-- New @for loop -->
+
+    <table class="table table-bordered">
+
+      <tr>
+
+        <th>ID</th>
+
+        <th>Name</th>
+
+        <th>Gender</th>
+
+        <th>Website</th>
+
+      </tr>
+
+      @for (person of persons; track person.id;) {
+
+        <tr>
+
+          <td>{{ person.id }}</td>
+
+          <td>{{ person.name }}</td>
+
+          <td>{{ person.gender | gender }}</td>
+
+          <td>{{ person.website }}</td>
+
+        </tr>
+
+      }
+
+    </table>
+
+</div>
+
+
+------------------------------------------------------------------------
+Angular provides two main types of forms:
+
+Reactive Forms: This approach is based on reactive programming, where the form model is maintained in the component class and can be programmatically manipulated. Reactive forms provide more control and flexibility, especially when dealing with complex forms.
+
+Template-Driven Forms: In this approach, the form model is defined directly in the HTML template, and Angular automatically creates the underlying form structure. Template-driven forms are easier to use for simple use cases but offer less flexibility compared to reactive forms.
+
+
+
+Template-Deiven Form
+====================
+
+--The form is set up using ngForm directive.
+--Controls are set up using the ngModel directive.
+--ngModel provides the two-way data binding.
+--The Validations are configured in the template via directives.
+
+src/app/app.component.ts
+
+import { Component } from '@angular/core';
+
+import { CommonModule } from '@angular/common';
+
+import { RouterOutlet } from '@angular/router';
+
+  
+
+import { FormsModule } from '@angular/forms';
+
+  
+
+@Component({ 
+
+  selector: 'app-root',
+
+  standalone: true,
+
+  imports: [CommonModule, RouterOutlet, FormsModule],
+
+  templateUrl: './app.component.html',
+
+  styleUrls: ['./app.component.css']
+
+})
+
+export class AppComponent {
+
+  title = 'firstApp';
+
+   
+
+  submit(form:any){
+
+    var firstName = form.firstName;
+    console.log(firstName);
+
+    var lastName = form.lastName;
+    console.log(lastName);
+
+    var comment = form.comment;
+    console.log(comment);
+
+  }
+
+    
+
+}
+
+
+Step 3: Form with ngModel
+
+
+
+src/app/app.component.html
+
+<h1>Template Driven Forms Validation in Angular  </h1>
+
+      
+
+<form #contactForm="ngForm" (ngSubmit)="submit(contactForm.value)">
+
+       
+
+  <div class="form-group">
+
+      <label for="firstName">First Name</label>
+
+      <input required minlength="3" maxlength="10" ngModel name="firstName" type="text" #firstName="ngModel" class="form-control" id="firstName">
+
+      <div class="alert alert-danger" *ngIf="firstName.touched && !firstName.valid">
+
+          <div *ngIf="firstName.errors && firstName.errors['required']">First Name is required.</div>
+
+          <div *ngIf="firstName.errors && firstName.errors['minlength']">First Name is minimum {{ firstName.errors && firstName.errors['minlength'].requiredLength }} character.</div>
+
+          <div *ngIf="firstName.errors && firstName.errors['maxlength']">First Name is maximum 10 character.</div>
+
+      </div>
+
+  </div>
+
+       
+
+  <div class="form-group">
+
+      <label for="lastName">Last Name</label>
+
+      <input required ngModel name="lastName" type="text" #lastName="ngModel" class="form-control" id="lastName">
+
+      <div class="alert alert-danger" *ngIf="lastName.touched && !lastName.valid">
+
+          Last Name is required.
+
+      </div>
+
+  </div>
+
+       
+
+  <div class="form-group">
+
+      <label for="comment">Comment</label>
+
+      <textarea required ngModel #comment="ngModel" name="comment" id="comment" cols="30" rows="10" class="form-control"></textarea>
+
+      <div class="alert alert-danger" *ngIf="comment.touched && !comment.valid">
+
+          Comment is required.
+
+      </div>
+
+  </div>
+
+        
+
+  <button class="btn btn-primary" type="submit" [class.disabled]="!contactForm.valid">Submit</button>
+
+      
+
+</form>
+
+Run Angular App:
+
+
+
+ng serve
+
+
+
+Step for Reactive Form in Angular 
+Step 1: Create Angular  Project
+Step 2: Update Component ts File
+Step 3:Form with ngModel
+
+Run Angular App
+
+
+
+
+
+
+src/app/app.component.ts
+
+import { Component } from '@angular/core';
+
+import { CommonModule } from '@angular/common';
+
+import { RouterOutlet } from '@angular/router';
+
+  
+
+import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
+
+  
+
+@Component({
+
+  selector: 'app-root',
+
+  standalone: true,
+
+  imports: [CommonModule, RouterOutlet, FormsModule, ReactiveFormsModule],
+
+  templateUrl: './app.component.html',
+
+  styleUrls: ['./app.component.css']
+
+})
+
+export class AppComponent {
+
+  title = 'boot-app';
+
+  
+
+  form = new FormGroup({
+
+    name: new FormControl('', [Validators.required, Validators.minLength(3)]),
+
+    email: new FormControl('', [Validators.required, Validators.email]),
+
+    body: new FormControl('', Validators.required)
+
+  });
+
+    
+
+  get f(){
+
+    return this.form.controls;
+
+  }
+
+    
+
+  submit(){
+
+    console.log(this.form.value);
+
+  }
+
+}
+
+
+
+src/app/app.component.html
+
+<h1>Angular  Reactive Forms Validation Example </h1>
+
+    
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+
+        
+
+    <div class="form-group">
+
+        <label for="name">Name</label>
+
+        <input 
+
+            formControlName="name"
+
+            id="name" 
+
+            type="text" 
+
+            class="form-control">
+
+        <div *ngIf="f['name'].touched && f['name'].invalid" class="alert alert-danger">
+
+            <div *ngIf="f['name'].errors && f['name'].errors['required']">Name is required.</div>
+
+            <div *ngIf="f['name'].errors && f['name'].errors['minlength']">Name should be 3 character.</div>
+
+        </div>
+
+    </div>
+
+     
+
+    <div class="form-group">
+
+        <label for="email">Email</label>
+
+        <input 
+
+            formControlName="email"
+
+            id="email" 
+
+            type="text" 
+
+            class="form-control">
+
+        <div *ngIf="f['email'].touched && f['email'].invalid" class="alert alert-danger">
+
+            <div *ngIf="f['email'].errors && f['email'].errors['required']">Email is required.</div>
+
+            <div *ngIf="f['email'].errors && f['email'].errors['email']">Please, enter valid email address.</div>
+
+        </div>
+
+    </div>
+
+     
+
+    <div class="form-group">
+
+        <label for="body">Body</label>
+
+        <textarea 
+
+            formControlName="body"
+
+            id="body" 
+
+            type="text" 
+
+            class="form-control">
+
+        </textarea>
+
+        <div *ngIf="f['body'].touched && f['body'].invalid" class="alert alert-danger">
+
+            <div *ngIf="f['body'].errors && f['body'].errors['required']">Body is required.</div>
+
+        </div>
+
+    </div>
+
+    
+
+    <button class="btn btn-primary" [disabled]="form.invalid" type="submit">Submit</button>
+
+</form>
+
