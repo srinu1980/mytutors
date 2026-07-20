@@ -1,0 +1,3091 @@
+
+
+
+Generate reactjs with .jsx for react hooks basics to advanced level
+
+Since you're teaching freshers in corporate training, here's a step-by-step React Hooks syllabus using .jsx (not TypeScript). It starts with the basics and gradually moves to advanced topics with practical examples.
+
+React Hooks Training (.jsx)
+Module 1: Introduction to Hooks
+What are Hooks?
+Hooks allow function components to use React features like:
+
+State
+
+Lifecycle methods
+
+Context
+
+References
+
+Performance optimization
+
+Before React 16.8:
+
+Class Components
+
+Functional Components (No State)
+
+After React 16.8:
+
+Functional Components + Hooks
+
+Module 2: useState()
+Example 1: Counter
+import { useState } from "react";
+
+function Counter() {
+
+    const [count, setCount] = useState(0);
+
+    return (
+        <div>
+            <h2>Count : {count}</h2>
+
+            <button onClick={() => setCount(count + 1)}>
+                Increment
+            </button>
+
+            <button onClick={() => setCount(count - 1)}>
+                Decrement
+            </button>
+        </div>
+    );
+}
+
+export default Counter;
+Example 2: Input Box
+import { useState } from "react";
+
+function Name() {
+
+    const [name, setName] = useState("");
+
+    return (
+        <>
+            <input
+                type="text"
+                onChange={(e)=>setName(e.target.value)}
+            />
+
+            <h2>{name}</h2>
+        </>
+    );
+}
+
+export default Name;
+Example 3: Object State
+import { useState } from "react";
+
+function Employee() {
+
+    const [employee,setEmployee]=useState({
+        id:101,
+        name:"Scott",
+        salary:5000
+    });
+
+    return(
+        <>
+        <h2>{employee.id}</h2>
+        <h2>{employee.name}</h2>
+        <h2>{employee.salary}</h2>
+
+        <button
+        onClick={()=>setEmployee({...employee,salary:8000})}>
+        Update Salary
+        </button>
+
+        </>
+    );
+}
+
+export default Employee;
+Example 4: Array State
+import { useState } from "react";
+
+function Fruits(){
+
+const [fruits,setFruits]=useState([
+"Apple",
+"Banana"
+]);
+
+return(
+
+<>
+<ul>
+
+{
+fruits.map((fruit,index)=>
+
+<li key={index}>{fruit}</li>
+
+)
+}
+
+</ul>
+
+<button
+onClick={()=>setFruits([...fruits,"Orange"])}
+>
+Add Fruit
+</button>
+
+</>
+
+);
+
+}
+
+export default Fruits;
+Module 3: useEffect()
+Runs once
+import { useEffect } from "react";
+
+function App(){
+
+useEffect(()=>{
+
+console.log("Component Loaded");
+
+},[]);
+
+return <h1>Hello React</h1>;
+
+}
+
+export default App;
+Runs every render
+useEffect(()=>{
+
+console.log("Rendering");
+
+});
+Runs when dependency changes
+useEffect(()=>{
+
+console.log("Count Changed");
+
+},[count]);
+Cleanup Function
+useEffect(()=>{
+
+const timer=setInterval(()=>{
+
+console.log("Running");
+
+},1000);
+
+return ()=>{
+
+clearInterval(timer);
+
+};
+
+},[]);
+Module 4: useRef()
+import {useRef} from "react";
+
+function Focus(){
+
+const inputRef=useRef();
+
+return(
+
+<>
+
+<input ref={inputRef}/>
+
+<button
+onClick={()=>inputRef.current.focus()}
+>
+Focus
+</button>
+
+</>
+
+);
+
+}
+
+export default Focus;
+Module 5: useContext()
+Create Context
+import {createContext} from "react";
+
+const UserContext=createContext();
+
+export default UserContext;
+Provider
+<UserContext.Provider value={"Scott"}>
+<Home/>
+</UserContext.Provider>
+Consumer
+import {useContext} from "react";
+import UserContext from "./UserContext";
+
+function Home(){
+
+const user=useContext(UserContext);
+
+return <h2>{user}</h2>;
+
+}
+
+export default Home;
+Module 6: useReducer()
+import {useReducer} from "react";
+
+function reducer(state,action){
+
+switch(action){
+
+case "increment":
+return state+1;
+
+case "decrement":
+return state-1;
+
+default:
+return state;
+
+}
+
+}
+
+function Counter(){
+
+const [count,dispatch]=useReducer(reducer,0);
+
+return(
+
+<>
+
+<h2>{count}</h2>
+
+<button
+onClick={()=>dispatch("increment")}
+>
++
+</button>
+
+<button
+onClick={()=>dispatch("decrement")}
+>
+-
+</button>
+
+</>
+
+);
+
+}
+
+export default Counter;
+Module 7: useMemo()
+import {useMemo,useState} from "react";
+
+function App(){
+
+const [count,setCount]=useState(0);
+
+const square=useMemo(()=>{
+
+console.log("Calculating");
+
+return count*count;
+
+},[count]);
+
+return(
+
+<>
+
+<h2>{square}</h2>
+
+<button
+onClick={()=>setCount(count+1)}
+>
+Increment
+</button>
+
+</>
+
+);
+
+}
+
+export default App;
+Module 8: useCallback()
+import {useCallback,useState} from "react";
+
+function App(){
+
+const [count,setCount]=useState(0);
+
+const show=useCallback(()=>{
+
+console.log("Hello");
+
+},[]);
+
+return(
+
+<>
+
+<h2>{count}</h2>
+
+<button onClick={()=>setCount(count+1)}>
+Increment
+</button>
+
+<button onClick={show}>
+Show
+</button>
+
+</>
+
+);
+
+}
+
+export default App;
+Module 9: Custom Hook
+import {useState} from "react";
+
+function useCounter(){
+
+const [count,setCount]=useState(0);
+
+const increment=()=>setCount(count+1);
+
+return {count,increment};
+
+}
+
+export default useCounter;
+Usage:
+
+import useCounter from "./useCounter";
+
+function App(){
+
+const {count,increment}=useCounter();
+
+return(
+
+<>
+
+<h2>{count}</h2>
+
+<button onClick={increment}>
+Increment
+</button>
+
+</>
+
+);
+
+}
+
+export default App;
+Module 10: useLayoutEffect()
+import {useLayoutEffect} from "react";
+
+function App(){
+
+useLayoutEffect(()=>{
+
+console.log("Runs before Paint");
+
+},[]);
+
+return <h2>Hello</h2>;
+
+}
+
+export default App;
+Module 11: useImperativeHandle()
+import {
+forwardRef,
+useImperativeHandle,
+useRef
+} from "react";
+
+const Child=forwardRef((props,ref)=>{
+
+useImperativeHandle(ref,()=>({
+
+showAlert(){
+
+alert("Hello");
+
+}
+
+}));
+
+return <h2>Child</h2>;
+
+});
+
+function App(){
+
+const ref=useRef();
+
+return(
+
+<>
+
+<Child ref={ref}/>
+
+<button
+onClick={()=>ref.current.showAlert()}
+>
+Click
+</button>
+
+</>
+
+);
+
+}
+
+export default App;
+Module 12: React.memo()
+import React from "react";
+
+const Child=React.memo(({name})=>{
+
+console.log("Rendering Child");
+
+return <h2>{name}</h2>;
+
+});
+
+export default Child;
+Module 13: useTransition()
+import { useState, useTransition } from "react";
+
+function Search() {
+  const [text, setText] = useState("");
+  const [isPending, startTransition] = useTransition();
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    startTransition(() => {
+      setText(value);
+    });
+  };
+
+  return (
+    <>
+      <input onChange={handleChange} />
+      {isPending && <p>Loading...</p>}
+      <h2>{text}</h2>
+    </>
+  );
+}
+
+export default Search;
+Module 14: useDeferredValue()
+import { useState, useDeferredValue } from "react";
+
+function Search() {
+  const [query, setQuery] = useState("");
+  const deferredQuery = useDeferredValue(query);
+
+  return (
+    <>
+      <input
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search..."
+      />
+      <p>Typing: {query}</p>
+      <p>Deferred: {deferredQuery}</p>
+    </>
+  );
+}
+
+export default Search;
+Module 15: useId()
+import { useId } from "react";
+
+function Login() {
+  const id = useId();
+
+  return (
+    <>
+      <label htmlFor={id}>Username</label>
+      <input id={id} type="text" />
+    </>
+  );
+}
+
+export default Login;
+Advanced Mini Projects (Using Hooks)
+Counter Application (useState)
+
+Calculator (useState)
+
+Digital Clock (useEffect)
+
+Stopwatch (useRef, useEffect)
+
+To-Do List (useState)
+
+Employee CRUD (Hooks + Axios)
+
+Student Management System
+
+Weather Application (useEffect, API)
+
+Shopping Cart (useReducer, useContext)
+
+Authentication System (JWT + Context API)
+
+Employee Portal (Protected Routes + Hooks)
+
+E-Commerce Application (React Hooks + Spring Boot + MySQL)
+
+This sequence is well-suited for a 2–3 week corporate React training program, progressing from fundamental hooks to advanced performance optimization and enterprise-ready applications.
+
+
+Advanced Mini Projects (Using Hooks)
+
+For corporate trainees, it's best to introduce mini projects in increasing order of complexity. Each project should focus on one or more React Hooks before moving to enterprise-level applications.
+
+React Hooks Advanced Mini Projects (.jsx)
+Project 1: Counter Application
+Hooks
+useState
+
+Features
+Increment
+
+Decrement
+
+Reset
+
+Step Increment
+
+Disable Negative Values
+
+Concepts Covered
+State Management
+
+Event Handling
+
+Conditional Rendering
+
+Project 2: Digital Clock
+Hooks
+useState
+
+useEffect
+
+Features
+Live Time
+
+Live Date
+
+12/24 Hour Format
+
+Auto Refresh Every Second
+
+Concepts Covered
+useEffect()
+Cleanup Function
+setInterval()
+clearInterval()
+Project 3: Stopwatch
+Hooks
+useState
+
+useRef
+
+useEffect
+
+Features
+Start
+
+Stop
+
+Resume
+
+Reset
+
+Lap Timer
+
+Concepts
+useRef()
+setInterval()
+Cleanup
+Project 4: Countdown Timer
+Hooks
+useState
+
+useEffect
+
+Features
+Enter Minutes
+
+Countdown
+
+Pause
+
+Resume
+
+Restart
+
+Alarm
+
+Project 5: Calculator
+Hooks
+useState
+
+Features
+Addition
+Subtraction
+Multiplication
+Division
+Percentage
+Square
+Square Root
+Project 6: BMI Calculator
+Hooks
+useState
+
+Features
+Height
+Weight
+Calculate BMI
+
+Result
+
+Underweight
+Normal
+Overweight
+Obesity
+Project 7: Student Result Calculator
+Hooks
+useState
+
+Features
+Enter Marks
+
+Calculate
+
+Total
+
+Average
+
+Percentage
+
+Grade
+
+Pass/Fail
+Project 8: Temperature Converter
+Hooks
+useState
+
+Features
+Celsius
+
+Fahrenheit
+
+Kelvin
+
+Auto Conversion
+Project 9: ToDo Application
+Hooks
+useState
+
+Features
+Add Task
+
+Delete
+
+Edit
+
+Search
+
+Complete
+
+Pending
+
+Clear Completed
+Concepts
+CRUD
+
+map()
+
+filter()
+
+Conditional Rendering
+Project 10: Notes Application
+Hooks
+useState
+
+Features
+Add Notes
+
+Delete
+
+Update
+
+Search
+
+Character Count
+Project 11: Employee CRUD
+Hooks
+useState
+
+Features
+Employee Id
+
+Name
+
+Salary
+
+Department
+
+Designation
+
+CRUD
+Later
+
+Spring Boot REST API
+
+Axios
+
+MySQL
+Project 12: Product Management
+Hooks
+useState
+
+Features
+Products
+
+Category
+
+Price
+
+Image
+
+Stock
+
+CRUD
+Project 13: Shopping Cart
+Hooks
+useState
+
+useReducer
+
+useContext
+
+Features
+Add to Cart
+
+Remove
+
+Increase Quantity
+
+Decrease Quantity
+
+Grand Total
+
+Discount
+
+GST
+
+Checkout
+Project 14: Expense Tracker
+Hooks
+useState
+
+useMemo
+
+Features
+Income
+
+Expense
+
+Balance
+
+Monthly Report
+
+Category Wise Report
+Project 15: Movie Search App
+Hooks
+useState
+
+useEffect
+
+API
+OMDB API
+Features
+Search Movies
+
+Poster
+
+Ratings
+
+Release Date
+
+Description
+Project 16: Weather Application
+Hooks
+useState
+
+useEffect
+
+API
+OpenWeather API
+Features
+Current Weather
+
+Humidity
+
+Temperature
+
+Wind Speed
+
+Forecast
+Project 17: GitHub Profile Finder
+Hooks
+useState
+
+useEffect
+
+API
+GitHub REST API
+Features
+Search User
+
+Followers
+
+Repositories
+
+Avatar
+
+Bio
+Project 18: Currency Converter
+Hooks
+useState
+
+useEffect
+
+API
+Exchange Rate API
+Features
+USD
+
+INR
+
+EUR
+
+GBP
+
+Live Conversion
+Project 19: Authentication System
+Hooks
+useState
+
+useContext
+
+Features
+Login
+
+Logout
+
+Protected Pages
+
+JWT Token
+
+Role Based Menu
+Later connect with
+
+Spring Boot JWT
+Project 20: Employee Management System (Enterprise)
+Hooks
+useState
+
+useEffect
+
+useContext
+
+useReducer
+
+useMemo
+
+useCallback
+
+useRef
+Backend
+Spring Boot
+
+REST API
+
+Spring Security
+
+JWT
+
+MySQL
+Features
+Login
+
+Dashboard
+
+Employees
+
+Departments
+
+Projects
+
+Profile
+
+Search
+
+Pagination
+
+Sorting
+
+Filtering
+
+CRUD
+
+Reports
+
+Logout
+Project 21: E-Commerce Website
+Hooks
+useState
+
+useEffect
+
+useReducer
+
+useContext
+
+useMemo
+Features
+Products
+
+Categories
+
+Cart
+
+Wishlist
+
+Payment
+
+Order History
+
+Authentication
+
+Invoice
+Project 22: Hospital Management System
+Features
+Patients
+
+Doctors
+
+Appointments
+
+Billing
+
+Reports
+
+Search
+Project 23: Library Management System
+Features
+Books
+
+Issue Book
+
+Return Book
+
+Students
+
+Fine
+
+Reports
+Project 24: Online Examination System
+Features
+Student Login
+
+Questions
+
+Timer
+
+Submit
+
+Score
+
+Leaderboard
+Project 25: Enterprise HR Portal
+Features
+Employee Login
+
+Attendance
+
+Leave Management
+
+Payroll
+
+Notifications
+
+Reports
+
+Admin Dashboard
+React Hooks Used
+Hook	Common Use Cases
+useState	Form inputs, CRUD operations, counters
+useEffect	API calls, timers, subscriptions
+useContext	Authentication, themes, shared user data
+useReducer	Shopping cart, complex state transitions
+useRef	Focus management, timers, DOM access
+useMemo	Expensive calculations, filtering large datasets
+useCallback	Prevent unnecessary child re-renders
+useLayoutEffect	DOM measurements before paint
+useImperativeHandle	Exposing child methods to parent components
+useTransition	Smooth rendering during heavy UI updates
+useDeferredValue	Responsive search and filtering
+useId	Accessible, unique form element IDs
+Corporate Training Roadmap (4 Weeks)
+Week 1: Counter, Calculator, Digital Clock, Stopwatch, Countdown Timer, BMI Calculator
+
+Week 2: ToDo App, Notes App, Employee CRUD (Local State), Expense Tracker, Shopping Cart
+
+Week 3: Weather App, Movie Search, GitHub Profile Finder, Currency Converter, Authentication with Context API
+
+Week 4: Employee Management System integrated with React + Axios + Spring Boot + Spring Security JWT + MySQL, including protected routes, role-based access, pagination, search, sorting, and complete CRUD operations.
+
+This progression gives trainees a clear path from basic React Hooks to building production-style full-stack applications.
+
+
+project 1
+
+Great choice. We'll build Project 1: Counter Application using React (.jsx). This project is ideal for beginners because it introduces useState, event handling, conditional rendering, and reusable components.
+
+Project 1: Counter Application
+Learning Objectives
+After completing this project, trainees will understand:
+
+useState() Hook
+
+Event Handling (onClick)
+
+State Updates
+
+Conditional Rendering
+
+Inline Styling
+
+Component Creation
+
+Props (Optional Enhancement)
+
+Project Structure
+counter-app/
+│
+├── src/
+│   ├── components/
+│   │      Counter.jsx
+│   │
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── App.css
+Step 1: Create React Project
+npm create vite@latest counter-app
+
+cd counter-app
+
+npm install
+
+npm run dev
+Choose:
+
+React
+
+JavaScript
+Step 2: Counter.jsx
+import { useState } from "react";
+
+function Counter() {
+
+    const [count, setCount] = useState(0);
+
+    return (
+
+        <div>
+
+            <h1>React Counter App</h1>
+
+            <h2>{count}</h2>
+
+            <button
+                onClick={() => setCount(count + 1)}
+            >
+                Increment
+            </button>
+
+            <button
+                onClick={() => setCount(count - 1)}
+            >
+                Decrement
+            </button>
+
+            <button
+                onClick={() => setCount(0)}
+            >
+                Reset
+            </button>
+
+        </div>
+
+    );
+
+}
+
+export default Counter;
+Step 3: App.jsx
+import Counter from "./components/Counter";
+
+function App() {
+
+    return (
+
+        <Counter />
+
+    );
+
+}
+
+export default App;
+Output
+Initially
+
+React Counter App
+
+0
+
+[Increment]
+
+[Decrement]
+
+[Reset]
+After clicking Increment
+
+1
+Again
+
+2
+How useState Works
+const [count, setCount] = useState(0);
+Part	Meaning
+count	Current state value
+setCount()	Updates the state
+0	Initial value
+Increment
+setCount(count + 1);
+Example:
+
+count = 5
+
+setCount(6)
+Decrement
+setCount(count - 1);
+Reset
+setCount(0);
+Step 4: Prevent Negative Values
+const decrement = () => {
+
+    if (count > 0) {
+
+        setCount(count - 1);
+
+    }
+
+}
+Button
+
+<button onClick={decrement}>
+    Decrement
+</button>
+Now the counter never goes below zero.
+
+Step 5: Disable Buttons
+Disable Decrement when the count is 0.
+
+<button
+
+disabled={count===0}
+
+onClick={decrement}
+
+>
+
+Decrement
+
+</button>
+Step 6: Increase by 5
+<button
+
+onClick={()=>setCount(count+5)}
+
+>
+
++5
+
+</button>
+Step 7: Decrease by 5
+<button
+
+onClick={()=>{
+
+if(count>=5)
+
+setCount(count-5);
+
+}}
+
+>
+
+-5
+
+</button>
+Step 8: Maximum Value
+const increment=()=>{
+
+if(count<20){
+
+setCount(count+1);
+
+}
+
+}
+Step 9: Counter Status
+{
+count==0 &&
+<h3>Counter is Empty</h3>
+}
+{
+count>0 &&
+<h3>Counter Started</h3>
+}
+Step 10: Dynamic Color
+<h1
+
+style={{
+
+color:count>=10?"green":"red"
+
+}}
+
+>
+
+{count}
+
+</h1>
+Complete Version
+import { useState } from "react";
+
+function Counter() {
+
+    const [count, setCount] = useState(0);
+
+    const increment = () => {
+        if (count < 20) {
+            setCount(count + 1);
+        }
+    };
+
+    const decrement = () => {
+        if (count > 0) {
+            setCount(count - 1);
+        }
+    };
+
+    const reset = () => {
+        setCount(0);
+    };
+
+    return (
+        <div style={{ textAlign: "center", marginTop: "40px" }}>
+
+            <h1>React Counter App</h1>
+
+            <h2 style={{ color: count >= 10 ? "green" : "red" }}>
+                {count}
+            </h2>
+
+            {count === 0 && <h3>Counter is Empty</h3>}
+            {count > 0 && <h3>Counter Started</h3>}
+
+            <button onClick={increment}>
+                Increment
+            </button>
+
+            <button
+                onClick={decrement}
+                disabled={count === 0}
+            >
+                Decrement
+            </button>
+
+            <button onClick={reset}>
+                Reset
+            </button>
+
+            <br /><br />
+
+            <button onClick={() => setCount(count + 5)}>
+                +5
+            </button>
+
+            <button
+                onClick={() => {
+                    if (count >= 5) {
+                        setCount(count - 5);
+                    }
+                }}
+            >
+                -5
+            </button>
+
+        </div>
+    );
+}
+
+export default Counter;
+Concepts Covered
+✅ Creating a functional component
+
+✅ useState() Hook
+
+✅ Event handling with onClick
+
+✅ Updating state
+
+✅ Conditional rendering
+
+✅ Button disabling
+
+✅ Inline styling
+
+✅ Business logic in event handlers
+
+✅ State validation (minimum and maximum values)
+
+Assignment for Trainees:
+
+Add a step input so the user can choose the increment/decrement value.
+
+Add Min (-10) and Max (50) limits.
+
+Display a message such as "Maximum limit reached" or "Minimum limit reached" when the user hits a limit.
+
+Add a history list showing every counter value after each operation. This introduces array state management using useState.
+
+
+project 2
+
+Project 2: Digital Clock (React Hooks - .jsx)
+This project teaches trainees how to use useState() and useEffect() to create a real-time digital clock.
+
+Learning Objectives
+After completing this project, trainees will understand:
+
+useState()
+
+useEffect()
+
+setInterval()
+
+clearInterval()
+
+Cleanup Function
+
+Date Object
+
+Real-Time UI Updates
+
+Conditional Rendering
+
+Inline Styling
+
+Project Structure
+digital-clock/
+│
+├── src/
+│   ├── components/
+│   │      DigitalClock.jsx
+│   │
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── App.css
+Step 1: Create React Project
+npm create vite@latest digital-clock
+
+cd digital-clock
+
+npm install
+
+npm run dev
+Select:
+
+React
+
+JavaScript
+Step 2: DigitalClock.jsx
+import { useEffect, useState } from "react";
+
+function DigitalClock() {
+
+    const [time, setTime] = useState(new Date());
+
+    useEffect(() => {
+
+        const timer = setInterval(() => {
+
+            setTime(new Date());
+
+        }, 1000);
+
+        return () => {
+
+            clearInterval(timer);
+
+        };
+
+    }, []);
+
+    return (
+
+        <div>
+
+            <h1>Digital Clock</h1>
+
+            <h2>{time.toLocaleTimeString()}</h2>
+
+        </div>
+
+    );
+
+}
+
+export default DigitalClock;
+Step 3: App.jsx
+import DigitalClock from "./components/DigitalClock";
+
+function App() {
+
+    return (
+
+        <DigitalClock />
+
+    );
+
+}
+
+export default App;
+Output
+Digital Clock
+
+10:35:15 PM
+
+10:35:16 PM
+
+10:35:17 PM
+The time updates automatically every second.
+
+Understanding useState
+const [time, setTime] = useState(new Date());
+Part	Description
+time	Current Date Object
+setTime()	Updates the time
+new Date()	Gets current system date & time
+Understanding useEffect
+useEffect(() => {
+
+}, []);
+Runs only once when the component is loaded.
+
+setInterval()
+const timer = setInterval(() => {
+
+    setTime(new Date());
+
+}, 1000);
+This executes every 1000 milliseconds (1 second).
+
+Cleanup Function
+return () => {
+
+    clearInterval(timer);
+
+};
+This prevents memory leaks by stopping the interval when the component is removed.
+
+Step 4: Display Date
+<h2>{time.toLocaleDateString()}</h2>
+Output:
+
+20/07/2026
+Step 5: Display Day
+<h2>
+{time.toLocaleDateString("en-US",
+{
+weekday:"long"
+})}
+</h2>
+Output
+
+Monday
+Step 6: 12-Hour Clock
+<h2>
+
+{time.toLocaleTimeString("en-US")}
+
+</h2>
+Output
+
+10:45:25 PM
+Step 7: 24-Hour Clock
+<h2>
+
+{
+time.toLocaleTimeString("en-GB")
+}
+
+</h2>
+Output
+
+22:45:25
+Step 8: Greeting Based on Time
+const hour=time.getHours();
+
+let message="";
+
+if(hour<12){
+
+message="Good Morning";
+
+}
+
+else if(hour<17){
+
+message="Good Afternoon";
+
+}
+
+else{
+
+message="Good Evening";
+
+}
+Display
+
+<h2>{message}</h2>
+Step 9: Dynamic Color
+<h1
+
+style={{
+
+color:time.getHours()<12?"green":"blue"
+
+}}
+
+>
+
+Digital Clock
+
+</h1>
+Step 10: Complete Version
+import { useEffect, useState } from "react";
+
+function DigitalClock() {
+
+    const [time, setTime] = useState(new Date());
+
+    useEffect(() => {
+
+        const timer = setInterval(() => {
+
+            setTime(new Date());
+
+        }, 1000);
+
+        return () => {
+
+            clearInterval(timer);
+
+        };
+
+    }, []);
+
+    const hour = time.getHours();
+
+    let message = "";
+
+    if (hour < 12) {
+
+        message = "Good Morning";
+
+    }
+    else if (hour < 17) {
+
+        message = "Good Afternoon";
+
+    }
+    else {
+
+        message = "Good Evening";
+
+    }
+
+    return (
+
+        <div
+            style={{
+                textAlign: "center",
+                marginTop: "100px",
+                fontFamily: "Arial"
+            }}
+        >
+
+            <h1
+                style={{
+                    color: hour < 12 ? "green" : "blue"
+                }}
+            >
+                Digital Clock
+            </h1>
+
+            <h2>{message}</h2>
+
+            <h2>
+
+                {time.toLocaleTimeString("en-US")}
+
+            </h2>
+
+            <h3>
+
+                {time.toLocaleDateString()}
+
+            </h3>
+
+            <h3>
+
+                {
+
+                    time.toLocaleDateString("en-US",
+
+                        {
+
+                            weekday: "long"
+
+                        })
+
+                }
+
+            </h3>
+
+        </div>
+
+    );
+
+}
+
+export default DigitalClock;
+Expected Output
+Digital Clock
+
+Good Evening
+
+10:45:20 PM
+
+20/07/2026
+
+Monday
+Concepts Covered
+✅ useState()
+
+✅ useEffect()
+
+✅ setInterval()
+
+✅ clearInterval()
+
+✅ Cleanup function
+
+✅ JavaScript Date object
+
+✅ Conditional rendering
+
+✅ Dynamic styling
+
+✅ Real-time UI updates
+
+Assignment for Trainees
+Add a Toggle button to switch between 12-hour and 24-hour formats.
+
+Display the current time zone (e.g., Asia/Kolkata).
+
+Add a Dark Mode / Light Mode toggle.
+
+Display the month name (e.g., July) and year.
+
+Show a live seconds progress bar that fills from 0 to 59 seconds.
+
+Play a short notification sound at the start of every hour (optional, using the browser Audio API).
+
+These enhancements help trainees practice combining useState, useEffect, conditional rendering, and event handling in a realistic React application.
+
+
+project 3
+
+Project 3: Stopwatch Application (React Hooks - .jsx)
+This project introduces trainees to useState(), useEffect(), and useRef() by building a fully functional stopwatch.
+
+Learning Objectives
+After completing this project, trainees will understand:
+
+useState()
+
+useEffect()
+
+useRef()
+
+setInterval()
+
+clearInterval()
+
+Cleanup Function
+
+Event Handling
+
+Conditional Rendering
+
+Project Structure
+stopwatch-app/
+│
+├── src/
+│   ├── components/
+│   │      Stopwatch.jsx
+│   │
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── App.css
+Step 1: Create React Project
+npm create vite@latest stopwatch-app
+
+cd stopwatch-app
+
+npm install
+
+npm run dev
+Choose:
+
+React
+
+JavaScript
+
+Step 2: Stopwatch.jsx
+import { useState, useEffect, useRef } from "react";
+
+function Stopwatch() {
+
+    const [seconds, setSeconds] = useState(0);
+    const [running, setRunning] = useState(false);
+
+    const intervalRef = useRef(null);
+
+    useEffect(() => {
+
+        if (running) {
+
+            intervalRef.current = setInterval(() => {
+
+                setSeconds(prev => prev + 1);
+
+            }, 1000);
+
+        } else {
+
+            clearInterval(intervalRef.current);
+
+        }
+
+        return () => {
+
+            clearInterval(intervalRef.current);
+
+        };
+
+    }, [running]);
+
+    const start = () => {
+
+        setRunning(true);
+
+    };
+
+    const stop = () => {
+
+        setRunning(false);
+
+    };
+
+    const reset = () => {
+
+        setRunning(false);
+        setSeconds(0);
+
+    };
+
+    return (
+
+        <div style={{ textAlign: "center" }}>
+
+            <h1>Stopwatch</h1>
+
+            <h2>{seconds} Seconds</h2>
+
+            <button onClick={start}>Start</button>
+
+            <button onClick={stop}>Stop</button>
+
+            <button onClick={reset}>Reset</button>
+
+        </div>
+
+    );
+
+}
+
+export default Stopwatch;
+Step 3: App.jsx
+import Stopwatch from "./components/Stopwatch";
+
+function App() {
+
+    return <Stopwatch />;
+
+}
+
+export default App;
+Output
+Stopwatch
+
+0 Seconds
+
+Start Stop Reset
+Click Start
+
+1
+
+2
+
+3
+
+4
+
+5
+Understanding useRef()
+const intervalRef = useRef(null);
+useRef() stores a value that persists across renders without causing a re-render.
+
+Here it stores the interval ID returned by setInterval().
+
+Why useRef?
+Without useRef(), React recreates local variables on every render.
+
+const intervalRef = useRef(null);
+stores the timer safely.
+
+Start Button
+const start = () => {
+
+    setRunning(true);
+
+};
+Stop Button
+const stop = () => {
+
+    setRunning(false);
+
+};
+Reset Button
+const reset = () => {
+
+    setRunning(false);
+
+    setSeconds(0);
+
+};
+Step 4: Display Minutes & Seconds
+Instead of showing only seconds:
+
+65 Seconds
+Display
+
+01 : 05
+Logic
+const minutes = Math.floor(seconds / 60);
+
+const remainingSeconds = seconds % 60;
+Display
+
+<h2>
+
+{String(minutes).padStart(2,"0")}
+
+:
+
+{String(remainingSeconds).padStart(2,"0")}
+
+</h2>
+Step 5: Disable Buttons
+<button
+
+disabled={running}
+
+onClick={start}
+
+>
+
+Start
+
+</button>
+<button
+
+disabled={!running}
+
+onClick={stop}
+
+>
+
+Stop
+
+</button>
+Step 6: Show Status
+{
+running ?
+
+<h3>Running...</h3>
+
+:
+
+<h3>Stopped</h3>
+
+}
+Step 7: Dynamic Color
+<h2
+
+style={{
+
+color:running?"green":"red"
+
+}}
+
+>
+
+{seconds}
+
+</h2>
+Step 8: Complete Version
+import { useState, useEffect, useRef } from "react";
+
+function Stopwatch() {
+
+    const [seconds, setSeconds] = useState(0);
+
+    const [running, setRunning] = useState(false);
+
+    const intervalRef = useRef(null);
+
+    useEffect(() => {
+
+        if (running) {
+
+            intervalRef.current = setInterval(() => {
+
+                setSeconds(prev => prev + 1);
+
+            }, 1000);
+
+        }
+
+        else {
+
+            clearInterval(intervalRef.current);
+
+        }
+
+        return () => {
+
+            clearInterval(intervalRef.current);
+
+        };
+
+    }, [running]);
+
+    const minutes = Math.floor(seconds / 60);
+
+    const remainingSeconds = seconds % 60;
+
+    return (
+
+        <div
+            style={{
+                textAlign: "center",
+                marginTop: "80px"
+            }}
+        >
+
+            <h1>React Stopwatch</h1>
+
+            <h2
+                style={{
+                    color: running ? "green" : "red"
+                }}
+            >
+
+                {String(minutes).padStart(2, "0")}
+
+                :
+
+                {String(remainingSeconds).padStart(2, "0")}
+
+            </h2>
+
+            {
+
+                running ?
+
+                    <h3>Running...</h3>
+
+                    :
+
+                    <h3>Stopped</h3>
+
+            }
+
+            <button
+
+                disabled={running}
+
+                onClick={() => setRunning(true)}
+
+            >
+
+                Start
+
+            </button>
+
+            <button
+
+                disabled={!running}
+
+                onClick={() => setRunning(false)}
+
+            >
+
+                Stop
+
+            </button>
+
+            <button
+
+                onClick={() => {
+
+                    setRunning(false);
+
+                    setSeconds(0);
+
+                }}
+
+            >
+
+                Reset
+
+            </button>
+
+        </div>
+
+    );
+
+}
+
+export default Stopwatch;
+Concepts Covered
+✅ useState()
+
+✅ useEffect()
+
+✅ useRef()
+
+✅ setInterval()
+
+✅ clearInterval()
+
+✅ Cleanup Function
+
+✅ Timer Management
+
+✅ Conditional Rendering
+
+✅ Button Enable/Disable
+
+✅ Time Formatting (MM:SS)
+
+Interview Questions
+Q1. Why is useRef() used in a stopwatch?
+Answer: It stores the interval ID without causing re-renders, allowing us to start and stop the timer safely.
+
+Q2. Why do we return a cleanup function in useEffect()?
+Answer: To clear the interval when the component unmounts or when the effect reruns, preventing memory leaks and duplicate timers.
+
+Q3. Why use setSeconds(prev => prev + 1) instead of setSeconds(seconds + 1)?
+Answer: The functional update form always receives the latest state value, avoiding stale state issues inside asynchronous callbacks like setInterval().
+
+Assignment for Trainees
+Add Lap Time functionality (store lap times in an array and display them).
+
+Extend the display to HH:MM:SS format.
+
+Add a Pause/Resume feature while preserving elapsed time.
+
+Display milliseconds (update every 10 ms or 100 ms).
+
+Add a theme switcher (Light/Dark mode).
+
+Show the total number of laps and the fastest and slowest lap.
+
+Persist the last stopwatch state in localStorage so it can be restored after refreshing the page.
+
+
+project 4
+
+Project 4: Countdown Timer (React Hooks - .jsx)
+This project teaches trainees how to build a Countdown Timer using React Hooks. It introduces handling user input, timers, cleanup functions, and conditional rendering.
+
+Learning Objectives
+After completing this project, trainees will understand:
+
+✅ useState()
+
+✅ useEffect()
+
+✅ useRef()
+
+✅ setInterval()
+
+✅ clearInterval()
+
+✅ Form Handling
+
+✅ Event Handling
+
+✅ Conditional Rendering
+
+✅ Cleanup Function
+
+Project Structure
+countdown-timer/
+│
+├── src/
+│   ├── components/
+│   │      CountdownTimer.jsx
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── App.css
+Step 1: Create React Project
+npm create vite@latest countdown-timer
+
+cd countdown-timer
+
+npm install
+
+npm run dev
+Choose:
+
+React
+
+JavaScript
+
+Step 2: CountdownTimer.jsx
+import { useState, useEffect, useRef } from "react";
+
+function CountdownTimer() {
+
+    const [seconds, setSeconds] = useState(0);
+    const [running, setRunning] = useState(false);
+
+    const intervalRef = useRef(null);
+
+    useEffect(() => {
+
+        if (running && seconds > 0) {
+
+            intervalRef.current = setInterval(() => {
+
+                setSeconds(prev => prev - 1);
+
+            }, 1000);
+
+        }
+
+        if (seconds === 0) {
+
+            setRunning(false);
+
+            clearInterval(intervalRef.current);
+
+        }
+
+        return () => {
+
+            clearInterval(intervalRef.current);
+
+        };
+
+    }, [running, seconds]);
+
+    const startTimer = () => {
+
+        if (seconds > 0) {
+
+            setRunning(true);
+
+        }
+
+    };
+
+    const pauseTimer = () => {
+
+        setRunning(false);
+
+    };
+
+    const resetTimer = () => {
+
+        setRunning(false);
+
+        setSeconds(0);
+
+    };
+
+    return (
+
+        <div style={{ textAlign: "center", marginTop: "50px" }}>
+
+            <h1>Countdown Timer</h1>
+
+            <input
+                type="number"
+                placeholder="Enter Seconds"
+                value={seconds}
+                disabled={running}
+                onChange={(e) => setSeconds(Number(e.target.value))}
+            />
+
+            <h2>{seconds} Seconds</h2>
+
+            <button onClick={startTimer}>
+                Start
+            </button>
+
+            <button onClick={pauseTimer}>
+                Pause
+            </button>
+
+            <button onClick={resetTimer}>
+                Reset
+            </button>
+
+        </div>
+
+    );
+
+}
+
+export default CountdownTimer;
+Step 3: App.jsx
+import CountdownTimer from "./components/CountdownTimer";
+
+function App() {
+
+    return <CountdownTimer />;
+
+}
+
+export default App;
+Output
+Initially
+
+Countdown Timer
+
+[ 30 ]
+
+30 Seconds
+
+Start   Pause   Reset
+After clicking Start
+
+30
+
+29
+
+28
+
+27
+
+26
+
+...
+
+0
+How It Works
+Step 1
+const [seconds, setSeconds] = useState(0);
+Stores the remaining countdown time.
+
+Step 2
+const [running, setRunning] = useState(false);
+Tracks whether the timer is running.
+
+Step 3
+const intervalRef = useRef(null);
+Stores the interval ID without causing re-renders.
+
+Step 4
+Start Timer
+
+setRunning(true);
+Step 5
+Every second
+
+setSeconds(prev => prev - 1);
+Step 6
+When timer reaches zero
+
+clearInterval(intervalRef.current);
+Timer stops automatically.
+
+Display MM:SS Format
+Instead of
+
+125 Seconds
+Display
+
+02 : 05
+Logic
+const minutes = Math.floor(seconds / 60);
+
+const remainingSeconds = seconds % 60;
+Display
+
+<h2>
+
+{String(minutes).padStart(2,"0")}
+
+:
+
+{String(remainingSeconds).padStart(2,"0")}
+
+</h2>
+Disable Buttons
+Disable Start
+
+<button
+
+disabled={running || seconds===0}
+
+onClick={startTimer}
+
+>
+
+Start
+
+</button>
+Disable Pause
+
+<button
+
+disabled={!running}
+
+onClick={pauseTimer}
+
+>
+
+Pause
+
+</button>
+Timer Status
+{
+running
+
+?
+
+<h3>Running...</h3>
+
+:
+
+<h3>Paused</h3>
+}
+Timer Completed
+{
+seconds===0
+
+&&
+
+<h2>
+
+Time Up!!
+
+</h2>
+
+}
+Change Color
+<h2
+
+style={{
+
+color:
+
+seconds<=10
+
+?
+
+"red"
+
+:
+
+"green"
+
+}}
+
+>
+
+{seconds}
+
+</h2>
+Complete Version
+import { useState, useEffect, useRef } from "react";
+
+function CountdownTimer() {
+
+    const [seconds, setSeconds] = useState(60);
+    const [running, setRunning] = useState(false);
+
+    const intervalRef = useRef(null);
+
+    useEffect(() => {
+
+        if (running && seconds > 0) {
+
+            intervalRef.current = setInterval(() => {
+
+                setSeconds(prev => prev - 1);
+
+            }, 1000);
+
+        }
+
+        else {
+
+            clearInterval(intervalRef.current);
+
+        }
+
+        if (seconds === 0) {
+
+            setRunning(false);
+
+            clearInterval(intervalRef.current);
+
+        }
+
+        return () => {
+
+            clearInterval(intervalRef.current);
+
+        };
+
+    }, [running, seconds]);
+
+    const minutes = Math.floor(seconds / 60);
+
+    const remainingSeconds = seconds % 60;
+
+    return (
+
+        <div
+            style={{
+                textAlign: "center",
+                marginTop: "80px"
+            }}
+        >
+
+            <h1>Countdown Timer</h1>
+
+            <input
+                type="number"
+                value={seconds}
+                disabled={running}
+                onChange={(e) =>
+                    setSeconds(Number(e.target.value))
+                }
+            />
+
+            <h2
+                style={{
+                    color: seconds <= 10 ? "red" : "green"
+                }}
+            >
+
+                {String(minutes).padStart(2, "0")}
+
+                :
+
+                {String(remainingSeconds).padStart(2, "0")}
+
+            </h2>
+
+            {
+
+                running ?
+
+                    <h3>Running...</h3>
+
+                    :
+
+                    <h3>Paused</h3>
+
+            }
+
+            {
+
+                seconds === 0 &&
+
+                <h2>Time Up!!</h2>
+
+            }
+
+            <button
+                disabled={running || seconds === 0}
+                onClick={() => setRunning(true)}
+            >
+                Start
+            </button>
+
+            <button
+                disabled={!running}
+                onClick={() => setRunning(false)}
+            >
+                Pause
+            </button>
+
+            <button
+                onClick={() => {
+
+                    setRunning(false);
+
+                    setSeconds(60);
+
+                }}
+            >
+                Reset
+            </button>
+
+        </div>
+
+    );
+
+}
+
+export default CountdownTimer;
+Concepts Covered
+✅ useState()
+
+✅ useEffect()
+
+✅ useRef()
+
+✅ Timer management with setInterval()
+
+✅ Cleanup with clearInterval()
+
+✅ Controlled form inputs
+
+✅ Conditional rendering
+
+✅ Dynamic styling
+
+✅ Time formatting (MM:SS)
+
+Interview Questions
+Q1. Why is useRef() used instead of a normal variable?
+Answer: useRef() keeps the interval ID between renders without triggering re-renders, making it ideal for storing timer references.
+
+Q2. Why use setSeconds(prev => prev - 1)?
+Answer: The functional update always uses the latest state value, preventing stale state problems inside the interval callback.
+
+Q3. Why is the cleanup function important?
+Answer: It clears the interval when the component unmounts or before a new interval is created, avoiding duplicate timers and memory leaks.
+
+Assignment for Trainees
+Allow users to enter hours, minutes, and seconds separately.
+
+Add a Resume button to continue after pausing.
+
+Add +30 Seconds and -30 Seconds buttons while the timer is running.
+
+Display a progress bar that shrinks as time counts down.
+
+Play a notification sound when the timer reaches zero.
+
+Save the remaining time in localStorage and restore it after refreshing the page.
+
+Show a history of completed countdown sessions with their original duration and completion time.
+
+
+project 5
+
+Project 5: Calculator Application (React Hooks - .jsx)
+This project teaches trainees how to build a Calculator using React Hooks. It focuses on state management, controlled form inputs, event handling, arithmetic operations, and basic validation.
+
+Learning Objectives
+After completing this project, trainees will understand:
+
+✅ useState()
+
+✅ Controlled Components
+
+✅ Event Handling
+
+✅ Form Validation
+
+✅ Conditional Rendering
+
+✅ Reusable Functions
+
+✅ Basic Arithmetic Logic
+
+Project Structure
+calculator-app/
+│
+├── src/
+│   ├── components/
+│   │      Calculator.jsx
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── App.css
+Step 1: Create React Project
+npm create vite@latest calculator-app
+
+cd calculator-app
+
+npm install
+
+npm run dev
+Select:
+
+React
+
+JavaScript
+
+Step 2: Calculator.jsx
+import { useState } from "react";
+
+function Calculator() {
+
+    const [num1, setNum1] = useState("");
+    const [num2, setNum2] = useState("");
+    const [result, setResult] = useState("");
+
+    const add = () => {
+        setResult(Number(num1) + Number(num2));
+    };
+
+    const subtract = () => {
+        setResult(Number(num1) - Number(num2));
+    };
+
+    const multiply = () => {
+        setResult(Number(num1) * Number(num2));
+    };
+
+    const divide = () => {
+
+        if (Number(num2) === 0) {
+            setResult("Cannot divide by zero");
+        } else {
+            setResult(Number(num1) / Number(num2));
+        }
+
+    };
+
+    const clear = () => {
+        setNum1("");
+        setNum2("");
+        setResult("");
+    };
+
+    return (
+
+        <div style={{ textAlign: "center", marginTop: "50px" }}>
+
+            <h1>React Calculator</h1>
+
+            <input
+                type="number"
+                placeholder="Enter First Number"
+                value={num1}
+                onChange={(e) => setNum1(e.target.value)}
+            />
+
+            <br /><br />
+
+            <input
+                type="number"
+                placeholder="Enter Second Number"
+                value={num2}
+                onChange={(e) => setNum2(e.target.value)}
+            />
+
+            <br /><br />
+
+            <button onClick={add}>+</button>
+
+            <button onClick={subtract}>-</button>
+
+            <button onClick={multiply}>*</button>
+
+            <button onClick={divide}>/</button>
+
+            <button onClick={clear}>Clear</button>
+
+            <h2>Result : {result}</h2>
+
+        </div>
+
+    );
+
+}
+
+export default Calculator;
+Step 3: App.jsx
+import Calculator from "./components/Calculator";
+
+function App() {
+
+    return <Calculator />;
+
+}
+
+export default App;
+Output
+React Calculator
+
+First Number : 20
+
+Second Number : 10
+
++  -  *  /  Clear
+
+Result : 30
+Understanding useState()
+const [num1, setNum1] = useState("");
+Stores the first input value.
+
+const [num2, setNum2] = useState("");
+Stores the second input value.
+
+const [result, setResult] = useState("");
+Stores the calculation result.
+
+Controlled Input
+<input
+
+value={num1}
+
+onChange={(e)=>setNum1(e.target.value)}
+
+/>
+Whenever the user types, the state is updated immediately.
+
+Addition
+setResult(Number(num1)+Number(num2));
+Example
+
+10 + 20 = 30
+Subtraction
+setResult(Number(num1)-Number(num2));
+Multiplication
+setResult(Number(num1)*Number(num2));
+Division
+if(Number(num2)==0){
+
+setResult("Cannot divide by zero");
+
+}
+Clear Button
+setNum1("");
+
+setNum2("");
+
+setResult("");
+Step 4: Percentage
+const percentage=()=>{
+
+setResult((Number(num1)/100)*Number(num2));
+
+}
+Button
+
+<button onClick={percentage}>
+%
+</button>
+Step 5: Square
+const square=()=>{
+
+setResult(Number(num1)*Number(num1));
+
+}
+Step 6: Square Root
+const squareRoot=()=>{
+
+setResult(Math.sqrt(Number(num1)));
+
+}
+Step 7: Power
+const power=()=>{
+
+setResult(Math.pow(Number(num1),Number(num2)));
+
+}
+Step 8: Modulus
+const modulus=()=>{
+
+setResult(Number(num1)%Number(num2));
+
+}
+Step 9: Dynamic Color
+<h2
+
+style={{
+
+color:
+
+result>0
+
+?
+
+"green"
+
+:
+
+"red"
+
+}}
+
+>
+
+Result : {result}
+
+</h2>
+Complete Advanced Calculator
+import { useState } from "react";
+
+function Calculator() {
+
+    const [num1, setNum1] = useState("");
+
+    const [num2, setNum2] = useState("");
+
+    const [result, setResult] = useState("");
+
+    const add = () => setResult(Number(num1) + Number(num2));
+
+    const subtract = () => setResult(Number(num1) - Number(num2));
+
+    const multiply = () => setResult(Number(num1) * Number(num2));
+
+    const divide = () => {
+
+        if (Number(num2) === 0)
+
+            setResult("Cannot divide by zero");
+
+        else
+
+            setResult(Number(num1) / Number(num2));
+
+    };
+
+    const modulus = () => {
+
+        setResult(Number(num1) % Number(num2));
+
+    };
+
+    const power = () => {
+
+        setResult(Math.pow(Number(num1), Number(num2)));
+
+    };
+
+    const square = () => {
+
+        setResult(Number(num1) * Number(num1));
+
+    };
+
+    const squareRoot = () => {
+
+        setResult(Math.sqrt(Number(num1)));
+
+    };
+
+    const clear = () => {
+
+        setNum1("");
+
+        setNum2("");
+
+        setResult("");
+
+    };
+
+    return (
+
+        <div
+            style={{
+                textAlign: "center",
+                marginTop: "50px"
+            }}
+        >
+
+            <h1>Advanced Calculator</h1>
+
+            <input
+                type="number"
+                value={num1}
+                placeholder="First Number"
+                onChange={(e) => setNum1(e.target.value)}
+            />
+
+            <br /><br />
+
+            <input
+                type="number"
+                value={num2}
+                placeholder="Second Number"
+                onChange={(e) => setNum2(e.target.value)}
+            />
+
+            <br /><br />
+
+            <button onClick={add}>+</button>
+
+            <button onClick={subtract}>-</button>
+
+            <button onClick={multiply}>*</button>
+
+            <button onClick={divide}>/</button>
+
+            <button onClick={modulus}>%</button>
+
+            <button onClick={power}>Power</button>
+
+            <button onClick={square}>Square</button>
+
+            <button onClick={squareRoot}>√</button>
+
+            <button onClick={clear}>Clear</button>
+
+            <h2
+                style={{
+                    color:
+                        result > 0 ? "green" : "red"
+                }}
+            >
+
+                Result : {result}
+
+            </h2>
+
+        </div>
+
+    );
+
+}
+
+export default Calculator;
+Concepts Covered
+✅ useState()
+
+✅ Controlled Inputs
+
+✅ Event Handling (onClick, onChange)
+
+✅ Arithmetic Operations
+
+✅ Conditional Logic
+
+✅ Validation (Division by Zero)
+
+✅ Dynamic Styling
+
+✅ Reusable Functions
+
+Interview Questions
+Q1. Why do we use Number() before calculations?
+Answer: Input values from HTML <input> elements are strings by default. Number() converts them to numeric values so arithmetic operations work correctly.
+
+Q2. What is a controlled component in React?
+Answer: A controlled component is an input element whose value is managed by React state using value and onChange.
+
+Q3. Why should division by zero be validated?
+Answer: Division by zero is mathematically undefined and would produce an invalid result (Infinity in JavaScript). Validating it provides a better user experience.
+
+Assignment for Trainees
+Add buttons for:
+
+Cube
+
+Cube Root
+
+Absolute Value
+
+Factorial
+
+Add keyboard support so users can press Enter to calculate.
+
+Display a calculation history (e.g., 10 + 20 = 30).
+
+Add a Dark Mode / Light Mode toggle.
+
+Add scientific operations:
+
+sin()
+
+cos()
+
+tan()
+
+log()
+
+ln()
+
+Create a Standard Calculator and Scientific Calculator mode using conditional rendering.
+
+Corporate Challenge: Replace the local calculation logic with a Spring Boot REST API using Axios. The React app sends numbers and the selected operation to the backend, which performs the calculation and returns the result. This prepares trainees for full-stack React + Spring Boot integration.
+
+
