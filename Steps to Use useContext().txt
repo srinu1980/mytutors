@@ -1,0 +1,151 @@
+Steps to Use useContext()
+Create a Context.
+Wrap components with a Context Provider.
+Access the Context using useContext().
+Syntax
+Step 1: Create Context
+import { createContext } from "react";
+
+const UserContext = createContext();
+Step 2: Provide Context
+<UserContext.Provider value={value}>
+    <Child />
+</UserContext.Provider>
+Step 3: Consume Context
+import { useContext } from "react";
+
+const value = useContext(UserContext);
+Example 1: Basic useContext()
+App.jsx
+import { createContext } from "react";
+import Child from "./Child";
+
+export const UserContext = createContext();
+
+function App() {
+
+    return (
+        <UserContext.Provider value="John">
+            <Child />
+        </UserContext.Provider>
+    );
+}
+
+export default App;
+Child.jsx
+import GrandChild from "./GrandChild";
+
+function Child() {
+
+    return (
+        <>
+            <GrandChild />
+        </>
+    );
+}
+
+export default Child;
+GrandChild.jsx
+import { useContext } from "react";
+import { UserContext } from "./App";
+
+function GrandChild() {
+
+    const user = useContext(UserContext);
+
+    return (
+        <h2>Welcome {user}</h2>
+    );
+}
+
+export default GrandChild;
+Output
+Welcome John
+
+Notice that Child does not receive or pass any props.
+
+Example 2: Theme Context
+App.jsx
+import { createContext } from "react";
+import Home from "./Home";
+
+export const ThemeContext = createContext();
+
+function App() {
+
+    return (
+        <ThemeContext.Provider value="Dark">
+            <Home />
+        </ThemeContext.Provider>
+    );
+}
+
+export default App;
+Home.jsx
+import { useContext } from "react";
+import { ThemeContext } from "./App";
+
+function Home() {
+
+    const theme = useContext(ThemeContext);
+
+    return (
+        <h2>Current Theme : {theme}</h2>
+    );
+}
+
+export default Home;
+Output
+Current Theme : Dark
+Example 3: Object as Context Value
+import { createContext, useContext } from "react";
+
+const EmployeeContext = createContext();
+
+function App() {
+
+    const employee = {
+        id: 101,
+        name: "John",
+        department: "IT"
+    };
+
+    return (
+        <EmployeeContext.Provider value={employee}>
+            <Employee />
+        </EmployeeContext.Provider>
+    );
+}
+
+function Employee() {
+
+    const emp = useContext(EmployeeContext);
+
+    return (
+        <>
+            <h2>ID : {emp.id}</h2>
+            <h2>Name : {emp.name}</h2>
+            <h2>Department : {emp.department}</h2>
+        </>
+    );
+}
+
+export default App;
+Output
+ID : 101
+Name : John
+Department : IT
+How useContext() Works
+Create Context
+      │
+      ▼
+Provider Supplies Data
+      │
+      ▼
+Component Tree
+      │
+      ▼
+useContext() Reads Data
+      │
+      ▼
+
