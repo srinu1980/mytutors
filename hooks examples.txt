@@ -1,0 +1,1125 @@
+
+
+
+React useReducer() Hook – Basic Examples
+What is useReducer()?
+The useReducer() hook is used to manage complex state logic in React components.
+
+It is an alternative to useState() when:
+
+Multiple state values are related.
+
+State updates are complex.
+
+Different actions modify the same state.
+
+Why do we need useReducer()?
+Suppose you have a counter with multiple operations:
+
+Increment
+
+Decrement
+
+Reset
+
+Using useState():
+
+const [count, setCount] = useState(0);
+You need multiple update functions.
+
+Using useReducer(), all updates are handled in one place using a reducer function.
+
+Syntax
+import { useReducer } from "react";
+
+const [state, dispatch] = useReducer(reducer, initialState);
+Parameters
+reducer → Function that updates the state.
+
+initialState → Initial value of the state.
+
+state → Current state.
+
+dispatch() → Sends an action to the reducer.
+
+How useReducer() Works
+Button Click
+      │
+      ▼
+dispatch({ type: "increment" })
+      │
+      ▼
+Reducer Function
+      │
+      ▼
+Returns New State
+      │
+      ▼
+UI Updates
+Structure of a Reducer
+function reducer(state, action) {
+
+    switch(action.type){
+
+        case "increment":
+            return state + 1;
+
+        case "decrement":
+            return state - 1;
+
+        case "reset":
+            return 0;
+
+        default:
+            return state;
+    }
+}
+Example 1: Simple Counter
+import { useReducer } from "react";
+
+function reducer(state, action) {
+
+    switch(action.type){
+
+        case "increment":
+            return state + 1;
+
+        case "decrement":
+            return state - 1;
+
+        case "reset":
+            return 0;
+
+        default:
+            return state;
+    }
+}
+
+function App(){
+
+    const [count, dispatch] = useReducer(reducer, 0);
+
+    return(
+
+        <div>
+
+            <h2>Count : {count}</h2>
+
+            <button onClick={() => dispatch({type:"increment"})}>
+                Increment
+            </button>
+
+            <button onClick={() => dispatch({type:"decrement"})}>
+                Decrement
+            </button>
+
+            <button onClick={() => dispatch({type:"reset"})}>
+                Reset
+            </button>
+
+        </div>
+
+    );
+}
+
+export default App;
+Output
+Count : 0
+
+Increment → 1
+
+Increment → 2
+
+Decrement → 1
+
+Reset → 0
+Example 2: Counter with Step Value
+import { useReducer } from "react";
+
+function reducer(state, action){
+
+    switch(action.type){
+
+        case "add":
+            return state + action.value;
+
+        case "subtract":
+            return state - action.value;
+
+        default:
+            return state;
+    }
+}
+
+function App(){
+
+    const [count, dispatch] = useReducer(reducer, 0);
+
+    return(
+
+        <div>
+
+            <h2>{count}</h2>
+
+            <button
+                onClick={() => dispatch({
+                    type:"add",
+                    value:5
+                })}
+            >
+                +5
+            </button>
+
+            <button
+                onClick={() => dispatch({
+                    type:"subtract",
+                    value:2
+                })}
+            >
+                -2
+            </button>
+
+        </div>
+
+    );
+}
+
+export default App;
+Output
+0
+
++5
+
+5
+
+-2
+
+3
+Example 3: Manage Object State
+import { useReducer } from "react";
+
+const initialState = {
+    name:"",
+    age:0
+};
+
+function reducer(state, action){
+
+    switch(action.type){
+
+        case "setName":
+            return {
+                ...state,
+                name:action.payload
+            };
+
+        case "setAge":
+            return {
+                ...state,
+                age:action.payload
+            };
+
+        default:
+            return state;
+    }
+}
+
+function App(){
+
+    const [user, dispatch] = useReducer(reducer, initialState);
+
+    return(
+
+        <div>
+
+            <h2>Name : {user.name}</h2>
+
+            <h2>Age : {user.age}</h2>
+
+            <button
+                onClick={() =>
+                dispatch({
+                    type:"setName",
+                    payload:"Scott"
+                })}
+            >
+                Set Name
+            </button>
+
+            <button
+                onClick={() =>
+                dispatch({
+                    type:"setAge",
+                    payload:30
+                })}
+            >
+                Set Age
+            </button>
+
+        </div>
+
+    );
+}
+
+export default App;
+Output
+Name :
+
+Age : 0
+
+Click Set Name
+
+Name : Scott
+
+Click Set Age
+
+Age : 30
+Example 4: Login Status
+import { useReducer } from "react";
+
+const initialState = {
+    isLoggedIn:false
+};
+
+function reducer(state, action){
+
+    switch(action.type){
+
+        case "login":
+            return { isLoggedIn:true };
+
+        case "logout":
+            return { isLoggedIn:false };
+
+        default:
+            return state;
+    }
+}
+
+function App(){
+
+    const [state, dispatch] = useReducer(reducer, initialState);
+
+    return(
+
+        <div>
+
+            <h2>
+
+                {state.isLoggedIn
+                    ? "Welcome User"
+                    : "Please Login"}
+
+            </h2>
+
+            <button
+                onClick={() => dispatch({type:"login"})}>
+                Login
+            </button>
+
+            <button
+                onClick={() => dispatch({type:"logout"})}>
+                Logout
+            </button>
+
+        </div>
+
+    );
+}
+
+export default App;
+Output
+Please Login
+
+Login
+
+Welcome User
+
+Logout
+
+Please Login
+useState() vs useReducer()
+useState()	useReducer()
+Best for simple state	Best for complex state
+Easy to learn	Slightly more code
+Updates directly	Updates through reducer
+Good for one or two values	Good for multiple related values
+Uses setState()	Uses dispatch()
+Real-Time Use Cases
+Use useReducer() for:
+
+🛒 Shopping cart
+
+👤 User profile management
+
+📋 Employee forms
+
+📝 Multi-step forms
+
+🔐 Authentication state
+
+🎮 Game state management
+
+📊 Dashboard filters
+
+Advantages
+Centralizes state update logic in one reducer function.
+
+Makes complex state easier to manage.
+
+Predictable and easier to debug.
+
+Scales well as applications grow.
+
+Limitations
+More boilerplate than useState() for simple state.
+
+Reducer functions should remain pure (avoid side effects).
+
+Hook Comparison
+Hook	Purpose
+useState()	Manage simple component state
+useEffect()	Perform side effects
+useRef()	Store mutable values and access DOM elements
+useContext()	Share data across components
+useReducer()	Manage complex state with actions and reducers
+Key Points to Remember
+useReducer() accepts a reducer function and an initial state.
+
+The reducer receives (state, action) and returns the new state.
+
+Use dispatch() to send actions to the reducer.
+
+Actions typically have a type and can include additional data such as payload.
+
+Prefer useReducer() over useState() when state logic becomes complex or involves multiple related updates.
+
+
+useCallback() hook
+
+React useCallback() Hook – Basic Examples
+What is useCallback()?
+The useCallback() hook is used to memoize (remember) a function so that React does not recreate the function on every component re-render.
+
+It improves performance by preventing unnecessary function creation and unnecessary re-renders of child components.
+
+Why do we need useCallback()?
+Normally, whenever a component re-renders, all functions inside it are recreated.
+
+Without useCallback()
+Render 1
+↓
+
+create increment()
+
+↓
+
+Render 2
+↓
+
+create increment() again
+
+↓
+
+Render 3
+↓
+
+create increment() again
+Even though the function logic is the same, React creates a new function object every render.
+
+With useCallback()
+Render 1
+↓
+
+Create increment()
+
+↓
+
+Render 2
+↓
+
+Reuse same increment()
+
+↓
+
+Render 3
+↓
+
+Reuse same increment()
+The function is recreated only when its dependencies change.
+
+Syntax
+import { useCallback } from "react";
+
+const memoizedFunction = useCallback(() => {
+
+    // function body
+
+}, [dependencies]);
+Parameters
+Function → The function to memoize.
+
+Dependency Array → When dependencies change, React creates a new function.
+
+Example 1: Basic Example
+import { useState, useCallback } from "react";
+
+function App() {
+
+    const [count, setCount] = useState(0);
+
+    const sayHello = useCallback(() => {
+        console.log("Hello React");
+    }, []);
+
+    return (
+
+        <div>
+
+            <h2>Count : {count}</h2>
+
+            <button
+                onClick={() => setCount(count + 1)}>
+                Increment
+            </button>
+
+            <button onClick={sayHello}>
+                Say Hello
+            </button>
+
+        </div>
+
+    );
+}
+
+export default App;
+Output
+Count : 0
+
+Increment
+
+Count : 1
+
+Click Say Hello
+
+Hello React
+The sayHello function is created only once because the dependency array is empty ([]).
+
+Example 2: Dependency Example
+import { useState, useCallback } from "react";
+
+function App() {
+
+    const [count, setCount] = useState(0);
+
+    const display = useCallback(() => {
+        console.log("Count is", count);
+    }, [count]);
+
+    return (
+
+        <div>
+
+            <h2>{count}</h2>
+
+            <button
+                onClick={() => setCount(count + 1)}>
+                Increment
+            </button>
+
+            <button onClick={display}>
+                Show Count
+            </button>
+
+        </div>
+
+    );
+}
+
+export default App;
+Output
+0
+
+Increment
+
+1
+
+Show Count
+
+Count is 1
+Whenever count changes, React creates a new version of the display function.
+
+Example 3: With React.memo()
+Child.jsx
+import React from "react";
+
+function Child({ greet }) {
+
+    console.log("Child Rendered");
+
+    return (
+
+        <button onClick={greet}>
+            Greet
+        </button>
+
+    );
+}
+
+export default React.memo(Child);
+App.jsx
+import { useState, useCallback } from "react";
+import Child from "./Child";
+
+function App() {
+
+    const [count, setCount] = useState(0);
+
+    const greet = useCallback(() => {
+        alert("Hello");
+    }, []);
+
+    return (
+
+        <div>
+
+            <h2>{count}</h2>
+
+            <button
+                onClick={() => setCount(count + 1)}>
+                Increment
+            </button>
+
+            <Child greet={greet} />
+
+        </div>
+
+    );
+}
+
+export default App;
+Output
+Child Rendered
+
+Increment
+
+Child does NOT render again
+Since greet remains the same function reference, the memoized child component does not re-render unnecessarily.
+
+Example 4: Without useCallback()
+import { useState } from "react";
+import Child from "./Child";
+
+function App() {
+
+    const [count, setCount] = useState(0);
+
+    const greet = () => {
+        alert("Hello");
+    };
+
+    return (
+
+        <div>
+
+            <h2>{count}</h2>
+
+            <button
+                onClick={() => setCount(count + 1)}>
+                Increment
+            </button>
+
+            <Child greet={greet} />
+
+        </div>
+
+    );
+}
+
+export default App;
+Output
+Child Rendered
+
+Increment
+
+Child Rendered Again
+
+Increment
+
+Child Rendered Again
+A new greet function is created on every render, so React.memo() cannot prevent the child from re-rendering.
+
+Real-Time Use Cases
+Use useCallback() for:
+
+Passing callback functions to child components.
+
+Optimizing components wrapped with React.memo().
+
+Event handlers for large lists.
+
+Expensive UI rendering.
+
+Dashboard and enterprise applications with many nested components.
+
+useCallback() vs Normal Function
+Normal Function	useCallback()
+New function created on every render	Function is reused until dependencies change
+May trigger child re-renders	Helps avoid unnecessary child re-renders
+Simpler code	Adds optimization when needed
+useMemo() vs useCallback()
+useMemo()	useCallback()
+Memoizes a computed value	Memoizes a function
+Returns a value	Returns a function
+Used for expensive calculations	Used for callback optimization
+Advantages
+Improves performance by reusing function references.
+
+Helps React.memo() work effectively.
+
+Reduces unnecessary re-renders in child components.
+
+Useful in large applications with complex component trees.
+
+Limitations
+Adds complexity if used everywhere.
+
+Provides little or no benefit for simple components.
+
+Incorrect dependency arrays can lead to stale values or bugs.
+
+Hook Comparison
+Hook	Purpose
+useState()	Store component state
+useEffect()	Handle side effects
+useRef()	Store mutable values and access DOM elements
+useContext()	Share data across components
+useReducer()	Manage complex state
+useCallback()	Memoize functions
+Key Points to Remember
+useCallback() returns a memoized function.
+
+The function is recreated only when dependencies change.
+
+It is most useful when passing callbacks to memoized child components (React.memo()).
+
+Do not use useCallback() everywhere—use it only when it provides a measurable performance benefit.
+
+Remember the difference:
+
+useMemo() → Memoizes values
+
+useCallback() → Memoizes functions
+
+
+useMemo() hook
+
+React useMemo() Hook – Basic Examples
+What is useMemo()?
+The useMemo() hook is used to memoize (cache) the result of an expensive calculation so that React does not recalculate it on every component re-render.
+
+It improves performance by recomputing the value only when its dependencies change.
+
+Why do we need useMemo()?
+Normally, every time a component re-renders, all calculations inside it run again.
+
+Without useMemo()
+Render 1
+↓
+
+Calculate Total
+
+↓
+
+Render 2
+↓
+
+Calculate Total Again
+
+↓
+
+Render 3
+↓
+
+Calculate Total Again
+Even if the calculation result doesn't change, React recalculates it.
+
+With useMemo()
+Render 1
+↓
+
+Calculate Total
+
+↓
+
+Render 2
+↓
+
+Reuse Cached Value
+
+↓
+
+Render 3
+↓
+
+Reuse Cached Value
+The calculation runs again only if the dependencies change.
+
+Syntax
+import { useMemo } from "react";
+
+const memoizedValue = useMemo(() => {
+
+    // Expensive calculation
+
+    return result;
+
+}, [dependencies]);
+Parameters
+Function → Returns the calculated value.
+
+Dependency Array → If dependencies change, React recalculates the value.
+
+Example 1: Basic Example
+import { useState, useMemo } from "react";
+
+function App() {
+
+    const [count, setCount] = useState(0);
+
+    const square = useMemo(() => {
+
+        console.log("Calculating...");
+
+        return count * count;
+
+    }, [count]);
+
+    return (
+
+        <div>
+
+            <h2>Count : {count}</h2>
+
+            <h2>Square : {square}</h2>
+
+            <button
+                onClick={() => setCount(count + 1)}>
+                Increment
+            </button>
+
+        </div>
+
+    );
+}
+
+export default App;
+Output
+Count : 0
+Square : 0
+
+Increment
+
+Calculating...
+
+Count : 1
+Square : 1
+
+Increment
+
+Calculating...
+
+Count : 2
+Square : 4
+The square is recalculated only when count changes.
+
+Example 2: Expensive Calculation
+import { useState, useMemo } from "react";
+
+function App() {
+
+    const [number, setNumber] = useState(1);
+
+    const factorial = useMemo(() => {
+
+        console.log("Calculating Factorial...");
+
+        let result = 1;
+
+        for(let i = 1; i <= number; i++) {
+
+            result *= i;
+        }
+
+        return result;
+
+    }, [number]);
+
+    return (
+
+        <div>
+
+            <h2>Factorial : {factorial}</h2>
+
+            <button
+                onClick={() => setNumber(number + 1)}>
+                Next
+            </button>
+
+        </div>
+
+    );
+}
+
+export default App;
+Output
+Number : 1
+Factorial : 1
+
+Next
+
+Calculating Factorial...
+
+Factorial : 2
+
+Next
+
+Calculating Factorial...
+
+Factorial : 6
+Example 3: Prevent Unnecessary Calculation
+import { useState, useMemo } from "react";
+
+function App() {
+
+    const [count, setCount] = useState(0);
+    const [name, setName] = useState("");
+
+    const square = useMemo(() => {
+
+        console.log("Calculating Square...");
+
+        return count * count;
+
+    }, [count]);
+
+    return (
+
+        <div>
+
+            <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+            />
+
+            <h2>Count : {count}</h2>
+
+            <h2>Square : {square}</h2>
+
+            <button
+                onClick={() => setCount(count + 1)}>
+                Increment
+            </button>
+
+        </div>
+
+    );
+}
+
+export default App;
+Output
+Type Name
+
+(No "Calculating Square..." message)
+
+Increment Count
+
+Calculating Square...
+Changing the name does not recalculate the square because count did not change.
+
+Example 4: Filtering a List
+import { useState, useMemo } from "react";
+
+function App() {
+
+    const [search, setSearch] = useState("");
+
+    const employees = [
+        "Scott",
+        "John",
+        "Smith",
+        "Martin",
+        "Allen"
+    ];
+
+    const filteredEmployees = useMemo(() => {
+
+        console.log("Filtering...");
+
+        return employees.filter(emp =>
+            emp.toLowerCase().includes(search.toLowerCase())
+        );
+
+    }, [search]);
+
+    return (
+
+        <div>
+
+            <input
+                type="text"
+                placeholder="Search"
+                onChange={(e) => setSearch(e.target.value)}
+            />
+
+            <ul>
+
+                {filteredEmployees.map(emp => (
+
+                    <li key={emp}>
+                        {emp}
+                    </li>
+
+                ))}
+
+            </ul>
+
+        </div>
+
+    );
+}
+
+export default App;
+Output
+Search : Sc
+
+Filtering...
+
+Scott
+The filtering runs only when the search text changes.
+
+Real-Time Use Cases
+Use useMemo() for:
+
+Large table filtering
+
+Searching thousands of records
+
+Sorting data
+
+Dashboard reports
+
+Financial calculations
+
+Data analytics
+
+Expensive mathematical operations
+
+Without useMemo()
+const result = expensiveCalculation();
+Every render:
+
+Render
+
+↓
+
+Calculate Again
+
+↓
+
+Render
+
+↓
+
+Calculate Again
+With useMemo()
+const result = useMemo(() => {
+
+    return expensiveCalculation();
+
+}, []);
+Render
+
+↓
+
+Calculate Once
+
+↓
+
+Render Again
+
+↓
+
+Use Cached Value
+useMemo() vs useCallback()
+useMemo()	useCallback()
+Memoizes a value	Memoizes a function
+Returns a computed value	Returns a function
+Used for expensive calculations	Used for callback optimization
+useMemo() vs Normal Variable
+Normal Variable	useMemo()
+Recalculated every render	Cached until dependencies change
+Can slow down rendering	Improves performance for expensive calculations
+Advantages
+Prevents unnecessary recalculations.
+
+Improves rendering performance.
+
+Useful for expensive computations.
+
+Helps optimize large applications.
+
+Limitations
+Adds extra complexity if overused.
+
+Not beneficial for simple or inexpensive calculations.
+
+Incorrect dependency arrays can lead to stale values.
+
+Hook Comparison
+Hook	Purpose
+useState()	Store state
+useEffect()	Handle side effects
+useRef()	Store mutable values and access DOM elements
+useContext()	Share data between components
+useReducer()	Manage complex state
+useCallback()	Memoize functions
+useMemo()	Memoize computed values
+useMemo() vs useCallback() (Easy to Remember)
+useMemo()
+↓
+
+Remembers VALUE
+
+Example:
+
+const total = useMemo(() => {
+    return price * quantity;
+}, [price, quantity]);
+useCallback()
+↓
+
+Remembers FUNCTION
+
+Example:
+
+const handleClick = useCallback(() => {
+    alert("Hello");
+}, []);
+Key Points to Remember
+useMemo() returns a memoized value.
+
+It recalculates the value only when its dependencies change.
+
+Use it for expensive calculations, filtering, sorting, or processing large datasets.
+
+Avoid using useMemo() for simple calculations, as the overhead may outweigh the benefit.
+
+Remember:
+
+useMemo() → Memoizes values
+
+useCallback() → Memoizes functions
+
+
