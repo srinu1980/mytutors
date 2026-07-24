@@ -1,0 +1,1966 @@
+
+
+
+
+Phase 1: API Integration
+
+What is REST API?
+
+Fetch API
+
+Axios
+
+GET Request
+
+POST Request
+
+PUT Request
+
+DELETE Request
+
+Error Handling
+
+Loading State
+
+
+Mini Project:
+
+Employee CRUD using Mock API
+
+
+Phase 2: React Router
+
+Introduction to SPA
+
+Installing React Router
+
+BrowserRouter
+
+Routes
+
+Route
+
+Link
+
+NavLink
+
+useNavigate()
+
+useParams()
+
+Nested Routes
+
+404 Page
+
+Mini Project:
+
+Employee Management Navigation
+
+Phase 3: Forms and Validation
+Controlled Components
+
+Uncontrolled Components
+
+Form Validation
+
+Custom Validation
+
+React Hook Form (optional)
+
+Form Submission
+
+Mini Project:
+
+Employee Registration Form
+
+Phase 4: State Management
+Why State Management?
+
+Context API
+
+Context with Reducer
+
+Redux Toolkit
+
+Store
+
+Slice
+
+Reducers
+
+Actions
+
+useSelector()
+
+useDispatch()
+
+Mini Project:
+
+Employee Dashboard using Redux Toolkit
+
+Phase 5: Authentication
+JWT Authentication Basics
+
+Login Page
+
+Logout
+
+Protected Routes
+
+Private Routes
+
+Token Storage
+
+Role-Based Navigation
+
+Mini Project:
+
+Login with Spring Boot JWT Backend
+
+Phase 6: React Performance
+React.memo()
+
+useMemo()
+
+useCallback()
+
+Lazy Loading
+
+React.lazy()
+
+Suspense
+
+Code Splitting
+
+Phase 7: Custom Hooks
+Why Custom Hooks?
+
+Creating Custom Hooks
+
+Reusing Logic
+
+Custom API Hook
+
+Custom Form Hook
+
+Phase 8: React Project Structure
+src/
+│── components/
+│── pages/
+│── layouts/
+│── services/
+│── hooks/
+│── context/
+│── redux/
+│── routes/
+│── utils/
+│── assets/
+│── App.jsx
+Phase 9: Backend Integration (Spring Boot)
+Connect React with Spring Boot
+
+Axios Configuration
+
+CRUD Operations
+
+Exception Handling
+
+File Upload
+
+CORS Configuration
+
+Phase 10: Enterprise-Level Employee Management System
+Features
+Login (JWT Authentication)
+
+Dashboard
+
+Employee CRUD
+
+Department CRUD
+
+Search
+
+Pagination
+
+Sorting
+
+Filtering
+
+Profile Management
+
+Protected Routes
+
+Role-Based Access (Admin/User)
+
+Logout
+
+Toast Notifications
+
+Responsive Design
+
+Tech Stack
+React 19
+
+Vite
+
+React Router
+
+Axios
+
+Context API / Redux Toolkit
+
+Bootstrap or Material UI
+
+Spring Boot 4.1
+
+Spring Security + JWT
+
+MySQL
+
+Final Enterprise Project Flow
+React Basics
+      ↓
+JSX
+      ↓
+Components
+      ↓
+Props
+      ↓
+State
+      ↓
+Event Handling
+      ↓
+Forms
+      ↓
+Conditional Rendering
+      ↓
+Lists
+      ↓
+Hooks
+      ↓
+API Calls (Axios)
+      ↓
+React Router
+      ↓
+Form Validation
+      ↓
+Context API
+      ↓
+Redux Toolkit
+      ↓
+JWT Authentication
+      ↓
+Protected Routes
+      ↓
+Spring Boot Integration
+      ↓
+Employee CRUD
+      ↓
+Enterprise Employee Management System
+This progression takes trainees from React fundamentals to building a complete, production-style application integrated with a Spring Boot backend. Based on your ongoing React + Spring Boot training plan, the next topic to cover is API Integration with Axios, followed by React Router.
+
+
+Phase 1 explain
+
+Phase 1: API Integration in ReactJS (Axios) – Beginner to Intermediate
+This phase teaches trainees how to connect a React application to a backend REST API (such as Spring Boot) to perform CRUD operations.
+
+Learning Objectives
+By the end of this phase, trainees will be able to:
+
+Understand REST APIs
+
+Install and configure Axios
+
+Make GET, POST, PUT, and DELETE requests
+
+Handle loading and error states
+
+Display data from a backend
+
+Integrate React with a Spring Boot REST API
+
+Module 1: What is an API?
+API (Application Programming Interface) allows two applications to communicate with each other.
+
+Example:
+
+React Frontend
+       |
+   HTTP Request
+       |
+Spring Boot REST API
+       |
+     MySQL Database
+Real-Time Example
+Imagine you're using Amazon:
+
+Open the website.
+
+Search for a product.
+
+React sends a request to the server.
+
+The server fetches data from the database.
+
+The product list is displayed.
+
+Module 2: What is REST API?
+REST stands for Representational State Transfer.
+
+It is a standard way to exchange data over HTTP.
+
+Example API:
+
+GET    /employees
+POST   /employees
+PUT    /employees/101
+DELETE /employees/101
+Module 3: HTTP Methods
+Method	Purpose	Example
+GET	Retrieve data	Get all employees
+POST	Create data	Add an employee
+PUT	Update data	Update employee details
+DELETE	Delete data	Remove an employee
+Module 4: What is Axios?
+Axios is a popular JavaScript library used to send HTTP requests from React to a backend server.
+
+Install Axios
+npm install axios
+or
+
+npm i axios
+Module 5: Project Structure
+src
+│
+├── components
+│      EmployeeList.jsx
+│      AddEmployee.jsx
+│
+├── services
+│      employeeService.js
+│
+├── App.jsx
+Keeping API calls in a separate services folder makes the code cleaner and easier to maintain.
+
+Module 6: Creating an Axios Service
+Create employeeService.js.
+
+import axios from "axios";
+
+const API_URL = "http://localhost:8080/employees";
+
+export const getEmployees = () => {
+    return axios.get(API_URL);
+};
+Explanation
+import axios from "axios";
+Imports the Axios library.
+
+const API_URL = "http://localhost:8080/employees";
+Stores the backend API endpoint.
+
+axios.get(API_URL);
+Sends a GET request to fetch employee data.
+
+Module 7: GET Request Example
+EmployeeList.jsx
+import { useEffect, useState } from "react";
+import { getEmployees } from "../services/employeeService";
+
+function EmployeeList() {
+
+    const [employees, setEmployees] = useState([]);
+
+    useEffect(() => {
+        getEmployees()
+            .then(response => {
+                setEmployees(response.data);
+            });
+    }, []);
+
+    return (
+        <div>
+            <h2>Employees</h2>
+
+            <ul>
+                {employees.map(emp => (
+                    <li key={emp.id}>
+                        {emp.name}
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+}
+
+export default EmployeeList;
+Output
+Employees
+
+John
+
+David
+
+Scott
+Module 8: Understanding the Flow
+React Component
+
+      ↓
+
+useEffect()
+
+      ↓
+
+Axios GET Request
+
+      ↓
+
+Spring Boot API
+
+      ↓
+
+Database
+
+      ↓
+
+JSON Response
+
+      ↓
+
+setEmployees()
+
+      ↓
+
+UI Updated
+Module 9: POST Request
+Service:
+
+export const addEmployee = (employee) => {
+    return axios.post(API_URL, employee);
+};
+Component:
+
+const employee = {
+    name: "Rahul",
+    salary: 45000
+};
+
+addEmployee(employee)
+    .then(response => {
+        console.log(response.data);
+    });
+Module 10: PUT Request
+Service:
+
+export const updateEmployee = (id, employee) => {
+    return axios.put(`${API_URL}/${id}`, employee);
+};
+Example:
+
+updateEmployee(1, {
+    name: "Rahul Kumar",
+    salary: 60000
+});
+Module 11: DELETE Request
+Service:
+
+export const deleteEmployee = (id) => {
+    return axios.delete(`${API_URL}/${id}`);
+};
+Example:
+
+deleteEmployee(5);
+Module 12: Loading State
+const [loading, setLoading] = useState(true);
+
+useEffect(() => {
+
+    getEmployees()
+        .then(res => {
+            setEmployees(res.data);
+        })
+        .finally(() => {
+            setLoading(false);
+        });
+
+}, []);
+
+if (loading) {
+    return <h2>Loading...</h2>;
+}
+Module 13: Error Handling
+const [error, setError] = useState("");
+
+useEffect(() => {
+
+    getEmployees()
+        .then(res => {
+            setEmployees(res.data);
+        })
+        .catch(() => {
+            setError("Unable to fetch employees.");
+        });
+
+}, []);
+Display the error:
+
+{
+    error && <p>{error}</p>
+}
+Module 14: Complete Request Lifecycle
+User opens page
+       │
+       ▼
+React Component loads
+       │
+       ▼
+useEffect() executes
+       │
+       ▼
+Axios sends GET request
+       │
+       ▼
+Spring Boot Controller
+       │
+       ▼
+Service Layer
+       │
+       ▼
+Repository
+       │
+       ▼
+MySQL Database
+       │
+       ▼
+JSON Response
+       │
+       ▼
+Axios receives response
+       │
+       ▼
+setEmployees(response.data)
+       │
+       ▼
+React re-renders UI
+Mini Project: Employee List
+Backend (Spring Boot)
+
+GET /employees
+
+POST /employees
+
+PUT /employees/{id}
+
+DELETE /employees/{id}
+
+Frontend (React)
+
+Display employee list
+
+Add a new employee
+
+Update employee details
+
+Delete an employee
+
+Show loading indicator
+
+Handle API errors
+
+Key Concepts Covered
+REST APIs
+
+HTTP methods (GET, POST, PUT, DELETE)
+
+Installing and using Axios
+
+Organizing API calls in a service layer
+
+Fetching data with useEffect
+
+Managing component state with useState
+
+Handling loading and error states
+
+Connecting React to a Spring Boot backend
+
+This phase prepares trainees to build a complete Employee CRUD application by integrating a React frontend with a Spring Boot REST API.
+
+
+Mini Project: Employee List
+
+Mini Project: Employee List (React + Axios)
+This mini project demonstrates how to fetch and display employee data from a Spring Boot REST API using React and Axios.
+
+Project Objective
+Build a React application that:
+
+Retrieves employee data from a Spring Boot backend
+
+Displays employees in a table
+
+Shows a loading message while data is being fetched
+
+Displays an error message if the API call fails
+
+Technology Stack
+Frontend
+React
+
+Axios
+
+Bootstrap (Optional)
+
+Backend
+Spring Boot
+
+Spring Data JPA
+
+MySQL
+
+Project Structure
+employee-app/
+│
+├── src
+│   ├── components
+│   │      EmployeeList.jsx
+│   │
+│   ├── services
+│   │      employeeService.js
+│   │
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── App.css
+
+
+Step 1: Install Axios
+
+npm install axios
+
+Step 2: Create Employee Service
+
+src/services/employeeService.js
+
+import axios from "axios";
+
+const API_URL = "http://localhost:8080/employees";
+
+export const getEmployees = () => {
+    return axios.get(API_URL);
+};
+Explanation
+axios.get() sends a GET request.
+
+API_URL is the Spring Boot endpoint.
+
+Step 3: Create Employee List Component
+src/components/EmployeeList.jsx
+import { useEffect, useState } from "react";
+import { getEmployees } from "../services/employeeService";
+
+function EmployeeList() {
+
+    const [employees, setEmployees] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+
+        getEmployees()
+            .then((response) => {
+                setEmployees(response.data);
+            })
+            .catch(() => {
+                setError("Unable to fetch employee data.");
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+
+    }, []);
+
+    if (loading) {
+        return <h2>Loading Employees...</h2>;
+    }
+
+    if (error) {
+        return <h2>{error}</h2>;
+    }
+
+    return (
+        <div className="container">
+            <h2>Employee List</h2>
+
+            <table border="1" cellPadding="10">
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Salary</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {employees.map((emp) => (
+
+                        <tr key={emp.id}>
+                            <td>{emp.id}</td>
+                            <td>{emp.name}</td>
+                            <td>{emp.department}</td>
+                            <td>{emp.salary}</td>
+                        </tr>
+
+                    ))}
+
+                </tbody>
+
+            </table>
+
+        </div>
+    );
+}
+
+export default EmployeeList;
+Step 4: Update App.jsx
+import EmployeeList from "./components/EmployeeList";
+
+function App() {
+
+    return (
+        <div>
+            <EmployeeList />
+        </div>
+    );
+
+}
+
+export default App;
+Step 5: Sample Spring Boot Response
+[
+  {
+    "id":1,
+    "name":"John",
+    "department":"IT",
+    "salary":65000
+  },
+  {
+    "id":2,
+    "name":"David",
+    "department":"HR",
+    "salary":50000
+  },
+  {
+    "id":3,
+    "name":"Scott",
+    "department":"Finance",
+    "salary":70000
+  }
+]
+Output
+---------------------------------------------
+              Employee List
+---------------------------------------------
+ID   Name     Department      Salary
+---------------------------------------------
+1    John     IT              65000
+2    David    HR              50000
+3    Scott    Finance         70000
+---------------------------------------------
+Request Flow
+React Application
+        │
+        ▼
+EmployeeList Component
+        │
+        ▼
+useEffect()
+        │
+        ▼
+getEmployees()
+        │
+        ▼
+Axios GET Request
+        │
+        ▼
+Spring Boot REST API
+        │
+        ▼
+MySQL Database
+        │
+        ▼
+JSON Response
+        │
+        ▼
+setEmployees(response.data)
+        │
+        ▼
+React Re-renders UI
+
+
+
+
+
+
+
+Phase 2: React Router (Beginner to Advanced)
+Learning Objectives
+By the end of this phase, trainees will be able to:
+
+Understand Single Page Applications (SPA)
+
+Install and configure React Router
+
+Create multiple pages
+
+Navigate between pages
+
+Pass route parameters
+
+Use nested routes
+
+Create a 404 page
+
+Build a multi-page Employee Management application
+
+Module 1: What is React Router?
+React Router is a library used for navigation in React applications.
+
+Instead of loading a new HTML page, React changes only the required component, making the application faster.
+
+Without React Router
+Home.html
+Employee.html
+About.html
+Contact.html
+Every click reloads the entire page.
+
+With React Router
+Home Component
+Employee Component
+About Component
+Contact Component
+Only the component changes without reloading the page.
+
+Module 2: What is SPA (Single Page Application)?
+A Single Page Application (SPA) loads one HTML page initially and updates only the content when users navigate.
+
+Traditional Website
+Browser
+
+↓
+
+Home.html
+
+↓
+
+Employee.html
+
+↓
+
+About.html
+
+↓
+
+Contact.html
+Every navigation reloads the page.
+
+React SPA
+Browser
+
+↓
+
+index.html
+
+↓
+
+Home Component
+
+↓
+
+Employee Component
+
+↓
+
+About Component
+
+↓
+
+Contact Component
+Only components change.
+
+Advantages of SPA
+Faster navigation
+
+Better user experience
+
+No full page refresh
+
+Less server load
+
+Smooth transitions
+
+Module 3: Install React Router
+Open the terminal:
+
+npm install react-router-dom
+Verify installation:
+
+npm list react-router-dom
+Module 4: Project Structure
+src
+│
+├── pages
+│     Home.jsx
+│     About.jsx
+│     Employee.jsx
+│     Contact.jsx
+│     NotFound.jsx
+│
+├── components
+│     Navbar.jsx
+│
+├── App.jsx
+└── main.jsx
+Module 5: Create Pages
+Home.jsx
+function Home() {
+    return <h2>Welcome to Home Page</h2>;
+}
+
+export default Home;
+About.jsx
+function About() {
+    return <h2>About Us</h2>;
+}
+
+export default About;
+Employee.jsx
+function Employee() {
+    return <h2>Employee Page</h2>;
+}
+
+export default Employee;
+Contact.jsx
+function Contact() {
+    return <h2>Contact Page</h2>;
+}
+
+export default Contact;
+NotFound.jsx
+function NotFound() {
+    return <h2>404 - Page Not Found</h2>;
+}
+
+export default NotFound;
+Module 6: Configure BrowserRouter
+main.jsx
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>
+);
+Explanation
+BrowserRouter enables routing in the React application.
+
+It should wrap the root component (App).
+
+Module 7: Configure Routes
+App.jsx
+import { Routes, Route } from "react-router-dom";
+
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Employee from "./pages/Employee";
+import Contact from "./pages/Contact";
+import NotFound from "./pages/NotFound";
+
+function App() {
+
+    return (
+
+        <Routes>
+
+            <Route path="/" element={<Home />} />
+
+            <Route path="/about" element={<About />} />
+
+            <Route path="/employee" element={<Employee />} />
+
+            <Route path="/contact" element={<Contact />} />
+
+            <Route path="*" element={<NotFound />} />
+
+        </Routes>
+
+    );
+
+}
+
+export default App;
+Module 8: Link Navigation
+Instead of using the HTML <a> tag, React Router provides the Link component.
+
+Navbar.jsx
+import { Link } from "react-router-dom";
+
+function Navbar() {
+
+    return (
+
+        <nav>
+
+            <Link to="/">Home</Link>
+
+            {" | "}
+
+            <Link to="/employee">Employee</Link>
+
+            {" | "}
+
+            <Link to="/about">About</Link>
+
+            {" | "}
+
+            <Link to="/contact">Contact</Link>
+
+        </nav>
+
+    );
+
+}
+
+export default Navbar;
+Add <Navbar /> above <Routes /> in App.jsx.
+
+Module 9: NavLink
+NavLink automatically highlights the active menu.
+
+import { NavLink } from "react-router-dom";
+
+<NavLink to="/">Home</NavLink>
+<NavLink to="/employee">Employee</NavLink>
+Module 10: useNavigate()
+Used for programmatic navigation.
+
+import { useNavigate } from "react-router-dom";
+
+function Home() {
+
+    const navigate = useNavigate();
+
+    return (
+
+        <button onClick={() => navigate("/employee")}>
+            Go to Employee
+        </button>
+
+    );
+
+}
+
+export default Home;
+Module 11: Route Parameters (useParams)
+Route:
+
+<Route path="/employee/:id" element={<EmployeeDetails />} />
+Component:
+
+import { useParams } from "react-router-dom";
+
+function EmployeeDetails() {
+
+    const { id } = useParams();
+
+    return <h2>Employee ID : {id}</h2>;
+
+}
+
+export default EmployeeDetails;
+Visiting:
+
+http://localhost:5173/employee/101
+Output:
+
+Employee ID : 101
+Module 12: Nested Routes
+<Route path="/employee" element={<Employee />}>
+
+    <Route path="details" element={<EmployeeDetails />} />
+
+</Route>
+Inside Employee.jsx:
+
+import { Outlet } from "react-router-dom";
+
+function Employee() {
+
+    return (
+
+        <>
+            <h2>Employee Module</h2>
+            <Outlet />
+        </>
+
+    );
+
+}
+
+export default Employee;
+Module 13: 404 Page
+<Route path="*" element={<NotFound />} />
+Any invalid URL displays:
+
+404 - Page Not Found
+Module 14: Routing Flow
+User Clicks Menu
+
+        │
+
+        ▼
+
+Link / NavLink
+
+        │
+
+        ▼
+
+BrowserRouter
+
+        │
+
+        ▼
+
+Routes
+
+        │
+
+        ▼
+
+Matching Route
+
+        │
+
+        ▼
+
+Corresponding Component
+
+        │
+
+        ▼
+
+UI Updated
+Mini Project: Employee Management Navigation
+Pages
+Home
+
+Employee List
+
+Add Employee
+
+Update Employee
+
+About
+
+Contact
+
+404 Page
+Suggested Routes
+URL	Component
+/	Home
+/employees	EmployeeList
+/add-employee	AddEmployee
+/update-employee/:id	UpdateEmployee
+/about	About
+/contact	Contact
+*	NotFound
+Project Structure
+src
+│
+├── components
+│     Navbar.jsx
+│
+├── pages
+│     Home.jsx
+│     EmployeeList.jsx
+│     AddEmployee.jsx
+│     UpdateEmployee.jsx
+│     About.jsx
+│     Contact.jsx
+│     NotFound.jsx
+│
+├── App.jsx
+└── main.jsx
+Interview Questions
+What is React Router?
+
+What is the difference between Link and the HTML <a> tag?
+
+Why do we use BrowserRouter?
+
+What is a Single Page Application (SPA)?
+
+What is the difference between Link and NavLink?
+
+What is the purpose of useNavigate()?
+
+How does useParams() work?
+
+What are nested routes?
+
+What is the purpose of the Outlet component?
+
+How do you create a 404 page in React Router?
+
+Phase 2 Summary
+After completing this phase, trainees will be able to:
+
+Configure routing in a React application.
+
+Navigate between pages without reloading the browser.
+
+Create dynamic routes using URL parameters.
+
+Build nested layouts with child routes.
+
+Handle invalid URLs with a custom 404 page.
+
+Structure a multi-page React application using React Router.
+
+Next Phase: Forms and Validation, where you'll build forms for adding and updating employees with client-side validation before connecting them to the backend.
+
+
+Phase 3: Forms and Validation
+
+Phase 3: Forms and Validation (ReactJS)
+Learning Objectives
+By the end of this phase, trainees will be able to:
+
+Understand React forms
+
+Create controlled components
+
+Handle user input with useState
+
+Handle form submission
+
+Validate form fields
+
+Display validation errors
+
+Reset form fields
+
+Build an Employee Registration Form
+
+Module 1: Introduction to Forms
+A form is used to collect user input.
+
+Examples:
+
+Login Form
+
+Registration Form
+
+Employee Form
+
+Student Form
+
+Contact Form
+
+Real-Time Example
+Employee Registration Form
+
+-------------------------------
+Employee Registration
+-------------------------------
+
+Name        : __________
+
+Email       : __________
+
+Department  : __________
+
+Salary      : __________
+
+[ Save Employee ]
+Module 2: Controlled Components
+A Controlled Component is a form element whose value is controlled by React state.
+
+Example
+import { useState } from "react";
+
+function EmployeeForm() {
+
+    const [name, setName] = useState("");
+
+    return (
+        <>
+            <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+            />
+
+            <p>Name : {name}</p>
+        </>
+    );
+}
+
+export default EmployeeForm;
+Explanation
+value={name} → Input value comes from React state.
+
+onChange → Updates state whenever the user types.
+
+setName() → Triggers a re-render with the latest value.
+
+Module 3: Handling Multiple Inputs
+import { useState } from "react";
+
+function EmployeeForm() {
+
+    const [employee, setEmployee] = useState({
+        name: "",
+        email: "",
+        department: "",
+        salary: ""
+    });
+
+    const handleChange = (event) => {
+
+        const { name, value } = event.target;
+
+        setEmployee({
+            ...employee,
+            [name]: value
+        });
+
+    };
+
+    return (
+        <>
+            <input
+                type="text"
+                name="name"
+                placeholder="Enter Name"
+                value={employee.name}
+                onChange={handleChange}
+            />
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Enter Email"
+                value={employee.email}
+                onChange={handleChange}
+            />
+        </>
+    );
+}
+
+export default EmployeeForm;
+Module 4: Form Submission
+const handleSubmit = (event) => {
+
+    event.preventDefault();
+
+    console.log(employee);
+
+};
+<form onSubmit={handleSubmit}>
+
+    <!-- Input Fields -->
+
+    <button type="submit">
+        Save Employee
+    </button>
+
+</form>
+Why event.preventDefault()?
+It prevents the browser from reloading the page after submitting the form.
+
+Module 5: Basic Validation
+Rules
+
+Name cannot be empty.
+
+Email cannot be empty.
+
+Salary must be greater than 0.
+
+if(employee.name === ""){
+    alert("Name is required");
+}
+Module 6: Error Messages
+const [errors, setErrors] = useState({});
+Validation Function
+
+const validate = () => {
+
+    let validationErrors = {};
+
+    if (!employee.name.trim()) {
+        validationErrors.name = "Name is required";
+    }
+
+    if (!employee.email.trim()) {
+        validationErrors.email = "Email is required";
+    }
+
+    if (employee.salary <= 0) {
+        validationErrors.salary = "Salary must be greater than zero";
+    }
+
+    setErrors(validationErrors);
+
+    return Object.keys(validationErrors).length === 0;
+};
+Module 7: Display Validation Errors
+<input
+    type="text"
+    name="name"
+    value={employee.name}
+    onChange={handleChange}
+/>
+
+<p style={{ color: "red" }}>
+    {errors.name}
+</p>
+Module 8: Submit After Validation
+const handleSubmit = (event) => {
+
+    event.preventDefault();
+
+    if(validate()){
+
+        console.log(employee);
+
+        alert("Employee Saved Successfully");
+
+    }
+
+};
+Module 9: Reset Form
+setEmployee({
+    name:"",
+    email:"",
+    department:"",
+    salary:""
+});
+Module 10: Complete Flow
+User Enters Data
+        │
+        ▼
+onChange()
+        │
+        ▼
+Update State
+        │
+        ▼
+Click Submit
+        │
+        ▼
+handleSubmit()
+        │
+        ▼
+validate()
+        │
+        ▼
+Valid?
+   │         │
+  Yes       No
+   │         │
+   ▼         ▼
+Save Data  Show Errors
+Mini Project: Employee Registration Form
+Features
+Employee Name
+
+Email
+
+Department
+
+Salary
+
+Validation
+
+Reset Form
+
+Success Message
+
+UI
+----------------------------------
+Employee Registration
+----------------------------------
+
+Name        __________
+
+Email       __________
+
+Department  __________
+
+Salary      __________
+
+[ Save ]
+
+[ Reset ]
+Project Structure
+src
+│
+├── components
+│     EmployeeForm.jsx
+│
+├── App.jsx
+│
+└── main.jsx
+Interview Questions
+What is a controlled component in React?
+
+Why do we use useState() in forms?
+
+What is the purpose of the value attribute in an input field?
+
+Why do we use onChange?
+
+What does event.preventDefault() do?
+
+How do you validate form inputs in React?
+
+Why do we store validation errors in an object?
+
+How do you reset a form after successful submission?
+
+What is the difference between controlled and uncontrolled components?
+
+How can you improve the user experience by showing inline validation errors?
+
+Hands-on Exercise
+Create an Employee Registration Form with the following fields:
+
+Employee Name (Required)
+
+Email (Required)
+
+Department (Required)
+
+Salary (Must be greater than 0)
+
+Requirements:
+
+Validate all fields before submission.
+
+Display validation messages below each field.
+
+Show a success alert if all validations pass.
+
+Clear the form after successful submission.
+
+Phase 3 Summary
+By the end of this phase, trainees will know how to:
+
+Build forms using controlled components.
+
+Manage form state with useState.
+
+Handle form submissions without page refresh.
+
+Validate user input.
+
+Display user-friendly error messages.
+
+Reset forms after successful submission.
+
+Next Phase: Employee CRUD Application
+In the next phase, you'll integrate this form with the Spring Boot backend to build a complete Employee CRUD Application using:
+
+Axios
+
+React Router
+
+REST APIs
+
+Spring Boot
+
+MySQL
+
+JWT Authentication
+
+
+Next Phase: Employee CRUD Application
+
+Phase 4: Employee CRUD Application (React + Spring Boot)
+In this phase, trainees will build a complete Employee Management System by integrating a React frontend with a Spring Boot REST API.
+
+Learning Objectives
+By the end of this phase, trainees will be able to:
+
+Connect React with Spring Boot APIs
+
+Perform CRUD operations
+
+Use Axios for API communication
+
+Navigate using React Router
+
+Pass route parameters
+
+Handle form submission
+
+Display employee records
+
+Delete and update employee records
+
+Project Overview
+Frontend
+React
+
+React Router
+
+Axios
+
+Bootstrap
+
+Backend
+Spring Boot
+
+Spring Data JPA
+
+MySQL
+
+Application Flow
+React UI
+     │
+Axios HTTP Request
+     │
+Spring Boot REST API
+     │
+Service Layer
+     │
+Repository
+     │
+MySQL Database
+Project Structure
+src
+│
+├── components
+│      Navbar.jsx
+│
+├── pages
+│      Home.jsx
+│      EmployeeList.jsx
+│      AddEmployee.jsx
+│      UpdateEmployee.jsx
+│
+├── services
+│      EmployeeService.js
+│
+├── App.jsx
+├── main.jsx
+Backend REST APIs
+Method	URL	Description
+GET	/employees	Get all employees
+GET	/employees/{id}	Get employee by ID
+POST	/employees	Add employee
+PUT	/employees/{id}	Update employee
+DELETE	/employees/{id}	Delete employee
+Module 1: Display Employee List
+Topics
+Axios GET
+
+useEffect()
+
+useState()
+
+Table Rendering
+
+Loading State
+
+Error Handling
+
+Output
+---------------------------------------------
+ID   Name      Department     Salary
+---------------------------------------------
+1    John      IT             60000
+2    David     HR             45000
+3    Scott     Finance        70000
+---------------------------------------------
+Module 2: Add Employee
+Topics
+Employee Form
+
+Controlled Components
+
+Axios POST
+
+Form Validation
+
+Success Message
+
+Flow
+Fill Form
+      │
+Click Save
+      │
+Axios POST
+      │
+Spring Boot
+      │
+Database
+      │
+Employee Saved
+Module 3: Update Employee
+Topics
+useParams()
+
+GET Employee by ID
+
+Pre-fill Form
+
+Axios PUT
+
+Success Message
+
+URL
+/update-employee/1
+Flow
+Open Update Page
+        │
+Fetch Employee
+        │
+Display Existing Data
+        │
+Modify Details
+        │
+Click Update
+        │
+Axios PUT
+        │
+Database Updated
+Module 4: Delete Employee
+Topics
+Delete Button
+
+Confirmation Dialog
+
+Axios DELETE
+
+Refresh Employee List
+
+Flow
+Click Delete
+      │
+Confirmation
+      │
+Axios DELETE
+      │
+Database
+      │
+Refresh Table
+Module 5: Navigation
+Pages
+Home
+
+Employee List
+
+Add Employee
+
+Update Employee
+
+404 Page
+Module 6: React Router
+Topics
+BrowserRouter
+
+Routes
+
+Route
+
+Link
+
+NavLink
+
+useNavigate()
+
+useParams()
+
+Module 7: Employee Service
+Create a service class.
+
+getEmployees()
+
+getEmployeeById(id)
+
+addEmployee(employee)
+
+updateEmployee(id, employee)
+
+deleteEmployee(id)
+Module 8: Bootstrap UI
+Components
+Navbar
+
+Cards
+
+Table
+
+Buttons
+
+Forms
+
+Alerts
+
+Module 9: Search Employee (Optional)
+Search by Name
+Search Box
+
+↓
+
+John
+
+↓
+
+Filtered Employee List
+Module 10: Future Enhancements
+Pagination
+
+Sorting
+
+Filtering
+
+File Upload
+
+Employee Photo
+
+Export to Excel
+
+Export to PDF
+
+Complete Application Flow
+Home
+   │
+Employee List
+   │
+ ├── Add Employee
+ │
+ ├── Update Employee
+ │
+ ├── Delete Employee
+ │
+ └── View Employee
+Final Project UI
+---------------------------------------------------
+Employee Management System
+---------------------------------------------------
+
+Home | Employees | Add Employee
+
+---------------------------------------------------
+
+Employee List
+
+---------------------------------------------------
+
+ID   Name     Department     Salary     Actions
+
+---------------------------------------------------
+
+1    John     IT             60000
+
+        Edit    Delete
+
+2    David    HR             45000
+
+        Edit    Delete
+
+---------------------------------------------------
+Project Folder Structure
+employee-management
+
+src
+│
+├── components
+│      Navbar.jsx
+│
+├── pages
+│      Home.jsx
+│      EmployeeList.jsx
+│      AddEmployee.jsx
+│      UpdateEmployee.jsx
+│
+├── services
+│      EmployeeService.js
+│
+├── App.jsx
+├── main.jsx
+Interview Questions
+How does React communicate with Spring Boot?
+
+Why do we use Axios instead of Fetch?
+
+Why are API calls placed in a service file?
+
+What is the purpose of useEffect() in fetching data?
+
+Why is useNavigate() used after saving an employee?
+
+How do you pass an employee ID to the update page?
+
+Why is useParams() needed?
+
+How do you refresh the employee list after deleting a record?
+
+What HTTP methods are used for CRUD operations?
+
+How can you handle API errors gracefully in React?
+
+Mini Project Deliverables
+By the end of this phase, trainees will have built a complete Employee Management System with:
+
+✅ Employee List (GET)
+
+✅ Add Employee (POST)
+
+✅ Update Employee (PUT)
+
+✅ Delete Employee (DELETE)
+
+✅ React Router Navigation
+
+✅ Axios Integration
+
+✅ Form Validation
+
+✅ Bootstrap UI
+
+✅ Spring Boot + MySQL Backend Integration
+
+Next Phase: JWT Authentication
+Once the CRUD application is complete, the next step is to secure it with Spring Security and JWT Authentication, including:
+
+User Registration
+
+User Login
+
+JWT Token Generation
+
+Protected Routes in React
+
+Role-Based Access (ADMIN and USER)
+
+Logout Functionality
+
+Axios Interceptors for automatically sending JWT tokens with API requests
+
+This phase transforms the CRUD application into an enterprise-style full-stack application.
+
+
