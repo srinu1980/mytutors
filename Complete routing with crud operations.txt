@@ -1,0 +1,732 @@
+
+
+Technology Stack
+Frontend
+ReactJS (Vite)
+React Router DOM
+Axios
+Bootstrap 5
+Backend
+Spring Boot 4.1
+Spring Data JPA
+MySQL
+Lombok
+Project Architecture
+React (Port: 5173)
+        │
+        │ Axios HTTP Request
+        ▼
+Spring Boot REST API (Port: 8080)
+        │
+        ▼
+Employee Service
+        │
+        ▼
+Employee Repository
+        │
+        ▼
+MySQL Database
+Module 1 – Create Spring Boot Backend
+
+We'll first create the backend.
+
+Employee Entity
+Employee
+---------
+id
+name
+email
+department
+salary
+APIs
+Method	URL	Description
+GET	/employees	Get all employees
+GET	/employees/{id}	Get employee by ID
+POST	/employees	Add employee
+PUT	/employees/{id}	Update employee
+DELETE	/employees/{id}	Delete employee
+Module 2 – Create React Project
+npm create vite@latest employee-ui
+
+Install dependencies:
+
+npm install
+npm install axios react-router-dom bootstrap
+
+Start the application:
+
+npm run dev
+Module 3 – React Project Structure
+src
+│
+├── components
+│      Navbar.jsx
+│
+├── pages
+│      EmployeeList.jsx
+│      AddEmployee.jsx
+│      EditEmployee.jsx
+│      Home.jsx
+│
+├── services
+│      EmployeeService.js
+│
+├── App.jsx
+├── main.jsx
+Module 4 – Routing
+/
+            Home
+
+/employees
+            Employee List
+
+/add
+            Add Employee
+
+/edit/:id
+            Edit Employee
+Module 5 – Axios Integration
+
+Create one service class.
+
+EmployeeService.js
+
+All HTTP requests will be written here.
+
+GET
+
+POST
+
+PUT
+
+DELETE
+
+This keeps the React code clean and organized.
+
+Module 6 – Employee List
+
+Display all employees in a table.
+
+---------------------------------------------
+ID    Name      Email        Salary
+---------------------------------------------
+101   John      john@mail     50000
+102   Scott     scott@mail    60000
+103   David     david@mail    70000
+---------------------------------------------
+
+        Edit     Delete
+
+Flow:
+
+Component loads
+      ↓
+useEffect()
+      ↓
+Axios GET
+      ↓
+Spring Boot API
+      ↓
+Database
+      ↓
+Display Employees
+Module 7 – Add Employee
+
+User enters employee details.
+
+Name
+
+Email
+
+Department
+
+Salary
+
+[Save]
+
+Flow:
+
+Form
+   ↓
+Axios POST
+   ↓
+Spring Boot
+   ↓
+MySQL
+Module 8 – Edit Employee
+
+Click the Edit button.
+
+Employees
+
+John
+
+Scott
+
+David
+
+      Edit
+
+Navigate to:
+
+/edit/101
+
+Flow:
+
+Employee ID
+      ↓
+GET Employee By ID
+      ↓
+Populate Form
+      ↓
+Update
+      ↓
+PUT API
+Module 9 – Delete Employee
+
+Click the Delete button.
+
+Delete
+
+↓
+
+Confirmation
+
+↓
+
+DELETE API
+
+↓
+
+Refresh Employee List
+Module 10 – Navigation Bar
+Employee Management
+
+Home
+
+Employees
+
+Add Employee
+Final Application Flow
+Home
+   │
+   ▼
+Employee List
+   │
+   ├── Add Employee
+   │
+   ├── Edit Employee
+   │
+   └── Delete Employee
+Project Folder Structure
+React
+employee-ui
+│
+├── src
+│   ├── components
+│   │      Navbar.jsx
+│   │
+│   ├── pages
+│   │      Home.jsx
+│   │      EmployeeList.jsx
+│   │      AddEmployee.jsx
+│   │      EditEmployee.jsx
+│   │
+│   ├── services
+│   │      EmployeeService.js
+│   │
+│   ├── App.jsx
+│   └── main.jsx
+Spring Boot
+employee-service
+│
+├── controller
+│      EmployeeController.java
+│
+├── service
+│      EmployeeService.java
+│      EmployeeServiceImpl.java
+│
+├── repository
+│      EmployeeRepository.java
+│
+├── entity
+│      Employee.java
+│
+├── exception
+│      ResourceNotFoundException.java
+│
+└── EmployeeServiceApplication.java
+Recommended Teaching Order
+
+Since you're teaching freshers, I recommend implementing the project in this order:
+
+Create the Spring Boot project and test all REST APIs using Postman.
+Create the React project with Vite.
+Configure React Router and create the page structure.
+Create the Axios service (EmployeeService.js).
+Implement the Employee List (GET).
+Implement Add Employee (POST).
+Implement Edit Employee (GET by ID + PUT).
+Implement Delete Employee (DELETE).
+Add Bootstrap styling and navigation.
+Test the complete CRUD flow end-to-end.
+========================================================================
+
+
+In ReactJs , what is routing and how to integrate spring boot application.
+
+ReactJS Routing and Spring Boot Integration
+What is Routing in ReactJS?
+Routing is the process of navigating between different pages (components) in a React Single Page Application (SPA) without reloading the browser.
+
+Instead of loading a new HTML page every time, React dynamically changes the displayed component.
+
+Example
+Without Routing:
+
+http://localhost:5173
+Everything is displayed on one page.
+
+With Routing:
+
+http://localhost:5173/
+http://localhost:5173/login
+http://localhost:5173/employees
+http://localhost:5173/add-employee
+http://localhost:5173/edit/101
+Each URL displays a different React component.
+
+Why do we need Routing?
+Suppose you are developing an Employee Management System.
+
+You need multiple pages:
+
+Home
+
+Login
+
+Dashboard
+
+Employee List
+
+Add Employee
+
+Edit Employee
+
+About
+
+Contact
+
+Routing helps users navigate between these pages.
+
+React Router
+React uses the react-router-dom library.
+
+Install:
+
+npm install react-router-dom
+Project Structure
+src
+│
+├── components
+│      Home.jsx
+│      Login.jsx
+│      EmployeeList.jsx
+│      AddEmployee.jsx
+│      EditEmployee.jsx
+│      Navbar.jsx
+│
+├── App.jsx
+└── main.jsx
+Step 1: Configure BrowserRouter
+main.jsx
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import { BrowserRouter } from "react-router-dom";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>
+);
+BrowserRouter enables routing.
+
+Step 2: Configure Routes
+App.jsx
+import { Routes, Route } from "react-router-dom";
+
+import Home from "./components/Home";
+import Login from "./components/Login";
+import EmployeeList from "./components/EmployeeList";
+import AddEmployee from "./components/AddEmployee";
+import EditEmployee from "./components/EditEmployee";
+
+function App() {
+
+    return (
+
+        <Routes>
+
+            <Route path="/" element={<Home />} />
+
+            <Route path="/login" element={<Login />} />
+
+            <Route path="/employees" element={<EmployeeList />} />
+
+            <Route path="/add" element={<AddEmployee />} />
+
+            <Route path="/edit/:id" element={<EditEmployee />} />
+
+        </Routes>
+
+    );
+
+}
+
+export default App;
+Route Parameters
+Example:
+
+http://localhost:5173/edit/100
+Here
+
+100
+is the route parameter.
+
+Retrieve it using:
+
+import { useParams } from "react-router-dom";
+
+function EditEmployee() {
+
+    const { id } = useParams();
+
+    return (
+        <h1>Editing Employee : {id}</h1>
+    );
+}
+
+export default EditEmployee;
+Output
+
+Editing Employee : 100
+Navigation
+Instead of HTML
+
+<a href="/employees">
+React uses
+
+<Link to="/employees">
+    Employees
+</Link>
+Example
+
+import { Link } from "react-router-dom";
+
+function Navbar() {
+
+    return (
+
+        <div>
+
+            <Link to="/">Home</Link>
+
+            <Link to="/employees">Employees</Link>
+
+            <Link to="/add">Add Employee</Link>
+
+        </div>
+
+    );
+
+}
+
+export default Navbar;
+Programmatic Navigation
+Use useNavigate().
+
+Example
+
+import { useNavigate } from "react-router-dom";
+
+function Login() {
+
+    const navigate = useNavigate();
+
+    function loginSuccess() {
+
+        navigate("/employees");
+
+    }
+
+    return (
+        <button onClick={loginSuccess}>
+            Login
+        </button>
+    );
+
+}
+
+export default Login;
+Nested Routing
+Example
+
+Dashboard
+
+    Employee
+
+    Department
+
+    Project
+<Route path="/dashboard" element={<Dashboard />}>
+
+      <Route path="employees" element={<EmployeeList />} />
+
+      <Route path="departments" element={<Department />} />
+
+</Route>
+Protected Routing (JWT)
+Users should not access
+
+/employees
+without login.
+
+Example:
+
+function ProtectedRoute({ children }) {
+
+    const token = localStorage.getItem("token");
+
+    return token ? children : <Navigate to="/login" />;
+}
+Usage
+
+<Route
+
+path="/employees"
+
+element={
+    <ProtectedRoute>
+        <EmployeeList />
+    </ProtectedRoute>
+}
+
+/>
+React + Spring Boot Integration
+Architecture
+
+                Browser
+
+                   |
+
+            React Application
+
+                   |
+
+              Axios/Fetch
+
+                   |
+
+------------------------------------
+
+        Spring Boot REST API
+
+------------------------------------
+
+                   |
+
+               MySQL Database
+Example
+
+React
+↓
+
+GET /employees
+
+↓
+
+Spring Boot
+
+↓
+
+EmployeeController
+
+↓
+
+EmployeeService
+
+↓
+
+Repository
+
+↓
+
+MySQL
+Spring Boot REST API
+Controller
+@RestController
+@RequestMapping("/employees")
+@CrossOrigin(origins = "http://localhost:5173")
+public class EmployeeController {
+
+    @GetMapping
+    public List<Employee> getEmployees() {
+        return employeeService.getAllEmployees();
+    }
+}
+React API Call
+Install Axios:
+
+npm install axios
+Create an API service:
+
+// services/EmployeeService.js
+
+import axios from "axios";
+
+const API_URL = "http://localhost:8080/employees";
+
+export const getEmployees = () => {
+    return axios.get(API_URL);
+};
+Display Data in React
+import { useEffect, useState } from "react";
+import { getEmployees } from "../services/EmployeeService";
+
+function EmployeeList() {
+
+    const [employees, setEmployees] = useState([]);
+
+    useEffect(() => {
+
+        getEmployees()
+            .then((response) => {
+                setEmployees(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+    }, []);
+
+    return (
+
+        <table>
+
+            <tbody>
+
+                {
+                    employees.map(emp => (
+
+                        <tr key={emp.id}>
+                            <td>{emp.id}</td>
+                            <td>{emp.name}</td>
+                            <td>{emp.salary}</td>
+                        </tr>
+
+                    ))
+                }
+
+            </tbody>
+
+        </table>
+
+    );
+
+}
+
+export default EmployeeList;
+CRUD Integration Flow
+React Form
+
+↓
+
+Axios POST
+
+↓
+
+Spring Boot POST API
+
+↓
+
+Database
+
+↓
+
+Response
+
+↓
+
+React Refresh UI
+Operation	React	Spring Boot
+Read	axios.get()	@GetMapping
+Create	axios.post()	@PostMapping
+Update	axios.put()	@PutMapping
+Delete	axios.delete()	@DeleteMapping
+Complete Employee CRUD Flow
+Login Page
+      │
+      ▼
+Generate JWT Token
+      │
+      ▼
+Store Token (localStorage)
+      │
+      ▼
+Navigate to Dashboard
+      │
+      ▼
+Employee List
+      │
+      ├── GET Employees
+      ├── Add Employee (POST)
+      ├── Edit Employee (PUT)
+      └── Delete Employee (DELETE)
+      │
+      ▼
+Spring Boot REST API
+      │
+      ▼
+MySQL
+Typical Project Structure
+React Frontend
+src/
+├── components/
+├── pages/
+├── services/
+│   └── EmployeeService.js
+├── routes/
+│   └── ProtectedRoute.jsx
+├── App.jsx
+└── main.jsx
+Spring Boot Backend
+src/main/java/
+├── controller/
+├── service/
+├── repository/
+├── entity/
+├── dto/
+├── config/
+└── exception/
+Learning Sequence
+For your Employee CRUD application, a practical order is:
+
+React Router (BrowserRouter, Routes, Route)
+
+Navigation (Link, NavLink, useNavigate)
+
+Route parameters (useParams)
+
+Create a Spring Boot REST API (GET, POST, PUT, DELETE)
+
+Integrate React with Spring Boot using Axios
+
+Add JWT authentication and protected routes
+
+Implement a complete Employee Management System with login, dashboard, and CRUD operations.
+
+This sequence builds from navigation fundamentals to a production-style React + Spring Boot application.
+
+
