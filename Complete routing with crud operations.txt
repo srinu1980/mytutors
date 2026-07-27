@@ -580,6 +580,7 @@ React API Call
 Install Axios:
 
 npm install axios
+
 Create an API service:
 
 // services/EmployeeService.js
@@ -591,7 +592,11 @@ const API_URL = "http://localhost:8080/employees";
 export const getEmployees = () => {
     return axios.get(API_URL);
 };
+
+
 Display Data in React
+
+
 import { useEffect, useState } from "react";
 import { getEmployees } from "../services/EmployeeService";
 
@@ -638,7 +643,10 @@ function EmployeeList() {
 }
 
 export default EmployeeList;
+
+
 CRUD Integration Flow
+
 React Form
 
 ↓
