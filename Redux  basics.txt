@@ -1,0 +1,662 @@
+https://www.geeksforgeeks.org/web-tech/introduction-to-react-redux/
+https://medium.com/@arpitparekh54/react-redux-how-to-implement-redux-in-your-react-application-c3b6bc93aec5
+https://www.geeksforgeeks.org/reactjs/explain-the-concept-of-redux-in-react/
+https://www.tutorialspoint.com/redux/redux_react_example.htm
+
+
+Today 7:41 PM
+Explain basics of reactjs redux?
+
+Since you've already learned React Hooks (useState, useEffect, useContext, useReducer, useMemo, useCallback), the next important topic is Redux.
+
+What is Redux?
+Redux is a state management library used to manage and share application data across multiple React components.
+
+Instead of passing data from one component to another using props (called prop drilling), Redux stores the data in one central store, and any component can access it.
+
+Why do we need Redux?
+Without Redux
+App
+ │
+ ├── Header
+ │
+ ├── Dashboard
+ │     │
+ │     ├── EmployeeList
+ │     │
+ │     └── EmployeeDetails
+ │
+ └── Footer
+Suppose employee data is stored inside App.
+
+To send it to EmployeeDetails:
+
+App
+ ↓
+Dashboard
+ ↓
+EmployeeList
+ ↓
+EmployeeDetails
+Every component has to pass the data.
+
+This is called Prop Drilling.
+
+With Redux
+          Redux Store
+         ┌──────────────┐
+         │ Employees    │
+         │ Users        │
+         │ Products     │
+         │ Cart         │
+         └──────────────┘
+
+      ↑        ↑        ↑
+
+ Header  EmployeeList  EmployeeDetails
+Every component directly accesses the store.
+
+No prop drilling.
+
+Real-Time Example
+Imagine an Employee Management System.
+
+Components:
+
+Navbar
+Employee List
+Employee Form
+Employee Details
+Footer
+Employee information is needed in all components.
+
+Instead of storing data separately,
+
+Store it once inside Redux Store.
+
+What is State?
+State means data that can change.
+
+Example:
+
+Employee Name
+Salary
+Department
+Login Status
+Shopping Cart
+Theme
+All these are state.
+
+Redux manages them efficiently.
+
+Redux Architecture
+React Component
+        │
+        │ Dispatch Action
+        ▼
+     Action
+        │
+        ▼
+     Reducer
+        │
+        ▼
+    Redux Store
+        │
+        ▼
+React Component updates automatically
+Redux Flow
+User Clicks Button
+        │
+        ▼
+Dispatch(Action)
+        │
+        ▼
+Reducer
+        │
+        ▼
+Store Updated
+        │
+        ▼
+UI Re-render
+Main Redux Concepts
+There are five important concepts.
+
+1. Store
+Store is the central database.
+
+Example:
+
+{
+    employees: [],
+    users: [],
+    cart: [],
+    theme: "light"
+}
+Everything is stored here.
+
+2. Action
+Action tells Redux
+
+"What happened?"
+
+Example
+
+ADD_EMPLOYEE
+
+DELETE_EMPLOYEE
+
+UPDATE_EMPLOYEE
+
+LOGIN
+
+LOGOUT
+Action Object
+
+{
+    type: "ADD_EMPLOYEE"
+}
+With data
+
+{
+    type: "ADD_EMPLOYEE",
+    payload: {
+        id:1,
+        name:"John"
+    }
+}
+3. Reducer
+Reducer changes the state.
+
+Example
+
+Old State
+
+↓
+
+Reducer
+
+↓
+
+New State
+Reducer never changes the old state directly.
+
+Instead,
+
+Returns a new state.
+
+Example
+
+function employeeReducer(state, action){
+
+}
+4. Dispatch
+Dispatch sends the action.
+
+dispatch(addEmployee())
+Dispatch says,
+
+"Execute this action."
+
+5. Selector
+Selector reads data from store.
+
+Store
+
+↓
+
+Selector
+
+↓
+
+Component
+Example
+
+const employees = useSelector(state => state.employees);
+Redux Lifecycle
+Button Click
+
+↓
+
+dispatch()
+
+↓
+
+Action
+
+↓
+
+Reducer
+
+↓
+
+Store Updated
+
+↓
+
+UI Updated
+Everyday Example
+Suppose ATM.
+
+Customer
+
+↓
+
+Withdraw Request
+
+↓
+
+Bank Server
+
+↓
+
+Account Updated
+
+↓
+
+New Balance
+Similarly
+
+User
+
+↓
+
+Dispatch
+
+↓
+
+Reducer
+
+↓
+
+Store
+
+↓
+
+Updated UI
+React Hooks Used with Redux
+Redux Toolkit provides React hooks.
+
+useSelector()
+Reads data.
+
+const employees = useSelector(state => state.employee.list);
+useDispatch()
+Dispatches actions.
+
+const dispatch = useDispatch();
+Redux Toolkit (Modern Redux)
+Nowadays, developers use Redux Toolkit (RTK) instead of writing Redux manually because it reduces boilerplate code and follows best practices.
+
+Benefits:
+
+Less code
+
+Easier configuration
+
+Built-in support for immutable updates
+
+Better performance
+
+Recommended by the Redux team
+
+When Should You Use Redux?
+Use Redux when:
+
+Multiple components need the same data.
+
+Your application has complex state.
+
+You need predictable state updates.
+
+You're building medium to large applications.
+
+Avoid Redux for very small applications where React's built-in state (useState) or useContext is sufficient.
+
+React State Management Comparison
+Feature	useState	useContext	Redux Toolkit
+Component State	✅	❌	❌
+Share Data	❌	✅	✅
+Global State	❌	✅	✅
+Performance for Large Apps	Medium	Medium	High
+Learning Curve	Easy	Easy	Moderate
+Best For	Local UI state	Small/medium apps	Medium/large apps
+Redux Folder Structure (Recommended)
+src/
+│
+├── app/
+│   └── store.js
+│
+├── features/
+│   ├── employee/
+│   │   ├── employeeSlice.js
+│   │   └── employeeAPI.js
+│   │
+│   └── auth/
+│       └── authSlice.js
+│
+├── components/
+│
+├── pages/
+│
+└── main.jsx
+Enterprise Example
+In your planned React + Spring Boot Employee Management System, Redux Toolkit is useful for managing:
+
+Authentication (JWT token and logged-in user)
+
+Employee list
+
+Department list
+
+User roles (ADMIN/USER)
+
+Loading indicators
+
+Error messages
+
+Application theme
+
+This keeps state centralized and easier to maintain as the application grows.
+
+Learning Roadmap
+Redux fundamentals
+
+Install Redux Toolkit and React Redux
+
+Create the Redux Store
+
+Create a Slice
+
+Configure the Store
+
+Connect the Store using Provider
+
+Read data with useSelector
+
+Update data with useDispatch
+
+Perform CRUD operations with Redux Toolkit
+
+Integrate Redux Toolkit with Spring Boot APIs using Axios
+
+This sequence will prepare you to build scalable React applications with centralized state management.
+
+
+Today 9:30 PM
+Give me proper basic example 
+
+Let's start with the smallest possible Redux Toolkit example. This example demonstrates a simple Counter Application, which is the standard way to learn Redux before moving on to Employee CRUD.
+
+Step 1: Create React Project
+npm create vite@latest redux-demo -- --template react
+Move to the project.
+
+cd redux-demo
+Install Redux Toolkit.
+
+npm install @reduxjs/toolkit react-redux
+Project Structure
+src
+│
+├── app
+│     └── store.js
+│
+├── features
+│     └── counter
+│             └── counterSlice.js
+│
+├── App.jsx
+├── main.jsx
+Step 2: Create Redux Store
+app/store.js
+import { configureStore } from "@reduxjs/toolkit";
+import counterReducer from "../features/counter/counterSlice";
+
+export const store = configureStore({
+    reducer: {
+        counter: counterReducer
+    }
+});
+Explanation
+
+configureStore() creates the Redux store.
+
+counter is the name of the state.
+
+counterReducer controls how the state changes.
+
+Step 3: Create Counter Slice
+features/counter/counterSlice.js
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+    value: 0
+};
+
+const counterSlice = createSlice({
+    name: "counter",
+    initialState,
+
+    reducers: {
+
+        increment: (state) => {
+            state.value++;
+        },
+
+        decrement: (state) => {
+            state.value--;
+        }
+
+    }
+
+});
+
+export const { increment, decrement } = counterSlice.actions;
+
+export default counterSlice.reducer;
+What is happening?
+Initial state
+
+{
+   value:0
+}
+When
+
+dispatch(increment())
+becomes
+
+{
+   value:1
+}
+When
+
+dispatch(decrement())
+becomes
+
+{
+   value:0
+}
+Step 4: Connect Redux to React
+main.jsx
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+
+import { Provider } from "react-redux";
+import { store } from "./app/store";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+
+    <Provider store={store}>
+        <App />
+    </Provider>
+
+);
+Why Provider?
+Provider makes the Redux store available to every component in your React application.
+
+Provider
+      │
+      ├── App
+      │      │
+      │      ├── Header
+      │      ├── Home
+      │      └── Footer
+All components can access the same store.
+
+Step 5: Use Redux in App
+App.jsx
+import { useSelector, useDispatch } from "react-redux";
+import { increment, decrement } from "./features/counter/counterSlice";
+
+function App() {
+
+    const count = useSelector((state) => state.counter.value);
+
+    const dispatch = useDispatch();
+
+    return (
+
+        <div style={{ textAlign: "center", marginTop: "50px" }}>
+
+            <h1>Redux Counter Example</h1>
+
+            <h2>{count}</h2>
+
+            <button onClick={() => dispatch(increment())}>
+                Increment
+            </button>
+
+            <button
+                onClick={() => dispatch(decrement())}
+                style={{ marginLeft: "10px" }}
+            >
+                Decrement
+            </button>
+
+        </div>
+
+    );
+
+}
+
+export default App;
+How does it work?
+Initial State
+Store
+
+{
+   value : 0
+}
+Screen
+
+Redux Counter Example
+
+0
+User clicks Increment
+Button Click
+      │
+      ▼
+dispatch(increment())
+      │
+      ▼
+Reducer
+      │
+      ▼
+Store
+Store becomes
+
+{
+   value : 1
+}
+Screen
+
+Redux Counter Example
+
+1
+User clicks Increment again
+Store
+
+{
+   value : 2
+}
+User clicks Decrement
+Store
+
+{
+   value : 1
+}
+Data Flow Diagram
+Button Click
+      │
+      ▼
+dispatch(increment())
+      │
+      ▼
+counterSlice
+      │
+      ▼
+Store Updated
+      │
+      ▼
+useSelector()
+      │
+      ▼
+UI Re-rendered
+Key Redux Functions
+configureStore()
+Creates the Redux store.
+
+createSlice()
+Creates:
+
+State
+
+Reducers
+
+Actions
+
+useSelector()
+Reads data from the Redux store.
+
+const count = useSelector(state => state.counter.value);
+useDispatch()
+Sends an action to update the store.
+
+dispatch(increment());
+Output
+Initially:
+
+Redux Counter Example
+
+0
+
+[Increment] [Decrement]
+After clicking Increment twice:
+
+Redux Counter Example
+
+2
+
+[Increment] [Decrement]
+After clicking Decrement once:
+
+Redux Counter Example
+
+1
+
+[Increment] [Decrement]
+Next Step
+Once you're comfortable with this example, the next logical example is a Redux Employee Management application where you:
+
+Add an employee
+
+Delete an employee
+
+Update an employee
+
+Display the employee list
+
+This will show how Redux Toolkit manages arrays of objects, which is much closer to real-world React + Spring Boot applications.
+
+

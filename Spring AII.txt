@@ -1,0 +1,1882 @@
+
+
+
+Sat, Jul 11 at 7:52 AM
+Spring ai beginners 
+
+If you're teaching Spring AI to beginners, it's best to start from AI fundamentals and gradually move into Spring Boot integration. Here's a structured corporate training plan.
+
+Spring AI for Beginners
+Module 1: Introduction to Artificial Intelligence
+What is AI?
+
+Machine Learning vs Deep Learning vs Generative AI
+
+What is a Large Language Model (LLM)?
+
+Popular AI Models
+
+ChatGPT
+
+Gemini
+
+Claude
+
+Llama
+
+AI Use Cases
+
+Chatbots
+
+Content Generation
+
+Code Generation
+
+Image Generation
+
+Document Analysis
+
+Module 2: Introduction to Spring AI
+What is Spring AI?
+
+Why Spring AI?
+
+Spring AI Architecture
+
+Features of Spring AI
+
+Supported AI Providers
+
+OpenAI
+
+Azure OpenAI
+
+Anthropic
+
+Ollama
+
+Google Gemini
+
+Topics:
+
+AI Model
+
+Prompt
+
+Completion
+
+Chat Model
+
+Embedding Model
+
+Vector Store
+
+Module 3: Spring Boot Project Setup
+Create a Spring Boot project.
+
+Dependencies:
+
+Spring Web
+
+Spring AI
+
+Lombok
+
+Project Structure:
+
+src
+ ├── controller
+ ├── service
+ ├── config
+ └── application.properties
+Run your first Spring Boot application.
+
+Module 4: Connecting Spring AI
+Configure API Key
+
+Configure AI Model
+
+application.properties
+
+Creating a ChatClient
+
+Calling the AI Model
+
+Example Flow:
+
+User
+   ↓
+Controller
+   ↓
+Service
+   ↓
+Spring AI
+   ↓
+OpenAI / Gemini
+   ↓
+Response
+Module 5: First AI Chat Application
+Develop a REST API.
+
+Endpoints:
+
+GET /chat?message=Hello
+Response:
+
+Hello! How can I help you today?
+Learn:
+
+Controller
+
+Service
+
+Dependency Injection
+
+ChatClient
+
+Module 6: Prompt Engineering Basics
+What is a Prompt?
+
+System Prompt
+
+User Prompt
+
+Prompt Templates
+
+Dynamic Prompts
+
+Variables
+
+Examples:
+
+Summarization
+
+Translation
+
+Email Writing
+
+Java Code Generation
+
+Module 7: Chat Memory
+Why Chat Memory?
+
+Stateless vs Stateful Conversations
+
+Conversation History
+
+Session Management
+
+Build:
+
+User → Chat → Continue Conversation
+Module 8: Image Generation
+Generate Images
+
+Image Prompts
+
+AI Image Models
+
+Image Quality
+
+Use Cases
+
+Module 9: AI for Java Developers
+Generate:
+
+Java Classes
+
+SQL Queries
+
+Unit Tests
+
+Spring Boot APIs
+
+REST Controllers
+
+JPA Entities
+
+Documentation
+
+Module 10: Mini Project – AI Chat Assistant
+Build an application with:
+
+Spring Boot
+
+Spring AI
+
+REST APIs
+
+Prompt Templates
+
+Chat Memory
+
+Error Handling
+
+Features:
+
+Ask Questions
+
+Summarize Text
+
+Translate Content
+
+Generate Code
+
+Explain Java Programs
+
+Learning Outcomes
+By the end of this course, learners will be able to:
+
+Understand AI and Generative AI fundamentals.
+
+Build Spring Boot applications integrated with AI models.
+
+Create chat-based REST APIs using Spring AI.
+
+Design effective prompts and prompt templates.
+
+Implement chat memory for conversational applications.
+
+Generate code, text, and images with AI.
+
+Develop an end-to-end AI-powered Spring Boot application.
+
+This progression is well-suited for beginners and provides a strong foundation before moving to advanced topics such as Retrieval-Augmented Generation (RAG), vector databases, embeddings, function/tool calling, Model Context Protocol (MCP), and AI agents.
+
+
+Module 8: Spring AI Agents and Tool Calling
+Duration: 6–8 Hours
+
+Prerequisites:
+
+Modules 1–7
+
+Java 21+
+
+Spring Boot
+
+Spring AI Basics
+
+REST APIs
+
+Basic Database Knowledge
+
+Learning Objectives
+By the end of this module, you will be able to:
+
+Understand AI Agents.
+
+Learn what Tool (Function) Calling is.
+
+Build AI agents using Spring AI.
+
+Connect AI to external APIs and databases.
+
+Create AI assistants that can perform actions.
+
+Build enterprise AI workflows.
+
+1. What is an AI Agent?
+An AI Agent is an AI-powered application that can not only answer questions but also take actions by interacting with external tools, APIs, databases, or services.
+
+Unlike a basic chatbot, an AI agent can:
+
+Retrieve live information
+
+Call REST APIs
+
+Query databases
+
+Execute business logic
+
+Automate workflows
+
+Traditional Chatbot
+User
+
+↓
+
+LLM
+
+↓
+
+Response
+The LLM only generates text.
+
+AI Agent
+User
+
+↓
+
+AI Agent
+
+↓
+
+Tool/API/Database
+
+↓
+
+LLM
+
+↓
+
+Response
+The AI agent can perform tasks before generating a response.
+
+2. Why Do We Need AI Agents?
+Suppose a user asks:
+
+"What is my leave balance?"
+
+A normal chatbot cannot answer because it does not know company-specific data.
+
+An AI agent can:
+
+Understand the question.
+
+Call the HR API.
+
+Retrieve the leave balance.
+
+Generate a natural language response.
+
+3. What is Tool (Function) Calling?
+Tool Calling allows the AI model to invoke predefined Java methods or external services to complete a task.
+
+Example:
+
+User:
+
+What is the weather in Chennai?
+AI Process:
+
+LLM
+
+↓
+
+Calls Weather Tool
+
+↓
+
+Gets Temperature
+
+↓
+
+Returns Response
+The AI decides when a tool is needed based on the user's request.
+
+4. Spring AI Agent Architecture
+User
+
+↓
+
+REST Controller
+
+↓
+
+ChatService
+
+↓
+
+ChatClient
+
+↓
+
+AI Model
+
+↓
+
+Tool Selection
+
+↓
+
+Java Tool/API
+
+↓
+
+Response
+
+↓
+
+User
+5. AI Agent Workflow
+User Request
+
+↓
+
+AI Understands Intent
+
+↓
+
+Need Tool?
+
+↓
+
+Yes
+
+↓
+
+Execute Tool
+
+↓
+
+Collect Data
+
+↓
+
+Generate Response
+
+↓
+
+Return to User
+6. Types of Tools
+REST API Tool
+Example:
+
+Weather API
+
+Currency API
+
+HR API
+
+Employee API
+
+Database Tool
+Examples:
+
+MySQL
+
+PostgreSQL
+
+MongoDB
+
+Retrieve:
+
+Employee Details
+
+Salary
+
+Leave Balance
+
+File Tool
+Read:
+
+PDF
+
+Excel
+
+CSV
+
+Word Documents
+
+Email Tool
+Send:
+
+Leave Approval
+
+Notifications
+
+Reports
+
+Calculator Tool
+Perform:
+
+Addition
+
+EMI Calculation
+
+Tax Calculation
+
+7. Enterprise Tool Examples
+Tool	Purpose
+Employee Service	Employee Information
+HR Service	Leave Balance
+Payroll Service	Salary Details
+Inventory Service	Product Stock
+CRM Service	Customer Information
+Banking Service	Account Balance
+8. Example: Weather Assistant
+User:
+
+What is today's temperature?
+Flow:
+
+User
+
+↓
+
+Weather Tool
+
+↓
+
+Weather API
+
+↓
+
+Temperature
+
+↓
+
+AI Response
+Response:
+
+The current temperature is 31°C.
+9. Example: Employee Lookup
+User:
+
+Show employee details for ID 101.
+Flow:
+
+User
+
+↓
+
+AI Agent
+
+↓
+
+Employee API
+
+↓
+
+Employee Database
+
+↓
+
+Response
+Response:
+
+{
+   "id":101,
+   "name":"Rahul",
+   "department":"IT"
+}
+10. Example: Leave Balance
+User:
+
+How many leave days do I have?
+Flow:
+
+User
+
+↓
+
+AI
+
+↓
+
+HR Tool
+
+↓
+
+HR Database
+
+↓
+
+Response
+Response:
+
+You have 12 casual leave days remaining.
+11. Multi-Step AI Workflow
+Example:
+
+User:
+
+Book leave for tomorrow and notify my manager.
+Workflow:
+
+User
+
+↓
+
+Check Leave Balance
+
+↓
+
+Book Leave
+
+↓
+
+Send Email
+
+↓
+
+Confirm Success
+This demonstrates how an AI agent can orchestrate multiple actions.
+
+12. Error Handling
+Common failures:
+
+Tool unavailable
+
+API timeout
+
+Database connection failure
+
+Invalid user input
+
+Authentication failure
+
+Example Response:
+
+{
+  "status":"ERROR",
+  "message":"Unable to retrieve employee details at the moment."
+}
+13. Security Considerations
+Authenticate users before accessing protected data.
+
+Authorize tool execution based on user roles.
+
+Validate tool inputs.
+
+Avoid exposing sensitive information.
+
+Audit tool usage.
+
+Apply rate limiting where appropriate.
+
+14. Best Practices
+Keep tools focused on a single responsibility.
+
+Make tools idempotent when possible.
+
+Handle exceptions gracefully.
+
+Log tool execution (excluding sensitive data).
+
+Validate AI-generated tool arguments.
+
+Use secure API communication (HTTPS).
+
+15. Mini Project
+AI HR Assistant
+Features
+Check leave balance
+
+Employee lookup
+
+Holiday calendar
+
+Apply leave
+
+Send notification
+
+View company policies using RAG
+
+Answer HR-related questions
+
+Architecture:
+
+Employee
+
+↓
+
+Spring Boot
+
+↓
+
+Spring AI
+
+↓
+
+Tools
+
+↓
+
+HR APIs
+
+↓
+
+Database
+
+↓
+
+Response
+16. Hands-on Lab
+Exercise 1
+Create a Spring Boot project with Spring AI.
+
+Exercise 2
+Create an Employee Tool that retrieves employee information.
+
+Exercise 3
+Create an HR Tool to fetch leave balances.
+
+Exercise 4
+Integrate a sample Weather API tool.
+
+Exercise 5
+Build a chatbot that automatically invokes the correct tool based on the user's question.
+
+Exercise 6
+Implement authentication and authorization checks before invoking protected tools.
+
+17. Enterprise Use Cases
+HR Assistant
+Leave management
+
+Employee information
+
+Policy queries
+
+Banking Assistant
+Balance enquiry
+
+Transaction history
+
+Loan eligibility
+
+Hospital Assistant
+Appointment booking
+
+Doctor availability
+
+Medical records (with proper authorization)
+
+E-Commerce Assistant
+Product search
+
+Order tracking
+
+Inventory status
+
+Return requests
+
+Software Development Assistant
+Generate code
+
+Query documentation
+
+Review code
+
+Create unit tests
+
+Interview Questions
+What is an AI Agent?
+
+How is an AI Agent different from a chatbot?
+
+What is Tool (Function) Calling?
+
+Why is Tool Calling important?
+
+Give examples of AI tools.
+
+How can an AI agent interact with databases?
+
+What is a multi-step AI workflow?
+
+What security measures should be applied to AI agents?
+
+What are common errors during tool execution?
+
+List some enterprise use cases for AI agents.
+
+Module Summary
+In this module, you learned:
+
+What AI Agents are
+
+How Tool (Function) Calling works
+
+Spring AI agent architecture
+
+Building AI assistants that interact with APIs and databases
+
+Multi-step AI workflows
+
+Security and best practices
+
+Enterprise use cases
+
+Next Module: Module 9 – Model Context Protocol (MCP) with Spring AI
+In Module 9, you'll learn:
+
+What Model Context Protocol (MCP) is
+
+MCP architecture and components
+
+MCP Clients and MCP Servers
+
+Connecting Spring AI applications to MCP servers
+
+Exposing enterprise tools through MCP
+
+Building extensible AI applications using the MCP standard
+
+
+Module 9
+
+Module 9: Model Context Protocol (MCP) with Spring AI
+Duration: 6–8 Hours
+
+Prerequisites:
+
+Modules 1–8
+
+Java 21+
+
+Spring Boot
+
+Spring AI
+
+REST APIs
+
+AI Agents and Tool Calling
+
+Learning Objectives
+By the end of this module, you will be able to:
+
+Understand Model Context Protocol (MCP).
+
+Learn why MCP was introduced.
+
+Understand MCP Architecture.
+
+Differentiate MCP Client and MCP Server.
+
+Build Spring AI applications using MCP.
+
+Connect AI models to enterprise tools using MCP.
+
+Build reusable AI integrations.
+
+1. What is Model Context Protocol (MCP)?
+Model Context Protocol (MCP) is an open standard that enables AI models to securely communicate with external tools, data sources, and services through a common protocol.
+
+Think of MCP as a USB-C port for AI—instead of creating a custom integration for every AI model and every tool, MCP provides a standard way for them to work together.
+
+Without MCP
+Every AI model requires separate integrations.
+
+                CRM
+                  ▲
+                  │
+      Database ◄──┼──► Weather API
+                  │
+                  ▼
+             Email Service
+
+ChatGPT → Separate Integrations
+Gemini → Separate Integrations
+Claude → Separate Integrations
+Problems:
+
+Duplicate code
+
+Higher maintenance
+
+Vendor-specific integrations
+
+Difficult to scale
+
+With MCP
+             AI Model
+                 │
+                 ▼
+           MCP Client
+                 │
+         MCP Protocol
+                 │
+                 ▼
+           MCP Server
+      ┌──────┼────────┐
+      ▼      ▼        ▼
+ Database  REST API  File System
+Benefits:
+
+Standard communication
+
+Reusable integrations
+
+Easier maintenance
+
+Better scalability
+
+2. Why Do We Need MCP?
+Imagine your company has:
+
+Employee Database
+
+HR System
+
+CRM
+
+Jira
+
+GitHub
+
+File Storage
+
+Without MCP:
+
+Each AI model needs custom connectors.
+
+With MCP:
+
+Every tool exposes a standard MCP interface, and any compatible AI application can use it.
+
+3. MCP Architecture
+                  User
+                    │
+                    ▼
+             Spring Boot API
+                    │
+                    ▼
+               Spring AI
+                    │
+                    ▼
+               MCP Client
+                    │
+             MCP Protocol
+                    │
+                    ▼
+               MCP Server
+          ┌────────┼─────────┐
+          ▼        ▼         ▼
+      Database   REST API   File System
+4. MCP Components
+MCP Client
+The client:
+
+Sends requests
+
+Discovers available tools
+
+Executes tools
+
+Receives responses
+
+Examples:
+
+Spring AI Application
+
+AI Desktop Assistant
+
+AI IDE Plugin
+
+MCP Server
+The server exposes tools and resources.
+
+Examples:
+
+Database Server
+
+Employee Service
+
+Weather Service
+
+HR Service
+
+GitHub Integration
+
+MCP Tool
+A callable function.
+
+Examples:
+
+getEmployee()
+
+getWeather()
+
+findCustomer()
+
+sendEmail()
+
+searchDocuments()
+MCP Resource
+Provides read-only information.
+
+Examples:
+
+PDF Documents
+
+Markdown Files
+
+SQL Reports
+
+API Documentation
+
+MCP Prompt
+Reusable prompts provided by the server.
+
+Example:
+
+Generate Java Unit Tests.
+5. MCP Request Flow
+User Question
+
+↓
+
+Spring AI
+
+↓
+
+MCP Client
+
+↓
+
+MCP Server
+
+↓
+
+Tool Execution
+
+↓
+
+Tool Result
+
+↓
+
+LLM
+
+↓
+
+Final Response
+6. MCP Discovery
+One of MCP's strengths is that clients can discover available tools dynamically.
+
+Example:
+
+MCP Server exposes:
+
+Employee Tool
+
+Weather Tool
+
+Calculator Tool
+
+Email Tool
+The client retrieves this list and decides which tool to use.
+
+7. Spring AI with MCP
+Architecture:
+
+User
+
+↓
+
+REST Controller
+
+↓
+
+Service
+
+↓
+
+ChatClient
+
+↓
+
+MCP Client
+
+↓
+
+MCP Server
+
+↓
+
+Enterprise Tools
+
+↓
+
+Response
+8. Enterprise MCP Example
+Suppose an employee asks:
+
+"Show my leave balance."
+
+Execution Flow:
+
+User
+
+↓
+
+Spring AI
+
+↓
+
+MCP Client
+
+↓
+
+HR MCP Server
+
+↓
+
+Leave Tool
+
+↓
+
+Database
+
+↓
+
+Result
+
+↓
+
+LLM
+
+↓
+
+Response
+9. MCP vs Traditional REST APIs
+REST API	MCP
+Fixed endpoints	Dynamic tool discovery
+Manual integration	Standard protocol
+Provider-specific logic	AI-friendly integration
+Separate APIs for each tool	Unified interface
+Limited AI context	Context-aware interactions
+10. MCP Security
+Enterprise applications should implement:
+
+User authentication
+
+Authorization (Role-Based Access Control)
+
+Secure transport (HTTPS)
+
+Audit logging
+
+Tool permissions
+
+Rate limiting
+
+Input validation
+
+11. Enterprise Use Cases
+HR Assistant
+Tools:
+
+Leave Balance
+
+Holiday Calendar
+
+Employee Search
+
+Banking Assistant
+Tools:
+
+Account Balance
+
+Loan Status
+
+Transaction History
+
+Software Development Assistant
+Tools:
+
+GitHub Repository Search
+
+Build Status
+
+Test Reports
+
+Code Review
+
+Customer Support Assistant
+Tools:
+
+CRM Lookup
+
+Ticket Search
+
+Customer History
+
+Knowledge Management
+Resources:
+
+PDF Manuals
+
+Product Documentation
+
+Company Policies
+
+Internal Wiki
+
+12. Advantages of MCP
+Standard protocol for AI integrations
+
+Reusable tools
+
+Dynamic tool discovery
+
+Reduced integration effort
+
+Easier maintenance
+
+Better interoperability
+
+Scalable enterprise architecture
+
+13. Limitations
+Requires MCP-compatible clients and servers.
+
+Initial setup can be more involved than a simple REST API.
+
+Security must be carefully designed.
+
+Monitoring and logging are essential in production.
+
+14. Mini Project
+Enterprise AI Assistant
+Features
+Employee Lookup
+
+Leave Balance
+
+Weather Information
+
+Company Policy Search
+
+GitHub Repository Search
+
+Database Queries
+
+PDF Search (via RAG)
+
+Email Notifications
+
+Architecture:
+
+User
+
+↓
+
+Spring Boot
+
+↓
+
+Spring AI
+
+↓
+
+MCP Client
+
+↓
+
+MCP Server
+
+↓
+
+Enterprise Services
+
+↓
+
+Response
+15. Hands-on Lab
+Exercise 1
+Create a Spring Boot project with Spring AI.
+
+Exercise 2
+Configure an MCP Client.
+
+Exercise 3
+Connect to a sample MCP Server.
+
+Exercise 4
+Discover available MCP tools.
+
+Exercise 5
+Invoke an MCP tool (for example, employee lookup).
+
+Exercise 6
+Return the tool result through your chatbot.
+
+Exercise 7
+Add authentication and logging for MCP requests.
+
+16. Best Practices
+Keep each MCP tool focused on a single responsibility.
+
+Secure every MCP endpoint with authentication and authorization.
+
+Validate all inputs before invoking tools.
+
+Handle tool failures gracefully.
+
+Log tool invocations for auditing.
+
+Design MCP servers to be modular and reusable.
+
+17. Interview Questions
+What is Model Context Protocol (MCP)?
+
+Why was MCP introduced?
+
+What is the difference between an MCP Client and an MCP Server?
+
+What are MCP Tools?
+
+What are MCP Resources?
+
+What are the advantages of MCP over traditional REST integrations?
+
+How does MCP support tool discovery?
+
+What security measures should be implemented in MCP?
+
+Give some enterprise use cases for MCP.
+
+How does Spring AI integrate with MCP?
+
+Module Summary
+In this module, you learned:
+
+What Model Context Protocol (MCP) is
+
+MCP architecture and components
+
+MCP Client and MCP Server
+
+MCP tools, resources, and prompts
+
+Integrating Spring AI with MCP
+
+Enterprise use cases
+
+Security considerations
+
+Best practices for scalable AI integrations
+
+Course Capstone Project
+After completing Modules 1–9, a comprehensive final project is to build an Enterprise AI Assistant using:
+
+Spring Boot
+
+Spring AI
+
+AI ChatClient
+
+Prompt Engineering
+
+Chat Memory
+
+RAG
+
+AI Agents and Tool Calling
+
+MCP
+
+Spring Security (JWT)
+
+MySQL/PostgreSQL
+
+Vector Database
+
+REST APIs
+
+This capstone combines all the concepts learned throughout the course into a production-style AI application.
+
+
+Capstone Project
+
+Capstone Project: Enterprise AI Assistant using Spring AI
+Project Level: Advanced (Industry Ready)
+
+Duration: 15–20 Hours
+
+Technology Stack:
+
+Java 21
+
+Spring Boot 3.5+
+
+Spring AI
+
+Spring Security (JWT)
+
+MySQL / PostgreSQL
+
+Vector Database (pgvector, Chroma, or Milvus)
+
+Maven
+
+REST APIs
+
+Docker (Optional)
+
+React (Optional Frontend)
+
+Project Overview
+Build an Enterprise AI Assistant that can:
+
+Answer company-related questions
+
+Search internal documents (RAG)
+
+Retrieve employee information
+
+Check leave balances
+
+Generate reports
+
+Generate Java code
+
+Summarize documents
+
+Translate text
+
+Remember previous conversations
+
+Call enterprise APIs
+
+Use MCP servers
+
+Authenticate users using JWT
+
+Project Architecture
+                    React Frontend
+
+                           │
+
+                           ▼
+
+                 Spring Boot REST APIs
+
+                           │
+
+               Spring Security (JWT)
+
+                           │
+
+                           ▼
+
+                      Spring AI
+
+        ┌─────────────┬──────────────┬──────────────┐
+        ▼             ▼              ▼
+    ChatClient     Chat Memory       RAG
+        │             │              │
+        └─────────────┼──────────────┘
+                      ▼
+                  AI Agents
+                      │
+               MCP Client
+                      │
+        ┌─────────────┼──────────────┐
+        ▼             ▼              ▼
+     HR API      Employee API    Weather API
+                      │
+                 MySQL Database
+Functional Modules
+Module 1 – User Authentication
+Features
+Register
+
+Login
+
+JWT Authentication
+
+Role-Based Authorization
+
+Password Encryption (BCrypt)
+
+Roles
+
+ADMIN
+
+HR
+
+EMPLOYEE
+
+Module 2 – AI Chat Assistant
+Features
+
+Ask Questions
+
+Chat with AI
+
+Conversation History
+
+Session Management
+
+Example
+
+User:
+Explain Spring Boot
+
+↓
+
+AI Response
+Module 3 – Chat Memory
+Features
+
+Stateful Conversation
+
+Session ID
+
+Memory Management
+
+Conversation History
+
+Example
+
+Question 1
+
+↓
+
+Question 2
+
+↓
+
+Context-aware Response
+Module 4 – Prompt Engineering
+Features
+
+Prompt Templates
+
+Dynamic Prompts
+
+System Prompt
+
+JSON Output
+
+Example
+
+Explain Java Collections.
+
+Return JSON.
+Module 5 – Document Upload
+Upload
+
+PDF
+
+DOCX
+
+TXT
+
+Markdown
+
+Store Metadata
+
+File Name
+
+Uploaded By
+
+Upload Time
+
+File Size
+
+Module 6 – RAG
+Features
+
+Read Documents
+
+Chunk Documents
+
+Generate Embeddings
+
+Store Vectors
+
+Semantic Search
+
+Example
+
+Question
+
+↓
+
+Vector Search
+
+↓
+
+Relevant Chunks
+
+↓
+
+LLM
+
+↓
+
+Answer
+Module 7 – AI Agent
+Agent can
+
+Call Employee API
+
+Call HR API
+
+Call Weather API
+
+Call Calculator Tool
+
+Example
+
+User
+
+↓
+
+Need Leave Balance
+
+↓
+
+HR Tool
+
+↓
+
+Database
+
+↓
+
+Response
+Module 8 – MCP Integration
+Features
+
+MCP Client
+
+MCP Server
+
+Tool Discovery
+
+Tool Execution
+
+Available Tools
+
+Employee Search
+
+Holiday Calendar
+
+Weather
+
+Company Policy
+
+Module 9 – Admin Dashboard
+Admin can
+
+View Users
+
+View Uploaded Documents
+
+View Chat Sessions
+
+View API Usage
+
+View AI Token Usage
+
+Project Structure
+enterprise-ai-assistant
+
+├── auth-service
+├── ai-service
+├── rag-service
+├── mcp-service
+├── employee-service
+├── hr-service
+├── gateway
+├── discovery-server
+├── common-library
+└── frontend-react
+Database Design
+users
+Column	Type
+id	BIGINT
+username	VARCHAR
+email	VARCHAR
+password	VARCHAR
+role	VARCHAR
+employees
+Column	Type
+id	BIGINT
+employee_code	VARCHAR
+name	VARCHAR
+department	VARCHAR
+email	VARCHAR
+leave_balance
+Column	Type
+id	BIGINT
+employee_id	BIGINT
+casual_leave	INT
+sick_leave	INT
+earned_leave	INT
+documents
+Column	Type
+id	BIGINT
+file_name	VARCHAR
+file_type	VARCHAR
+uploaded_by	VARCHAR
+upload_time	TIMESTAMP
+chat_history
+Column	Type
+id	BIGINT
+session_id	VARCHAR
+user_message	TEXT
+ai_response	TEXT
+timestamp	TIMESTAMP
+REST APIs
+Authentication
+POST /auth/register
+
+POST /auth/login
+Chat
+POST /chat
+
+DELETE /chat/session/{id}
+Documents
+POST /documents/upload
+
+GET /documents
+
+DELETE /documents/{id}
+Employee
+GET /employees
+
+GET /employees/{id}
+Leave
+GET /leave/{employeeId}
+RAG
+POST /ask
+MCP
+GET /mcp/tools
+
+POST /mcp/execute
+Security
+JWT Authentication
+
+Role-Based Authorization
+
+Password Encryption
+
+API Validation
+
+Exception Handling
+
+HTTPS Support
+
+Audit Logging
+
+Enterprise Features
+Chat Memory
+
+RAG Search
+
+AI Agents
+
+MCP Integration
+
+PDF Upload
+
+Semantic Search
+
+Token Usage Tracking
+
+Role-Based Security
+
+Global Exception Handling
+
+Logging
+
+Monitoring
+
+Testing
+Unit Testing
+JUnit 5
+
+Mockito
+
+Integration Testing
+MockMvc
+
+Spring Boot Test
+
+API Testing
+Postman
+
+Deployment
+Docker
+
+Docker Compose
+
+Kubernetes (Optional)
+
+CI/CD using Jenkins or GitHub Actions
+
+Project Workflow
+User
+
+↓
+
+Login (JWT)
+
+↓
+
+Ask Question
+
+↓
+
+Spring AI
+
+↓
+
+Need Document?
+
+↓
+
+RAG Search
+
+↓
+
+Need Tool?
+
+↓
+
+AI Agent
+
+↓
+
+MCP
+
+↓
+
+External API
+
+↓
+
+LLM
+
+↓
+
+Generate Response
+
+↓
+
+Save Chat History
+
+↓
+
+Return Response
+Learning Outcomes
+After completing this capstone project, you will be able to:
+
+Develop enterprise-grade AI applications with Spring AI.
+
+Implement secure JWT authentication and role-based access.
+
+Build context-aware chatbots with chat memory.
+
+Integrate Retrieval-Augmented Generation (RAG) for document-based question answering.
+
+Use AI agents and MCP to interact with enterprise tools and services.
+
+Build REST APIs and integrate them with AI workflows.
+
+Design scalable, modular microservices suitable for production environments.
+
+Phase-wise Implementation Plan
+Phase	Module	Duration
+Phase 1	Spring Boot Microservices Setup	1 Day
+Phase 2	JWT Authentication & User Management	1 Day
+Phase 3	Employee & Leave Services	1 Day
+Phase 4	Spring AI Chat Module	1 Day
+Phase 5	Chat Memory	1 Day
+Phase 6	Document Upload & RAG	2 Days
+Phase 7	AI Agents & Tool Calling	1 Day
+Phase 8	MCP Integration	1 Day
+Phase 9	React Dashboard Integration	2 Days
+Phase 10	Testing, Docker & Deployment	2 Days
+Corporate Training Outcome
+This capstone is designed to simulate a real enterprise AI application. It combines Spring Boot microservices, Spring AI, JWT security, RAG, AI agents, MCP, and optional React into a complete production-style system that demonstrates modern AI application development end to end.
+
+
