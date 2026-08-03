@@ -1,0 +1,1688 @@
+ChatGPT
+
+
+
+
+Explain step by step Html 5 with examples for all tags
+
+HTML5 is the latest version of HTML used to create web pages. It provides new semantic elements, multimedia support, forms, graphics, and APIs that make web development easier.
+
+Since you are learning ReactJS and Full Stack Development, you should first become strong in HTML5 fundamentals before moving to CSS and JavaScript.
+
+HTML5 Complete Roadmap
+HTML5
+│
+├── 1. Basic Structure
+├── 2. Text Formatting Tags
+├── 3. Heading Tags
+├── 4. Paragraph Tags
+├── 5. Lists
+├── 6. Links
+├── 7. Images
+├── 8. Tables
+├── 9. Forms
+├── 10. Input Types
+├── 11. Semantic Tags
+├── 12. Multimedia
+├── 13. Iframe
+├── 14. Canvas
+├── 15. SVG
+├── 16. Meta Tags
+├── 17. HTML Entities
+├── 18. Global Attributes
+└── 19. HTML5 APIs
+1. HTML5 Basic Structure
+Every HTML page begins like this.
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My First Page</title>
+</head>
+<body>
+
+    Hello World
+
+</body>
+</html>
+Explanation
+<!DOCTYPE html>  → HTML5 Document
+<html>           → Root Element
+<head>           → Page Information
+<title>          → Browser Tab Name
+<body>           → Visible Content
+Diagram
+
+HTML
+│
+├── Head
+│      ├── Title
+│      ├── Meta
+│      └── CSS
+│
+└── Body
+       ├── Heading
+       ├── Paragraph
+       ├── Image
+       └── Form
+2. Heading Tags
+There are six heading tags.
+
+<h1>Main Heading</h1>
+<h2>Heading</h2>
+<h3>Sub Heading</h3>
+<h4>Heading</h4>
+<h5>Heading</h5>
+<h6>Small Heading</h6>
+Output
+
+Largest
+   ↓
+Smallest
+Use
+
+h1 → Website Title
+h2 → Chapter
+h3 → Topic
+h4 → Subtopic
+3. Paragraph Tag
+<p>
+Welcome to HTML5 Tutorial.
+</p>
+4. Line Break
+HTML<br>
+CSS<br>
+JavaScript
+Output
+
+HTML
+CSS
+JavaScript
+5. Horizontal Line
+<hr>
+Output
+
+----------------------------
+6. Text Formatting Tags
+Bold
+<b>Java</b>
+Strong
+<strong>Important</strong>
+Difference
+
+b        → Bold
+strong   → Important Text
+Italic
+<i>HTML</i>
+Emphasis
+<em>HTML</em>
+Underline
+<u>ReactJS</u>
+Mark
+<mark>Highlighted</mark>
+Small
+<small>Small Text</small>
+Deleted
+<del>Old Price</del>
+Output
+
+~~Old Price~~
+Inserted
+<ins>New Price</ins>
+Subscript
+H<sub>2</sub>O
+Output
+
+H₂O
+Superscript
+10<sup>2</sup>
+Output
+
+10²
+7. Comments
+<!-- This is comment -->
+Browser ignores comments.
+
+8. Hyperlink Tag
+<a href="https://google.com">
+Google
+</a>
+Open new tab
+
+<a href="https://google.com"
+target="_blank">
+Google
+</a>
+9. Image Tag
+<img src="flower.jpg"
+     width="200"
+     height="200">
+Attributes
+
+src
+alt
+width
+height
+Example
+
+<img src="cat.jpg"
+alt="Cat Image">
+10. Lists
+Ordered List
+<ol>
+   <li>Java</li>
+   <li>Python</li>
+   <li>React</li>
+</ol>
+Output
+
+1 Java
+2 Python
+3 React
+Unordered List
+<ul>
+   <li>Apple</li>
+   <li>Mango</li>
+</ul>
+Output
+
+• Apple
+• Mango
+Description List
+<dl>
+
+<dt>Java</dt>
+
+<dd>Programming Language</dd>
+
+</dl>
+11. Table Tags
+table
+│
+├── tr
+│     ├── th
+│     └── td
+Example
+
+<table border="1">
+
+<tr>
+
+<th>ID</th>
+
+<th>Name</th>
+
+</tr>
+
+<tr>
+
+<td>101</td>
+
+<td>Ravi</td>
+
+</tr>
+
+</table>
+Output
+
++------+------+
+| ID   |Name  |
++------+------+
+|101   |Ravi  |
++------+------+
+12. Div Tag
+<div>
+
+<h2>Java Course</h2>
+
+<p>Welcome</p>
+
+</div>
+Used for grouping elements.
+
+13. Span Tag
+<p>
+
+Welcome
+
+<span style="color:red">
+
+Java
+
+</span>
+
+</p>
+Span works inline.
+
+Difference
+div
+
+Starts New Line
+
+span
+
+Same Line
+14. Semantic Tags
+Before HTML5
+
+div
+div
+div
+div
+HTML5
+
+<header>
+
+<nav>
+
+<section>
+
+<article>
+
+<aside>
+
+<footer>
+Diagram
+
+-------------------------
+Header
+-------------------------
+Navigation
+-------------------------
+Section
+    |
+ Article
+-------------------------
+Aside
+-------------------------
+Footer
+-------------------------
+Example
+
+<header>
+
+<h1>My Website</h1>
+
+</header>
+
+<nav>
+
+<a href="#">Home</a>
+
+<a href="#">About</a>
+
+</nav>
+
+<section>
+
+<h2>Courses</h2>
+
+</section>
+
+<footer>
+
+Copyright 2026
+
+</footer>
+15. Multimedia Tags
+Video
+
+<video controls width="300">
+
+<source src="movie.mp4">
+
+</video>
+Audio
+
+<audio controls>
+
+<source src="song.mp3">
+
+</audio>
+16. Iframe
+<iframe
+
+src="page.html"
+
+width="400"
+
+height="300">
+
+</iframe>
+17. Canvas
+<canvas
+
+id="myCanvas"
+
+width="200"
+
+height="100">
+
+</canvas>
+Used for games and drawing.
+
+18. SVG
+
+Output
+
+●
+19. Forms
+<form>
+
+Name
+
+<input type="text">
+
+<br>
+
+Password
+
+<input type="password">
+
+<br>
+
+<input type="submit">
+
+</form>
+20. Form Tags
+form
+
+label
+
+input
+
+textarea
+
+select
+
+option
+
+button
+
+fieldset
+
+legend
+21. Input Types
+text
+
+password
+
+email
+
+number
+
+date
+
+time
+
+datetime-local
+
+month
+
+week
+
+radio
+
+checkbox
+
+color
+
+range
+
+file
+
+search
+
+url
+
+hidden
+
+submit
+
+reset
+
+button
+Example
+
+<input type="email">
+
+<input type="date">
+
+<input type="color">
+
+<input type="file">
+22. Button
+<button>
+
+Click Me
+
+</button>
+23. Select
+<select>
+
+<option>Java</option>
+
+<option>Python</option>
+
+<option>React</option>
+
+</select>
+24. TextArea
+<textarea
+rows="5"
+cols="30">
+</textarea>
+25. Meta Tags
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0">
+26. HTML Entities
+&lt;
+
+&gt;
+
+&amp;
+
+&nbsp;
+
+&copy;
+
+&reg;
+Output
+
+<
+
+>
+
+&
+
+(space)
+
+©
+
+®
+27. Global Attributes
+Available for almost every HTML element:
+
+Attribute	Purpose
+id	Unique identifier
+class	CSS/JavaScript grouping
+style	Inline CSS
+title	Tooltip text
+hidden	Hide an element
+draggable	Allow dragging
+contenteditable	Editable content
+tabindex	Keyboard navigation
+lang	Language
+dir	Text direction (ltr/rtl)
+Example:
+
+<p id="intro"
+   class="welcome"
+   title="Welcome Message">
+   Hello HTML5
+</p>
+28. HTML5 APIs (Introduction)
+HTML5 also introduced browser APIs that work with JavaScript:
+
+API	Purpose
+Geolocation	Get user's location
+Local Storage	Store data in the browser
+Session Storage	Temporary browser storage
+Drag and Drop	Drag elements on the page
+Web Workers	Run background tasks
+WebSocket	Real-time communication
+History API	Control browser history
+HTML5 Tag Summary
+Category	Important Tags
+Structure	html, head, body, title
+Headings	h1–h6
+Text	p, b, strong, i, em, u, mark, small, sub, sup, del, ins
+Layout	div, span
+Lists	ol, ul, li, dl, dt, dd
+Links	a
+Images	img
+Tables	table, tr, th, td
+Forms	form, input, label, textarea, select, option, button, fieldset, legend
+Semantic	header, nav, main, section, article, aside, footer
+Media	audio, video, source
+Graphics	canvas, svg
+Embedding	iframe
+Metadata	meta, link, script, style
+Recommended learning order
+Basic HTML structure
+
+Headings and text formatting
+
+Links and images
+
+Lists
+
+Tables
+
+Forms and all input types
+
+Semantic HTML5 tags
+
+Multimedia (audio, video)
+
+Graphics (canvas, svg)
+
+Global attributes and HTML5 APIs
+
+Mastering these topics will give you a solid foundation for CSS, JavaScript, ReactJS, and modern front-end development.
+
+
+
+
+
+ChatGPT
+
+
+
+
+HTML5 is the latest version of HTML used to create web pages. It provides new semantic elements, multimedia support, forms, graphics, and APIs that make web development easier.
+
+Since you are learning ReactJS and Full Stack Development, you should first become strong in HTML5 fundamentals before moving to CSS and JavaScript.
+
+HTML5 Complete Roadmap
+HTML5
+│
+├── 1. Basic Structure
+├── 2. Text Formatting Tags
+├── 3. Heading Tags
+├── 4. Paragraph Tags
+├── 5. Lists
+├── 6. Links
+├── 7. Images
+├── 8. Tables
+├── 9. Forms
+├── 10. Input Types
+├── 11. Semantic Tags
+├── 12. Multimedia
+├── 13. Iframe
+├── 14. Canvas
+├── 15. SVG
+├── 16. Meta Tags
+├── 17. HTML Entities
+├── 18. Global Attributes
+└── 19. HTML5 APIs
+1. HTML5 Basic Structure
+Every HTML page begins like this.
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My First Page</title>
+</head>
+<body>
+
+    Hello World
+
+</body>
+</html>
+Explanation
+<!DOCTYPE html>  → HTML5 Document
+<html>           → Root Element
+<head>           → Page Information
+<title>          → Browser Tab Name
+<body>           → Visible Content
+Diagram
+
+HTML
+│
+├── Head
+│      ├── Title
+│      ├── Meta
+│      └── CSS
+│
+└── Body
+       ├── Heading
+       ├── Paragraph
+       ├── Image
+       └── Form
+2. Heading Tags
+There are six heading tags.
+
+<h1>Main Heading</h1>
+<h2>Heading</h2>
+<h3>Sub Heading</h3>
+<h4>Heading</h4>
+<h5>Heading</h5>
+<h6>Small Heading</h6>
+Output
+
+Largest
+   ↓
+Smallest
+Use
+
+h1 → Website Title
+h2 → Chapter
+h3 → Topic
+h4 → Subtopic
+3. Paragraph Tag
+<p>
+Welcome to HTML5 Tutorial.
+</p>
+4. Line Break
+HTML<br>
+CSS<br>
+JavaScript
+Output
+
+HTML
+CSS
+JavaScript
+5. Horizontal Line
+<hr>
+Output
+
+----------------------------
+6. Text Formatting Tags
+Bold
+<b>Java</b>
+Strong
+<strong>Important</strong>
+Difference
+
+b        → Bold
+strong   → Important Text
+Italic
+<i>HTML</i>
+Emphasis
+<em>HTML</em>
+Underline
+<u>ReactJS</u>
+Mark
+<mark>Highlighted</mark>
+Small
+<small>Small Text</small>
+Deleted
+<del>Old Price</del>
+Output
+
+~~Old Price~~
+Inserted
+<ins>New Price</ins>
+Subscript
+H<sub>2</sub>O
+Output
+
+H₂O
+Superscript
+10<sup>2</sup>
+Output
+
+10²
+7. Comments
+<!-- This is comment -->
+Browser ignores comments.
+
+8. Hyperlink Tag
+<a href="https://google.com">
+Google
+</a>
+Open new tab
+
+<a href="https://google.com"
+target="_blank">
+Google
+</a>
+9. Image Tag
+<img src="flower.jpg"
+     width="200"
+     height="200">
+Attributes
+
+src
+alt
+width
+height
+Example
+
+<img src="cat.jpg"
+alt="Cat Image">
+10. Lists
+Ordered List
+<ol>
+   <li>Java</li>
+   <li>Python</li>
+   <li>React</li>
+</ol>
+Output
+
+1 Java
+2 Python
+3 React
+Unordered List
+<ul>
+   <li>Apple</li>
+   <li>Mango</li>
+</ul>
+Output
+
+• Apple
+• Mango
+Description List
+<dl>
+
+<dt>Java</dt>
+
+<dd>Programming Language</dd>
+
+</dl>
+11. Table Tags
+table
+│
+├── tr
+│     ├── th
+│     └── td
+Example
+
+<table border="1">
+
+<tr>
+
+<th>ID</th>
+
+<th>Name</th>
+
+</tr>
+
+<tr>
+
+<td>101</td>
+
+<td>Ravi</td>
+
+</tr>
+
+</table>
+Output
+
++------+------+
+| ID   |Name  |
++------+------+
+|101   |Ravi  |
++------+------+
+12. Div Tag
+<div>
+
+<h2>Java Course</h2>
+
+<p>Welcome</p>
+
+</div>
+Used for grouping elements.
+
+13. Span Tag
+<p>
+
+Welcome
+
+<span style="color:red">
+
+Java
+
+</span>
+
+</p>
+Span works inline.
+
+Difference
+div
+
+Starts New Line
+
+span
+
+Same Line
+14. Semantic Tags
+Before HTML5
+
+div
+div
+div
+div
+HTML5
+
+<header>
+
+<nav>
+
+<section>
+
+<article>
+
+<aside>
+
+<footer>
+Diagram
+
+-------------------------
+Header
+-------------------------
+Navigation
+-------------------------
+Section
+    |
+ Article
+-------------------------
+Aside
+-------------------------
+Footer
+-------------------------
+Example
+
+<header>
+
+<h1>My Website</h1>
+
+</header>
+
+<nav>
+
+<a href="#">Home</a>
+
+<a href="#">About</a>
+
+</nav>
+
+<section>
+
+<h2>Courses</h2>
+
+</section>
+
+<footer>
+
+Copyright 2026
+
+</footer>
+15. Multimedia Tags
+Video
+
+<video controls width="300">
+
+<source src="movie.mp4">
+
+</video>
+Audio
+
+<audio controls>
+
+<source src="song.mp3">
+
+</audio>
+16. Iframe
+<iframe
+
+src="page.html"
+
+width="400"
+
+height="300">
+
+</iframe>
+17. Canvas
+<canvas
+
+id="myCanvas"
+
+width="200"
+
+height="100">
+
+</canvas>
+Used for games and drawing.
+
+18. SVG
+
+Output
+
+●
+19. Forms
+<form>
+
+Name
+
+<input type="text">
+
+<br>
+
+Password
+
+<input type="password">
+
+<br>
+
+<input type="submit">
+
+</form>
+20. Form Tags
+form
+
+label
+
+input
+
+textarea
+
+select
+
+option
+
+button
+
+fieldset
+
+legend
+21. Input Types
+text
+
+password
+
+email
+
+number
+
+date
+
+time
+
+datetime-local
+
+month
+
+week
+
+radio
+
+checkbox
+
+color
+
+range
+
+file
+
+search
+
+url
+
+hidden
+
+submit
+
+reset
+
+button
+Example
+
+<input type="email">
+
+<input type="date">
+
+<input type="color">
+
+<input type="file">
+22. Button
+<button>
+
+Click Me
+
+</button>
+23. Select
+<select>
+
+<option>Java</option>
+
+<option>Python</option>
+
+<option>React</option>
+
+</select>
+24. TextArea
+<textarea
+rows="5"
+cols="30">
+</textarea>
+25. Meta Tags
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0">
+26. HTML Entities
+&lt;
+
+&gt;
+
+&amp;
+
+&nbsp;
+
+&copy;
+
+&reg;
+Output
+
+<
+
+>
+
+&
+
+(space)
+
+©
+
+®
+27. Global Attributes
+Available for almost every HTML element:
+
+Attribute	Purpose
+id	Unique identifier
+class	CSS/JavaScript grouping
+style	Inline CSS
+title	Tooltip text
+hidden	Hide an element
+draggable	Allow dragging
+contenteditable	Editable content
+tabindex	Keyboard navigation
+lang	Language
+dir	Text direction (ltr/rtl)
+Example:
+
+<p id="intro"
+   class="welcome"
+   title="Welcome Message">
+   Hello HTML5
+</p>
+28. HTML5 APIs (Introduction)
+HTML5 also introduced browser APIs that work with JavaScript:
+
+API	Purpose
+Geolocation	Get user's location
+Local Storage	Store data in the browser
+Session Storage	Temporary browser storage
+Drag and Drop	Drag elements on the page
+Web Workers	Run background tasks
+WebSocket	Real-time communication
+History API	Control browser history
+HTML5 Tag Summary
+Category	Important Tags
+Structure	html, head, body, title
+Headings	h1–h6
+Text	p, b, strong, i, em, u, mark, small, sub, sup, del, ins
+Layout	div, span
+Lists	ol, ul, li, dl, dt, dd
+Links	a
+Images	img
+Tables	table, tr, th, td
+Forms	form, input, label, textarea, select, option, button, fieldset, legend
+Semantic	header, nav, main, section, article, aside, footer
+Media	audio, video, source
+Graphics	canvas, svg
+Embedding	iframe
+Metadata	meta, link, script, style
+Recommended learning order
+Basic HTML structure
+
+Headings and text formatting
+
+Links and images
+
+Lists
+
+Tables
+
+Forms and all input types
+
+Semantic HTML5 tags
+
+Multimedia (audio, video)
+
+Graphics (canvas, svg)
+
+Global attributes and HTML5 APIs
+
+Mastering these topics will give you a solid foundation for CSS, JavaScript, ReactJS, and modern front-end development.
+
+
+generate HTML5 Registration form by using id, name attributes .
+
+Below is a complete HTML5 Registration Form that uses id and name attributes for every input field. This is the standard approach used in real-world projects because:
+
+id → Used by <label>, CSS, and JavaScript.
+
+name → Used to send data to the server during form submission.
+
+HTML5 Registration Form
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration Form</title>
+</head>
+
+<body>
+
+    <h2>Student Registration Form</h2>
+
+    <form action="register" method="post">
+
+        <!-- Full Name -->
+        <label for="fullName">Full Name</label><br>
+        <input
+            type="text"
+            id="fullName"
+            name="fullName"
+            placeholder="Enter Full Name"
+            required>
+        <br><br>
+
+        <!-- Email -->
+        <label for="email">Email</label><br>
+        <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter Email"
+            required>
+        <br><br>
+
+        <!-- Password -->
+        <label for="password">Password</label><br>
+        <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter Password"
+            required>
+        <br><br>
+
+        <!-- Mobile -->
+        <label for="mobile">Mobile Number</label><br>
+        <input
+            type="tel"
+            id="mobile"
+            name="mobile"
+            placeholder="9876543210"
+            pattern="[0-9]{10}"
+            required>
+        <br><br>
+
+        <!-- Date of Birth -->
+        <label for="dob">Date of Birth</label><br>
+        <input
+            type="date"
+            id="dob"
+            name="dob">
+        <br><br>
+
+        <!-- Gender -->
+        <label>Gender</label><br>
+
+        <input
+            type="radio"
+            id="male"
+            name="gender"
+            value="Male">
+
+        <label for="male">Male</label>
+
+        <input
+            type="radio"
+            id="female"
+            name="gender"
+            value="Female">
+
+        <label for="female">Female</label>
+
+        <input
+            type="radio"
+            id="other"
+            name="gender"
+            value="Other">
+
+        <label for="other">Other</label>
+
+        <br><br>
+
+        <!-- Course -->
+        <label for="course">Course</label><br>
+
+        <select id="course" name="course">
+
+            <option value="">Select Course</option>
+            <option value="Java">Java</option>
+            <option value="Python">Python</option>
+            <option value="ReactJS">ReactJS</option>
+            <option value="Spring Boot">Spring Boot</option>
+
+        </select>
+
+        <br><br>
+
+        <!-- Address -->
+        <label for="address">Address</label><br>
+
+        <textarea
+            id="address"
+            name="address"
+            rows="4"
+            cols="40"
+            placeholder="Enter Address"></textarea>
+
+        <br><br>
+
+        <!-- Skills -->
+        <label>Skills</label><br>
+
+        <input
+            type="checkbox"
+            id="java"
+            name="skills"
+            value="Java">
+
+        <label for="java">Java</label>
+
+        <input
+            type="checkbox"
+            id="html"
+            name="skills"
+            value="HTML">
+
+        <label for="html">HTML</label>
+
+        <input
+            type="checkbox"
+            id="css"
+            name="skills"
+            value="CSS">
+
+        <label for="css">CSS</label>
+
+        <input
+            type="checkbox"
+            id="javascript"
+            name="skills"
+            value="JavaScript">
+
+        <label for="javascript">JavaScript</label>
+
+        <br><br>
+
+        <!-- Upload Resume -->
+        <label for="resume">Upload Resume</label><br>
+
+        <input
+            type="file"
+            id="resume"
+            name="resume">
+
+        <br><br>
+
+        <!-- Submit -->
+        <input type="submit" value="Register">
+
+        <!-- Reset -->
+        <input type="reset" value="Clear">
+
+    </form>
+
+</body>
+</html>
+Output Layout
+---------------------------------------------
+          Student Registration Form
+---------------------------------------------
+
+Full Name
+[__________________________]
+
+Email
+[__________________________]
+
+Password
+[__________________________]
+
+Mobile Number
+[__________________________]
+
+Date of Birth
+[__/__/____]
+
+Gender
+( ) Male   ( ) Female   ( ) Other
+
+Course
+[ Select Course ▼ ]
+
+Address
++---------------------------+
+|                           |
+|                           |
++---------------------------+
+
+Skills
+☐ Java
+☐ HTML
+☐ CSS
+☐ JavaScript
+
+Upload Resume
+[ Choose File ]
+
+[ Register ]   [ Clear ]
+Explanation of id and name
+Attribute	Purpose	Example
+id	Uniquely identifies an HTML element. Used by labels, CSS, and JavaScript.	id="email"
+name	The key used when form data is submitted to the server.	name="email"
+Example:
+
+<label for="email">Email</label>
+
+<input
+    type="email"
+    id="email"
+    name="email">
+Here:
+
+for="email" connects the label to the input with id="email".
+
+name="email" is the parameter sent to the server, for example:
+
+fullName=Srinivasa Rao
+email=srinivas@gmail.com
+password=12345
+mobile=9876543210
+course=Java
+This structure is commonly used with Java Servlets, Spring Boot, JSP, and other backend frameworks.
+
+
+Explain HTML 5 storage classes with examples
+
+HTML5 provides Web Storage, which allows websites to store data in the browser. Before HTML5, developers mainly used cookies, which had limited storage and were sent with every HTTP request. HTML5 introduced Storage APIs that are faster, larger, and easier to use with JavaScript.
+
+HTML5 Storage Overview
+HTML5 Storage
+│
+├── Local Storage
+├── Session Storage
+└── Cookies (older method, still supported)
+Why Do We Need Storage?
+Suppose a user logs into a website.
+
+Without storage:
+
+Open Website
+      ↓
+Login
+      ↓
+Refresh Page
+      ↓
+Login Again
+With HTML5 storage:
+
+Open Website
+      ↓
+Login
+      ↓
+Store User Information
+      ↓
+Refresh Page
+      ↓
+User Information Still Available
+1. Local Storage
+Definition
+Stores data without an expiration time.
+
+Data remains even after closing the browser.
+
+Data is available until it is explicitly removed.
+
+Lifetime
+Save Data
+     ↓
+Close Browser
+     ↓
+Open Browser Again
+     ↓
+Data Still Exists
+Syntax
+localStorage.setItem("key", "value");
+Retrieve data:
+
+let value = localStorage.getItem("key");
+Delete one item:
+
+localStorage.removeItem("key");
+Delete everything:
+
+localStorage.clear();
+Example 1: Store Username
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Local Storage Example</h2>
+
+<input type="text" id="username">
+
+<button onclick="saveData()">Save</button>
+
+<script>
+
+function saveData(){
+
+let user=document.getElementById("username").value;
+
+localStorage.setItem("username",user);
+
+alert("Saved Successfully");
+
+}
+
+</script>
+
+</body>
+</html>
+Retrieve Data
+<script>
+
+let user=localStorage.getItem("username");
+
+document.write(user);
+
+</script>
+Output
+
+Srinivasa Rao
+Local Storage Methods
+Method	Description
+setItem()	Save data
+getItem()	Read data
+removeItem()	Remove one item
+clear()	Remove all data
+key()	Get key name
+length	Number of stored items
+Example
+localStorage.setItem("course","Java");
+
+localStorage.getItem("course");
+
+localStorage.removeItem("course");
+
+localStorage.clear();
+2. Session Storage
+Definition
+Stores data only for the current browser tab/session.
+
+When the tab or browser is closed, the data is removed automatically.
+
+Lifetime
+Open Browser
+      ↓
+Store Data
+      ↓
+Close Tab
+      ↓
+Data Deleted
+Syntax
+sessionStorage.setItem("key","value");
+Retrieve:
+
+sessionStorage.getItem("key");
+Delete:
+
+sessionStorage.removeItem("key");
+Clear:
+
+sessionStorage.clear();
+Example
+<!DOCTYPE html>
+<html>
+<body>
+
+<button onclick="store()">Store Data</button>
+
+<script>
+
+function store(){
+
+sessionStorage.setItem("city","Hyderabad");
+
+alert("Stored");
+
+}
+
+</script>
+
+</body>
+</html>
+Retrieve
+
+document.write(sessionStorage.getItem("city"));
+Output
+
+Hyderabad
+Session Storage Methods
+Method	Description
+setItem()	Save data
+getItem()	Read data
+removeItem()	Delete one item
+clear()	Delete all items
+Local Storage vs Session Storage
+Feature	Local Storage	Session Storage
+Lifetime	Permanent until removed	Until tab/window is closed
+Capacity	About 5–10 MB (browser-dependent)	About 5 MB (browser-dependent)
+Shared Across Tabs	Yes (same origin)	No (each tab has its own session)
+Survives Browser Restart	Yes	No
+Use Case	Remember user preferences, theme, shopping cart	Multi-step forms, temporary session data
+3. Cookies
+Cookies existed before HTML5 storage.
+
+Example
+document.cookie="username=Srinivasa Rao";
+Read
+
+document.cookie;
+Cookies vs Local Storage
+Cookies	Local Storage
+Small storage (around 4 KB)	Much larger (around 5–10 MB)
+Sent with every HTTP request	Not sent automatically to the server
+Can have expiration dates	Remains until removed
+Often used for sessions and authentication	Used for client-side application data
+Real-Time Examples
+Example 1: Dark Mode
+User clicks Dark Mode
+        ↓
+Store Theme in Local Storage
+        ↓
+Refresh Page
+        ↓
+Dark Mode Remains Enabled
+Example 2: Shopping Cart
+Add Product
+      ↓
+Store Cart in Local Storage
+      ↓
+Close Browser
+      ↓
+Open Again
+      ↓
+Cart Still Available
+Example 3: Online Exam
+Start Exam
+      ↓
+Store Current Answers
+      ↓
+Close Tab
+      ↓
+Session Ends
+      ↓
+Answers Removed
+Session storage is appropriate because the data should exist only while the exam session is active.
+
+Example 4: Banking Website
+Login
+    ↓
+Temporary Session
+    ↓
+Close Browser
+    ↓
+Logout Automatically
+Sensitive information such as passwords or authentication tokens should not be stored in Local Storage because JavaScript running on the page can access it. Modern applications typically use secure, HttpOnly cookies for session management.
+
+Browser Storage Architecture
+Browser
+│
+├── Local Storage
+│      ├── username
+│      ├── theme
+│      └── language
+│
+├── Session Storage
+│      ├── currentPage
+│      └── tempData
+│
+└── Cookies
+       ├── sessionId
+       └── preferences
+Interview Questions
+What is HTML5 Web Storage?
+
+What is the difference between Local Storage and Session Storage?
+
+Which methods are available in the Storage API?
+
+When would you choose Local Storage over Session Storage?
+
+Can Local Storage data expire automatically?
+
+Is Session Storage shared across browser tabs?
+
+Why is Local Storage generally preferred over cookies for client-side application data?
+
+Why shouldn't sensitive information such as passwords or authentication tokens be stored in Local Storage?
+
+How do you remove a single item and how do you clear all stored data?
+
+Give a real-world example where Session Storage is a better choice than Local Storage.
+
+Summary
+Local Storage: Persistent browser storage for long-term client-side data (user preferences, theme, non-sensitive settings).
+
+Session Storage: Temporary storage that lasts only for the current browser tab or window.
+
+Cookies: Small pieces of data often used for server-related sessions and authentication; secure HttpOnly cookies are generally recommended for sensitive session information.
+
+
+
