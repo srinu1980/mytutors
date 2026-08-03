@@ -1,0 +1,99 @@
+
+
+AI (Artificial Intelligence) is computer technology that lets machines think, learn, and solve problems like humans. It spots patterns in data to do tasks such as translation, chat, and image recognition.
+
+
+What is AI really used for?
+============================
+
+Artificial intelligence (AI) is used for automating tasks, analyzing data, and improving decision-making across healthcare, business, and daily life. 
+
+
+
+How AI Works
+
+Data Collection: Systems gather massive amounts of text, images, or numbers.
+
+Pattern Recognition: Algorithms analyze the information to find hidden rules and connections.
+
+Learning & Improving: Models adjust their settings over time to make better predictions on new data.
+
+
+Common Types of AI
+
+Machine Learning: A core subset where computers learn from data without being explicitly programmed for every step.
+
+Generative AI: Tools that create new text, images, or audio based on user prompts.
+
+Narrow AI: Systems designed for one specific job, like voice assistants or spam filters.
+
+Super Intelligent AI
+
+
+
+
+Generative AI
+
+Generative AI focuses on creating new content such as text, images, audio, and videos using learned patterns from large datasets.
+
+Generates original content instead of only analyzing data.
+
+Learns patterns from massive datasets for content creation.
+
+Used in chatbots, image generation, and content writing tools.
+
+
+
+
+AI Models
+
+AI models are systems that learn from data or predefined rules to make predictions and decisions. 
+Different models use different learning approaches depending on the type of training data and feedback available.
+
+
+1. Supervised Learning Models
+
+In supervised learning, AI is trained on labeled data with clear input-output pairs to learn the relationship between them.
+Reduces prediction errors during training.
+Used in image classification, spam filtering, and medical diagnosis.
+
+
+2. Unsupervised Learning Models
+
+In unsupervised learning, AI works with unlabeled data to identify hidden patterns, trends, or groupings automatically.
+Helps discover structures within complex datasets.
+Used in clustering, customer segmentation, and fraud detection.
+
+3. Reinforcement Learning Models
+
+In reinforcement learning, AI learns by interacting with an environment using rewards and penalties as feedback.
+Optimizes decisions through trial and error.
+Used in robotics, gaming, and autonomous systems.
+
+
+Advantages
+
+Automates repetitive tasks, reduces errors and improves workflow efficiency.
+
+Helps in better decision making by analyzing large amounts of data.
+
+Provides personalized experiences based on user preferences.
+
+Works continuously without breaks, enabling 24/7 operations.
+Identifies patterns in large datasets for insights like fraud detection and diagnostics.
+
+
+
+Diff b/w Generative AI & LLMS
+=================================
+Generative AI covers multiple media types including visuals, audio, and 3D models (e.g., Midjourney, Sora).
+
+LLMs focus strictly on words, language patterns, and code (e.g., GPT-4, Llama).
+
+How They Work:
+
+Generative AI uses various mathematical structures depending on whether it is producing pixels, sound waves, or text.
+
+LLMs use transformer neural networks to predict the next most likely word or token in a sequence.
+
+
