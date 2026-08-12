@@ -1,0 +1,3059 @@
+Today 8:47 PM
+Core Java itself, explain step by step with examples of "Inheritance and polymorphism"
+
+Absolutely. Let’s learn Core Java – Inheritance and Polymorphism from the basics, step by step, with simple examples and then move toward interview-level understanding.
+
+1. First understand the relationship
+
+In object-oriented programming, two important concepts are:
+
+Inheritance → one class gets properties and behaviors from another class.
+Polymorphism → one thing can behave in different ways.
+
+A simple real-world example:
+
+Vehicle
+
+Car
+Bike
+Bus
+
+All are vehicles, but each behaves differently.
+
+                 Vehicle
+                    |
+          ---------------------
+          |         |         |
+         Car       Bike      Bus
+
+Here:
+
+Vehicle → Parent/Superclass
+Car, Bike, Bus → Child/Subclasses
+2. What is Inheritance?
+
+Inheritance is the mechanism by which one class acquires the properties and methods of another class.
+
+Java uses the extends keyword.
+
+Basic syntax
+class Parent {
+    // properties
+    // methods
+}
+
+class Child extends Parent {
+    // additional properties
+    // additional methods
+}
+3. Very Simple Example
+class Animal {
+
+    void eat() {
+        System.out.println("Animal is eating");
+    }
+}
+
+class Dog extends Animal {
+
+    void bark() {
+        System.out.println("Dog is barking");
+    }
+}
+
+Now:
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        Dog d = new Dog();
+
+        d.eat();
+        d.bark();
+    }
+}
+
+Output:
+
+Animal is eating
+Dog is barking
+
+Why can Dog call eat()?
+
+Because:
+
+class Dog extends Animal
+
+means:
+
+Dog IS-A Animal
+
+So the Dog object gets access to inherited methods from Animal.
+
+4. Important terminology
+class Animal {
+}
+
+class Dog extends Animal {
+}
+
+Here:
+
+Term	Meaning
+Animal	Parent class
+Dog	Child class
+Animal	Superclass
+Dog	Subclass
+extends	Keyword used for inheritance
+Dog IS-A Animal	Inheritance relationship
+5. Why do we need inheritance?
+
+Mainly for:
+
+1. Code reusability
+
+Suppose:
+
+class Employee {
+
+    String name;
+    double salary;
+
+    void display() {
+        System.out.println(name);
+        System.out.println(salary);
+    }
+}
+
+We can reuse these properties in:
+
+class Developer extends Employee {
+}
+
+class Tester extends Employee {
+}
+
+class Manager extends Employee {
+}
+
+Instead of writing name, salary, and display() repeatedly.
+
+6. Inheritance Example – Employee
+class Employee {
+
+    int id;
+    String name;
+
+    void displayEmployee() {
+        System.out.println("ID   : " + id);
+        System.out.println("Name : " + name);
+    }
+}
+
+Child class:
+
+class Developer extends Employee {
+
+    String programmingLanguage;
+
+    void writeCode() {
+        System.out.println("Developer writes " 
+                           + programmingLanguage + " code");
+    }
+}
+
+Usage:
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        Developer d = new Developer();
+
+        d.id = 101;
+        d.name = "Ravi";
+        d.programmingLanguage = "Java";
+
+        d.displayEmployee();
+        d.writeCode();
+    }
+}
+
+Output:
+
+ID   : 101
+Name : Ravi
+Developer writes Java code
+7. Types of Inheritance in Java
+
+Java supports:
+
+Single inheritance
+A
+|
+B
+class A {
+}
+
+class B extends A {
+}
+Multilevel inheritance
+A
+|
+B
+|
+C
+class A {
+}
+
+class B extends A {
+}
+
+class C extends B {
+}
+
+Example:
+
+class Animal {
+
+    void eat() {
+        System.out.println("Eating");
+    }
+}
+
+class Dog extends Animal {
+
+    void bark() {
+        System.out.println("Barking");
+    }
+}
+
+class Puppy extends Dog {
+
+    void play() {
+        System.out.println("Playing");
+    }
+}
+
+Now:
+
+Puppy p = new Puppy();
+
+p.eat();
+p.bark();
+p.play();
+
+Puppy can access methods from both Dog and Animal.
+
+8. Hierarchical Inheritance
+
+One parent → multiple children.
+
+             Animal
+            /      \
+          Dog      Cat
+
+Example:
+
+class Animal {
+
+    void eat() {
+        System.out.println("Eating");
+    }
+}
+
+class Dog extends Animal {
+
+    void bark() {
+        System.out.println("Barking");
+    }
+}
+
+class Cat extends Animal {
+
+    void meow() {
+        System.out.println("Meowing");
+    }
+}
+9. Does Java support Multiple Inheritance?
+
+Java does not support multiple inheritance through classes.
+
+This is not allowed:
+
+class A {
+}
+
+class B {
+}
+
+class C extends A, B {   // ERROR
+}
+
+Why?
+
+Because of the Diamond Problem / ambiguity.
+
+       A       B
+        \     /
+          C
+
+Suppose both A and B contain:
+
+void display()
+
+Then:
+
+C c = new C();
+
+c.display();
+
+Which display() should execute?
+
+Java avoids this ambiguity by not allowing multiple inheritance with classes.
+
+However, Java supports multiple inheritance through interfaces.
+
+interface A {
+    void display();
+}
+
+interface B {
+    void display();
+}
+
+class C implements A, B {
+
+    public void display() {
+        System.out.println("C display");
+    }
+}
+10. Now let's understand Polymorphism
+
+This is one of the most important Core Java concepts.
+
+The word polymorphism comes from:
+
+Poly = Many
+Morph = Forms
+
+So:
+
+One thing can take many forms.
+
+In Java, polymorphism mainly has two types:
+
+                 Polymorphism
+                      |
+             ------------------
+             |                |
+       Compile-time       Runtime
+       Polymorphism       Polymorphism
+             |                |
+       Method Overloading  Method Overriding
+11. Compile-Time Polymorphism
+
+Compile-time polymorphism is achieved through method overloading.
+
+Example:
+
+class Calculator {
+
+    int add(int a, int b) {
+        return a + b;
+    }
+
+    int add(int a, int b, int c) {
+        return a + b + c;
+    }
+
+    double add(double a, double b) {
+        return a + b;
+    }
+}
+
+Now:
+
+Calculator c = new Calculator();
+
+System.out.println(c.add(10, 20));
+
+System.out.println(c.add(10, 20, 30));
+
+System.out.println(c.add(10.5, 20.5));
+
+Output:
+
+30
+60
+31.0
+
+Same method name:
+
+add()
+
+Different parameter lists.
+
+That's method overloading.
+
+12. What can change in Method Overloading?
+
+You can change:
+
+Number of parameters
+void display(int a) {
+}
+
+void display(int a, int b) {
+}
+Data type
+void display(int a) {
+}
+
+void display(double a) {
+}
+Order of parameters
+void display(int a, double b) {
+}
+
+void display(double a, int b) {
+}
+
+But this is not overloading:
+
+int display(int a) {
+    return a;
+}
+
+double display(int a) {
+    return a;
+}
+
+Only return type is different.
+
+❌ Not allowed.
+
+13. Runtime Polymorphism
+
+This is more important for interviews.
+
+Runtime polymorphism is achieved using:
+
+Method overriding + inheritance
+
+Example:
+
+class Animal {
+
+    void sound() {
+        System.out.println("Animal makes sound");
+    }
+}
+
+Child:
+
+class Dog extends Animal {
+
+    @Override
+    void sound() {
+        System.out.println("Dog barks");
+    }
+}
+
+Another child:
+
+class Cat extends Animal {
+
+    @Override
+    void sound() {
+        System.out.println("Cat meows");
+    }
+}
+
+Now:
+
+Dog d = new Dog();
+d.sound();
+
+Cat c = new Cat();
+c.sound();
+
+Output:
+
+Dog barks
+Cat meows
+14. The Most Important Concept: Parent Reference → Child Object
+
+Look carefully at this:
+
+Animal a = new Dog();
+
+This is the foundation of runtime polymorphism.
+
+The reference type is:
+
+Animal
+
+The actual object is:
+
+Dog
+
+Diagram:
+
+Animal a
+   |
+   | reference
+   ↓
++-----------+
+|   Dog     |
+|           |
+| sound()   |
++-----------+
+
+Now:
+
+a.sound();
+
+Which sound() executes?
+
+Dog's sound() executes.
+
+Output:
+
+Dog barks
+
+Why?
+
+Because Java determines the overridden instance method based on the actual object at runtime.
+
+15. Multiple Objects Using Same Parent Reference
+
+This is where polymorphism becomes powerful.
+
+class Animal {
+
+    void sound() {
+        System.out.println("Animal sound");
+    }
+}
+
+class Dog extends Animal {
+
+    @Override
+    void sound() {
+        System.out.println("Dog barks");
+    }
+}
+
+class Cat extends Animal {
+
+    @Override
+    void sound() {
+        System.out.println("Cat meows");
+    }
+}
+
+Now:
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        Animal a;
+
+        a = new Dog();
+        a.sound();
+
+        a = new Cat();
+        a.sound();
+    }
+}
+
+Output:
+
+Dog barks
+Cat meows
+
+The same reference:
+
+Animal a
+
+can refer to different objects:
+
+Animal a → Dog
+Animal a → Cat
+
+This is runtime polymorphism.
+
+16. Real-World Example – Payment System
+
+This is a very important example for understanding enterprise Java.
+
+Suppose we have:
+
+             Payment
+                |
+       -------------------
+       |        |        |
+      UPI     Card      Cash
+
+Parent:
+
+class Payment {
+
+    void pay() {
+        System.out.println("Generic payment");
+    }
+}
+
+UPI:
+
+class UpiPayment extends Payment {
+
+    @Override
+    void pay() {
+        System.out.println("Payment through UPI");
+    }
+}
+
+Card:
+
+class CardPayment extends Payment {
+
+    @Override
+    void pay() {
+        System.out.println("Payment through Card");
+    }
+}
+
+Now:
+
+Payment payment;
+
+payment = new UpiPayment();
+payment.pay();
+
+payment = new CardPayment();
+payment.pay();
+
+Output:
+
+Payment through UPI
+Payment through Card
+
+This design is extremely common in real applications.
+
+17. Another Real-Time Example
+
+Imagine an application has:
+
+Notification
+      |
+ ---------------------
+ |         |         |
+Email      SMS      WhatsApp
+
+Parent:
+
+class Notification {
+
+    void send() {
+        System.out.println("Sending notification");
+    }
+}
+
+Email:
+
+class EmailNotification extends Notification {
+
+    @Override
+    void send() {
+        System.out.println("Sending Email");
+    }
+}
+
+SMS:
+
+class SmsNotification extends Notification {
+
+    @Override
+    void send() {
+        System.out.println("Sending SMS");
+    }
+}
+
+WhatsApp:
+
+class WhatsAppNotification extends Notification {
+
+    @Override
+    void send() {
+        System.out.println("Sending WhatsApp message");
+    }
+}
+
+Now:
+
+Notification notification;
+
+notification = new EmailNotification();
+notification.send();
+
+notification = new SmsNotification();
+notification.send();
+
+notification = new WhatsAppNotification();
+notification.send();
+
+Output:
+
+Sending Email
+Sending SMS
+Sending WhatsApp message
+
+One common interface/reference:
+
+Notification
+
+Different behavior:
+
+Email
+SMS
+WhatsApp
+
+That's polymorphism.
+
+18. Inheritance + Polymorphism Together
+
+These two concepts are closely connected.
+
+Inheritance
+
+Provides the relationship:
+
+Dog IS-A Animal
+Method overriding
+
+Provides different implementation:
+
+Dog → sound()
+Cat → sound()
+Parent reference
+
+Allows:
+
+Animal a = new Dog();
+Runtime polymorphism
+
+Determines:
+
+Which sound()?
+       ↓
+Dog's sound()
+
+So:
+
+Inheritance
+     ↓
+Method Overriding
+     ↓
+Parent Reference
+     ↓
+Runtime Polymorphism
+19. Very Important Interview Question
+
+Consider:
+
+Animal a = new Dog();
+
+What are the two different things?
+
+Reference type
+Animal
+Object type
+Dog
+
+Remember:
+
+Reference type determines what members are accessible at compile time.
+
+Actual object type determines which overridden instance method executes at runtime.
+
+This distinction is extremely important.
+
+20. Example
+class Animal {
+
+    void eat() {
+        System.out.println("Animal eating");
+    }
+}
+
+class Dog extends Animal {
+
+    @Override
+    void eat() {
+        System.out.println("Dog eating");
+    }
+
+    void bark() {
+        System.out.println("Dog barking");
+    }
+}
+
+Now:
+
+Animal a = new Dog();
+
+a.eat();
+
+Output:
+
+Dog eating
+
+But:
+
+a.bark();
+
+❌ Compilation error.
+
+Why?
+
+Because reference type is:
+
+Animal
+
+Animal doesn't know about bark().
+
+21. How to access the child-specific method?
+
+We can use casting:
+
+Animal a = new Dog();
+
+Dog d = (Dog) a;
+
+d.bark();
+
+This is called downcasting.
+
+But you should be careful.
+
+This is dangerous:
+
+Animal a = new Cat();
+
+Dog d = (Dog) a;
+
+It will produce:
+
+ClassCastException
+
+because the actual object is Cat, not Dog.
+
+22. Upcasting
+
+This is very common and safe:
+
+Dog d = new Dog();
+
+Animal a = d;
+
+or simply:
+
+Animal a = new Dog();
+
+This is called upcasting.
+
+Diagram:
+
+        Animal
+           ↑
+           |
+          Dog
+
+Child → Parent reference.
+
+23. @Override Annotation
+
+When overriding a method, we normally use:
+
+@Override
+void sound() {
+    System.out.println("Dog barks");
+}
+
+Why?
+
+It tells the compiler:
+
+"I intend to override a parent method."
+
+If you accidentally make a mistake:
+
+@Override
+void sounds() {
+}
+
+The compiler will identify the problem.
+
+So @Override improves safety and readability.
+
+24. Method Overloading vs Overriding
+
+This is a must-know interview comparison.
+
+Feature	Overloading	Overriding
+Polymorphism	Compile-time	Runtime
+Class relationship	Usually same class	Parent-child
+Method name	Same	Same
+Parameters	Must be different	Normally same
+Return type	Cannot differ only by return type	Same/covariant
+Inheritance required?	No	Yes
+Binding	Static/Early binding	Dynamic/Late binding
+
+Simple memory trick:
+
+OVERLOADING  → Same class → Different parameters
+OVERRIDING   → Parent/Child → Same method signature
+25. Constructor and Inheritance
+
+Constructors are not inherited.
+
+Example:
+
+class Parent {
+
+    Parent() {
+        System.out.println("Parent constructor");
+    }
+}
+
+class Child extends Parent {
+
+    Child() {
+        System.out.println("Child constructor");
+    }
+}
+
+Now:
+
+Child c = new Child();
+
+Output:
+
+Parent constructor
+Child constructor
+
+The parent constructor executes first.
+
+Why?
+
+Because the child object contains the inherited parent state, which must be initialized first.
+
+26. super Keyword
+
+super refers to the parent class.
+
+Example:
+
+class Animal {
+
+    String name = "Animal";
+
+    void display() {
+        System.out.println("Animal display");
+    }
+}
+
+Child:
+
+class Dog extends Animal {
+
+    String name = "Dog";
+
+    void show() {
+
+        System.out.println(name);
+
+        System.out.println(super.name);
+
+        super.display();
+    }
+}
+
+Usage:
+
+Dog d = new Dog();
+
+d.show();
+
+Output:
+
+Dog
+Animal
+Animal display
+
+So:
+
+super.name
+
+means parent class variable.
+
+And:
+
+super.display()
+
+means parent class method.
+
+27. Complete Example
+
+Let's combine everything.
+
+class Employee {
+
+    void work() {
+        System.out.println("Employee is working");
+    }
+}
+
+class Developer extends Employee {
+
+    @Override
+    void work() {
+        System.out.println("Developer writes code");
+    }
+}
+
+class Tester extends Employee {
+
+    @Override
+    void work() {
+        System.out.println("Tester tests application");
+    }
+}
+
+class Manager extends Employee {
+
+    @Override
+    void work() {
+        System.out.println("Manager manages team");
+    }
+}
+
+Main:
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        Employee employee;
+
+        employee = new Developer();
+        employee.work();
+
+        employee = new Tester();
+        employee.work();
+
+        employee = new Manager();
+        employee.work();
+    }
+}
+
+Output:
+
+Developer writes code
+Tester tests application
+Manager manages team
+
+Here:
+
+Employee employee
+       |
+       +----> Developer
+       |
+       +----> Tester
+       |
+       +----> Manager
+
+This is runtime polymorphism.
+
+28. Why is Polymorphism Useful in Real Applications?
+
+Suppose you write:
+
+void processPayment(Payment payment) {
+    payment.pay();
+}
+
+Now you can pass:
+
+processPayment(new UpiPayment());
+
+processPayment(new CardPayment());
+
+processPayment(new CashPayment());
+
+You don't need:
+
+if (paymentType.equals("UPI")) {
+   ...
+}
+else if (paymentType.equals("CARD")) {
+   ...
+}
+else if (paymentType.equals("CASH")) {
+   ...
+}
+
+Instead, each class handles its own behavior.
+
+This leads to:
+
+Loose coupling
+Extensibility
+Cleaner code
+Better maintainability
+Easier testing
+Support for SOLID principles
+29. Very Important Mental Model
+
+When you see:
+
+Parent p = new Child();
+
+Think:
+
+             Parent
+                ↑
+                |
+        reference type
+                |
+                p
+                |
+                ↓
+             Child
+          actual object
+
+Then:
+
+p.method();
+
+Ask two questions:
+
+Question 1
+
+Does Parent have the method?
+
+If no → compile-time error.
+
+Question 2
+
+Is the method overridden in Child?
+
+If yes → Child's implementation executes at runtime.
+
+30. Interview Questions You Should Practice
+Basic
+What is inheritance?
+Why do we use inheritance?
+What is the difference between superclass and subclass?
+What is the extends keyword?
+What types of inheritance does Java support?
+Why doesn't Java support multiple inheritance through classes?
+Polymorphism
+What is polymorphism?
+What are the types of polymorphism?
+What is method overloading?
+What is method overriding?
+What is compile-time polymorphism?
+What is runtime polymorphism?
+What is dynamic method dispatch?
+Important tricky questions
+What does this mean?
+Animal a = new Dog();
+What is upcasting?
+What is downcasting?
+Can a parent reference access child-specific methods?
+Can static methods be overridden?
+Can private methods be overridden?
+Can constructors be overridden?
+Can final methods be overridden?
+What is the difference between overloading and overriding?
+What is the role of super?
+Why do we use @Override?
+31. One-Page Summary
+                 INHERITANCE
+                      |
+             Parent → Child
+                      |
+                   extends
+                      |
+              Code Reusability
+                      |
+              IS-A Relationship
+                POLYMORPHISM
+                     |
+          -------------------------
+          |                       |
+      Compile-time            Runtime
+          |                       |
+    Method Overloading      Method Overriding
+                                  |
+                           Parent Reference
+                                  |
+                         Animal a = new Dog()
+                                  |
+                         Dynamic Method Dispatch
+                                  |
+                         Dog method executes
+Remember these 5 lines
+class Dog extends Animal
+
+→ Inheritance
+
+void sound(int x)
+void sound(double x)
+
+→ Overloading
+
+@Override
+void sound()
+
+→ Overriding
+
+Animal a = new Dog();
+
+→ Upcasting / Runtime polymorphism
+
+a.sound();
+
+→ Overridden method selected based on actual object at runtime
+
+If you're preparing for a Core Java interview/evaluation, the next best step is to learn Object class → super → final → upcasting/downcasting → method overriding rules → dynamic method dispatch, because these topics connect directly to the tricky Inheritance & Polymorphism interview questions.
+
+Today 10:30 PM
+Explain step by step java Exception handling with examples
+
+Absolutely. Let's learn Java Exception Handling from the very basics to interview level, step by step.
+
+1. What is an Exception?
+
+An exception is an unexpected event that occurs during program execution and disrupts the normal flow of the program.
+
+Example:
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        int a = 10;
+        int b = 0;
+
+        int result = a / b;
+
+        System.out.println(result);
+    }
+}
+
+Here:
+
+int result = a / b;
+
+causes:
+
+ArithmeticException: / by zero
+
+The program terminates abnormally.
+
+2. Why do we need Exception Handling?
+
+Consider:
+
+int a = 10;
+int b = 0;
+
+System.out.println(a / b);
+
+System.out.println("Hello");
+
+Because of the exception, "Hello" is never executed.
+
+Exception handling allows us to handle the problem gracefully:
+
+Normal Program
+      |
+      ↓
+Exception occurs
+      |
+      ↓
+Handle Exception
+      |
+      ↓
+Continue / terminate gracefully
+3. Exception Handling Keywords
+
+Java provides five important keywords:
+
+try
+catch
+finally
+throw
+throws
+
+Remember:
+
+try     → risky code
+catch   → handle exception
+finally → cleanup
+throw   → explicitly create/throw exception
+throws  → declare possible exception
+4. try and catch
+
+The basic syntax is:
+
+try {
+    // risky code
+}
+catch (Exception e) {
+    // exception handling
+}
+
+Example:
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        try {
+
+            int result = 10 / 0;
+
+            System.out.println(result);
+
+        } catch (ArithmeticException e) {
+
+            System.out.println("Cannot divide by zero");
+        }
+
+        System.out.println("Program continues...");
+    }
+}
+
+Output:
+
+Cannot divide by zero
+Program continues...
+
+Instead of the program terminating, the exception is handled.
+
+5. What happens internally?
+
+Consider:
+
+try {
+    int result = 10 / 0;
+}
+catch (ArithmeticException e) {
+    System.out.println("Exception handled");
+}
+
+Execution:
+
+          try block
+             |
+             ↓
+        10 / 0
+             |
+             ↓
+    ArithmeticException
+             |
+             ↓
+       catch block
+             |
+             ↓
+    Exception handled
+
+Once an exception occurs inside try, Java immediately stops executing the remaining statements in that try block and searches for a matching catch.
+
+6. Example – ArrayIndexOutOfBoundsException
+public class Test {
+
+    public static void main(String[] args) {
+
+        int[] numbers = {10, 20, 30};
+
+        try {
+
+            System.out.println(numbers[5]);
+
+        } catch (ArrayIndexOutOfBoundsException e) {
+
+            System.out.println("Invalid array index");
+        }
+
+        System.out.println("End of program");
+    }
+}
+
+Output:
+
+Invalid array index
+End of program
+7. Example – NullPointerException
+public class Test {
+
+    public static void main(String[] args) {
+
+        String name = null;
+
+        try {
+
+            System.out.println(name.length());
+
+        } catch (NullPointerException e) {
+
+            System.out.println("String is null");
+        }
+    }
+}
+
+Output:
+
+String is null
+8. Exception Object
+
+In:
+
+catch (ArithmeticException e)
+
+e is an exception object.
+
+We can get information from it.
+
+getMessage()
+try {
+
+    int x = 10 / 0;
+
+} catch (ArithmeticException e) {
+
+    System.out.println(e.getMessage());
+}
+
+Output:
+
+/ by zero
+toString()
+System.out.println(e.toString());
+
+Output:
+
+java.lang.ArithmeticException: / by zero
+printStackTrace()
+e.printStackTrace();
+
+This prints detailed information about where the exception occurred.
+
+For debugging, this is very useful.
+
+9. Multiple Catch Blocks
+
+One try can have multiple catch blocks.
+
+try {
+
+    int[] numbers = {10, 20, 30};
+
+    System.out.println(numbers[5]);
+
+}
+catch (ArithmeticException e) {
+
+    System.out.println("Arithmetic problem");
+
+}
+catch (ArrayIndexOutOfBoundsException e) {
+
+    System.out.println("Array index problem");
+
+}
+catch (Exception e) {
+
+    System.out.println("Some other exception");
+}
+
+The order is important.
+
+More specific exceptions should come first.
+
+Specific Exception
+       ↓
+More General Exception
+       ↓
+Exception
+       ↓
+Object
+10. Why can't we put Exception first?
+
+This is wrong:
+
+try {
+    // code
+}
+catch (Exception e) {
+    // general
+}
+catch (ArithmeticException e) {
+    // specific
+}
+
+Compilation error.
+
+Why?
+
+Because Exception can already catch ArithmeticException.
+
+So the second catch becomes unreachable.
+
+Correct:
+
+catch (ArithmeticException e) {
+}
+catch (Exception e) {
+}
+11. finally
+
+finally is used for cleanup code.
+
+Syntax:
+
+try {
+
+}
+catch (Exception e) {
+
+}
+finally {
+
+}
+
+Example:
+
+try {
+
+    int result = 10 / 2;
+
+    System.out.println(result);
+
+}
+catch (Exception e) {
+
+    System.out.println("Exception occurred");
+
+}
+finally {
+
+    System.out.println("Finally executed");
+}
+
+Output:
+
+5
+Finally executed
+12. finally with Exception
+try {
+
+    int result = 10 / 0;
+
+}
+catch (ArithmeticException e) {
+
+    System.out.println("Exception handled");
+
+}
+finally {
+
+    System.out.println("Finally executed");
+}
+
+Output:
+
+Exception handled
+Finally executed
+
+So normally:
+
+finally executes whether an exception occurs or not.
+
+13. Real-World Use of finally
+
+Suppose you open a database connection:
+
+Connection con = null;
+
+try {
+
+    con = DriverManager.getConnection(...);
+
+    // database operation
+
+}
+catch (Exception e) {
+
+    // handle exception
+
+}
+finally {
+
+    // close connection
+}
+
+Historically, finally was commonly used for resource cleanup.
+
+Modern Java generally prefers try-with-resources, which we'll see later.
+
+14. try without catch
+
+You can have:
+
+try {
+    
+}
+finally {
+
+}
+
+Example:
+
+try {
+
+    System.out.println("Try block");
+
+}
+finally {
+
+    System.out.println("Finally block");
+}
+
+Output:
+
+Try block
+Finally block
+
+But you cannot have only:
+
+try {
+}
+
+A try must be followed by at least one catch or a finally.
+
+15. Nested Try
+
+A try can exist inside another try.
+
+try {
+
+    System.out.println("Outer try");
+
+    try {
+
+        int x = 10 / 0;
+
+    } catch (ArithmeticException e) {
+
+        System.out.println("Inner exception handled");
+    }
+
+} catch (Exception e) {
+
+    System.out.println("Outer exception handled");
+}
+
+Output:
+
+Outer try
+Inner exception handled
+16. Exception Hierarchy
+
+This is extremely important.
+
+Java exceptions have a hierarchy.
+
+                    Object
+                       |
+                   Throwable
+                  /         \
+                 /           \
+            Error          Exception
+                              |
+                    -------------------
+                    |                 |
+            RuntimeException      Other Exceptions
+                    |
+        -------------------------
+        |           |           |
+ Arithmetic     NullPointer   ArrayIndex...
+ Exception      Exception     Exception
+
+The most important class is:
+
+Throwable
+
+It has two major categories:
+
+Throwable
+   |
+   +---- Error
+   |
+   +---- Exception
+17. Error vs Exception
+Error
+
+Errors generally indicate serious problems that applications typically should not try to recover from.
+
+Examples:
+
+OutOfMemoryError
+StackOverflowError
+Exception
+
+Exceptions represent conditions that an application can often handle.
+
+Examples:
+
+IOException
+SQLException
+NullPointerException
+ArithmeticException
+18. Checked vs Unchecked Exceptions
+
+This is one of the most important interview topics.
+
+                 Exception
+                     |
+          ----------------------
+          |                    |
+    Checked Exception    RuntimeException
+                              |
+                       Unchecked Exception
+Checked Exceptions
+
+Checked by the compiler.
+
+Examples:
+
+IOException
+SQLException
+FileNotFoundException
+ClassNotFoundException
+
+You must either:
+
+handle them
+   OR
+declare them
+19. Example of Checked Exception
+
+Suppose we read a file:
+
+import java.io.FileReader;
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        FileReader reader = new FileReader("data.txt");
+    }
+}
+
+This causes a compilation error because FileReader can throw a checked exception.
+
+We can handle it:
+
+import java.io.FileReader;
+import java.io.IOException;
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        try {
+
+            FileReader reader =
+                    new FileReader("data.txt");
+
+        } catch (IOException e) {
+
+            System.out.println("File problem");
+        }
+    }
+}
+20. Unchecked Exceptions
+
+Unchecked exceptions occur at runtime.
+
+They are subclasses of:
+
+RuntimeException
+
+Examples:
+
+ArithmeticException
+NullPointerException
+ArrayIndexOutOfBoundsException
+NumberFormatException
+ClassCastException
+
+Example:
+
+int x = 10 / 0;
+
+No compiler error.
+
+But at runtime:
+
+ArithmeticException
+
+occurs.
+
+21. Checked vs Unchecked
+Checked	Unchecked
+Checked by compiler	Occurs at runtime
+Compile-time checking	Runtime checking
+Must handle or declare	No requirement to handle
+Subclasses of Exception excluding RuntimeException	Subclasses of RuntimeException
+IOException	NullPointerException
+SQLException	ArithmeticException
+FileNotFoundException	ArrayIndexOutOfBoundsException
+
+Memory trick:
+
+Checked   → Compiler says: "Handle it!"
+Unchecked → Runtime says: "Problem!"
+22. throw
+
+throw is used when we explicitly want to throw an exception.
+
+Example:
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        int age = 15;
+
+        if (age < 18) {
+
+            throw new RuntimeException(
+                    "Age must be 18 or above"
+            );
+        }
+
+        System.out.println("Eligible");
+    }
+}
+
+Output:
+
+Exception in thread "main"
+java.lang.RuntimeException:
+Age must be 18 or above
+
+So:
+
+throw new RuntimeException(...)
+
+means:
+
+Create an exception object and explicitly throw it.
+
+23. Real-World throw Example
+
+Suppose we create a bank account.
+
+class BankAccount {
+
+    double balance = 5000;
+
+    void withdraw(double amount) {
+
+        if (amount > balance) {
+
+            throw new RuntimeException(
+                "Insufficient balance"
+            );
+        }
+
+        balance = balance - amount;
+
+        System.out.println(
+            "Remaining balance: " + balance
+        );
+    }
+}
+
+Usage:
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        BankAccount account = new BankAccount();
+
+        account.withdraw(6000);
+    }
+}
+
+We are deliberately throwing an exception when the business rule is violated.
+
+24. throws
+
+throws is different from throw.
+
+throws is used in a method declaration.
+
+Example:
+
+void readFile() throws IOException {
+
+    FileReader reader =
+            new FileReader("data.txt");
+}
+
+This means:
+
+This method may throw IOException; the caller must handle or further declare it.
+
+25. throw vs throws
+
+Very important interview question.
+
+throw
+throw new IOException();
+
+Used to actually throw an exception.
+
+throws
+void readFile() throws IOException
+
+Used to declare that a method may throw an exception.
+
+Remember:
+
+throw  → inside method → actually throws exception
+throws → method signature → declares exception
+26. Example of throws
+import java.io.IOException;
+
+class FileService {
+
+    void readFile() throws IOException {
+
+        throw new IOException("Unable to read file");
+    }
+}
+
+Caller:
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        FileService service = new FileService();
+
+        try {
+
+            service.readFile();
+
+        } catch (IOException e) {
+
+            System.out.println(e.getMessage());
+        }
+    }
+}
+
+Output:
+
+Unable to read file
+27. Custom Exception
+
+In real applications, we often create our own exceptions.
+
+Example:
+
+class InvalidAgeException extends Exception {
+
+    public InvalidAgeException(String message) {
+
+        super(message);
+    }
+}
+
+Now use it:
+
+class VotingService {
+
+    void checkAge(int age)
+            throws InvalidAgeException {
+
+        if (age < 18) {
+
+            throw new InvalidAgeException(
+                    "Age must be 18 or above"
+            );
+        }
+
+        System.out.println("Eligible for voting");
+    }
+}
+
+Main:
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        VotingService service =
+                new VotingService();
+
+        try {
+
+            service.checkAge(15);
+
+        } catch (InvalidAgeException e) {
+
+            System.out.println(e.getMessage());
+        }
+    }
+}
+
+Output:
+
+Age must be 18 or above
+
+This is very common in enterprise applications.
+
+28. Custom Runtime Exception
+
+We can also extend RuntimeException.
+
+class InsufficientBalanceException
+        extends RuntimeException {
+
+    public InsufficientBalanceException(
+            String message) {
+
+        super(message);
+    }
+}
+
+Use it:
+
+class BankAccount {
+
+    double balance = 5000;
+
+    void withdraw(double amount) {
+
+        if (amount > balance) {
+
+            throw new InsufficientBalanceException(
+                    "Insufficient balance"
+            );
+        }
+
+        balance -= amount;
+    }
+}
+
+This is an unchecked custom exception.
+
+29. Try-with-Resources
+
+Modern Java provides try-with-resources for automatically closing resources.
+
+Example:
+
+try (FileReader reader =
+         new FileReader("data.txt")) {
+
+    // read file
+
+} catch (IOException e) {
+
+    System.out.println("File error");
+}
+
+The resource is automatically closed.
+
+This is preferred over manually closing resources in finally when the resource implements AutoCloseable.
+
+30. Real-Time Enterprise Example
+
+Imagine a Spring Boot application:
+
+Controller
+    |
+    ↓
+Service
+    |
+    ↓
+Repository
+    |
+    ↓
+Database
+
+Suppose a user searches for an employee:
+
+GET /employees/101
+
+Service:
+
+Employee getEmployee(int id) {
+
+    Employee employee =
+        repository.findById(id);
+
+    if (employee == null) {
+
+        throw new EmployeeNotFoundException(
+                "Employee not found: " + id
+        );
+    }
+
+    return employee;
+}
+
+Custom exception:
+
+class EmployeeNotFoundException
+        extends RuntimeException {
+
+    public EmployeeNotFoundException(
+            String message) {
+
+        super(message);
+    }
+}
+
+In Spring Boot, we can then use:
+
+@ControllerAdvice
+
+to centrally handle exceptions.
+
+For example:
+
+EmployeeNotFoundException
+          |
+          ↓
+Global Exception Handler
+          |
+          ↓
+HTTP 404 NOT FOUND
+          |
+          ↓
+JSON response
+
+This is how Core Java exception handling connects to Spring Boot Global Exception Handling.
+
+31. Important Exception Handling Rules
+Rule 1
+
+try cannot exist alone.
+
+try {
+}
+
+❌ Invalid.
+
+You need:
+
+try {
+}
+catch (...) {
+}
+
+or:
+
+try {
+}
+finally {
+}
+Rule 2
+
+More specific catch should come first.
+
+catch (ArithmeticException e) {
+}
+catch (Exception e) {
+}
+
+✅ Correct.
+
+Rule 3
+
+finally normally executes whether exception occurs or not.
+
+try {
+}
+finally {
+}
+Rule 4
+
+throw actually throws an exception.
+
+throw new RuntimeException();
+Rule 5
+
+throws declares an exception.
+
+void test() throws IOException
+Rule 6
+
+Constructors can also declare exceptions.
+
+class Test {
+
+    Test() throws IOException {
+
+    }
+}
+32. Important Interview Question – Can finally be skipped?
+
+Normally finally executes.
+
+But there are exceptional situations, such as JVM termination:
+
+try {
+
+    System.out.println("Try");
+
+    System.exit(0);
+
+}
+finally {
+
+    System.out.println("Finally");
+}
+
+Here finally will not execute because:
+
+System.exit(0);
+
+terminates the JVM.
+
+33. Exception Propagation
+
+Suppose:
+
+method1()
+   ↓
+method2()
+   ↓
+method3()
+
+And exception occurs in method3().
+
+method1()
+   |
+   ↓
+method2()
+   |
+   ↓
+method3()
+   |
+   ↓
+Exception
+
+Java searches for a handler.
+
+If method3() doesn't handle it:
+
+method3()
+   ↓
+method2()
+   ↓
+method1()
+   ↓
+main()
+
+This is called exception propagation.
+
+Example:
+
+static void method3() {
+
+    int x = 10 / 0;
+}
+
+static void method2() {
+
+    method3();
+}
+
+static void method1() {
+
+    method2();
+}
+
+public static void main(String[] args) {
+
+    try {
+
+        method1();
+
+    } catch (ArithmeticException e) {
+
+        System.out.println(
+                "Exception handled in main"
+        );
+    }
+}
+
+Output:
+
+Exception handled in main
+
+The exception propagated from method3() to main().
+
+34. final, finally, finalize
+
+This is another common interview question.
+
+final
+
+Used with:
+
+final variable
+final method
+final class
+
+Example:
+
+final int MAX = 100;
+finally
+
+Used with exception handling:
+
+try {
+}
+catch (Exception e) {
+}
+finally {
+}
+finalize()
+
+Historically related to garbage collection, but it has been deprecated and should not be used for resource management in modern Java.
+
+So remember:
+
+final     → restriction
+finally   → cleanup block
+finalize  → obsolete/deprecated mechanism
+35. Complete Flow
+
+You should remember exception handling like this:
+
+                 Java Program
+                     |
+                     ↓
+                 try block
+                     |
+              Exception occurs?
+                 /       \
+               No         Yes
+               |           |
+               ↓           ↓
+          Continue     Find catch
+                           |
+                           ↓
+                    Matching catch?
+                       /       \
+                     Yes        No
+                      |          |
+                      ↓          ↓
+                   Handle     Propagate
+                      |
+                      ↓
+                  finally
+                      |
+                      ↓
+              Continue execution
+36. Most Important Interview Differences
+Exception vs Error
+Exception → application-level problem that can often be handled
+Error     → serious JVM/system-level problem
+Checked vs Unchecked
+Checked Exception
+→ compiler checks
+→ handle or declare
+
+Unchecked Exception
+→ RuntimeException
+→ runtime problem
+throw vs throws
+throw
+→ actually throws exception
+
+throws
+→ declares possible exception
+final vs finally
+final
+→ keyword for restriction
+
+finally
+→ block for cleanup
+37. Final Mental Model
+
+If you remember only this diagram, you can reconstruct most of the topic:
+
+                         Throwable
+                            |
+                 ---------------------
+                 |                   |
+               Error              Exception
+                                     |
+                         -----------------------
+                         |                     |
+                  Checked Exception     RuntimeException
+                         |                     |
+                   IOException          NullPointerException
+                   SQLException         ArithmeticException
+                   FileNotFound         NumberFormatException
+
+And:
+
+try
+ ↓
+Risky code
+
+catch
+ ↓
+Handle exception
+
+finally
+ ↓
+Cleanup
+
+throw
+ ↓
+Explicitly throw exception
+
+throws
+ ↓
+Declare exception
+The most important Core Java sequence to master
+
+Exception basics → Exception hierarchy → try/catch → multiple catch → finally → checked/unchecked → throw → throws → custom exceptions → exception propagation → try-with-resources.
+
+After this, the natural next topic for your Core Java preparation is Collections Framework (List, Set, Map, Queue, HashMap internals, Comparable vs Comparator), because it is another major area heavily asked in Java interviews.
+
+
+
+===============
+1. First: Why do we need throw and throws?
+
+Suppose we have a method:
+
+void withdraw(double amount) {
+    // business logic
+}
+
+If the amount is greater than the balance, we want to indicate a problem.
+
+We can explicitly throw an exception:
+
+throw new RuntimeException("Insufficient balance");
+
+That's throw.
+
+But suppose a method can generate a checked exception, such as IOException. We need to tell the caller:
+
+"This method may produce an IOException. You must handle it."
+
+We use:
+
+throws IOException
+
+That's throws.
+
+So the basic difference is:
+
+throw  → Actually throws an exception
+throws → Declares that a method may throw an exception
+2. What is throw?
+
+throw is a Java keyword used to explicitly throw an exception object.
+
+Syntax
+throw new ExceptionType("message");
+
+Example:
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        int age = 15;
+
+        if (age < 18) {
+
+            throw new RuntimeException(
+                    "Age must be 18 or above"
+            );
+        }
+
+        System.out.println("Eligible");
+    }
+}
+
+Output:
+
+Exception in thread "main"
+java.lang.RuntimeException: Age must be 18 or above
+
+Here:
+
+throw new RuntimeException(...)
+
+means:
+
+Create a RuntimeException object.
+Throw that object.
+Stop the current normal execution flow.
+Search for an appropriate exception handler.
+3. throw with try-catch
+
+Usually, we handle the thrown exception.
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        try {
+
+            int age = 15;
+
+            if (age < 18) {
+                throw new RuntimeException(
+                        "Age must be 18 or above"
+                );
+            }
+
+            System.out.println("Eligible");
+
+        } catch (RuntimeException e) {
+
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println("Program continues...");
+    }
+}
+
+Output:
+
+Age must be 18 or above
+Program continues...
+
+Flow:
+
+main()
+  |
+  ↓
+age < 18
+  |
+  ↓
+throw
+  |
+  ↓
+RuntimeException
+  |
+  ↓
+catch
+  |
+  ↓
+Program continues
+4. throw is useful for business validation
+
+This is where throw becomes very useful in real applications.
+
+Suppose we have a bank account:
+
+class BankAccount {
+
+    private double balance = 5000;
+
+    void withdraw(double amount) {
+
+        if (amount <= 0) {
+
+            throw new IllegalArgumentException(
+                    "Amount must be greater than zero"
+            );
+        }
+
+        if (amount > balance) {
+
+            throw new IllegalArgumentException(
+                    "Insufficient balance"
+            );
+        }
+
+        balance -= amount;
+
+        System.out.println(
+                "Remaining balance: " + balance
+        );
+    }
+}
+
+Usage:
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        BankAccount account = new BankAccount();
+
+        try {
+
+            account.withdraw(6000);
+
+        } catch (IllegalArgumentException e) {
+
+            System.out.println(e.getMessage());
+        }
+    }
+}
+
+Output:
+
+Insufficient balance
+
+The application itself decides when to throw the exception.
+
+5. What is throws?
+
+throws is used in a method declaration to indicate that the method may throw one or more exceptions.
+
+Syntax:
+
+returnType methodName() throws ExceptionType {
+}
+
+Example:
+
+void readFile() throws IOException {
+    // file reading
+}
+
+It means:
+
+"This method may throw IOException. Whoever calls this method must handle it or declare it further."
+
+6. Simple throws Example
+
+Consider reading a file:
+
+import java.io.FileReader;
+import java.io.IOException;
+
+class FileService {
+
+    void readFile() throws IOException {
+
+        FileReader reader =
+                new FileReader("data.txt");
+
+        System.out.println("File opened");
+    }
+}
+
+Now the caller must deal with IOException.
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        FileService service = new FileService();
+
+        try {
+
+            service.readFile();
+
+        } catch (IOException e) {
+
+            System.out.println(
+                    "Unable to read file"
+            );
+        }
+    }
+}
+
+Here:
+
+void readFile() throws IOException
+
+doesn't itself handle the exception.
+
+It declares the possibility of the exception.
+
+7. throws does NOT throw the exception by itself
+
+This is very important.
+
+When you write:
+
+void readFile() throws IOException {
+}
+
+you are saying:
+
+"This method may throw IOException."
+
+You are not saying:
+
+"Throw IOException right now."
+
+Actual throwing is done using:
+
+throw new IOException();
+8. throw + throws together
+
+This is one of the best examples to understand both.
+
+import java.io.IOException;
+
+class FileService {
+
+    void readFile() throws IOException {
+
+        boolean fileAvailable = false;
+
+        if (!fileAvailable) {
+
+            throw new IOException(
+                    "File not available"
+            );
+        }
+
+        System.out.println("Reading file...");
+    }
+}
+
+Notice:
+
+throws IOException
+
+and:
+
+throw new IOException(...)
+
+are doing different jobs.
+
+throws
+void readFile() throws IOException
+
+Declares the exception.
+
+throw
+throw new IOException("File not available");
+
+Actually throws the exception.
+
+9. Complete Flow
+Caller
+   |
+   ↓
+readFile()
+   |
+   ↓
+fileAvailable?
+   |
+   ↓ No
+throw new IOException()
+   |
+   ↓
+Exception travels to caller
+   |
+   ↓
+catch(IOException e)
+   |
+   ↓
+Handle exception
+10. Multiple Exceptions with throws
+
+A method can declare multiple exceptions.
+
+void processFile()
+        throws IOException, SQLException {
+
+    // code
+}
+
+This means the method may throw either:
+
+IOException
+     OR
+SQLException
+
+The caller must handle them or declare them.
+
+11. Multiple Exceptions with throw
+
+A method can explicitly throw different exception types depending on conditions.
+
+void process(int value) {
+
+    if (value < 0) {
+
+        throw new IllegalArgumentException(
+                "Value cannot be negative"
+        );
+    }
+
+    if (value == 0) {
+
+        throw new ArithmeticException(
+                "Value cannot be zero"
+        );
+    }
+
+    System.out.println("Valid value");
+}
+
+Here, depending on the condition, different exceptions can be thrown.
+
+12. throw with Checked Exception
+
+Suppose:
+
+import java.io.IOException;
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        throw new IOException("File error");
+    }
+}
+
+This won't compile.
+
+Why?
+
+Because IOException is a checked exception.
+
+You need to handle it:
+
+import java.io.IOException;
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        try {
+
+            throw new IOException("File error");
+
+        } catch (IOException e) {
+
+            System.out.println(e.getMessage());
+        }
+    }
+}
+
+Or declare it:
+
+import java.io.IOException;
+
+public class Test {
+
+    public static void main(String[] args)
+            throws IOException {
+
+        throw new IOException("File error");
+    }
+}
+
+This demonstrates how throw and throws can work together.
+
+13. Custom Exception with throw
+
+This is very important for enterprise applications.
+
+Create your own exception:
+
+class InvalidAgeException extends Exception {
+
+    public InvalidAgeException(String message) {
+
+        super(message);
+    }
+}
+
+Now use it:
+
+class VotingService {
+
+    void checkAge(int age)
+            throws InvalidAgeException {
+
+        if (age < 18) {
+
+            throw new InvalidAgeException(
+                    "Age must be 18 or above"
+            );
+        }
+
+        System.out.println(
+                "You are eligible for voting"
+        );
+    }
+}
+
+Caller:
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        VotingService service =
+                new VotingService();
+
+        try {
+
+            service.checkAge(15);
+
+        } catch (InvalidAgeException e) {
+
+            System.out.println(e.getMessage());
+        }
+    }
+}
+
+Output:
+
+Age must be 18 or above
+
+Notice the combination:
+
+throw new InvalidAgeException(...)
+
+→ Actually throws the exception.
+
+throws InvalidAgeException
+
+→ Declares that the method can throw it.
+
+14. Custom Unchecked Exception
+
+We can also create an unchecked exception.
+
+class InsufficientBalanceException
+        extends RuntimeException {
+
+    public InsufficientBalanceException(
+            String message) {
+
+        super(message);
+    }
+}
+
+Use it:
+
+class BankAccount {
+
+    private double balance = 5000;
+
+    void withdraw(double amount) {
+
+        if (amount > balance) {
+
+            throw new InsufficientBalanceException(
+                    "Insufficient balance"
+            );
+        }
+
+        balance -= amount;
+    }
+}
+
+Because InsufficientBalanceException extends RuntimeException, we don't have to write:
+
+throws InsufficientBalanceException
+
+although we technically can.
+
+15. Very Important: throw can throw only one exception at a time
+
+This is invalid:
+
+throw new Exception1(), new Exception2();
+
+You throw one exception object at a time.
+
+But a method can declare multiple possible exceptions:
+
+void test()
+        throws IOException, SQLException {
+}
+16. throw vs throws
+
+This table is very important for interviews.
+
+throw	throws
+Used to actually throw an exception	Used to declare possible exceptions
+Used inside method/block	Used in method signature
+Followed by an exception object	Followed by exception class names
+Throws one exception at a time	Can declare multiple exceptions
+Example: throw new IOException()	Example: throws IOException
+Used for explicit exception throwing	Used to transfer responsibility to caller
+17. Easy Memory Trick
+
+Remember:
+
+throw
+   ↓
+DO something
+   ↓
+Actually throw exception
+throws
+   ↓
+DECLARE something
+   ↓
+This method may throw exception
+
+Think of a cricket example:
+
+throw  → I am throwing the ball.
+throws → I am declaring that I may throw the ball.
+18. Real-Time Spring Boot Connection
+
+This concept becomes very important when you work with Spring Boot.
+
+For example:
+
+class EmployeeService {
+
+    Employee getEmployee(int id) {
+
+        Employee employee =
+                repository.findById(id);
+
+        if (employee == null) {
+
+            throw new EmployeeNotFoundException(
+                    "Employee not found: " + id
+            );
+        }
+
+        return employee;
+    }
+}
+
+Here:

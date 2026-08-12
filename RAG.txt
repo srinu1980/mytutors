@@ -1,0 +1,2040 @@
+Absolutely. The reason you're finding it confusing is that LLM, RAG, Embeddings, and Vector Databases are all connected. If you study them in the wrong order, they seem complicated.
+
+Since you have an evaluation call, don't try to memorize definitions. Instead, understand the story of how an AI application works.
+
+3-Day Evaluation Preparation Plan
+Goal
+
+By the end of 3 days, you should be able to confidently answer:
+
+What is an LLM?
+What is Prompt Engineering?
+What is RAG?
+Why are Embeddings needed?
+What is a Vector Database?
+How does Spring AI use these concepts?
+Day 1 – Build the Foundation (Don't Study RAG Yet)
+
+Duration: 3–4 hours
+
+Today's goal is to answer one question:
+
+How does ChatGPT understand my question and generate an answer?
+
+Step 1: What is AI?
+
+Think of AI as a smart assistant.
+
+Example:
+
+You ask:
+
+"Write Java code for Employee CRUD."
+
+AI understands your request and responds.
+
+Diagram
+
+You
+ │
+ ▼
+AI
+ │
+ ▼
+Answer
+Step 2: What is an LLM?
+
+Imagine a Java trainer.
+
+The trainer has read:
+
+Java books
+Spring Boot books
+React books
+SQL books
+
+Now ask:
+
+Explain Dependency Injection.
+
+The trainer answers immediately.
+
+That trainer is like an LLM.
+
+Diagram
+
+Books
+ │
+ ▼
+Training
+ │
+ ▼
+LLM
+ │
+ ▼
+Answer
+
+Evaluation Question
+
+What is an LLM?
+
+Answer
+
+An LLM (Large Language Model) is an AI model trained on massive amounts of text that can understand and generate human language.
+
+Step 3: What is a Prompt?
+
+Every message you type is a prompt.
+
+Example
+
+Explain Spring Boot.
+
+Diagram
+
+User
+ │
+ ▼
+Prompt
+ │
+ ▼
+LLM
+ │
+ ▼
+Answer
+Step 4: Prompt Engineering
+
+Bad Prompt
+
+Spring
+
+Good Prompt
+
+Explain Spring Boot
+for beginners with examples.
+
+Evaluation Question
+
+Why is Prompt Engineering important?
+
+Answer:
+
+Because better prompts produce more relevant and useful responses.
+
+Step 5: Tokens
+
+Sentence
+
+I love Java Programming
+
+LLM reads
+
+I
+
+Love
+
+Java
+
+Programming
+
+These pieces are tokens.
+
+Easy Analogy
+
+Imagine LEGO blocks.
+
+Words are built from LEGO blocks.
+
+The LLM reads one block (token) at a time.
+
+Step 6: Context Window
+
+Imagine a whiteboard.
+
+Small whiteboard
+
+Java
+
+Spring
+
+Large whiteboard
+
+Java
+
+Spring
+
+React
+
+Docker
+
+Microservices
+
+JWT
+
+The larger the whiteboard, the more information the model can remember during a conversation.
+
+Step 7: Temperature
+
+Think of it as a creativity knob.
+
+Temperature = 0
+
+Coding
+
+Math
+
+SQL
+Temperature = 1
+
+Stories
+
+Poems
+
+Creative Writing
+End of Day 1
+
+You should confidently explain:
+
+AI
+LLM
+Prompt
+Prompt Engineering
+Tokens
+Context Window
+Temperature
+Day 2 – Learn RAG from Scratch
+
+Today's question is:
+
+How does an AI answer questions using company documents?
+
+Step 1: Problem Without RAG
+
+Company has
+
+Java Notes
+
+Spring Notes
+
+React Notes
+
+User asks
+
+Explain our coding standards.
+
+LLM says
+
+I don't know your company standards.
+Step 2: Introduce RAG
+
+RAG means
+
+Retrieve
+
+↓
+
+Augment
+
+↓
+
+Generate
+Step 3: Think Like a Librarian
+
+You ask:
+
+"Give me a Spring Security book."
+
+The librarian:
+
+Searches shelves.
+Finds the book.
+Gives it to you.
+
+Exactly the same happens in RAG.
+
+Step 4: Complete RAG Diagram
+User
+
+↓
+
+Question
+
+↓
+
+Retriever
+
+↓
+
+Company Documents
+
+↓
+
+LLM
+
+↓
+
+Answer
+Step 5: Embeddings
+
+Computer doesn't understand
+
+Java
+
+It understands numbers.
+
+Example
+
+Java
+
+↓
+
+[0.21, 0.67, 0.81]
+
+Embeddings let the system compare meaning instead of exact words.
+
+Step 6: Vector Database
+
+Imagine Google Photos.
+
+You search
+
+Dog
+
+Even if the file name isn't "dog," the app can still find dog photos.
+
+Why?
+
+Because it searches by meaning.
+
+A vector database works similarly for text.
+
+Step 7: Retrieval
+
+The vector database retrieves:
+
+Spring Security.pdf
+
+JWT Guide.pdf
+
+Authentication Notes.pdf
+
+These are sent to the LLM.
+
+End of Day 2
+
+You should understand:
+
+RAG
+Embeddings
+Vector Database
+Retrieval
+Day 3 – Full RAG Pipeline
+
+Today's goal:
+
+Explain the complete RAG pipeline from memory.
+
+Step 1: Query Expansion
+
+User asks
+
+JWT
+
+System also searches
+
+Bearer Token
+
+Spring Security
+
+Authentication
+
+OAuth
+
+This improves retrieval.
+
+Step 2: Embedding
+
+Convert the query into a vector.
+
+Step 3: Vector Search
+
+Find similar document vectors.
+
+Step 4: Retrieval
+
+Fetch the most relevant document chunks.
+
+Step 5: Re-ranking
+
+Reorder the retrieved chunks so the most relevant ones come first.
+
+Step 6: Prompt Building
+Question
+
++
+
+Retrieved Documents
+
+↓
+
+LLM
+Step 7: Final Answer
+
+The LLM generates a response grounded in the retrieved documents.
+
+Complete Flow
+                     USER
+                       │
+                       ▼
+                 User Question
+                       │
+                       ▼
+              Query Processing
+                       │
+                       ▼
+              Query Expansion
+                       │
+                       ▼
+               Embedding Model
+                       │
+                       ▼
+                Vector Database
+                       │
+                       ▼
+             Retrieve Top Chunks
+                       │
+                       ▼
+                  Re-ranking
+                       │
+                       ▼
+                Prompt Builder
+                       │
+                       ▼
+                      LLM
+                       │
+                       ▼
+                  Final Answer
+30-Minute Daily Revision
+Day 1
+AI
+LLM
+Prompt
+Prompt Engineering
+Tokens
+Context Window
+Temperature
+Day 2
+RAG
+Embeddings
+Vector Database
+Retrieval
+Day 3
+Query Expansion
+Re-ranking
+Full RAG Pipeline
+Enterprise Example
+Evaluation Tip
+
+If the interviewer asks:
+
+"Can you explain RAG?"
+
+Don't start with the definition.
+
+Instead, tell a story:
+
+"Imagine our company has thousands of Java, Spring Boot, React, and HR documents. If a developer asks a question, the LLM alone doesn't know our private documents. So the system first retrieves the most relevant document chunks from a vector database using embeddings, then adds those documents to the prompt, and finally the LLM generates a company-specific answer. This process is called Retrieval-Augmented Generation, or RAG."
+
+That kind of explanation shows genuine understanding rather than memorization.
+
+Since you already have a strong Java and Spring Boot background, focus on understanding the flow rather than memorizing definitions. Once the flow is clear, the individual concepts become much easier to explain.
+
+Yesterday 7:10 AM
+Based on LLM + RAG +Agentic AI + MCP used on these generate python related example
+
+Yes. Since you already understand Java/Spring Boot concepts, the best way to understand LLM + RAG + Agentic AI + MCP is to build one Python-based real-time example and add each concept step by step.
+
+Let's use a Java Training Assistant as the project.
+
+Python GenAI Example: Java Training AI Assistant
+
+Imagine a student asks:
+
+"Explain JWT authentication, check whether I have completed the JWT topic, and create a practice assignment for me."
+
+This single request can involve:
+
+                    STUDENT
+                       │
+                       ▼
+                  Python App
+                       │
+                       ▼
+                      LLM
+                 ┌─────┴─────┐
+                 │           │
+                 ▼           ▼
+                RAG      Agentic AI
+                 │           │
+                 ▼           ▼
+          Training PDFs     Tools
+                             │
+                             ▼
+                            MCP
+                             │
+                  ┌──────────┼──────────┐
+                  ▼          ▼          ▼
+              Student DB   Calendar   Assignment
+
+Let's understand this one layer at a time.
+
+1. First: LLM Only
+
+Start with the simplest Python application.
+
+Student
+   │
+   ▼
+Python
+   │
+   ▼
+LLM
+   │
+   ▼
+Answer
+
+For example:
+
+question = "Explain JWT authentication in Spring Boot"
+
+response = llm.invoke(question)
+
+print(response)
+
+The LLM can explain JWT from its general knowledge.
+
+Problem
+
+What if your training institute has its own:
+
+Java21.pdf
+SpringBoot.pdf
+JWT.pdf
+CompanyCodingStandards.pdf
+
+The LLM doesn't automatically know these private documents.
+
+That's where RAG comes in.
+
+2. Add RAG
+
+Now our architecture becomes:
+
+                     Student
+                        │
+                        ▼
+                   Question
+                        │
+                        ▼
+                 Python Application
+                        │
+             ┌──────────┴──────────┐
+             │                     │
+             ▼                     ▼
+        Vector DB                 LLM
+             │                     ▲
+             ▼                     │
+      Relevant Documents ──────────┘
+
+Suppose the student asks:
+
+Explain JWT authentication according to our training material.
+
+RAG searches:
+
+JWT.pdf
+SpringSecurity.pdf
+Authentication.pdf
+
+and gives the relevant content to the LLM.
+
+3. RAG Pipeline in Python
+
+The complete flow is:
+
+PDF Documents
+     │
+     ▼
+Document Loader
+     │
+     ▼
+Document Chunks
+     │
+     ▼
+Embedding Model
+     │
+     ▼
+Vector Database
+
+This is the ingestion phase.
+
+Then:
+
+Student Question
+       │
+       ▼
+Embedding
+       │
+       ▼
+Vector Search
+       │
+       ▼
+Relevant Chunks
+       │
+       ▼
+Prompt + Context
+       │
+       ▼
+LLM
+       │
+       ▼
+Answer
+4. Very Simple Python RAG Example
+
+Conceptually:
+
+question = "Explain JWT authentication"
+
+documents = vector_db.similarity_search(question)
+
+context = "\n".join(
+    document.page_content
+    for document in documents
+)
+
+prompt = f"""
+Answer the question using the following context.
+
+Context:
+{context}
+
+Question:
+{question}
+"""
+
+answer = llm.invoke(prompt)
+
+print(answer)
+
+The important idea is:
+
+Question
+   +
+Retrieved Context
+   ↓
+LLM
+   ↓
+Answer
+5. Now Add Agentic AI
+
+RAG is mainly about finding information.
+
+An Agent can decide what action to take.
+
+Suppose the student says:
+
+"Explain JWT, check my progress, and create an assignment."
+
+A simple LLM might just explain JWT.
+
+An AI Agent can reason about the task:
+
+Student Request
+       │
+       ▼
+      Agent
+       │
+       ├── Need knowledge?
+       │       ↓
+       │      RAG
+       │
+       ├── Need student progress?
+       │       ↓
+       │      Student DB Tool
+       │
+       └── Need assignment?
+               ↓
+             LLM
+6. Agent = LLM + Tools + Decision Making
+
+Think of an agent as:
+
+                 AI AGENT
+                    │
+          ┌─────────┼─────────┐
+          │         │         │
+          ▼         ▼         ▼
+         LLM       RAG      Tools
+                              │
+                    ┌─────────┼─────────┐
+                    ▼         ▼         ▼
+                 Student    Calendar   Email
+                   DB
+
+The LLM decides which tool is appropriate.
+
+7. Python Agent Example
+
+Imagine we expose three Python functions:
+
+def get_student_progress(student_id):
+    pass
+
+
+def create_assignment(topic):
+    pass
+
+
+def search_training_material(question):
+    pass
+
+The agent can decide:
+
+User:
+"Check my JWT progress and give me an assignment."
+
+                │
+                ▼
+              Agent
+                │
+          ┌─────┴─────┐
+          ▼           ▼
+    get_progress   create_assignment
+8. Why Do We Need MCP?
+
+Now imagine your company has many tools.
+
+Student Database
+Calendar
+Email
+Jira
+GitHub
+HR System
+CRM
+File Storage
+
+Without a common protocol, every AI application may need custom integration.
+
+MCP helps standardize how AI applications discover and use external tools and resources.
+
+MCP = Model Context Protocol
+
+Think of MCP as a standard communication layer between an AI application and external tools/data.
+
+9. MCP Architecture
+                    AI Application
+                         │
+                         ▼
+                    MCP Client
+                         │
+                         │ MCP
+                         ▼
+                    MCP Server
+                         │
+          ┌──────────────┼──────────────┐
+          ▼              ▼              ▼
+      Student DB      Calendar        GitHub
+
+The MCP server exposes capabilities to the AI application.
+
+10. Real-Time MCP Example
+
+Suppose we create a:
+
+Student Training MCP Server
+
+It provides:
+
+Tools:
+
+get_student_progress()
+
+get_assignment()
+
+create_assignment()
+
+get_exam_schedule()
+
+Our AI agent can use those capabilities.
+
+11. Complete Architecture
+
+Now combine everything:
+
+                         STUDENT
+                            │
+                            ▼
+                     Python AI App
+                            │
+                            ▼
+                          Agent
+                            │
+                     ┌──────┴──────┐
+                     │             │
+                     ▼             ▼
+                    LLM           RAG
+                     │             │
+                     │             ▼
+                     │        Vector DB
+                     │
+                     ▼
+                Tool Decision
+                     │
+                     ▼
+                 MCP Client
+                     │
+                     ▼
+                 MCP Server
+                     │
+        ┌────────────┼────────────┐
+        ▼            ▼            ▼
+   Student DB     Calendar     GitHub
+
+Now you have a genuine LLM + RAG + Agentic AI + MCP architecture.
+
+12. Complete Real-Time Scenario
+
+Student asks:
+
+"Explain JWT authentication based on our training material, check my progress, and schedule a mock test for Friday."
+
+Let's follow the request.
+
+Step 1 — Agent receives request
+Agent
+  │
+  ▼
+Understand request
+
+It identifies three tasks:
+
+1. Explain JWT
+2. Check progress
+3. Schedule mock test
+Step 2 — RAG
+
+For task 1:
+
+JWT question
+     │
+     ▼
+Embedding
+     │
+     ▼
+Vector DB
+     │
+     ▼
+JWT training documents
+     │
+     ▼
+LLM
+
+The LLM generates an explanation based on your training material.
+
+Step 3 — MCP
+
+For task 2:
+
+Agent
+ │
+ ▼
+MCP Client
+ │
+ ▼
+Training MCP Server
+ │
+ ▼
+Student Database
+ │
+ ▼
+Progress
+
+Example:
+
+JWT Module: Completed
+Mock Test: Pending
+Score: 82%
+Step 4 — MCP Again
+
+For task 3:
+
+Agent
+ │
+ ▼
+MCP Client
+ │
+ ▼
+Calendar MCP Server
+ │
+ ▼
+Schedule Test
+
+The calendar tool creates the event.
+
+13. Final Response
+
+The agent could return:
+
+JWT Authentication
+
+According to the training material, JWT authentication
+works using:
+
+1. User Login
+2. Authentication
+3. JWT Generation
+4. Token sent to client
+5. Token included in subsequent requests
+6. JWT validation
+
+Your Progress:
+JWT Module: Completed
+Current Score: 82%
+
+Mock Test:
+Scheduled for Friday.
+
+Notice how many technologies participated:
+
+             User
+               │
+               ▼
+             Agent
+               │
+       ┌───────┼────────┐
+       ▼       ▼        ▼
+      RAG      DB     Calendar
+       │       │        │
+       ▼       ▼        ▼
+     PDFs    MCP      MCP
+       │
+       ▼
+      LLM
+14. Difference Between LLM, RAG, Agent and MCP
+
+This is very important for your evaluation.
+
+Technology	Main Responsibility
+LLM	Understands and generates language
+RAG	Retrieves relevant knowledge
+Agent	Decides what actions/tools to use
+MCP	Standardizes access to external tools/resources
+
+Remember this simple formula:
+
+LLM
+↓
+Thinks / Generates
+
+RAG
+↓
+Finds Knowledge
+
+Agent
+↓
+Decides Actions
+
+MCP
+↓
+Connects AI to Tools/Data
+15. Simple Real-Life Analogy
+
+Imagine a Java trainer.
+
+LLM
+
+Trainer knows Java concepts.
+
+Student → Question → Trainer → Answer
+RAG
+
+Trainer opens the official training material before answering.
+
+Student
+   ↓
+Trainer
+   ↓
+Training Material
+   ↓
+Answer
+Agent
+
+Trainer decides:
+
+"I need to check the student's progress and create an assignment."
+
+Student
+   ↓
+Trainer
+   ├── Training Material
+   ├── Student Database
+   └── Assignment System
+MCP
+
+MCP provides a standardized way for the trainer's AI system to interact with those external systems.
+
+AI
+ │
+ ▼
+MCP
+ │
+ ├── Student DB
+ ├── Assignment System
+ ├── Calendar
+ └── GitHub
+16. Python Learning Path for These Topics
+
+Don't try to learn everything at once.
+
+Day 1 — LLM + Prompt Engineering
+
+Learn Python basics needed for AI:
+
+Python
+ ↓
+API calls
+ ↓
+LLM
+ ↓
+Prompt
+ ↓
+Response
+
+Build:
+
+Simple AI Chatbot
+
+Day 2 — RAG
+
+Learn:
+
+Documents
+ ↓
+Chunking
+ ↓
+Embeddings
+ ↓
+Vector DB
+ ↓
+Retrieval
+ ↓
+LLM
+
+Build:
+
+Java Documentation Chatbot
+
+Day 3 — Agentic AI + MCP
+
+Learn:
+
+LLM
+ ↓
+Agent
+ ↓
+Tools
+ ↓
+MCP
+ ↓
+External Systems
+
+Build:
+
+Java Training Assistant Agent
+
+17. Final Architecture to Remember for Your Evaluation
+
+If the evaluator asks:
+
+"Explain how LLM, RAG, Agentic AI and MCP work together."
+
+You can draw this:
+
+                           USER
+                             │
+                             ▼
+                      AI APPLICATION
+                             │
+                             ▼
+                           AGENT
+                             │
+                  ┌──────────┴──────────┐
+                  │                     │
+                  ▼                     ▼
+                 LLM                   RAG
+                  │                     │
+                  │                     ▼
+                  │                Embeddings
+                  │                     │
+                  │                     ▼
+                  │                Vector DB
+                  │                     │
+                  │                     ▼
+                  │             Relevant Documents
+                  │
+                  ▼
+             Tool Decision
+                  │
+                  ▼
+              MCP Client
+                  │
+                  ▼
+              MCP Server
+                  │
+        ┌─────────┼──────────┐
+        ▼         ▼          ▼
+   Student DB  Calendar    GitHub
+        │         │          │
+        └─────────┴──────────┘
+                  │
+                  ▼
+             Tool Results
+                  │
+                  ▼
+                  LLM
+                  │
+                  ▼
+             FINAL ANSWER
+The one-line explanation to remember:
+
+LLM generates the answer, RAG gives the LLM relevant knowledge, Agentic AI decides what needs to be done, and MCP provides a standardized way for the AI application to interact with external tools and data.
+
+That is the core mental model. Once this is clear, learning the Python implementation becomes much easier.
+
+Today 10:22 PM
+RAG real time example with step by step using python
+
+Absolutely. Let's build one small real-time RAG application in Python, from zero, so you can understand why each piece is required.
+
+We'll build:
+
+Java Training Document Chatbot
+
+Suppose you have a PDF called spring_boot_notes.txt containing your training material. A student asks:
+
+"What is Dependency Injection in Spring Boot?"
+
+The application will search the training document and answer using that content.
+
+1. First Understand the RAG Idea
+
+Without RAG:
+
+Student
+   │
+   ▼
+Question
+   │
+   ▼
+LLM
+   │
+   ▼
+Generic Answer
+
+With RAG:
+
+                    Student
+                       │
+                       ▼
+                  Question
+                       │
+                       ▼
+                 Search Docs
+                       │
+                       ▼
+              Relevant Content
+                       │
+                       ▼
+              Question + Content
+                       │
+                       ▼
+                     LLM
+                       │
+                       ▼
+                Final Answer
+
+The key idea is:
+
+RAG = Search relevant knowledge first + give that knowledge to the LLM + generate the answer.
+
+2. Our Real-Time Project
+
+We'll create:
+
+rag-demo/
+│
+├── documents/
+│   └── spring_boot_notes.txt
+│
+├── ingest.py
+├── rag.py
+└── requirements.txt
+
+Our architecture:
+
+                 spring_boot_notes.txt
+                         │
+                         ▼
+                  Read Document
+                         │
+                         ▼
+                    Chunk Text
+                         │
+                         ▼
+                 Create Embeddings
+                         │
+                         ▼
+                  Vector Database
+                         │
+                         │
+                         │
+Student Question ────────┘
+        │
+        ▼
+Create Query Embedding
+        │
+        ▼
+Similarity Search
+        │
+        ▼
+Relevant Chunks
+        │
+        ▼
+Build Prompt
+        │
+        ▼
+LLM
+        │
+        ▼
+Answer
+3. Step 1 — Create the Document
+
+Create:
+
+documents/spring_boot_notes.txt
+
+Put some training material inside:
+
+Spring Boot Dependency Injection
+
+Dependency Injection is a design pattern used by Spring to provide
+required dependencies to an object.
+
+Spring provides dependencies through the Spring IoC container.
+
+There are three common types of dependency injection:
+
+1. Constructor Injection
+2. Setter Injection
+3. Field Injection
+
+Constructor injection is generally preferred because dependencies
+can be made immutable and required dependencies are explicit.
+
+Example:
+
+@Service
+public class EmployeeService {
+
+    private final EmployeeRepository repository;
+
+    public EmployeeService(EmployeeRepository repository) {
+        this.repository = repository;
+    }
+}
+
+This is our knowledge base.
+
+4. Step 2 — Why Can't We Directly Give the Entire Document to the LLM?
+
+Imagine our document has:
+
+500 pages
+
+and the user asks:
+
+"What is constructor injection?"
+
+We don't want to send all 500 pages.
+
+Instead:
+
+500 pages
+     │
+     ▼
+Find relevant section
+     │
+     ▼
+Dependency Injection
+     │
+     ▼
+Constructor Injection
+
+This is called retrieval.
+
+5. Step 3 — Install Python Libraries
+
+For a simple demonstration, we can use:
+
+pip install openai chromadb
+
+We use:
+
+openai → communicate with the LLM and embeddings API
+chromadb → store and search vectors
+
+You can later replace Chroma with PostgreSQL/pgvector, Qdrant, Pinecone, etc.
+
+6. Step 4 — Understand Embeddings Before Coding
+
+This is the most important concept.
+
+Suppose we have:
+
+Document:
+
+Spring Boot uses Dependency Injection.
+
+We convert it into a vector:
+
+[0.12, 0.82, 0.45, 0.91, ...]
+
+And the question:
+
+What is Dependency Injection?
+
+also becomes:
+
+[0.15, 0.79, 0.48, 0.88, ...]
+
+The vectors are mathematically similar.
+
+Question Vector
+       │
+       │ similarity
+       ▼
+Document Vector
+
+Therefore, the database can determine:
+
+"This document is probably relevant to this question."
+
+7. Step 5 — Document Chunking
+
+Suppose the document contains:
+
+Paragraph 1
+Paragraph 2
+Paragraph 3
+Paragraph 4
+Paragraph 5
+Paragraph 6
+
+We don't necessarily store the entire document as one vector.
+
+Instead:
+
+                 Document
+                    │
+       ┌────────────┼────────────┐
+       ▼            ▼            ▼
+     Chunk 1      Chunk 2      Chunk 3
+       │            │            │
+       ▼            ▼            ▼
+    Vector        Vector        Vector
+       │            │            │
+       └────────────┼────────────┘
+                    ▼
+              Vector Database
+
+Why?
+
+Because the user may ask about something contained only in Chunk 2.
+
+8. Step 6 — Create the Vector Database
+
+For learning purposes, Chroma is convenient.
+
+Example:
+
+import chromadb
+
+client = chromadb.PersistentClient(
+    path="./chroma_db"
+)
+
+collection = client.get_or_create_collection(
+    name="spring_boot"
+)
+
+Now we have:
+
+Python
+  │
+  ▼
+ChromaDB
+  │
+  ▼
+spring_boot collection
+9. Step 7 — Read the Document
+with open(
+    "documents/spring_boot_notes.txt",
+    "r",
+    encoding="utf-8"
+) as file:
+    text = file.read()
+
+print(text)
+
+Now Python has the document.
+
+10. Step 8 — Split Into Chunks
+
+For our small example:
+
+chunks = [
+    text[i:i + 500]
+    for i in range(0, len(text), 500)
+]
+
+Now:
+
+Document
+   │
+   ▼
+500 characters
+   │
+   ▼
+Chunk 1
+
+500 characters
+   │
+   ▼
+Chunk 2
+
+500 characters
+   │
+   ▼
+Chunk 3
+
+In a production RAG system, you would normally use a proper text splitter and tune chunk size + overlap rather than blindly slicing characters.
+
+11. Step 9 — Generate Embeddings
+
+Conceptually:
+
+embedding = embedding_model.embed(chunk)
+
+For example:
+
+"Dependency Injection is..."
+            │
+            ▼
+      Embedding Model
+            │
+            ▼
+[0.23, 0.78, 0.41, ...]
+
+We generate an embedding for every chunk.
+
+12. Step 10 — Store Chunks + Embeddings
+
+Conceptually:
+
+collection.add(
+    documents=chunks,
+    ids=["chunk1", "chunk2", "chunk3"]
+)
+
+The vector database now contains something like:
+
+┌─────────┬───────────────────────┐
+│ ID      │ Document + Vector     │
+├─────────┼───────────────────────┤
+│ chunk1  │ Spring Boot...        │
+│ chunk2  │ Dependency Injection  │
+│ chunk3  │ Constructor Injection │
+└─────────┴───────────────────────┘
+13. Step 11 — User Asks a Question
+
+Now the student asks:
+
+What is constructor injection?
+
+This is the query.
+
+Student
+   │
+   ▼
+"What is constructor injection?"
+14. Step 12 — Convert Question Into an Embedding
+
+The question is converted to a vector:
+
+"What is constructor injection?"
+
+             │
+             ▼
+
+      Embedding Model
+
+             │
+             ▼
+
+[0.18, 0.81, 0.44, ...]
+
+Now we can compare it against the document vectors.
+
+15. Step 13 — Similarity Search
+
+We ask Chroma:
+
+Find the chunks most similar to this question.
+
+Conceptually:
+
+results = collection.query(
+    query_texts=[
+        "What is constructor injection?"
+    ],
+    n_results=3
+)
+
+The database might return:
+
+Chunk 3 → Constructor Injection
+Chunk 2 → Dependency Injection
+Chunk 1 → Spring IoC
+16. Step 14 — This Is the "Retrieval" in RAG
+
+Now we have:
+
+Question
+
+"What is constructor injection?"
+
+       +
+
+Retrieved Context
+
+"Constructor injection is a type of
+dependency injection..."
+
+       ↓
+
+RAG Context
+
+This is the most important transition:
+
+Question
+   +
+Retrieved Documents
+   ↓
+LLM
+17. Step 15 — Build the Prompt
+
+Now create a prompt:
+
+prompt = f"""
+You are a Java trainer.
+
+Answer the question using the provided context.
+
+Context:
+{context}
+
+Question:
+{question}
+
+If the answer is not available in the context,
+say that the information is not available.
+"""
+
+Notice what we did.
+
+We didn't just send:
+
+What is constructor injection?
+
+We sent:
+
+Instructions
++
+Retrieved Context
++
+Question
+18. Step 16 — Send to the LLM
+
+Conceptually:
+
+response = client.chat.completions.create(
+    model="your-model",
+    messages=[
+        {
+            "role": "user",
+            "content": prompt
+        }
+    ]
+)
+
+The LLM now receives:
+
+┌───────────────────────────────┐
+│ System/Instructions           │
+│                               │
+│ Answer using the context.     │
+├───────────────────────────────┤
+│ Retrieved Context             │
+│                               │
+│ Dependency Injection...       │
+│ Constructor Injection...      │
+├───────────────────────────────┤
+│ User Question                 │
+│                               │
+│ What is constructor injection?│
+└───────────────────────────────┘
+19. Step 17 — Final Answer
+
+The LLM might answer:
+
+Constructor injection is a form of Dependency Injection where required dependencies are provided through a class constructor. In Spring Boot, it is commonly preferred because required dependencies are explicit and can be immutable.
+
+The important point is:
+
+The answer was generated using retrieved training material.
+
+20. Complete Python RAG Code — Simplified
+
+Here is the entire concept in one place:
+
+import chromadb
+from openai import OpenAI
+
+# --------------------------------
+# 1. Create clients
+# --------------------------------
+
+llm_client = OpenAI()
+
+chroma_client = chromadb.PersistentClient(
+    path="./chroma_db"
+)
+
+collection = chroma_client.get_or_create_collection(
+    name="spring_boot"
+)
+
+
+# --------------------------------
+# 2. Read document
+# --------------------------------
+
+with open(
+    "documents/spring_boot_notes.txt",
+    "r",
+    encoding="utf-8"
+) as file:
+    text = file.read()
+
+
+# --------------------------------
+# 3. Split document
+# --------------------------------
+
+chunks = [
+    text[i:i + 500]
+    for i in range(0, len(text), 500)
+]
+
+
+# --------------------------------
+# 4. Store documents
+# --------------------------------
+
+collection.add(
+    documents=chunks,
+    ids=[
+        f"chunk-{i}"
+        for i in range(len(chunks))
+    ]
+)
+
+
+# --------------------------------
+# 5. Ask question
+# --------------------------------
+
+question = "What is constructor injection?"
+
+
+# --------------------------------
+# 6. Retrieve relevant chunks
+# --------------------------------
+
+results = collection.query(
+    query_texts=[question],
+    n_results=3
+)
+
+
+# --------------------------------
+# 7. Build context
+# --------------------------------
+
+context = "\n\n".join(
+    results["documents"][0]
+)
+
+
+# --------------------------------
+# 8. Build prompt
+# --------------------------------
+
+prompt = f"""
+You are a Java trainer.
+
+Answer the question using only the
+provided context.
+
+Context:
+{context}
+
+Question:
+{question}
+
+If the answer is not present in the
+context, say so.
+"""
+
+
+# --------------------------------
+# 9. Ask LLM
+# --------------------------------
+
+response = llm_client.chat.completions.create(
+    model="your-model",
+    messages=[
+        {
+            "role": "user",
+            "content": prompt
+        }
+    ]
+)
+
+
+# --------------------------------
+# 10. Print answer
+# --------------------------------
+
+print(
+    response.choices[0].message.content
+)
+
+This is a learning example, not yet a production-grade RAG implementation.
+
+21. Very Important: Separate Ingestion and Query
+
+In a real application, don't re-process your documents every time a user asks a question.
+
+There are actually two pipelines.
+
+Pipeline A — Ingestion
+
+Run when documents are uploaded/updated:
+
+PDF/TXT
+  │
+  ▼
+Document Loader
+  │
+  ▼
+Chunking
+  │
+  ▼
+Embedding Model
+  │
+  ▼
+Vector Database
+Pipeline B — Query
+
+Run every time the user asks something:
+
+User Question
+      │
+      ▼
+Query Embedding
+      │
+      ▼
+Vector Search
+      │
+      ▼
+Relevant Chunks
+      │
+      ▼
+Prompt
+      │
+      ▼
+LLM
+      │
+      ▼
+Answer
+
+This distinction is very important in interviews.
+
+22. Complete Real-Time Architecture
+                 DOCUMENT INGESTION
+                 ==================
+
+                  Spring Boot PDF
+                       │
+                       ▼
+                 Document Loader
+                       │
+                       ▼
+                    Chunking
+                       │
+                       ▼
+                 Embedding Model
+                       │
+                       ▼
+                 ┌──────────────┐
+                 │ Vector Store │
+                 └──────────────┘
+                       ▲
+                       │
+                       │
+                       │
+                 QUERY PIPELINE
+                 ==============
+
+User
+ │
+ ▼
+"What is DI?"
+ │
+ ▼
+Embedding Model
+ │
+ ▼
+Query Vector
+ │
+ ▼
+Vector Store
+ │
+ ▼
+Top-K Chunks
+ │
+ ▼
+Prompt + Context
+ │
+ ▼
+LLM
+ │
+ ▼
+Final Answer
+23. Where Does RAG Actually Start?
+
+This is a common interview confusion.
+
+The document ingestion pipeline prepares the knowledge.
+
+The RAG query pipeline retrieves that knowledge and augments the LLM prompt.
+
+So:
+
+INGESTION
+
+Documents
+   ↓
+Chunks
+   ↓
+Embeddings
+   ↓
+Vector Store
+
+then:
+
+RAG
+
+Question
+   ↓
+Retrieve
+   ↓
+Augment
+   ↓
+Generate
+24. Add Query Expansion
+
+Now suppose the student asks:
+
+"JWT?"
+
+That's too short.
+
+We can expand it:
+
+JWT
+ │
+ ├── JSON Web Token
+ ├── JWT Authentication
+ ├── Bearer Token
+ ├── Access Token
+ ├── Refresh Token
+ └── Spring Security JWT
+
+Then retrieve using these related queries.
+
+             JWT
+              │
+              ▼
+        Query Expansion
+              │
+     ┌────────┼─────────┐
+     ▼        ▼         ▼
+    JWT     Bearer    Spring
+            Token     Security
+     │        │         │
+     └────────┼─────────┘
+              ▼
+         Vector Search
+
+This can improve recall, although it also adds latency and can introduce irrelevant results if the expansion is poor.
+
+25. Add Re-ranking
+
+Suppose retrieval returns:
+
+1. Spring Security
+2. OAuth
+3. JWT
+4. React Authentication
+5. Docker Security
+
+A re-ranker can reorder them:
+
+1. JWT
+2. Spring Security
+3. OAuth
+4. Docker Security
+5. React Authentication
+
+Then only the best few chunks are passed to the LLM.
+
+Vector Search
+     │
+     ▼
+20 candidates
+     │
+     ▼
+Re-ranker
+     │
+     ▼
+Top 5
+     │
+     ▼
+LLM
+26. RAG vs Normal LLM
+
+This is another very important interview question.
+
+Normal LLM
+Question
+   │
+   ▼
+LLM
+   │
+   ▼
+Answer
+RAG
+Question
+   │
+   ▼
+Retrieve Knowledge
+   │
+   ▼
+Relevant Context
+   │
+   ▼
+LLM
+   │
+   ▼
+Answer
+27. RAG vs Fine-Tuning
+
+Suppose your company changes its HR policy every month.
+
+You could fine-tune a model, but that would be inconvenient for frequently changing knowledge.
+
+RAG is usually a better fit:
+
+New Policy
+    │
+    ▼
+Chunk
+    │
+    ▼
+Embedding
+    │
+    ▼
+Vector DB
+
+No model retraining is required just to make the new document retrievable.
+
+28. Your Evaluation Answer
+
+If the evaluator asks:
+
+"Explain a real-time RAG implementation in Python."
+
+You can answer:
+
+"I would build a document-based question-answering system. First, I load the company's PDF or text documents. I split the documents into smaller chunks and generate embeddings for those chunks. I store the chunks and embeddings in a vector database such as Chroma or pgvector. When a user asks a question, I generate an embedding for the question and perform similarity search against the vector database. I retrieve the most relevant chunks and combine them with the user's question to construct a prompt. The LLM then generates the final answer based on the retrieved context. This is the Retrieval-Augmented Generation pipeline."
+
+Then draw:
+
+Documents
+   │
+   ▼
+Chunking
+   │
+   ▼
+Embeddings
+   │
+   ▼
+Vector DB
+   ▲
+   │
+User Question
+   │
+   ▼
+Query Embedding
+   │
+   ▼
+Similarity Search
+   │
+   ▼
+Relevant Chunks
+   │
+   ▼
+Prompt + Context
+   │
+   ▼
+LLM
+   │
+   ▼
+Answer
+The 5 words to remember
+
+Load → Chunk → Embed → Retrieve → Generate
+
+If you remember those five words, you can reconstruct the entire basic RAG architecture during your evaluation.
