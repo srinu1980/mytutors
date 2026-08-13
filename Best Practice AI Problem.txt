@@ -1,0 +1,1562 @@
+
+what is Embeddings in AI
+Fast answer
+
+Embeddings are a way of representing data (such as words, sentences, images, or documents) as lists of numbers (vectors) that capture their meaning. This lets AI models understand similarity and relationships mathematically.
+
+A simple analogy
+
+Imagine you're organizing books in a library.
+
+If you organize them alphabetically, books about the same topic may end up far apart.
+If you organize them by subject, books on similar topics are placed close together.
+
+Embeddings work like the second approach: items with similar meanings have similar vectors.
+
+For example:
+
+Text	Simplified embedding (illustrative only)
+"cat"	[0.82, -0.15, 0.44, ...]
+"kitten"	[0.80, -0.17, 0.46, ...]
+"dog"	[0.76, -0.21, 0.39, ...]
+"car"	[-0.12, 0.91, -0.48, ...]
+
+The vectors for cat and kitten are much closer than cat and car.
+
+Why are embeddings useful?
+
+Embeddings allow AI to compare meanings instead of exact words.
+
+For example:
+
+Query:
+
+"How do I bake bread?"
+
+A document saying:
+
+"Guide to making homemade sourdough"
+
+can still be found even though it doesn't contain the exact words "bake bread."
+
+Common uses
+Semantic search – Find documents by meaning instead of keywords.
+Recommendation systems – Recommend similar products, movies, or songs.
+Retrieval-Augmented Generation (RAG) – Retrieve relevant documents before asking an LLM to answer.
+Clustering – Group similar documents or customers together.
+Duplicate detection – Identify nearly identical content.
+Classification – Categorize text, images, or other data.
+How embeddings are created
+
+An embedding model (often a neural network) learns patterns from large amounts of data.
+
+For example:
+
+Text
+   ↓
+Embedding Model
+   ↓
+[0.13, -0.55, 0.92, ... 1536 numbers]
+
+The model converts text into a vector where semantic relationships are encoded.
+
+Comparing embeddings
+
+Once everything is converted into vectors, AI measures how close they are using metrics such as:
+
+Cosine similarity (most common)
+Euclidean distance
+Dot product
+
+Higher similarity means the items are more semantically related.
+
+Example in a chatbot (RAG)
+
+Suppose you have 10,000 company documents.
+
+Convert every document into an embedding.
+Store the embeddings in a vector database.
+
+A user asks:
+
+"How do I reset my password?"
+
+Convert the question into an embedding.
+Find the stored document embeddings that are most similar.
+Provide those documents to the language model.
+The model generates an answer based on the retrieved information.
+Key points to remember
+Embeddings are numerical representations of meaning, not just text.
+Similar concepts produce vectors that are close together in vector space.
+They power semantic search, recommendations, clustering, and RAG systems.
+The vectors themselves are usually high-dimensional (e.g., 384, 768, or 1,536 dimensions), making them expressive enough to capture nuanced relationships.
+
+In short, you can think of embeddings as a mathematical language that enables AI systems to understand and compare the meaning of information rather than just matching exact words
+
+================
+
+I think you mean LangChain.
+
+What is LangChain?
+
+LangChain is a framework used to build applications powered by Large Language Models (LLMs) such as OpenAI models, Gemini, Claude, etc.
+
+Instead of simply asking an LLM:
+
+"Explain Java inheritance"
+
+LangChain helps you build an application where the LLM can use prompts, documents, databases, tools, memory, APIs, and other components to solve a larger task.
+
+Simple picture
+                    LangChain Application
+                           |
+        +------------------+------------------+
+        |                  |                  |
+      Prompt             LLM               Tools
+        |                  |                  |
+        +------------------+------------------+
+                           |
+                     Final Response
+1. Why do we need LangChain?
+
+Without LangChain:
+
+User
+ ↓
+Your Python code
+ ↓
+LLM API
+ ↓
+Response
+
+This works for simple questions.
+
+But imagine building a company chatbot:
+
+User
+ ↓
+Question
+ ↓
+Search company documents
+ ↓
+Retrieve relevant information
+ ↓
+Send information + question to LLM
+ ↓
+Generate answer
+
+LangChain provides components that make this type of application easier to develop.
+
+2. LangChain and LLM
+
+Think of the relationship like this:
+
+LLM
+ ↓
+Brain / Intelligence
+
+LangChain
+ ↓
+Framework that connects the LLM
+to other components
+
+For example:
+
+             LangChain
+                 |
+     +-----------+-----------+
+     |           |           |
+    LLM        Prompt      Tools
+     |           |           |
+ OpenAI       Template    Database
+ Gemini                    API
+ Claude                    Search
+3. Important LangChain concepts
+
+For your LLM + RAG + Agentic AI preparation, these are particularly important:
+
+① Models
+
+Connect LangChain to an LLM.
+
+LangChain → OpenAI
+LangChain → Gemini
+LangChain → Claude
+② Prompts
+
+Create reusable prompts.
+
+For example:
+
+You are a Java trainer.
+
+Explain the following topic:
+{topic}
+
+Give examples suitable for beginners.
+
+Here {topic} can be dynamically replaced.
+
+③ Chains
+
+A chain connects multiple operations together.
+
+For example:
+
+User Question
+      ↓
+Create Prompt
+      ↓
+Call LLM
+      ↓
+Parse Response
+      ↓
+Final Answer
+
+Hence the name LangChain.
+
+You are essentially creating a sequence/chain of operations.
+
+④ Document Loaders
+
+Used to load information from sources such as:
+
+PDF
+TXT
+CSV
+Web pages
+Documents
+Databases
+
+Example:
+
+Company PDF
+     ↓
+Document Loader
+     ↓
+Text
+⑤ Text Splitters
+
+Large documents are divided into smaller pieces.
+
+Large PDF
+   ↓
+Text
+   ↓
+Chunk 1
+Chunk 2
+Chunk 3
+Chunk 4
+
+This is very important for RAG.
+
+⑥ Embeddings
+
+You just asked about embeddings.
+
+LangChain can connect your documents to an embedding model:
+
+Document
+   ↓
+Chunk
+   ↓
+Embedding Model
+   ↓
+Vector
+
+Example:
+
+"Java supports inheritance"
+          ↓
+[0.21, -0.45, 0.78, ...]
+⑦ Vector Stores
+
+The vectors can be stored in a vector database.
+
+Examples include:
+
+FAISS
+Chroma
+Pinecone
+Milvus
+Weaviate
+
+Architecture:
+
+Documents
+   ↓
+Chunks
+   ↓
+Embeddings
+   ↓
+Vector Database
+4. LangChain + RAG
+
+This is especially important for your interview preparation.
+
+Suppose your company has:
+
+employee_policy.pdf
+leave_policy.pdf
+insurance_policy.pdf
+
+You want to create a chatbot.
+
+Step 1 — Load documents
+PDF files
+   ↓
+Document Loader
+Step 2 — Split documents
+Documents
+   ↓
+Text Splitter
+   ↓
+Chunks
+Step 3 — Create embeddings
+Chunks
+   ↓
+Embedding Model
+   ↓
+Vectors
+Step 4 — Store vectors
+Vectors
+   ↓
+Vector Database
+Step 5 — User asks a question
+"What is the maternity leave policy?"
+Step 6 — Convert question to embedding
+Question
+   ↓
+Embedding Model
+   ↓
+Query Vector
+Step 7 — Search
+Query Vector
+      ↓
+Vector Database
+      ↓
+Relevant Chunks
+Step 8 — Send to LLM
+Question + Relevant Documents
+             ↓
+            LLM
+             ↓
+          Answer
+
+This is a RAG application, and LangChain can provide many of the components needed to build it.
+
+5. LangChain + Agents
+
+LangChain is also used for AI agents.
+
+Imagine you ask:
+
+"Find the weather in Chennai and send me an email."
+
+An agent can decide:
+
+User
+ ↓
+AI Agent
+ ↓
+"What tools do I need?"
+ ↓
+Weather Tool
+ ↓
+Email Tool
+ ↓
+Final Response
+
+So:
+
+LLM
+ +
+Tools
+ +
+Decision making
+ =
+Agent
+
+This connects directly to your Agentic AI preparation.
+
+6. LangChain + Python
+
+A simplified conceptual example:
+
+from langchain_openai import ChatOpenAI
+
+llm = ChatOpenAI(
+    model="gpt-4.1"
+)
+
+response = llm.invoke(
+    "Explain Java inheritance with an example"
+)
+
+print(response.content)
+
+The important idea is:
+
+Python Application
+       ↓
+    LangChain
+       ↓
+      LLM
+       ↓
+    Response
+
+The exact package/model names can change as LangChain and model providers evolve, so for real projects you should follow the current provider documentation.
+
+7. LangChain vs LLM
+
+This distinction is very important in interviews.
+
+LLM	LangChain
+AI model	Application framework
+Generates text/reasoning	Connects components
+Understands language	Helps build AI workflows
+Example: GPT, Gemini, Claude	Framework/library
+Provides intelligence	Orchestrates the application
+
+Think:
+
+LLM = Engine
+
+LangChain = Framework that helps you build the vehicle around the engine
+8. LangChain vs RAG
+
+These are also different.
+
+LangChain
+   |
+   +--- Prompts
+   +--- Models
+   +--- Chains
+   +--- Tools
+   +--- Agents
+   +--- RAG components
+
+RAG is an architecture/pattern:
+
+Retrieve information
+        +
+Generate answer
+        =
+RAG
+
+LangChain can be used to implement RAG.
+
+9. The complete picture
+
+For your LLM learning, remember this architecture:
+
+                         AI Application
+                              |
+                         LangChain
+                              |
+          +-------------------+-------------------+
+          |                   |                   |
+        Prompt              LLM                Tools
+          |                   |                   |
+          |              GPT/Gemini/          APIs/DB
+          |                Claude
+          |
+         RAG
+          |
+   +------+------+
+   |             |
+Documents      Vector DB
+   |             |
+Chunking      Embeddings
+Interview definition
+
+LangChain is an open-source framework for developing applications powered by language models. It provides components and abstractions for working with LLMs, prompts, document retrieval, vector stores, tools, chains, and agents, making it easier to build applications such as RAG-based chatbots and AI agents.
+
+One-line memory trick
+
+LLM = Brain
+Embeddings = Meaning represented as vectors
+Vector DB = Memory/search storage
+RAG = Retrieve + Generate
+LangChain = Framework that connects these components
+Agent = LLM + Tools + Decision-making
+
+pip install langchain langchain-openai langchain-community faiss-cpu pypdf
+
+Yes. This command installs the main Python packages needed to start building LangChain + OpenAI + RAG applications:
+
+pip install langchain langchain-openai langchain-community faiss-cpu pypdf
+What each package does
+Package	Purpose
+langchain	Core LangChain framework
+langchain-openai	Connects LangChain with OpenAI models
+langchain-community	Community integrations, document loaders, vector stores, etc.
+faiss-cpu	Vector database/search library for similarity search
+pypdf	Reads and extracts text from PDF files
+How they work together in a RAG project
+                 PDF File
+                    ↓
+                 pypdf
+                    ↓
+             Extract PDF Text
+                    ↓
+             LangChain Splitter
+                    ↓
+                Text Chunks
+                    ↓
+        langchain-openai Embeddings
+                    ↓
+                Embeddings
+                    ↓
+                 FAISS
+              Vector Store
+                    ↓
+             Similarity Search
+                    ↓
+              Relevant Chunks
+                    ↓
+        langchain-openai → LLM
+                    ↓
+                Answer
+Typical project flow
+
+For example, if you have:
+
+employee_policy.pdf
+
+you can build:
+
+PDF
+ ↓
+PyPDFLoader
+ ↓
+Document
+ ↓
+Text Splitter
+ ↓
+Chunks
+ ↓
+OpenAI Embeddings
+ ↓
+FAISS Vector Store
+ ↓
+Retriever
+ ↓
+LLM
+ ↓
+Answer
+
+So this single installation command gives you most of the building blocks for a basic LangChain RAG application.
+
+Important: faiss-cpu is the CPU version of FAISS. You don't need a GPU just to learn and run a basic RAG example.
+
+Explain step by step building blocks for a basic LangChain RAG application.
+
+Absolutely. Since you are learning LLM → Embeddings → RAG → LangChain → Agentic AI, let's build a basic LangChain RAG application step by step, starting from the fundamentals.
+
+Basic LangChain RAG Application
+
+We will build a small application that can answer questions from a PDF document.
+
+For example:
+
+company_policy.pdf
+
+User asks:
+
+"How many days of leave can an employee take?"
+
+The application should search the PDF and answer based on its contents.
+
+1. First understand the complete architecture
+
+Before writing code, understand this flow:
+
+                         USER
+                           |
+                           | Question
+                           ↓
+                  ┌─────────────────┐
+                  │  LangChain RAG  │
+                  └─────────────────┘
+                           |
+                           ↓
+                    Query Embedding
+                           |
+                           ↓
+                  ┌─────────────────┐
+                  │  FAISS Vector   │
+                  │     Store       │
+                  └─────────────────┘
+                           |
+                    Similarity Search
+                           |
+                           ↓
+                    Relevant Chunks
+                           |
+                           ↓
+              ┌────────────────────────┐
+              │ Question + Context     │
+              └────────────────────────┘
+                           |
+                           ↓
+                         LLM
+                           |
+                           ↓
+                    Final Answer
+
+But before the user can ask a question, we need to prepare the PDF.
+
+So the complete RAG pipeline is actually:
+
+                    DOCUMENT INGESTION
+                           |
+                           ↓
+                       PDF File
+                           |
+                           ↓
+                    PDF Loader
+                           |
+                           ↓
+                    Extract Text
+                           |
+                           ↓
+                    Text Splitting
+                           |
+                           ↓
+                     Text Chunks
+                           |
+                           ↓
+                     Embeddings
+                           |
+                           ↓
+                    Vector Store
+                           |
+                           ↓
+                    FAISS Database
+                           |
+                           |
+                    USER QUESTION
+                           |
+                           ↓
+                    Query Embedding
+                           |
+                           ↓
+                    Similarity Search
+                           |
+                           ↓
+                  Relevant Documents
+                           |
+                           ↓
+                  Prompt + Context
+                           |
+                           ↓
+                           LLM
+                           |
+                           ↓
+                       ANSWER
+
+There are two major phases:
+
+Phase 1 — Data preparation
+PDF → Load → Split → Embed → Store
+Phase 2 — Question answering
+Question → Embed → Search → Retrieve → LLM → Answer
+
+This distinction is very important for interviews.
+
+2. Install required packages
+
+You already have this command:
+
+pip install langchain langchain-openai langchain-community faiss-cpu pypdf
+
+Let's understand each one.
+
+langchain
+
+Core LangChain framework.
+
+Your Python Application
+        ↓
+    LangChain
+langchain-openai
+
+Used to communicate with OpenAI models.
+
+It provides things such as:
+
+ChatOpenAI
+OpenAIEmbeddings
+langchain-community
+
+Contains integrations such as:
+
+PDF loaders
+Vector stores
+Document loaders
+Other integrations
+pypdf
+
+Used to read PDF files.
+
+PDF
+ ↓
+PyPDF
+ ↓
+Text
+faiss-cpu
+
+FAISS is used for vector similarity search.
+
+Embeddings
+    ↓
+FAISS
+    ↓
+Find similar vectors
+3. Create the project
+
+Create a folder:
+
+langchain-rag/
+
+Inside:
+
+langchain-rag/
+│
+├── documents/
+│   └── company_policy.pdf
+│
+├── ingest.py
+├── rag.py
+└── .env
+
+Later you can organize it into a larger enterprise project.
+
+For learning, keep it simple.
+
+4. Step 1 — Load the PDF
+
+Our first building block is the Document Loader.
+
+LangChain provides PyPDFLoader.
+
+from langchain_community.document_loaders import PyPDFLoader
+
+loader = PyPDFLoader("documents/company_policy.pdf")
+
+documents = loader.load()
+
+print(documents)
+
+What happens?
+
+company_policy.pdf
+        ↓
+   PyPDFLoader
+        ↓
+    Documents
+
+Suppose the PDF contains:
+
+Page 1:
+
+Employees are entitled to 20 days of annual leave.
+
+Page 2:
+
+Employees can apply for leave through the HR portal.
+
+LangChain converts this into Document objects.
+
+Conceptually:
+
+Document 1
+----------------
+page_content:
+Employees are entitled to 20 days...
+
+metadata:
+page = 1
+
+
+Document 2
+----------------
+page_content:
+Employees can apply for leave...
+
+metadata:
+page = 2
+Why metadata?
+
+Metadata helps us know where information came from.
+
+For example:
+
+print(documents[0].metadata)
+
+You may get something like:
+
+{
+    "source": "documents/company_policy.pdf",
+    "page": 0
+}
+
+This becomes useful when displaying citations such as:
+
+Answer found in page 2 of company_policy.pdf.
+
+5. Step 2 — Split the document
+
+A PDF could contain:
+
+100 pages
+10,000 pages
+
+We shouldn't send the entire PDF to the LLM every time.
+
+Instead, divide it into smaller pieces called chunks.
+
+Large Document
+       ↓
++--------------+
+| Chunk 1      |
++--------------+
+| Chunk 2      |
++--------------+
+| Chunk 3      |
++--------------+
+| Chunk 4      |
++--------------+
+
+Use a text splitter.
+
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+If this package isn't installed in your environment, install:
+
+pip install langchain-text-splitters
+
+Then:
+
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=1000,
+    chunk_overlap=200
+)
+
+chunks = text_splitter.split_documents(documents)
+6. What is chunk_size?
+
+Suppose we have:
+
+10000 characters
+
+and:
+
+chunk_size=1000
+
+Then approximately:
+
+Document
+ ↓
+1000 characters → Chunk 1
+1000 characters → Chunk 2
+1000 characters → Chunk 3
+...
+
+The actual split depends on the text and separators, so don't think of it as a rigid character-count guarantee.
+
+7. What is chunk_overlap?
+
+This is very important.
+
+Suppose:
+
+Chunk 1:
+Java supports inheritance and polymorphism.
+Inheritance allows one class to acquire properties...
+
+Chunk 2 might otherwise start abruptly:
+
+Polymorphism allows an object to take...
+
+Some context could be lost at the boundary.
+
+With overlap:
+
+Chunk 1
+--------------------
+A B C D E F G
+
+
+Chunk 2
+--------------------
+        F G H I J K
+        ↑
+      overlap
+
+So:
+
+chunk_size = 1000
+chunk_overlap = 200
+
+means chunks have approximately 200 characters of shared context at boundaries.
+
+8. Step 3 — Create embeddings
+
+Now comes one of the most important concepts.
+
+We have:
+
+PDF
+ ↓
+Chunks
+
+We need to convert every chunk into a vector.
+
+That's where embeddings come in.
+
+Text Chunk
+    ↓
+Embedding Model
+    ↓
+Vector
+
+Example:
+
+"Employees get 20 days annual leave"
+
+might conceptually become:
+
+[0.23, -0.71, 0.44, 0.18, ...]
+
+The actual vector will have many dimensions.
+
+9. Create OpenAI embeddings
+from langchain_openai import OpenAIEmbeddings
+
+embeddings = OpenAIEmbeddings(
+    model="text-embedding-3-small"
+)
+
+Now:
+
+Chunk
+ ↓
+OpenAI Embedding Model
+ ↓
+Vector
+10. Why do we need embeddings?
+
+Imagine the user asks:
+
+"How much annual vacation do employees receive?"
+
+But the document says:
+
+"Employees are entitled to 20 days of annual leave."
+
+There may be no exact keyword match.
+
+A traditional keyword search might struggle.
+
+Embeddings capture semantic similarity:
+
+"annual vacation"
+        ↕
+"annual leave"
+
+So the system can understand that they are related.
+
+11. Step 4 — Store embeddings in FAISS
+
+Now we have:
+
+Chunk 1 → Vector 1
+Chunk 2 → Vector 2
+Chunk 3 → Vector 3
+Chunk 4 → Vector 4
+
+We need somewhere to store them.
+
+For this example, we'll use FAISS.
+
+from langchain_community.vectorstores import FAISS
+
+vectorstore = FAISS.from_documents(
+    chunks,
+    embeddings
+)
+
+Conceptually:
+
+               FAISS
+                |
+      +---------+---------+
+      |         |         |
+   Vector 1  Vector 2  Vector 3
+      |         |         |
+   Chunk 1   Chunk 2   Chunk 3
+
+FAISS helps us efficiently find vectors that are similar to the user's question.
+
+12. Step 5 — Create a Retriever
+
+Now we need a mechanism to search the vector store.
+
+retriever = vectorstore.as_retriever(
+    search_kwargs={"k": 3}
+)
+
+k=3 means:
+
+Return approximately the 3 most relevant chunks.
+
+Conceptually:
+
+User Question
+      ↓
+Retriever
+      ↓
+FAISS
+      ↓
+Top 3 relevant chunks
+13. Step 6 — User asks a question
+
+Suppose:
+
+"What is the annual leave entitlement?"
+
+The question goes through the same embedding process:
+
+Question
+   ↓
+Embedding Model
+   ↓
+Query Vector
+
+For example:
+
+"What is the annual leave entitlement?"
+                    ↓
+             [0.31, -0.62, ...]
+14. Step 7 — Similarity Search
+
+Now FAISS compares:
+
+Question Vector
+      ↓
+FAISS
+      ↓
+Compare against document vectors
+
+Suppose:
+
+Question
+   ↓
+FAISS
+   ↓
+Chunk 7   ← highly relevant
+Chunk 2   ← relevant
+Chunk 15  ← relevant
+
+These chunks become the retrieved context.
+
+15. Step 8 — Send context to the LLM
+
+This is the heart of RAG.
+
+We create a prompt similar to:
+
+You are a helpful assistant.
+
+Answer the question using ONLY the following context.
+
+Context:
+Employees are entitled to 20 days of annual leave.
+
+Question:
+What is the annual leave entitlement?
+
+Then:
+
+Prompt
+ ↓
+LLM
+ ↓
+Answer
+
+The LLM might respond:
+
+Employees are entitled to 20 days of annual leave.
+
+16. Why is this called RAG?
+
+RAG stands for:
+
+Retrieval-Augmented Generation
+
+Break it down:
+
+Retrieval
+
+Find relevant information:
+
+Question
+ ↓
+Vector Search
+ ↓
+Relevant Documents
+Augmented
+
+Add that information to the prompt:
+
+Question + Retrieved Context
+Generation
+
+LLM generates the answer:
+
+Question + Context
+       ↓
+      LLM
+       ↓
+    Answer
+
+Therefore:
+
+R
+↓
+Retrieve
+
+A
+↓
+Augment
+
+G
+↓
+Generate
+17. Step 9 — Connect the LLM
+
+Using LangChain:
+
+from langchain_openai import ChatOpenAI
+
+llm = ChatOpenAI(
+    model="gpt-4.1",
+    temperature=0
+)
+
+Now we have:
+
+Retriever
+    ↓
+Context
+    ↓
+LLM
+18. Step 10 — Build the prompt
+
+We can use LangChain's prompt templates.
+
+from langchain_core.prompts import ChatPromptTemplate
+
+prompt = ChatPromptTemplate.from_template("""
+You are a helpful assistant.
+
+Answer the question using only the following context.
+
+Context:
+{context}
+
+Question:
+{question}
+
+If the answer is not available in the context,
+say "I don't know based on the provided documents."
+""")
+
+Here:
+
+{context}
+
+will contain retrieved document chunks.
+
+And:
+
+{question}
+
+will contain the user's question.
+
+19. Complete RAG flow
+
+Now put everything together conceptually:
+
+                   PDF
+                    ↓
+              PyPDFLoader
+                    ↓
+                Documents
+                    ↓
+              Text Splitter
+                    ↓
+                 Chunks
+                    ↓
+            OpenAI Embeddings
+                    ↓
+                 Vectors
+                    ↓
+                  FAISS
+                    ↓
+              Vector Store
+                    ↓
+                Retriever
+                    ↑
+                    |
+              User Question
+                    ↓
+             Query Embedding
+                    ↓
+              Similarity Search
+                    ↓
+             Relevant Chunks
+                    ↓
+               Prompt Template
+                    ↓
+                    LLM
+                    ↓
+              Final Answer
+20. Complete basic implementation
+
+A simple modern implementation can look like this:
+
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_openai import OpenAIEmbeddings, ChatOpenAI
+from langchain_community.vectorstores import FAISS
+from langchain_core.prompts import ChatPromptTemplate
+
+
+# 1. Load PDF
+loader = PyPDFLoader("documents/company_policy.pdf")
+documents = loader.load()
+
+
+# 2. Split document
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=1000,
+    chunk_overlap=200
+)
+
+chunks = text_splitter.split_documents(documents)
+
+
+# 3. Create embeddings
+embeddings = OpenAIEmbeddings(
+    model="text-embedding-3-small"
+)
+
+
+# 4. Create vector store
+vectorstore = FAISS.from_documents(
+    chunks,
+    embeddings
+)
+
+
+# 5. Create retriever
+retriever = vectorstore.as_retriever(
+    search_kwargs={"k": 3}
+)
+
+
+# 6. Create LLM
+llm = ChatOpenAI(
+    model="gpt-4.1",
+    temperature=0
+)
+
+
+# 7. Create prompt
+prompt = ChatPromptTemplate.from_template("""
+You are a helpful assistant.
+
+Answer the question using ONLY the following context.
+
+Context:
+{context}
+
+Question:
+{question}
+
+If the answer is not available in the context,
+say "I don't know based on the provided documents."
+""")
+
+
+# 8. Ask question
+question = "How many days of annual leave are available?"
+
+retrieved_docs = retriever.invoke(question)
+
+
+# 9. Combine retrieved documents
+context = "\n\n".join(
+    doc.page_content
+    for doc in retrieved_docs
+)
+
+
+# 10. Create final prompt
+messages = prompt.invoke({
+    "context": context,
+    "question": question
+})
+
+
+# 11. Ask LLM
+response = llm.invoke(messages)
+
+
+# 12. Print answer
+print(response.content)
+21. What is happening internally?
+
+When you execute:
+
+retrieved_docs = retriever.invoke(question)
+
+think:
+
+"What is the annual leave?"
+              ↓
+       Embedding Model
+              ↓
+        Query Vector
+              ↓
+            FAISS
+              ↓
+      Similarity calculation
+              ↓
+       Top 3 matching chunks
+
+Then:
+
+context = "\n\n".join(
+    doc.page_content
+    for doc in retrieved_docs
+)
+
+creates:
+
+Context =
+---------------------------
+Chunk 1
+
+Chunk 2
+
+Chunk 3
+---------------------------
+
+Then:
+
+messages = prompt.invoke(...)
+
+creates the actual LLM prompt:
+
+You are a helpful assistant.
+
+Answer using ONLY the following context.
+
+Context:
+[retrieved chunks]
+
+Question:
+What is the annual leave?
+
+Finally:
+
+llm.invoke(messages)
+
+calls the LLM.
+
+22. The 7 most important building blocks
+
+For your interview, remember these 7 components:
+
+1. Document Loader
+        ↓
+2. Text Splitter
+        ↓
+3. Embedding Model
+        ↓
+4. Vector Store
+        ↓
+5. Retriever
+        ↓
+6. Prompt
+        ↓
+7. LLM
+In one sentence each
+
+1. Document Loader
+
+Loads data from PDF, TXT, web pages, databases, etc.
+
+2. Text Splitter
+
+Divides large documents into smaller chunks.
+
+3. Embedding Model
+
+Converts text chunks into numerical vectors representing semantic meaning.
+
+4. Vector Store
+
+Stores embeddings and supports similarity search.
+
+5. Retriever
+
+Finds the most relevant chunks for a user question.
+
+6. Prompt
+
+Combines instructions, retrieved context, and the user's question.
+
+7. LLM
+
+Generates the final natural-language answer.
+
+23. Where does LangChain fit?
+
+This is a common interview question.
+
+LangChain doesn't replace the LLM.
+
+                 Your Application
+                       |
+                    LangChain
+                       |
+       +---------------+---------------+
+       |               |               |
+    Loader          Retriever        LLM
+       |               |               |
+      PDF            FAISS          OpenAI
+                       |
+                   Embeddings
+
+LangChain acts as an orchestration framework connecting these pieces.
+
+24. RAG without LangChain vs RAG with LangChain
+Without LangChain
+
+You might need to manually handle:
+
+PDF extraction
+Chunking
+Embedding API
+Vector database
+Similarity search
+Prompt construction
+LLM API
+Response processing
+With LangChain
+
+You can use reusable components:
+
+PyPDFLoader
+     ↓
+TextSplitter
+     ↓
+Embeddings
+     ↓
+FAISS
+     ↓
+Retriever
+     ↓
+Prompt
+     ↓
+LLM
+
+That's one of the major reasons frameworks such as LangChain are useful.
+
+25. Very important interview distinction
+
+Don't say:
+
+"FAISS is an embedding model."
+
+That's incorrect.
+
+Correct:
+
+Embedding Model
+     ↓
+Creates vectors
+
+FAISS
+     ↓
+Stores/searches vectors
+
+Similarly:
+
+LLM
+     ↓
+Generates answers
+
+Embedding Model
+     ↓
+Creates numerical representations
+
+Vector Store
+     ↓
+Stores/searches embeddings
+
+Retriever
+     ↓
+Retrieves relevant chunks
+
+RAG
+     ↓
+Combines retrieval + generation
+26. Final mental model
+
+If you're preparing for an evaluation, memorize this:
+
+                 RAG APPLICATION
+                       |
+                       ↓
+             ┌──────────────────┐
+             │   PDF Documents  │
+             └────────┬─────────┘
+                      ↓
+                Load Documents
+                      ↓
+                Split into Chunks
+                      ↓
+                Create Embeddings
+                      ↓
+                Store in FAISS
+                      ↓
+              ─────────────────
+                USER QUESTION
+              ─────────────────
+                      ↓
+                Create Embedding
+                      ↓
+                Similarity Search
+                      ↓
+              Retrieve Top Chunks
+                      ↓
+            Question + Context
+                      ↓
+                     LLM
+                      ↓
+                 Final Answer
+The simplest formula to remember:
+
+RAG = Retrieve → Augment → Generate
+
+And the implementation flow:
+
+PDF → Load → Split → Embed → Store → Retrieve → Prompt → LLM → Answer
+
+That is the basic LangChain RAG pipeline.
