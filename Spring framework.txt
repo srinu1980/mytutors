@@ -1,0 +1,1844 @@
+
+
+
+1. What is the Spring Framework?
+
+Spring Framework is a Java framework used to build enterprise applications.
+
+It helps developers create applications that are:
+
+Loosely coupled
+Easy to test
+Easy to maintain
+Modular
+Scalable
+Traditional Java approach
+
+Suppose we have two classes:
+
+class Engine {
+
+
+    public void start() {
+        System.out.println("Engine Started");
+    }
+}
+
+
+class Car {
+
+
+    Engine engine = new Engine();
+
+
+    public void drive() {
+        engine.start();
+        System.out.println("Car is running");
+    }
+}
+
+Here, the Car class itself creates the Engine object.
+
+Engine engine = new Engine();
+
+This creates tight coupling.
+
+If we want to change Engine to another implementation, we may need to modify the Car class.
+
+Spring solves this problem using:
+
+IoC – Inversion of Control
+DI – Dependency Injection
+
+2. What is a Framework?
+
+A framework provides a predefined structure for developing applications.
+
+Without Spring, you manually:
+
+Create objects.
+Connect objects.
+Manage object lifecycle.
+Configure dependencies.
+
+With Spring:
+
+Developer
+    ↓
+Defines Classes
+    ↓
+Spring Container
+    ↓
+Creates Objects
+    ↓
+Connects Dependencies
+    ↓
+Manages Object Lifecycle
+3. What is the Spring Container?
+
+The Spring Container is the heart of the Spring Framework.
+
+Its main responsibilities are:
+
+Creating objects
+Configuring objects
+Managing objects
+Injecting dependencies
+Managing object lifecycle
+
+The objects managed by the Spring Container are called:
+
+Spring Beans
+
+Example
+class Employee {
+
+
+}
+
+Normally:
+
+Employee emp = new Employee();
+
+You manually create the object.
+
+With Spring:
+
+Spring Container
+       ↓
+Creates Employee Object
+       ↓
+Manages Employee Object
+
+That object becomes a Spring Bean.
+
+4. What is IoC?
+IoC = Inversion of Control
+
+Normally, the programmer controls object creation.
+
+Traditional approach
+Engine engine = new Engine();
+
+You are controlling the object creation.
+
+Spring approach
+Spring Container
+       ↓
+Creates Engine Object
+       ↓
+Provides it to Car
+
+Now the control is transferred from:
+
+Programmer
+    ↓
+Spring Container
+
+This is called Inversion of Control.
+
+5. What is Dependency Injection?
+
+A dependency is an object required by another object.
+
+For example:
+
+class Car {
+
+
+    private Engine engine;
+
+
+}
+
+Here:
+
+Car
+ ↓ depends on
+Engine
+
+Instead of creating the Engine object inside Car, Spring injects it.
+
+class Car {
+
+
+    private Engine engine;
+
+
+    public Car(Engine engine) {
+        this.engine = engine;
+    }
+}
+
+Spring will do something conceptually like:
+
+Engine engine = new Engine();
+
+
+Car car = new Car(engine);
+
+This is called:
+
+Dependency Injection (DI)
+
+6. Types of Dependency Injection
+
+Spring mainly supports three types.
+
+A. Constructor Injection
+@Component
+class Engine {
+
+
+}
+
+
+@Component
+class Car {
+
+
+    private final Engine engine;
+
+
+    public Car(Engine engine) {
+        this.engine = engine;
+    }
+}
+
+Spring automatically injects the Engine object into Car.
+
+Flow
+Spring Container
+      │
+      ├── Creates Engine
+      │
+      └── Creates Car
+               │
+               └── Injects Engine
+
+Constructor injection is generally the preferred approach.
+
+B. Setter Injection
+@Component
+class Car {
+
+
+    private Engine engine;
+
+
+    @Autowired
+    public void setEngine(Engine engine) {
+        this.engine = engine;
+    }
+}
+
+Spring calls the setter method and injects the dependency.
+
+C. Field Injection
+@Component
+class Car {
+
+
+    @Autowired
+    private Engine engine;
+}
+
+Spring directly injects the object into the field.
+
+For modern applications, constructor injection is generally preferred because dependencies are explicit and easier to test.
+
+7. What is a Spring Bean?
+
+A Bean is simply an object managed by the Spring Container.
+
+Example:
+
+@Component
+class Employee {
+
+
+}
+
+Spring creates:
+
+Employee Object
+
+and manages it.
+
+Therefore:
+
+Employee Object
+       +
+Managed by Spring
+       =
+Spring Bean
+8. Core Container Modules
+
+The Spring Framework Core Container traditionally consists of four important modules:
+
+Spring Core Container
+│
+├── Core
+├── Beans
+├── Context
+└── SpEL
+    └── Spring Expression Language
+
+Let's understand each one.
+
+9. Core Module
+
+The Core module provides the fundamental features of Spring.
+
+The most important concepts are:
+
+IoC
+Dependency Injection
+Resource management
+Utility classes
+
+The Core module is the foundation on which Spring is built.
+
+Simple idea
+Core Module
+     ↓
+Provides fundamental Spring functionality
+     ↓
+IoC + Dependency Injection
+10. Beans Module
+
+The Beans module is responsible for managing Spring Beans.
+
+It provides features related to:
+
+Bean creation
+Bean configuration
+Dependency injection
+Bean lifecycle
+
+For example:
+
+@Component
+class Engine {
+
+
+}
+
+Spring identifies this class as a bean.
+
+Then:
+
+@Component
+class Car {
+
+
+    private final Engine engine;
+
+
+    public Car(Engine engine) {
+        this.engine = engine;
+    }
+}
+
+The Beans module helps manage these relationships.
+
+Flow
+Engine Bean
+     ↓
+Spring Container
+     ↓
+Car Bean
+11. BeanFactory
+
+One important interface in the Spring Core Container is:
+
+BeanFactory
+
+BeanFactory is a basic IoC container.
+
+It is responsible for:
+
+Creating Beans
+      ↓
+Configuring Beans
+      ↓
+Managing Beans
+      ↓
+Providing Beans
+
+Conceptually:
+
+BeanFactory factory;
+
+Then:
+
+Employee emp = factory.getBean(Employee.class);
+12. ApplicationContext
+
+ApplicationContext is a more advanced version of BeanFactory.
+
+BeanFactory
+     ↓
+Basic Bean Management
+
+
+ApplicationContext
+     ↓
+Advanced Bean Management
+     +
+Additional Enterprise Features
+
+ApplicationContext provides:
+
+Bean management
+Dependency injection
+Event handling
+Internationalization (i18n)
+Resource loading
+Application configuration
+
+In modern Spring applications, we generally work with:
+
+ApplicationContext
+13. BeanFactory vs ApplicationContext
+Feature	BeanFactory	ApplicationContext
+Bean Management	Yes	Yes
+Dependency Injection	Yes	Yes
+Internationalization	Limited/No	Yes
+Event Handling	No	Yes
+Resource Loading	Basic	Yes
+Enterprise Features	Limited	Yes
+Commonly used today	Less	Yes
+
+Relationship:
+
+BeanFactory
+     ↑
+ApplicationContext
+
+ApplicationContext extends BeanFactory.
+
+14. Context Module
+
+The Context module provides the ApplicationContext.
+
+It acts as an advanced container.
+
+Example:
+
+ApplicationContext context;
+
+The Context module allows Spring applications to:
+
+Access beans
+Manage configuration
+Handle events
+Load resources
+
+Conceptually:
+
+Application
+     │
+     ▼
+ApplicationContext
+     │
+ ┌───┼────┐
+ ▼   ▼    ▼
+Bean Event Resource
+Management
+15. SpEL – Spring Expression Language
+
+SpEL stands for:
+
+Spring Expression Language
+
+It allows you to dynamically access and manipulate data.
+
+For example:
+
+@Value("#{employee.name}")
+private String employeeName;
+
+Or using properties:
+
+@Value("${server.port}")
+private int port;
+
+SpEL can perform operations such as:
+
+Mathematical operations
+Logical operations
+Property access
+Method calls
+Collection access
+Conditional expressions
+
+Example:
+
+@Value("#{10 + 20}")
+private int result;
+
+Result:
+
+30
+16. Complete Core Container Architecture
+                 SPRING CORE CONTAINER
+                         │
+         ┌───────────────┼───────────────┐
+         │               │               │
+         ▼               ▼               ▼
+       CORE            BEANS          CONTEXT
+         │               │               │
+         │               │               │
+         ▼               ▼               ▼
+      IoC & DI       BeanFactory   ApplicationContext
+                         │
+                         │
+                         ▼
+                       SpEL
+                Spring Expression Language
+
+A more practical view:
+
+Developer writes classes
+          │
+          ▼
+   @Component / @Bean
+          │
+          ▼
+    Spring Configuration
+          │
+          ▼
+    ApplicationContext
+          │
+          ▼
+ ┌──────────────────────┐
+ │  Spring IoC Container │
+ └──────────────────────┘
+          │
+          ▼
+     Creates Beans
+          │
+          ▼
+   Injects Dependencies
+          │
+          ▼
+  Manages Bean Lifecycle
+17. First Simple Spring Example
+
+Consider two classes:
+
+Engine.java
+package com.example;
+
+
+import org.springframework.stereotype.Component;
+
+
+@Component
+public class Engine {
+
+
+    public void start() {
+        System.out.println("Engine Started");
+    }
+}
+Car.java
+package com.example;
+
+
+import org.springframework.stereotype.Component;
+
+
+@Component
+public class Car {
+
+
+    private final Engine engine;
+
+
+    public Car(Engine engine) {
+        this.engine = engine;
+    }
+
+
+    public void drive() {
+
+
+        engine.start();
+
+
+        System.out.println("Car is Running");
+    }
+}
+Main Application
+package com.example;
+
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+
+public class Main {
+
+
+    public static void main(String[] args) {
+
+
+        ApplicationContext context =
+                new AnnotationConfigApplicationContext("com.example");
+
+
+        Car car = context.getBean(Car.class);
+
+
+        car.drive();
+    }
+}
+Output
+Engine Started
+Car is Running
+18. What Happens Internally?
+
+When this code executes:
+
+ApplicationContext context =
+        new AnnotationConfigApplicationContext("com.example");
+
+Spring performs the following steps.
+
+Step 1: Scan the package
+com.example
+
+Spring searches for:
+
+@Component
+Step 2: Finds Engine
+@Component
+public class Engine
+
+Spring creates an object.
+
+Engine Bean Created
+Step 3: Finds Car
+@Component
+public class Car
+
+Spring sees:
+
+public Car(Engine engine)
+
+Spring understands:
+
+Car requires Engine
+Step 4: Dependency Injection
+
+Spring injects:
+
+Engine Bean
+     ↓
+Car Bean
+Step 5: Beans are stored in the Container
+ApplicationContext
+       │
+       ├── Engine Bean
+       │
+       └── Car Bean
+Step 6: Get the Bean
+Car car = context.getBean(Car.class);
+
+Then:
+
+car.drive();
+19. Different Ways to Create Spring Beans
+
+There are three common configuration approaches.
+
+1. XML Configuration
+
+Old approach:
+
+<bean id="engine"
+      class="com.example.Engine"/>
+
+
+<bean id="car"
+      class="com.example.Car"/>
+2. Java Configuration
+@Configuration
+public class AppConfig {
+
+
+    @Bean
+    public Engine engine() {
+
+
+        return new Engine();
+    }
+
+
+    @Bean
+    public Car car() {
+
+
+        return new Car(engine());
+    }
+}
+3. Annotation Configuration
+
+Most commonly used with modern Spring applications:
+
+@Component
+public class Engine {
+
+
+}
+@Component
+public class Car {
+
+
+}
+
+Common stereotype annotations include:
+
+@Component
+@Service
+@Repository
+@Controller
+@RestController
+20. Important Annotations
+@Component
+
+Marks a general Spring-managed component.
+
+@Component
+public class EmployeeService {
+
+
+}
+@Service
+
+Used mainly for the service/business layer.
+
+@Service
+public class EmployeeService {
+
+
+}
+@Repository
+
+Used mainly for the persistence/data access layer.
+
+@Repository
+public class EmployeeRepository {
+
+
+}
+@Controller
+
+Used for web applications.
+
+@Controller
+public class EmployeeController {
+
+
+}
+@RestController
+
+Used to create REST APIs.
+
+@RestController
+public class EmployeeRestController {
+
+
+}
+21. @Configuration and @Bean
+
+Instead of:
+
+@Component
+
+we can explicitly define beans using Java configuration.
+
+@Configuration
+public class AppConfig {
+
+
+    @Bean
+    public Engine engine() {
+        return new Engine();
+    }
+
+
+    @Bean
+    public Car car() {
+        return new Car(engine());
+    }
+}
+
+Then:
+
+ApplicationContext context =
+        new AnnotationConfigApplicationContext(AppConfig.class);
+
+Get the bean:
+
+Car car = context.getBean(Car.class);
+
+
+car.drive();
+22. Bean Lifecycle – Basic Idea
+
+A Spring Bean goes through a lifecycle.
+
+1. Bean Definition
+       ↓
+2. Bean Creation
+       ↓
+3. Dependency Injection
+       ↓
+4. Initialization
+       ↓
+5. Bean Ready for Use
+       ↓
+6. Application Stops
+       ↓
+7. Bean Destruction
+
+Example:
+
+@Component
+public class DatabaseConnection {
+
+
+    @PostConstruct
+    public void init() {
+
+
+        System.out.println("Database Connection Initialized");
+    }
+
+
+    @PreDestroy
+    public void destroy() {
+
+
+        System.out.println("Database Connection Closed");
+    }
+}
+23. Important Concept: Loose Coupling
+
+Consider this:
+
+public class Car {
+
+
+    private Engine engine;
+
+
+    public Car(Engine engine) {
+        this.engine = engine;
+    }
+}
+
+Now suppose we have different engines:
+
+interface Engine {
+
+
+    void start();
+}
+@Component
+class PetrolEngine implements Engine {
+
+
+    public void start() {
+        System.out.println("Petrol Engine Started");
+    }
+}
+@Component
+class ElectricEngine implements Engine {
+
+
+    public void start() {
+        System.out.println("Electric Engine Started");
+    }
+}
+
+The Car depends on the interface:
+
+public class Car {
+
+
+    private Engine engine;
+
+
+    public Car(Engine engine) {
+        this.engine = engine;
+    }
+}
+
+This is loose coupling.
+
+          Engine
+             ▲
+      ┌──────┴──────┐
+      │             │
+PetrolEngine   ElectricEngine
+      │             │
+      └──────┬──────┘
+             ▼
+            Car
+
+Spring helps manage these dependencies.
+
+24. Complete Conceptual Flow
+                 JAVA CLASSES
+                      │
+                      ▼
+            @Component / @Bean
+                      │
+                      ▼
+              SPRING CONTAINER
+                      │
+        ┌─────────────┼─────────────┐
+        ▼             ▼             ▼
+    Creates        Configures    Manages
+     Beans          Beans         Beans
+        │
+        ▼
+  Dependency Injection
+        │
+        ▼
+   ApplicationContext
+        │
+        ▼
+   Application Uses Beans
+25. Core Container Summary
+Module	Purpose
+Core	Provides fundamental IoC and DI functionality
+Beans	Creates and manages Spring Beans
+Context	Provides ApplicationContext and additional enterprise features
+SpEL	Provides Spring Expression Language
+26. Easy Way to Remember
+
+Think of a company:
+
+Employees = Java Objects
+HR Department = Spring Container
+Employee Management = Bean Management
+Assigning Employees to Teams = Dependency Injection
+Company Rules = Configuration
+
+So:
+
+Java Object
+    ↓ managed by Spring
+Spring Bean
+
+
+Object Dependency
+    ↓ provided by Spring
+Dependency Injection
+
+
+Object Creation Control
+    ↓ transferred to Spring
+Inversion of Control
+Final Learning Order
+
+I recommend learning Spring in this sequence:
+
+1. What is Spring Framework?
+          ↓
+2. What is IoC?
+          ↓
+3. What is Dependency Injection?
+          ↓
+4. Types of DI
+          ↓
+5. What is a Spring Bean?
+          ↓
+6. BeanFactory
+          ↓
+7. ApplicationContext
+          ↓
+8. Core Container Modules
+   ├── Core
+   ├── Beans
+   ├── Context
+   └── SpEL
+          ↓
+9. Spring Configuration
+   ├── XML
+   ├── Java Configuration
+   └── Annotations
+          ↓
+10. Bean Lifecycle
+          ↓
+11. Spring Boot
+
+The most important foundation to understand before moving to Spring Boot is:
+
+IoC + Dependency Injection + Spring Beans + ApplicationContext
+
+Once these concepts are clear, topics such as Spring MVC, Spring Boot, Spring Data JPA, Spring Security, and Microservices become much easier to understand.
+
+what is @componet in spring
+
+You mean @Component in Spring.
+
+What is @Component?
+
+@Component is a Spring annotation used to tell the Spring Framework:
+
+"This class should be managed by the Spring Container."
+
+When Spring finds a class annotated with @Component, it creates an object of that class and manages it as a Spring Bean.
+
+1. Without @Component
+public class Employee {
+
+
+}
+
+If you want to create an object:
+
+Employee emp = new Employee();
+
+Here, you are creating the object manually.
+
+2. With @Component
+import org.springframework.stereotype.Component;
+
+
+@Component
+public class Employee {
+
+
+}
+
+Now Spring will automatically create the object.
+
+Employee Class
+      ↓
+@Component
+      ↓
+Spring detects the class
+      ↓
+Creates Employee object
+      ↓
+Manages it as a Spring Bean
+
+So you usually don't need to write:
+
+Employee emp = new Employee();
+
+Instead, you can get the object from the Spring Container.
+
+3. Simple Example
+Engine.java
+import org.springframework.stereotype.Component;
+
+
+@Component
+public class Engine {
+
+
+    public void start() {
+        System.out.println("Engine Started");
+    }
+}
+
+Here:
+
+@Component
+
+tells Spring:
+
+Create an Engine object and manage it.
+
+Car.java
+import org.springframework.stereotype.Component;
+
+
+@Component
+public class Car {
+
+
+    private final Engine engine;
+
+
+    public Car(Engine engine) {
+        this.engine = engine;
+    }
+
+
+    public void drive() {
+        engine.start();
+        System.out.println("Car is running");
+    }
+}
+
+Spring performs these steps:
+
+Step 1: Finds @Component on Engine
+             ↓
+Step 2: Creates Engine Bean
+             ↓
+Step 3: Finds @Component on Car
+             ↓
+Step 4: Creates Car Bean
+             ↓
+Step 5: Car requires Engine
+             ↓
+Step 6: Spring injects Engine into Car
+
+This is called Dependency Injection.
+
+4. How does Spring find @Component classes?
+
+Spring uses Component Scanning.
+
+Example:
+
+@Configuration
+@ComponentScan("com.example")
+public class AppConfig {
+
+
+}
+
+Spring scans the package:
+
+com.example
+
+It looks for classes containing:
+
+@Component
+
+For example:
+
+com.example
+    │
+    ├── Employee.java     → @Component
+    │
+    ├── Engine.java       → @Component
+    │
+    └── Car.java          → @Component
+
+Spring automatically registers them as beans.
+
+5. @Component = Generic Spring Bean
+
+Think of this:
+
+Java Class
+    +
+@Component
+    ↓
+Spring Managed Object
+    ↓
+Spring Bean
+
+Example:
+
+@Component
+public class StudentService {
+
+
+}
+
+Spring internally manages an object similar to:
+
+StudentService studentService = new StudentService();
+
+But Spring creates and manages it, not your application code.
+
+6. What is the Default Bean Name?
+
+Example:
+
+@Component
+public class EmployeeService {
+
+
+}
+
+By default, the bean name will be:
+
+employeeService
+
+The first letter becomes lowercase.
+
+You can also provide your own name:
+
+@Component("empService")
+public class EmployeeService {
+
+
+}
+
+Now the bean name is:
+
+empService
+7. @Component vs @Bean
+
+These two are commonly confused.
+
+@Component
+
+Used directly on a class:
+
+@Component
+public class Engine {
+
+
+}
+
+Spring discovers it using component scanning.
+
+@Bean
+
+Used on a method:
+
+@Configuration
+public class AppConfig {
+
+
+    @Bean
+    public Engine engine() {
+        return new Engine();
+    }
+}
+
+Here, Spring executes the method and registers its returned object as a bean.
+
+Easy comparison
+@Component	@Bean
+Applied to a class	Applied to a method
+Uses component scanning	Uses explicit configuration
+Spring creates the object	Developer defines how to create the object
+Good for your own application classes	Useful for third-party or custom object creation
+8. Related Annotations
+
+Spring provides specialized versions of @Component:
+
+@Component
+    │
+    ├── @Service
+    ├── @Repository
+    └── @Controller
+
+For example:
+
+Service Layer
+@Service
+public class EmployeeService {
+
+
+}
+Repository Layer
+@Repository
+public class EmployeeRepository {
+
+
+}
+Controller Layer
+@Controller
+public class EmployeeController {
+
+
+}
+
+These are also treated as Spring-managed components.
+
+Simple Definition to Remember
+
+@Component tells Spring that this class is a Spring-managed component. During component scanning, Spring creates an object of this class and registers it as a Spring Bean.
+
+Visual flow
+@Component
+      ↓
+Component Scanning
+      ↓
+Spring detects the class
+      ↓
+Creates Object
+      ↓
+Registers as Bean
+      ↓
+Manages its lifecycle
+      ↓
+Can inject it into other components
+
+The next important concept after @Component is @ComponentScan, because it explains how Spring finds all the @Component classes.
+
+what is AOP in spring?
+What is AOP in Spring?
+
+AOP stands for:
+
+Aspect-Oriented Programming
+
+AOP is used to separate common functionality that is required across multiple parts of an application.
+
+For example:
+
+Logging
+Security
+Transaction management
+Performance monitoring
+Exception handling
+Auditing
+
+Instead of writing the same code in every method, AOP allows us to write that functionality once and apply it wherever needed.
+
+1. The Problem Without AOP
+
+Suppose we have a service:
+
+@Service
+public class EmployeeService {
+
+
+    public void addEmployee() {
+
+
+        System.out.println("Logging: addEmployee started");
+
+
+        // Business Logic
+        System.out.println("Employee Added");
+
+
+        System.out.println("Logging: addEmployee completed");
+    }
+
+
+    public void deleteEmployee() {
+
+
+        System.out.println("Logging: deleteEmployee started");
+
+
+        // Business Logic
+        System.out.println("Employee Deleted");
+
+
+        System.out.println("Logging: deleteEmployee completed");
+    }
+}
+
+Notice that logging code is repeated:
+
+Logging
+   ↓
+Business Logic
+   ↓
+Logging
+
+This repeated functionality is called a cross-cutting concern.
+
+2. Solution Using AOP
+
+With AOP, we separate the logging logic:
+
+                 Application
+                      │
+        ┌─────────────┼─────────────┐
+        │                           │
+        ▼                           ▼
+ Business Logic              Cross-Cutting Logic
+        │                           │
+        │                    Logging
+        │                    Security
+        │                    Transactions
+        │                    Monitoring
+        │
+        ▼
+ EmployeeService
+
+Now your business class focuses only on business logic:
+
+@Service
+public class EmployeeService {
+
+
+    public void addEmployee() {
+        System.out.println("Employee Added");
+    }
+
+
+    public void deleteEmployee() {
+        System.out.println("Employee Deleted");
+    }
+}
+
+The logging can be handled separately using AOP.
+
+3. Real-Life Example
+
+Imagine you have a company with 100 employees.
+
+Before entering the office:
+
+Employee
+   ↓
+Security Check
+   ↓
+Office Work
+
+Security checking is not part of the employee's actual job, but it applies to everyone.
+
+Similarly, in an application:
+
+Method Call
+    ↓
+Logging / Security / Transaction
+    ↓
+Actual Business Method
+
+AOP allows us to add this common functionality around the business methods.
+
+4. Important AOP Terminology
+
+There are several important terms:
+
+AOP
+ │
+ ├── Aspect
+ ├── Advice
+ ├── Join Point
+ ├── Pointcut
+ ├── Target Object
+ └── Proxy
+
+Let's understand them one by one.
+
+5. Aspect
+
+An Aspect is a class that contains cross-cutting functionality.
+
+For example:
+
+@Aspect
+@Component
+public class LoggingAspect {
+
+
+}
+
+This class can contain logging logic.
+
+Example
+LoggingAspect
+       │
+       ├── Logging
+       ├── Monitoring
+       └── Security
+6. Join Point
+
+A Join Point is a point during program execution where an Aspect can be applied.
+
+In Spring AOP, this is typically a method execution.
+
+Example:
+
+public void addEmployee() {
+}
+
+The execution of:
+
+addEmployee()
+
+can be a Join Point.
+
+Similarly:
+
+public void deleteEmployee() {
+}
+
+also provides a method execution where AOP advice can run.
+
+7. Advice
+
+Advice is the actual action that the Aspect performs.
+
+For example:
+
+Logging before method
+
+or:
+
+Logging after method
+
+Spring provides different types of advice.
+
+A. @Before
+
+Runs before the target method.
+
+AOP Logic
+   ↓
+Target Method
+
+Example:
+
+@Before("execution(* com.example.service.*.*(..))")
+public void logBefore() {
+
+
+    System.out.println("Method started");
+}
+B. @After
+
+Runs after the method finishes, regardless of whether it succeeds or throws an exception.
+
+Target Method
+   ↓
+AOP Logic
+
+Example:
+
+@After("execution(* com.example.service.*.*(..))")
+public void logAfter() {
+
+
+    System.out.println("Method completed");
+}
+C. @AfterReturning
+
+Runs only when the method completes successfully.
+
+Target Method
+      ↓
+Success
+      ↓
+AOP Logic
+
+Example:
+
+@AfterReturning(
+    pointcut = "execution(* com.example.service.*.*(..))",
+    returning = "result"
+)
+public void logResult(Object result) {
+
+
+    System.out.println("Result: " + result);
+}
+D. @AfterThrowing
+
+Runs when the method throws an exception.
+
+Target Method
+      ↓
+Exception
+      ↓
+AOP Logic
+
+Example:
+
+@AfterThrowing(
+    pointcut = "execution(* com.example.service.*.*(..))",
+    throwing = "ex"
+)
+public void logException(Exception ex) {
+
+
+    System.out.println("Exception: " + ex.getMessage());
+}
+E. @Around
+
+@Around is the most powerful advice.
+
+It can execute code:
+
+Before the method
+Call the method
+After the method
+Before Logic
+     ↓
+Target Method
+     ↓
+After Logic
+
+Example:
+
+@Around("execution(* com.example.service.*.*(..))")
+public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
+
+
+    System.out.println("Before method");
+
+
+    Object result = joinPoint.proceed();
+
+
+    System.out.println("After method");
+
+
+    return result;
+}
+8. Pointcut
+
+A Pointcut defines:
+
+Where should the Advice be applied?
+
+Example:
+
+execution(* com.example.service.*.*(..))
+
+This means approximately:
+
+All methods
+     ↓
+Inside
+     ↓
+com.example.service package
+
+Breaking it down:
+
+execution(
+    *                         → Any return type
+    com.example.service.*     → Any class
+    .*                        → Any method
+    (..)                      → Any number of arguments
+)
+9. Target Object
+
+The Target Object is the actual object whose method is being executed.
+
+Example:
+
+@Service
+public class EmployeeService {
+
+
+    public void addEmployee() {
+        System.out.println("Adding Employee");
+    }
+}
+
+Here:
+
+EmployeeService
+
+is the Target Object.
+
+10. Proxy
+
+Spring usually uses a Proxy Object to apply AOP behavior.
+
+Instead of directly calling:
+
+EmployeeService
+
+Spring may conceptually create a proxy around it:
+
+Client
+   ↓
+Spring AOP Proxy
+   ↓
+EmployeeService
+
+The proxy performs:
+
+Logging
+Security
+Transaction
+
+and then calls the actual method.
+
+11. Complete AOP Flow
+
+Suppose we call:
+
+employeeService.addEmployee();
+
+The flow is:
+
+Client
+   │
+   ▼
+Spring Proxy
+   │
+   ▼
+@Before Advice
+   │
+   ▼
+addEmployee()
+   │
+   ▼
+@AfterReturning Advice
+   │
+   ▼
+@After Advice
+
+If an exception occurs:
+
+Client
+   ↓
+Spring Proxy
+   ↓
+@Before
+   ↓
+Target Method
+   ↓
+Exception
+   ↓
+@AfterThrowing
+   ↓
+@After
+12. Complete Spring AOP Example
+Step 1: Service Class
+package com.example.service;
+
+
+import org.springframework.stereotype.Service;
+
+
+@Service
+public class EmployeeService {
+
+
+    public void addEmployee() {
+
+
+        System.out.println("Employee Added");
+    }
+
+
+    public void deleteEmployee() {
+
+
+        System.out.println("Employee Deleted");
+    }
+}
+Step 2: Create Aspect
+package com.example.aspect;
+
+
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.springframework.stereotype.Component;
+
+
+@Aspect
+@Component
+public class LoggingAspect {
+
+
+    @Before("execution(* com.example.service.*.*(..))")
+    public void logBefore() {
+
+
+        System.out.println("Logging: Method execution started");
+    }
+}
+Step 3: Run the Method
+employeeService.addEmployee();
+Output
+Logging: Method execution started
+Employee Added
+
+The logging method runs automatically before:
+
+addEmployee()
+13. Easy Diagram
+                @Aspect
+                   │
+                   ▼
+             LoggingAspect
+                   │
+                   │
+        Pointcut selects methods
+                   │
+                   ▼
+        ┌─────────────────────┐
+        │ EmployeeService     │
+        │                     │
+        │ addEmployee()       │
+        │ deleteEmployee()    │
+        └─────────────────────┘
+                   │
+                   ▼
+             Advice Executes
+14. Practical Uses of AOP in Spring
+
+AOP is commonly used for:
+
+Logging
+Method started
+Method completed
+Security
+User Request
+     ↓
+Check Authorization
+     ↓
+Allow / Deny
+Transactions
+
+For example:
+
+@Transactional
+public void transferMoney() {
+
+
+    withdrawMoney();
+
+
+    depositMoney();
+}
+
+If something fails:
+
+Transaction
+    ↓
+Error
+    ↓
+Rollback
+
+Spring internally uses AOP concepts for many features, including transaction management.
+
+Performance Monitoring
+Start Time
+    ↓
+Execute Method
+    ↓
+End Time
+    ↓
+Calculate Execution Time
+Auditing
+Who performed the operation?
+When was it performed?
+What operation was performed?
+15. Quick Summary
+AOP = Aspect-Oriented Programming
+
+
+Used to separate:
+    ↓
+Cross-Cutting Concerns
+
+
+Examples:
+    ├── Logging
+    ├── Security
+    ├── Transactions
+    ├── Monitoring
+    └── Exception Handling
+Important terms
+Term	Meaning
+Aspect	Class containing cross-cutting logic
+Advice	Action performed by an Aspect
+Join Point	Point where advice can be applied; in Spring AOP, typically a method execution
+Pointcut	Expression that selects join points
+Target	Actual object being advised
+Proxy	Object Spring uses to apply AOP behavior
+Best one-line definition for an interview
+
+Spring AOP is a programming approach used to separate cross-cutting concerns such as logging, security, and transaction management from the main business logic and apply them declaratively to selected methods.
+
