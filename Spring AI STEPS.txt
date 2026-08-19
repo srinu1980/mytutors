@@ -1,0 +1,3397 @@
+
+Spring AI — Step-by-Step Learning for Beginners
+
+Since you are learning Spring concepts step by step, the easiest approach is:
+
+First understand the AI concepts → then learn Spring AI building blocks → then implement small programs → finally build a RAG application.
+
+We will use this learning path:
+
+Java + Spring Boot
+        ↓
+     Spring AI
+        ↓
+   AI Model / LLM
+        ↓
+      Prompt
+        ↓
+    ChatClient
+        ↓
+  Structured Output
+        ↓
+     Embeddings
+        ↓
+    Vector Store
+        ↓
+       RAG
+        ↓
+ AI Tools / Function Calling
+        ↓
+   AI Agent concepts
+
+The first thing to understand is that Spring AI is not an AI model. Spring AI is a framework that helps Spring Boot applications communicate with AI models and related AI services.
+
+Spring AI — Complete Step-by-Step Learning Path for Beginners
+
+Spring AI is a good next topic after learning Spring Boot, LLMs, Embeddings, and RAG.
+
+The official Spring AI API provides abstractions for chat models, embeddings, vector stores, tool calling, advisors, RAG, ETL, and MCP, with Spring Boot auto-configuration and support for multiple AI providers.
+
+1. First understand: What is Spring AI?
+Simple definition
+
+Spring AI is a framework that helps Java and Spring Boot developers integrate AI models into their applications.
+
+For example:
+
+Spring Boot Application
+        ↓
+      Spring AI
+        ↓
+   Chat Model / LLM
+        ↓
+ OpenAI / Ollama / Azure / etc.
+
+Instead of manually calling an AI provider's REST API, Spring AI gives us Spring-friendly abstractions.
+
+2. Why do we need Spring AI?
+
+Imagine without Spring AI:
+
+Java Application
+      ↓
+Create HTTP Request manually
+      ↓
+Call AI REST API
+      ↓
+Create JSON manually
+      ↓
+Parse JSON Response
+      ↓
+Handle provider-specific code
+
+With Spring AI:
+
+Java Application
+      ↓
+   ChatClient
+      ↓
+    AI Model
+      ↓
+   Get Response
+
+Example:
+
+String response = chatClient.prompt()
+        .user("Explain Java Streams")
+        .call()
+        .content();
+
+The ChatClient provides a fluent API for communicating with AI models and supports synchronous and streaming interactions.
+
+3. Important Spring AI Concepts
+
+We will learn these concepts in order:
+
+Step	Concept	Purpose
+1	AI Model / LLM	Generates AI responses
+2	ChatModel	Java abstraction for chat models
+3	ChatClient	Easy API to communicate with AI
+4	Prompt	Instructions sent to AI
+5	System Message	Defines AI behavior
+6	User Message	User's question
+7	Prompt Template	Dynamic prompts
+8	Chat Options	Temperature, model, etc.
+9	Structured Output	Convert AI response into Java object
+10	Streaming	Receive response gradually
+11	Embeddings	Convert text into vectors
+12	Vector Store	Store embeddings
+13	RAG	Retrieve your data before asking AI
+14	Advisors	Add memory, RAG, logging, etc.
+15	Tool Calling	AI calls Java methods/APIs
+16	Chat Memory	Remember conversation
+17	MCP	Connect AI applications and tools
+
+Let's implement these gradually.
+
+4. Setup Your First Spring AI Project
+
+Create a Spring Boot project.
+
+For beginner learning, the easiest architecture is:
+
+spring-ai-demo
+│
+├── controller
+│     └── ChatController.java
+│
+├── service
+│     └── AIService.java
+│
+└── application.properties
+
+The exact dependency and configuration depend on which AI provider you choose.
+
+For learning, you can use:
+
+Option 1: OpenAI
+Option 2: Ollama
+Option 3: Azure OpenAI
+
+For beginners, Ollama is useful for local learning, while cloud providers require API credentials and may involve usage costs.
+
+CONCEPT 1: AI Model / ChatModel
+What is an LLM?
+
+LLM means:
+
+Large Language Model
+
+Examples include models from OpenAI, Anthropic, Google, and others.
+
+Your application communicates with an AI model through Spring AI abstractions.
+
+Conceptually:
+
+ChatModel
+    ↓
+Provider-specific implementation
+    ↓
+Actual AI Model
+
+Spring AI's Model API is designed to provide portable abstractions across providers, including chat and embedding models.
+
+CONCEPT 2: ChatClient
+
+ChatClient is one of the most important classes in Spring AI.
+
+It is similar in spirit to using a fluent client API.
+
+Basic flow
+User Question
+      ↓
+ChatClient
+      ↓
+AI Model
+      ↓
+AI Response
+Example
+@RestController
+public class ChatController {
+
+
+    private final ChatClient chatClient;
+
+
+    public ChatController(ChatClient.Builder builder) {
+        this.chatClient = builder.build();
+    }
+
+
+    @GetMapping("/ask")
+    public String ask(@RequestParam String question) {
+
+
+        return chatClient.prompt()
+                .user(question)
+                .call()
+                .content();
+    }
+}
+
+Now call:
+
+GET /ask?question=What is Java?
+
+Flow:
+
+Browser
+   ↓
+Spring Boot Controller
+   ↓
+ChatClient
+   ↓
+AI Model
+   ↓
+Response
+
+content() returns the response as a String; Spring AI also supports obtaining richer response metadata or mapping responses to Java types.
+
+CONCEPT 3: Prompt
+
+A Prompt is the input we send to an AI model.
+
+Example:
+
+Explain Spring Boot in simple language.
+
+In Spring AI:
+
+String response = chatClient.prompt()
+        .user("Explain Spring Boot")
+        .call()
+        .content();
+
+Flow:
+
+Prompt
+   ↓
+AI Model processes prompt
+   ↓
+Generates response
+CONCEPT 4: System Message
+
+A system message tells the AI how it should behave.
+
+Example:
+
+You are a Java trainer.
+Explain concepts using simple examples.
+
+Code:
+
+String response = chatClient.prompt()
+        .system("""
+                You are an experienced Java trainer.
+                Explain concepts step by step.
+                Give simple examples.
+                """)
+        .user("Explain inheritance")
+        .call()
+        .content();
+Flow
+System Message
+       +
+User Question
+       ↓
+     Prompt
+       ↓
+   AI Model
+       ↓
+   AI Response
+
+The ChatClient API supports system and user messages, prompt templates, options, advisors, and other prompt customization mechanisms.
+
+CONCEPT 5: Prompt Templates
+
+Suppose you want dynamic input.
+
+Instead of:
+
+.user("Explain Java")
+
+You want:
+
+Explain {topic}
+
+Example:
+
+String response = chatClient.prompt()
+        .user(u -> u
+                .text("Explain {topic} with examples")
+                .param("topic", "Java Streams"))
+        .call()
+        .content();
+
+Now:
+
+{topic}
+   ↓
+Java Streams
+
+Final prompt:
+
+Explain Java Streams with examples
+
+This is useful when building dynamic AI applications.
+
+CONCEPT 6: Chat Options
+
+Chat models can have options such as:
+
+Model name
+Temperature
+Other provider-specific settings
+What is temperature?
+
+Simple understanding:
+
+Low Temperature
+       ↓
+More predictable response
+
+
+High Temperature
+       ↓
+More creative response
+
+Example:
+
+String response = chatClient.prompt()
+        .user("Write a Java learning example")
+        .options(options -> options
+                .temperature(0.2))
+        .call()
+        .content();
+
+Use cases:
+
+0.0 - 0.3 → factual / consistent answers
+
+
+0.4 - 0.7 → balanced
+
+
+0.8+ → creative generation
+
+Prompt options can include settings such as model selection and temperature.
+
+CONCEPT 7: Structured Output
+
+This is a very important concept.
+
+Normally AI returns text:
+
+Java is an object-oriented programming language...
+
+But sometimes we want a Java object.
+
+For example:
+
+public record Course(
+        String name,
+        String description,
+        int duration
+) {
+}
+
+Now ask AI:
+
+Create a Java course.
+
+We want:
+
+{
+  "name": "Java Full Stack",
+  "description": "Java and Spring Boot course",
+  "duration": 30
+}
+
+Spring AI can map the response to a Java type.
+
+Course course = chatClient.prompt()
+        .user("Create a beginner Java course")
+        .call()
+        .entity(Course.class);
+Flow
+Prompt
+   ↓
+AI Model
+   ↓
+Structured JSON
+   ↓
+Spring AI
+   ↓
+Java Object
+
+Spring AI supports entity() methods for mapping responses into Java types, with options for provider-native structured output when supported.
+
+CONCEPT 8: Streaming
+
+Normally:
+
+.call()
+.content();
+
+The application waits until the complete response is ready.
+
+Request
+   ↓
+Wait...
+   ↓
+Wait...
+   ↓
+Complete Response
+
+With streaming:
+
+Request
+   ↓
+Response starts
+   ↓
+Java
+   ↓
+is
+   ↓
+a
+   ↓
+programming
+   ↓
+language...
+
+Conceptually:
+
+Flux<String> response = chatClient.prompt()
+        .user("Explain Spring Boot")
+        .stream()
+        .content();
+
+Streaming is useful for:
+
+Chat Applications
+AI Assistants
+Live Response UI
+
+Spring AI supports synchronous and streaming models through ChatClient.
+
+CONCEPT 9: Embeddings
+
+This is where Spring AI becomes more interesting.
+
+What is an embedding?
+
+An embedding converts text into numbers.
+
+Example:
+
+"Java is a programming language"
+
+becomes conceptually:
+
+[0.12, -0.45, 0.89, 0.23, ...]
+
+These numbers represent the semantic meaning of the text.
+
+Example
+Java programming
+        ↓
+Embedding Model
+        ↓
+[0.21, 0.55, 0.81, ...]
+
+Another sentence:
+
+Java coding language
+        ↓
+Embedding Model
+        ↓
+[0.20, 0.56, 0.79, ...]
+
+The vectors may be similar because the meaning is similar.
+
+CONCEPT 10: Vector Store
+
+A vector store stores embeddings.
+
+Traditional database search:
+
+SELECT * FROM documents
+WHERE title = 'Java';
+
+Vector search:
+
+Find documents similar to:
+
+
+"How can I learn Java?"
+
+Architecture:
+
+Documents
+    ↓
+Embedding Model
+    ↓
+Vectors
+    ↓
+Vector Store
+
+When the user asks:
+
+How do I start learning Java?
+
+The question is also converted to an embedding:
+
+Question
+   ↓
+Embedding
+   ↓
+Similarity Search
+   ↓
+Relevant Documents
+
+A vector database performs similarity searches rather than only exact-match queries, and this retrieval pattern is commonly used for RAG.
+
+CONCEPT 11: RAG
+
+RAG means:
+
+Retrieval-Augmented Generation
+
+This is one of the most important concepts to learn.
+
+Problem without RAG
+
+Suppose you ask:
+
+What is my company's leave policy?
+
+The LLM may not know your private company information.
+
+Without RAG:
+
+User Question
+      ↓
+     LLM
+      ↓
+Maybe incorrect answer
+With RAG
+Company Documents
+       ↓
+   Split Documents
+       ↓
+    Embeddings
+       ↓
+   Vector Store
+       ↓
+
+
+User Question
+       ↓
+   Similarity Search
+       ↓
+Relevant Documents
+       ↓
+      LLM
+       ↓
+   Final Answer
+
+The key idea:
+
+Don't retrain the model for every document. Retrieve relevant information and provide it as context.
+
+Simple Spring AI RAG Example
+
+Conceptually:
+
+String response = chatClient.prompt()
+        .advisors(
+            QuestionAnswerAdvisor.builder(vectorStore)
+                    .build()
+        )
+        .user("What is the leave policy?")
+        .call()
+        .content();
+
+The flow is:
+
+User Question
+      ↓
+QuestionAnswerAdvisor
+      ↓
+Vector Store Search
+      ↓
+Relevant Documents
+      ↓
+Add Context to Prompt
+      ↓
+LLM
+      ↓
+Final Answer
+
+Spring AI's QuestionAnswerAdvisor implements a naive RAG pattern by retrieving relevant vector-store content and augmenting the prompt.
+
+CONCEPT 12: Advisors
+
+An Advisor can intercept or enhance the interaction between your application and the AI model.
+
+Think of it like a processing layer.
+
+User Request
+      ↓
+   Advisor 1
+      ↓
+   Advisor 2
+      ↓
+   Advisor 3
+      ↓
+    AI Model
+
+Examples:
+
+Chat Memory Advisor
+       ↓
+RAG Advisor
+       ↓
+Logging Advisor
+       ↓
+AI Model
+Example
+ChatClient chatClient = ChatClient.builder(chatModel)
+        .defaultAdvisors(
+                new SimpleLoggerAdvisor()
+        )
+        .build();
+
+Spring AI Advisors are designed to encapsulate recurring AI patterns such as memory, RAG, tool calling, and logging. The order of advisors affects how data flows through the chain.
+
+CONCEPT 13: Chat Memory
+
+Normally, an LLM does not automatically remember a previous API call.
+
+Example:
+
+Request 1
+My name is Srinivasa.
+Request 2
+What is my name?
+
+Without conversation history, the model may not know.
+
+Solution: Chat Memory
+User: My name is Srinivasa
+         ↓
+      Memory
+         ↓
+
+
+User: What is my name?
+         ↓
+Previous Conversation
+         +
+Current Question
+         ↓
+         LLM
+
+Conceptually:
+
+chatClient.prompt()
+        .advisors(a -> a
+                .advisors(memoryAdvisor)
+                .param(ChatMemory.CONVERSATION_ID, "user-123"))
+        .user("What is my name?")
+        .call()
+        .content();
+
+When using Spring AI memory advisors, the conversation ID is supplied to identify the conversation context.
+
+CONCEPT 14: Tool Calling
+
+This is one of the most powerful concepts.
+
+An LLM can generate text, but it cannot directly access your database or execute your Java methods by itself.
+
+Tool calling connects the AI model to your application functions.
+
+Example question:
+
+What is the weather in Chennai?
+
+Flow:
+
+User
+  ↓
+LLM
+  ↓
+"I need weather information"
+  ↓
+Call Java Method / API
+  ↓
+Weather Result
+  ↓
+LLM
+  ↓
+Final Response
+Example Java Tool
+@Component
+public class WeatherTools {
+
+
+    @Tool(description = "Get current weather for a city")
+    public String getWeather(String city) {
+
+
+        // In real application,
+        // call weather API
+
+
+        return "The weather in " + city + " is 32°C";
+    }
+}
+
+Use the tool:
+
+String response = chatClient.prompt()
+        .user("What is the weather in Chennai?")
+        .tools(weatherTools)
+        .call()
+        .content();
+Tool Calling Flow
+User:
+"What is weather in Chennai?"
+          ↓
+         LLM
+          ↓
+Decides to call:
+
+
+getWeather("Chennai")
+          ↓
+Java Method
+          ↓
+"32°C"
+          ↓
+         LLM
+          ↓
+Final Response
+
+Spring AI supports tool calling through abstractions that expose tool definitions to the model and execute selected tools, returning their results to the model for the final answer. With ChatClient, the tool-calling loop can be handled automatically.
+
+CONCEPT 15: AI Application Architecture
+
+A real Spring AI application may look like this:
+
+                    ┌──────────────┐
+                    │   Angular /  │
+                    │   React UI   │
+                    └──────┬───────┘
+                           │
+                           ▼
+                    ┌──────────────┐
+                    │ Spring Boot  │
+                    │ REST API     │
+                    └──────┬───────┘
+                           │
+                           ▼
+                    ┌──────────────┐
+                    │  ChatClient  │
+                    └──────┬───────┘
+                           │
+              ┌────────────┼────────────┐
+              │            │            │
+              ▼            ▼            ▼
+          Chat Memory     RAG         Tools
+              │            │            │
+              │            ▼            ▼
+              │       Vector Store   Database/API
+              │            │            │
+              └────────────┼────────────┘
+                           ▼
+                      AI Model
+16. Recommended Learning Plan
+
+I recommend learning Spring AI in 6 stages.
+
+Day 1 — Spring AI Basics
+
+Learn:
+
+What is Generative AI?
+What is LLM?
+What is Spring AI?
+AI Provider
+ChatModel
+ChatClient
+Prompt
+System Message
+User Message
+Temperature
+
+Program:
+
+Simple Spring Boot AI Chat Application
+
+API:
+
+GET /ask?question=Explain Java
+Day 2 — Prompt Engineering
+
+Learn:
+
+System Prompt
+User Prompt
+Prompt Templates
+Dynamic Parameters
+Few-shot prompting
+Output control
+
+Program:
+
+AI Java Trainer Application
+
+Example:
+
+You are a Java trainer.
+Explain the topic for beginners.
+Give one real-time example.
+Day 3 — Structured Output + Streaming
+
+Learn:
+
+Structured Output
+Java Record
+JSON Response
+entity()
+Streaming
+Flux
+
+Program:
+
+Course Generator
+
+Example output:
+
+{
+  "courseName": "Spring Boot",
+  "duration": 30,
+  "topics": [
+    "REST API",
+    "JPA",
+    "Security"
+  ]
+}
+Day 4 — Embeddings + Vector Store
+
+Learn:
+
+Embeddings
+Vectors
+Similarity Search
+Vector Database
+Document
+Metadata
+
+Program:
+
+Document Search Application
+
+Flow:
+
+PDF / Text
+    ↓
+Embedding
+    ↓
+Vector Store
+    ↓
+Similarity Search
+Day 5 — RAG
+
+Learn:
+
+What problem RAG solves
+Document loading
+Text splitting
+Embedding
+Vector Store
+Retrieval
+Context
+Generation
+
+Program:
+
+Company Knowledge Chatbot
+
+Example:
+
+Employee asks:
+"What is the leave policy?"
+
+
+          ↓
+
+
+Retrieve relevant policy document
+
+
+          ↓
+
+
+Send context + question to LLM
+
+
+          ↓
+
+
+Generate answer
+Day 6 — Tool Calling + Memory + MCP
+
+Learn:
+
+Tool Calling
+@Tool
+Function Calling
+External API Integration
+Database Integration
+Chat Memory
+Advisors
+MCP basics
+
+Program:
+
+AI Employee Assistant
+
+The assistant can:
+
+User:
+"What is my leave balance?"
+
+
+        ↓
+
+
+AI calls:
+
+
+getLeaveBalance(employeeId)
+
+
+        ↓
+
+
+Database
+
+
+        ↓
+
+
+AI generates:
+
+
+"You have 8 leave days remaining."
+
+Spring AI also includes MCP support for integrating AI applications with MCP servers or exposing Spring-based services to the broader AI ecosystem.
+
+17. Final Project: Employee AI Assistant
+
+After completing all concepts, build this project:
+
+Employee AI Assistant
+
+Features:
+
+Feature 1: Normal Chat
+Explain company policies
+Feature 2: RAG
+Search HR policy documents
+Feature 3: Memory
+Remember previous conversation
+Feature 4: Tool Calling
+Get employee information
+Get leave balance
+Get project information
+Feature 5: Structured Output
+Generate employee reports as JSON
+Feature 6: Streaming
+Show AI response gradually in UI
+
+Architecture:
+
+React / Angular
+       ↓
+Spring Boot
+       ↓
+    Spring AI
+       │
+       ├── ChatClient
+       │
+       ├── Advisors
+       │      ├── Memory
+       │      └── RAG
+       │
+       ├── Tools
+       │      ├── Employee Service
+       │      └── Leave Service
+       │
+       └── Vector Store
+                ↓
+            AI Model
+The Most Important Learning Sequence
+
+Do not start with RAG immediately.
+
+Follow this order:
+
+STEP 1
+LLM Basics
+   ↓
+STEP 2
+Spring AI Introduction
+   ↓
+STEP 3
+ChatClient
+   ↓
+STEP 4
+Prompt + System + User Message
+   ↓
+STEP 5
+Prompt Templates
+   ↓
+STEP 6
+Chat Options
+   ↓
+STEP 7
+Structured Output
+   ↓
+STEP 8
+Streaming
+   ↓
+STEP 9
+Embeddings
+   ↓
+STEP 10
+Vector Store
+   ↓
+STEP 11
+RAG
+   ↓
+STEP 12
+Advisors
+   ↓
+Best next step
+
+I recommend that we now start Concept 1 practically and build a complete beginner project step by step:
+
+Spring Boot + Spring AI + Ollama → Simple AI Chat Application
+
+Then, after it works, we can add each concept one by one: Prompt Templates → Structured Output → Streaming → Embeddings → Vector Store → RAG → Tool Calling. Spring AI Reference Documentation
+
+Spring Boot + Spring AI + Ollama → Simple AI Chat Application
+
+Spring Boot + Spring AI + Ollama → Simple AI Chat Application
+
+Let's build the first Spring AI project from scratch. The goal is simple:
+
+User / Browser
+      ↓
+Spring Boot REST API
+      ↓
+Spring AI ChatClient
+      ↓
+Ollama
+      ↓
+Local LLM
+      ↓
+AI Response
+
+We will start with a basic application and then test it using a REST endpoint.
+
+Step 1: Prerequisites
+
+You need:
+
+Java 21 or later
+Maven
+Spring Boot
+Ollama installed locally
+
+Spring AI 2.0.x supports Spring Boot 4.0.x and 4.1.x.
+
+For Ollama installation and models:
+
+Ollama official website
+
+Spring AI provides an Ollama integration through the spring-ai-starter-model-ollama starter.
+
+Step 2: Install and Test Ollama
+
+After installing Ollama, open Command Prompt or Terminal:
+
+ollama --version
+
+Now download a model. For example:
+
+ollama pull llama3.2
+
+Then test it:
+
+ollama run llama3.2
+
+Ask:
+
+Explain Java inheritance in simple words.
+
+If Ollama responds, your local AI model is working.
+
+Spring AI's Ollama integration uses http://localhost:11434 as the default Ollama server URL.
+
+Step 3: Create Spring Boot Project
+
+Create a project with:
+
+Project: Maven
+Language: Java
+Spring Boot: 4.x
+Java: 21
+
+Dependencies:
+
+Spring Web
+Spring AI Ollama
+
+You can use Spring Initializr to create the project.
+
+Our project structure:
+
+spring-ai-ollama-demo
+│
+├── src/main/java
+│   └── com/example/ai
+│       ├── SpringAiOllamaApplication.java
+│       └── controller
+│           └── ChatController.java
+│
+├── src/main/resources
+│   └── application.properties
+│
+└── pom.xml
+Step 4: Configure pom.xml
+
+For the current Spring AI 2.0.0 documentation, the Ollama starter artifact is:
+
+<artifactId>spring-ai-starter-model-ollama</artifactId>
+
+The Spring AI BOM manages the Spring AI dependency versions.
+
+A simple Maven configuration is:
+
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-bom</artifactId>
+            <version>2.0.0</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+
+
+<dependencies>
+
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+
+    <dependency>
+        <groupId>org.springframework.ai</groupId>
+        <artifactId>spring-ai-starter-model-ollama</artifactId>
+    </dependency>
+
+
+</dependencies>
+Step 5: Configure Ollama
+
+Create:
+
+src/main/resources/application.properties
+
+Add:
+
+spring.application.name=spring-ai-ollama-demo
+
+
+spring.ai.ollama.base-url=http://localhost:11434
+
+
+spring.ai.ollama.chat.options.model=llama3.2
+
+
+spring.ai.ollama.chat.options.temperature=0.7
+
+The model name and options are configured under spring.ai.ollama.chat, while the Ollama base URL defaults to http://localhost:11434.
+
+Step 6: Create the Main Class
+package com.example.ai;
+
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+
+@SpringBootApplication
+public class SpringAiOllamaApplication {
+
+
+    public static void main(String[] args) {
+        SpringApplication.run(
+                SpringAiOllamaApplication.class,
+                args
+        );
+    }
+}
+
+This is a normal Spring Boot application.
+
+Step 7: Create Our First AI Controller
+
+Create:
+
+controller/ChatController.java
+
+Code:
+
+package com.example.ai.controller;
+
+
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+
+@RestController
+public class ChatController {
+
+
+    private final ChatClient chatClient;
+
+
+    public ChatController(ChatClient.Builder chatClientBuilder) {
+
+
+        this.chatClient = chatClientBuilder.build();
+
+
+    }
+
+
+    @GetMapping("/ask")
+    public String askAI(
+            @RequestParam String question) {
+
+
+        return chatClient
+                .prompt()
+                .user(question)
+                .call()
+                .content();
+    }
+}
+
+ChatClient.Builder can be auto-configured by Spring AI, and the prompt() → user() → call() → content() flow sends the user input to the configured AI model and returns the generated text.
+
+Step 8: Understand the Code Line by Line
+1. Inject ChatClient.Builder
+private final ChatClient chatClient;
+
+
+public ChatController(
+        ChatClient.Builder chatClientBuilder) {
+
+
+    this.chatClient = chatClientBuilder.build();
+}
+
+Spring AI automatically creates the builder because we configured the Ollama model.
+
+Conceptually:
+
+Spring Boot
+     ↓
+Spring AI Auto Configuration
+     ↓
+OllamaChatModel
+     ↓
+ChatClient.Builder
+     ↓
+ChatClient
+
+Ollama's OllamaChatModel implements Spring AI's chat model abstractions.
+
+2. Receive the User Question
+@GetMapping("/ask")
+public String askAI(
+        @RequestParam String question)
+
+For example:
+
+/ask?question=Explain Java Streams
+
+The value becomes:
+
+question = "Explain Java Streams";
+3. Create the Prompt
+chatClient
+        .prompt()
+
+This starts building the request for the AI model.
+
+4. Add the User Message
+.user(question)
+
+Example:
+
+User:
+Explain Java Streams
+5. Call the AI Model
+.call()
+
+The request goes:
+
+Spring Boot
+      ↓
+ChatClient
+      ↓
+Ollama
+      ↓
+llama3.2
+6. Get the Response
+.content()
+
+The final AI response is returned as a Java String.
+
+Complete flow:
+
+Browser
+   │
+   │ GET /ask?question=What is Java?
+   ▼
+ChatController
+   │
+   ▼
+ChatClient
+   │
+   ▼
+OllamaChatModel
+   │
+   ▼
+Ollama Server
+localhost:11434
+   │
+   ▼
+llama3.2 Model
+   │
+   ▼
+AI Response
+   │
+   ▼
+Browser
+Step 9: Run the Application
+
+Start your Spring Boot application.
+
+Then open:
+
+http://localhost:8080/ask?question=Explain%20Spring%20Boot
+
+You should receive an AI-generated response.
+
+You can also test:
+
+http://localhost:8080/ask?question=What%20is%20Java%20Inheritance
+
+Or:
+
+http://localhost:8080/ask?question=Explain%20Docker%20with%20a%20real-time%20example
+Step 10: Better API Response
+
+Instead of returning only a String, let's return JSON.
+
+package com.example.ai.controller;
+
+
+import java.util.Map;
+
+
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+
+@RestController
+public class ChatController {
+
+
+    private final ChatClient chatClient;
+
+
+    public ChatController(ChatClient.Builder builder) {
+        this.chatClient = builder.build();
+    }
+
+
+    @GetMapping("/ask")
+    public Map<String, String> askAI(
+            @RequestParam String question) {
+
+
+        String answer = chatClient
+                .prompt()
+                .user(question)
+                .call()
+                .content();
+
+
+        return Map.of(
+                "question", question,
+                "answer", answer
+        );
+    }
+}
+
+Response:
+
+{
+  "question": "What is Spring Boot?",
+  "answer": "Spring Boot is a framework..."
+}
+What You Have Learned So Far
+
+You have now implemented these Spring AI concepts:
+
+1. Spring Boot
+        +
+2. Spring AI
+        +
+3. Ollama
+        +
+4. Local LLM
+        +
+5. ChatClient
+        +
+6. Prompt
+        +
+7. User Message
+        +
+8. AI Response
+The most important concept
+
+Remember this architecture:
+
+Your Java Code
+      ↓
+ChatClient
+      ↓
+ChatModel
+      ↓
+Ollama
+      ↓
+LLM
+      ↓
+Generated Response
+Next recommended implementation
+
+The next step is Prompt Engineering with Spring AI. We can upgrade this same project to support:
+
+System Message
+        ↓
+"You are a Java Trainer"
+        +
+User Message
+        ↓
+"Explain Polymorphism"
+        ↓
+AI Response customized as a Java trainer
+
+After that, we can continue step by step with:
+
+Prompt Templates → Chat Options → Structured Output → Streaming → Embeddings → Vector Store → RAG → Tool Calling → MCP.
+
+
+
+
+
+
+Next Step: Prompt Engineering with Spring AI
+
+Now we will enhance the previous application.
+
+Previously, we directly sent the user's question:
+
+chatClient
+    .prompt()
+    .user(question)
+    .call()
+    .content();
+
+Now we will learn how to control how the AI responds.
+
+1. What is Prompt Engineering?
+
+Prompt Engineering means:
+
+Writing clear instructions to get the desired response from an AI model.
+
+For example, compare these two prompts.
+
+Simple prompt
+Explain Inheritance
+
+The AI can answer in any style.
+
+Engineered prompt
+You are an experienced Java trainer.
+
+
+Explain Inheritance for beginners.
+
+
+Follow these rules:
+1. Give a simple definition.
+2. Explain why we use inheritance.
+3. Provide a Java example.
+4. Explain the code line by line.
+5. Give one real-time example.
+
+Now the response will be more structured.
+
+2. Types of Messages
+
+In our Spring AI application, the important messages are:
+
+┌─────────────────────┐
+│   System Message    │
+│                     │
+│ Defines AI behavior │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│    User Message     │
+│                     │
+│ User's question     │
+└──────────┬──────────┘
+           │
+           ▼
+        AI MODEL
+           │
+           ▼
+       RESPONSE
+3. System Message
+
+A System Message tells the AI:
+
+Who it is
+How it should behave
+What style it should use
+What rules it should follow
+
+For our project, let's make the AI behave like a Java Trainer.
+
+You are an experienced Java and Spring Boot trainer.
+
+
+Your responsibility is to teach beginners.
+
+
+Rules:
+1. Explain concepts step by step.
+2. Use simple English.
+3. Give practical examples.
+4. Explain code line by line.
+5. Use real-time examples where possible.
+6. Do not give overly complex explanations.
+4. Update ChatController
+
+Let's modify the previous controller.
+
+package com.example.ai.controller;
+
+
+import java.util.Map;
+
+
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+
+@RestController
+public class ChatController {
+
+
+    private final ChatClient chatClient;
+
+
+    public ChatController(ChatClient.Builder builder) {
+        this.chatClient = builder.build();
+    }
+
+
+    @GetMapping("/ask")
+    public Map<String, String> askAI(
+            @RequestParam String question) {
+
+
+        String answer = chatClient
+                .prompt()
+                .system("""
+                        You are an experienced Java and Spring Boot trainer.
+
+
+                        Teach beginners step by step.
+
+
+                        Follow these rules:
+
+
+                        1. Use simple English.
+                        2. Start with a simple definition.
+                        3. Explain why the concept is used.
+                        4. Give a simple example.
+                        5. Explain the example.
+                        6. Give a real-time use case.
+                        """)
+                .user(question)
+                .call()
+                .content();
+
+
+        return Map.of(
+                "question", question,
+                "answer", answer
+        );
+    }
+}
+5. Understand the Flow
+
+Suppose the user calls:
+
+http://localhost:8080/ask?question=Explain%20Polymorphism
+
+Spring AI conceptually sends:
+
+SYSTEM:
+
+
+You are an experienced Java and Spring Boot trainer.
+
+
+Teach beginners step by step.
+
+
+Use simple English.
+Give examples.
+Explain real-time use cases.
+
+
+
+
+USER:
+
+
+Explain Polymorphism
+
+Then:
+
+System Instructions
+         +
+User Question
+         ↓
+     ChatClient
+         ↓
+      Ollama
+         ↓
+      LLM Model
+         ↓
+Customized Response
+
+The system message controls the behavior, while the user message contains the actual question.
+
+6. Test the Application
+
+Try these questions.
+
+Example 1
+/ask?question=Explain%20Java%20Inheritance
+Example 2
+/ask?question=Explain%20Spring%20Boot%20Dependency%20Injection
+Example 3
+/ask?question=Explain%20Docker%20with%20an%20example
+
+Because of the system prompt, the model should try to follow the same teaching style for each question.
+
+7. Dynamic System Prompt
+
+Sometimes we don't want to hardcode the instructions.
+
+For example, allow the user to select a role.
+
+Role = Java Trainer
+
+or:
+
+Role = Interviewer
+
+or:
+
+Role = Code Reviewer
+
+Let's create an API for this.
+
+@GetMapping("/ask-with-role")
+public Map<String, String> askWithRole(
+
+
+        @RequestParam String role,
+        @RequestParam String question) {
+
+
+    String answer = chatClient
+            .prompt()
+            .system("""
+                    You are a %s.
+
+
+                    Answer the question based on your role.
+
+
+                    Use simple and clear language.
+                    """.formatted(role))
+            .user(question)
+            .call()
+            .content();
+
+
+    return Map.of(
+            "role", role,
+            "question", question,
+            "answer", answer
+    );
+}
+Test
+http://localhost:8080/ask-with-role?role=Java%20Trainer&question=Explain%20Interfaces
+
+Now test with:
+
+role = Java Interviewer
+
+The same question may produce a different style of answer.
+
+8. Prompt Template
+
+Now let's learn an important concept: dynamic prompts.
+
+Suppose we have this prompt:
+
+Explain {topic} for a {level} student.
+
+Here:
+
+{topic}
+{level}
+
+are placeholders.
+
+Example:
+
+topic = Java Streams
+level = beginner
+
+Final prompt:
+
+Explain Java Streams for a beginner student.
+
+In Spring AI:
+
+@GetMapping("/explain")
+public String explain(
+
+
+        @RequestParam String topic,
+        @RequestParam String level) {
+
+
+    return chatClient
+            .prompt()
+            .user(userSpec -> userSpec
+                    .text("""
+                            Explain {topic} for a {level} student.
+
+
+                            Follow these rules:
+
+
+                            1. Start with a simple definition.
+                            2. Explain why we use it.
+                            3. Give a simple example.
+                            4. Explain the example step by step.
+                            """)
+                    .param("topic", topic)
+                    .param("level", level))
+            .call()
+            .content();
+}
+9. Test Prompt Template
+
+Call:
+
+http://localhost:8080/explain?topic=Java%20Streams&level=beginner
+
+The flow becomes:
+
+Template:
+
+
+Explain {topic} for a {level} student.
+        ↓
+Replace Variables
+        ↓
+Explain Java Streams for a beginner student.
+        ↓
+Send to LLM
+        ↓
+AI Response
+
+Another example:
+
+/explain?topic=Spring%20Boot&level=advanced
+
+Same template, different values.
+
+This is very useful when creating dynamic AI applications.
+
+10. Few-Shot Prompting
+
+Sometimes giving only instructions is not enough.
+
+We can show the AI an example of the expected output.
+
+For example:
+
+Explain the concept using this format:
+
+
+Example:
+
+
+Concept: Encapsulation
+
+
+Definition:
+Encapsulation means wrapping data and methods into a single unit.
+
+
+Example:
+class Student {
+    private String name;
+}
+
+
+Now explain: Inheritance
+
+The AI learns the desired response format from the example.
+
+Conceptually:
+
+Example Input
+      ↓
+Example Output
+      ↓
+Actual Question
+      ↓
+AI follows similar pattern
+
+This is called Few-Shot Prompting.
+
+11. Implement Few-Shot Prompting
+@GetMapping("/few-shot")
+public String fewShot(
+        @RequestParam String topic) {
+
+
+    return chatClient
+            .prompt()
+            .user("""
+                    You are a Java trainer.
+
+
+                    Explain concepts in the following format.
+
+
+                    Example:
+
+
+                    Topic: Encapsulation
+
+
+                    Definition:
+                    Encapsulation means wrapping data
+                    and methods into one unit.
+
+
+                    Why do we use it?
+                    To protect data.
+
+
+                    Simple Example:
+                    class Student {
+                        private String name;
+                    }
+
+
+                    Now explain this topic using the
+                    same format:
+
+
+                    %s
+                    """.formatted(topic))
+            .call()
+            .content();
+}
+
+Test:
+
+/few-shot?topic=Polymorphism
+
+The AI should try to follow the demonstrated structure.
+
+12. Add Output Rules
+
+Prompt Engineering is also useful for controlling the response.
+
+For example:
+
+.user("""
+        Explain Java Streams.
+
+
+        Rules:
+
+
+        - Maximum 5 points.
+        - Use simple English.
+        - Give one code example.
+        - Do not exceed 300 words.
+        """)
+
+Other examples:
+
+Ask for JSON
+Return the answer in JSON format.
+Ask for a table
+Return the comparison as a Markdown table.
+Ask for interview questions
+Generate exactly 10 interview questions.
+Ask for beginner explanation
+Explain as if teaching someone who is new to programming.
+13. Prompt Engineering Best Practices
+❌ Bad Prompt
+Explain Spring.
+
+This is too broad.
+
+✅ Better Prompt
+You are a Spring Boot trainer.
+
+
+Explain Dependency Injection.
+
+
+Target audience: Beginners.
+
+
+Include:
+
+
+1. Definition
+2. Why Dependency Injection is needed
+3. Constructor Injection example
+4. Line-by-line explanation
+5. Real-time example
+
+The general principle is:
+
+Clear Instructions
+        +
+Context
+        +
+Expected Output Format
+        +
+Constraints
+        =
+Better AI Response
+14. A Better Project Design
+
+Instead of putting all AI logic inside the controller, let's use a service layer.
+
+controller
+     ↓
+service
+     ↓
+ChatClient
+     ↓
+Ollama
+AIService.java
+package com.example.ai.service;
+
+
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.stereotype.Service;
+
+
+@Service
+public class AIService {
+
+
+    private final ChatClient chatClient;
+
+
+    public AIService(ChatClient.Builder builder) {
+        this.chatClient = builder.build();
+    }
+
+
+    public String askJavaTrainer(String question) {
+
+
+        return chatClient
+                .prompt()
+                .system("""
+                        You are an experienced Java and
+                        Spring Boot trainer.
+
+
+                        Teach beginners step by step.
+
+
+                        Follow these rules:
+
+
+                        1. Use simple English.
+                        2. Give a definition.
+                        3. Explain why it is used.
+                        4. Give a code example if applicable.
+                        5. Explain the code.
+                        6. Give a real-time example.
+                        """)
+                .user(question)
+                .call()
+                .content();
+ChatController.java
+package com.example.ai.controller;
+
+
+import com.example.ai.service.AIService;
+
+
+import java.util.Map;
+
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+
+@RestController
+public class ChatController {
+
+
+    private final AIService aiService;
+
+
+    public ChatController(AIService aiService) {
+        this.aiService = aiService;
+    }
+
+
+    @GetMapping("/ask")
+    public Map<String, String> askAI(
+            @RequestParam String question) {
+
+
+        String answer =
+                aiService.askJavaTrainer(question);
+
+
+        return Map.of(
+                "question", question,
+                "answer", answer
+        );
+    }
+}
+
+This is a cleaner architecture:
+
+Client
+  ↓
+ChatController
+  ↓
+AIService
+  ↓
+ChatClient
+  ↓
+Ollama
+  ↓
+LLM
+15. Important Prompt Engineering Concepts You Learned
+Prompt Engineering
+       │
+       ├── System Message
+       │       → Defines AI behavior
+       │
+       ├── User Message
+       │       → User question
+       │
+       ├── Prompt Template
+       │       → Dynamic variables
+       │
+       ├── Few-Shot Prompting
+       │       → Show examples
+       │
+       └── Output Constraints
+               → Control response format
+Your application has now evolved
+Stage 1
+User Question
+      ↓
+ChatClient
+      ↓
+Ollama
+Stage 2
+System Prompt
+      +
+Prompt Template
+      +
+User Question
+      ↓
+ChatClient
+      ↓
+Ollama
+      ↓
+Customized AI Response
+Next Step: Chat Options
+
+The next concept should be:
+
+Spring AI Chat Options
+
+We will learn and implement:
+
+Temperature
+    ↓
+Controls randomness / creativity
+
+
+Model Selection
+    ↓
+Choose different Ollama models
+
+
+Max Tokens
+    ↓
+Control response length
+
+Then we can build an API like:
+
+/ask?question=Explain Java&temperature=0.2
+
+and compare how the same prompt behaves with:
+
+Temperature = 0.1 → More consistent
+Temperature = 0.7 → Balanced
+Temperature = 1.0 → More creative
+
+After Chat Options, the recommended sequence is:
+
+Structured Output → Streaming → Embeddings → Vector Store → RAG → Advisors → Chat Memory → Tool Calling → MCP.
+
+Prompt Templates → Chat Options → Structured Output → Streaming → Embeddings → Vector Store → RAG → Tool Calling → MCP  
+
+Perfect. This is the complete Spring AI learning roadmap we will follow step by step, using the same Spring Boot + Spring AI + Ollama project.
+
+Spring AI Learning Roadmap
+STEP 1  → Prompt Templates
+STEP 2  → Chat Options
+STEP 3  → Structured Output
+STEP 4  → Streaming
+STEP 5  → Embeddings
+STEP 6  → Vector Store
+STEP 7  → RAG
+STEP 8  → Tool Calling
+STEP 9  → MCP
+
+We have already covered the basics of prompting. Now we will move forward in this exact sequence.
+
+STEP 1: Prompt Templates
+What problem does it solve?
+
+Suppose your application receives:
+
+Topic = Java Streams
+Level = Beginner
+
+Instead of creating the prompt manually every time:
+
+String prompt =
+        "Explain " + topic +
+        " for " + level + " students";
+
+Spring AI allows us to use placeholders.
+
+Explain {topic} for a {level} student.
+
+Then:
+
+{topic} → Java Streams
+{level} → Beginner
+
+Final prompt:
+
+Explain Java Streams for a Beginner student.
+Program
+@GetMapping("/explain")
+public String explain(
+        @RequestParam String topic,
+        @RequestParam String level) {
+
+
+    return chatClient
+            .prompt()
+            .user(user -> user
+                    .text("""
+                            Explain {topic} for a {level} student.
+
+
+                            Include:
+                            1. Definition
+                            2. Why we use it
+                            3. Simple example
+                            4. Real-time use case
+                            """)
+                    .param("topic", topic)
+                    .param("level", level))
+            .call()
+            .content();
+}
+
+Test:
+
+http://localhost:8080/explain?topic=Java%20Streams&level=Beginner
+
+Flow:
+
+User Input
+    ↓
+Prompt Template
+    ↓
+Replace Parameters
+    ↓
+Final Prompt
+    ↓
+ChatClient
+    ↓
+Ollama
+STEP 2: Chat Options
+
+Chat options control how the AI generates a response.
+
+Important options include:
+
+Temperature
+Model
+Max Tokens / Response length
+Temperature
+Low Temperature
+      ↓
+More predictable
+More consistent
+
+
+High Temperature
+      ↓
+More creative
+More varied
+
+For example:
+
+String response = chatClient
+        .prompt()
+        .user("Explain Java Streams")
+        .options(options -> options
+                .temperature(0.2))
+        .call()
+        .content();
+
+A dynamic API can look like this:
+
+@GetMapping("/ask")
+public String ask(
+        @RequestParam String question,
+        @RequestParam(defaultValue = "0.7") double temperature) {
+
+
+    return chatClient
+            .prompt()
+            .user(question)
+            .options(options -> options
+                    .temperature(temperature))
+            .call()
+            .content();
+}
+
+Test:
+
+/ask?question=Explain%20Java&temperature=0.2
+
+Then compare:
+
+temperature=0.1
+temperature=0.7
+temperature=1.0
+STEP 3: Structured Output
+
+Normally AI returns:
+
+Java is a programming language...
+
+But applications often need a Java object.
+
+For example:
+
+public record Course(
+        String name,
+        String description,
+        int duration
+) {
+}
+
+Now ask AI to generate a course:
+
+@GetMapping("/course")
+public Course generateCourse(
+        @RequestParam String topic) {
+
+
+    return chatClient
+            .prompt()
+            .user("""
+                    Create a course about {topic}.
+
+
+                    Include:
+                    - course name
+                    - description
+                    - duration
+                    """)
+            .param("topic", topic)
+            .call()
+            .entity(Course.class);
+}
+
+Flow:
+
+Prompt
+   ↓
+AI Model
+   ↓
+Structured Response
+   ↓
+Spring AI
+   ↓
+Course Java Object
+
+Example response:
+
+{
+  "name": "Java Full Stack",
+  "description": "Learn Java, Spring Boot and web development",
+  "duration": 30
+}
+
+This is extremely useful when integrating AI with:
+
+REST APIs
+Databases
+React/Angular applications
+Microservices
+STEP 4: Streaming
+
+Normally:
+
+.call().content();
+
+The application waits for the complete response.
+
+Streaming returns the response gradually.
+
+@GetMapping(value = "/stream",
+        produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+public Flux<String> stream(
+        @RequestParam String question) {
+
+
+    return chatClient
+            .prompt()
+            .user(question)
+            .stream()
+            .content();
+}
+
+Flow:
+
+AI Response:
+
+
+Spring
+   ↓
+Boot
+   ↓
+is
+   ↓
+a
+   ↓
+framework...
+
+Architecture:
+
+User
+  ↓
+Spring Boot
+  ↓
+ChatClient
+  ↓
+.stream()
+  ↓
+Ollama
+  ↓
+Flux<String>
+  ↓
+Browser / React / Angular
+
+This is commonly used for:
+
+ChatGPT-style applications
+AI assistants
+Live chat applications
+STEP 5: Embeddings
+
+This is the beginning of the RAG journey.
+
+Text:
+
+Java is a programming language.
+
+Embedding:
+
+[0.21, 0.45, -0.78, 0.12, ...]
+
+Concept:
+
+Text
+  ↓
+Embedding Model
+  ↓
+Vector
+
+In Spring AI, the main abstraction is conceptually:
+
+EmbeddingModel
+
+Example:
+
+@Service
+public class EmbeddingService {
+
+
+    private final EmbeddingModel embeddingModel;
+
+
+    public EmbeddingService(
+            EmbeddingModel embeddingModel) {
+
+
+        this.embeddingModel = embeddingModel;
+    }
+
+
+    public float[] createEmbedding(String text) {
+
+
+        return embeddingModel
+                .embed(text);
+    }
+}
+
+Example:
+
+Input:
+
+
+Java is an OOP language.
+
+
+        ↓
+
+
+Embedding Model
+
+
+        ↓
+
+
+[0.12, -0.45, 0.87, ...]
+STEP 6: Vector Store
+
+A vector store stores:
+
+Document
+    +
+Embedding
+    +
+Metadata
+
+Architecture:
+
+PDF / Text File
+      ↓
+Document Reader
+      ↓
+Text Splitter
+      ↓
+Embedding Model
+      ↓
+Vector
+      ↓
+Vector Store
+
+Later, when a user asks:
+
+How do I learn Java?
+
+The system performs:
+
+Question
+   ↓
+Embedding
+   ↓
+Similarity Search
+   ↓
+Relevant Documents
+
+Popular vector stores include:
+
+PGVector
+Pinecone
+Redis
+MongoDB
+Chroma
+Milvus
+STEP 7: RAG
+
+RAG means:
+
+Retrieval-Augmented Generation
+
+This combines:
+
+LLM
+ +
+Your Private Data
+
+Without RAG:
+
+User Question
+      ↓
+     LLM
+      ↓
+General Answer
+
+With RAG:
+
+Documents
+    ↓
+Embeddings
+    ↓
+Vector Store
+    ↑
+    │ Similarity Search
+    │
+User Question
+    ↓
+Relevant Documents
+    ↓
+ChatClient
+    ↓
+LLM
+    ↓
+Final Answer
+
+Example:
+
+User:
+
+
+What is the company's leave policy?
+
+
+        ↓
+
+
+Vector Store searches HR documents
+
+
+        ↓
+
+
+Relevant policy information
+Pro
+
+        ↓
+
+
+Send context to LLM
+
+
+        ↓
+
+
+AI generates answer
+STEP 8: Tool Calling
+
+An LLM does not directly know your current database data.
+
+For example:
+
+What is my leave balance?
+
+The AI needs to call your Java application.
+
+User
+  ↓
+LLM
+  ↓
+Needs employee data
+  ↓
+Java Tool
+  ↓
+Database / API
+  ↓
+Result
+  ↓
+LLM
+  ↓
+Final Answer
+
+Example tool:
+
+@Component
+public class EmployeeTools {
+
+
+    @Tool(description =
+            "Get employee leave balance using employee id")
+    public String getLeaveBalance(Long employeeId) {
+
+
+        // Normally call database/service
+
+
+        return "Employee has 8 leave days remaining";
+    }
+}
+
+Then register the tool with the chat request:
+
+String response = chatClient
+        .prompt()
+        .user("What is the leave balance of employee 101?")
+        .tools(employeeTools)
+        .call()
+        .content();
+
+This is how we connect:
+
+AI
+ ↓
+Java Methods
+ ↓
+REST APIs
+ ↓
+Databases
+ ↓
+Microservices
+STEP 9: MCP
+
+MCP means:
+
+Model Context Protocol
+
+Think of MCP as a standard way for AI applications to communicate with external tools and services.
+
+Instead of building a separate integration for every AI client:
+
+AI Application A ──┐
+AI Application B ──┼── Different Tools
+AI Application C ──┘
+
+MCP provides a standardized approach:
+
+AI Application
+       ↓
+     MCP
+       ↓
+MCP Server
+       ↓
+Tools / Resources / Services
+
+For example:
+
+Spring AI Application
+        ↓
+      MCP Client
+        ↓
+      MCP Server
+        ↓
+Employee Service
+Database
+GitHub
+Files
+External APIs
+Final Architecture We Will Build
+
+After learning all nine concepts, our project can become:
+
+                    React / Angular
+                          │
+                          ▼
+                    Spring Boot API
+                          │
+                          ▼
+                     Spring AI
+                          │
+        ┌─────────────────┼──────────────────┐
+        │                 │                  │
+        ▼                 ▼                  ▼
+   Prompt Template     Chat Memory       Tool Calling
+        │                 │                  │
+        ▼                 ▼                  ▼
+    ChatClient        Advisors        Java Services
+        │                                    │
+        │                                    ▼
+        │                                Database/API
+        │
+        ▼
+       LLM
+        ▲
+        │
+        │
+     RAG Advisor
+        ▲
+        │
+   Vector Store
+        ▲
+        │
+    Embeddings
+        ▲
+        │
+   PDF / Documents
+Recommended approach
+
+We should not implement all concepts at once. We will continue using the same project and add one feature at a time:
+
+Prompt Templates — build and test
+Chat Options — build and compare responses
+Structured Output — AI response → Java Record
+Streaming — Flux<String> response
+Embeddings — text → vectors
+Vector Store — store and search documents
+RAG — build a document-based chatbot
+Tool Calling — AI calls Java methods
+MCP — connect Spring AI with MCP tools
+
+The best next lesson is Step 1: Prompt Templates, where we can build a complete PromptTemplateController and test dynamic parameters such as topic, level, language, and response format.
+
+next lesson is Step 1: Prompt Templates, where we can build a complete PromptTemplateController and test dynamic parameters such as topic, level, language, and response format.
+
+Step 1: Prompt Templates with Spring AI
+
+In this lesson, we will build a complete PromptTemplateController that accepts dynamic parameters:
+
+topic
+level
+language
+format
+
+For example:
+
+Topic    = Java Streams
+Level    = Beginner
+Language = English
+Format   = Step by Step
+
+The application will dynamically create the prompt and send it to Ollama through Spring AI:
+
+Client Request
+      ↓
+Prompt Template
+      ↓
+Replace Dynamic Parameters
+      ↓
+Final Prompt
+      ↓
+ChatClient
+      ↓
+Ollama
+      ↓
+AI Response
+
+We will use the same Spring Boot + Spring AI + Ollama project from the previous lesson.
+
+1. Project Structure
+
+Add a new controller:
+
+src/main/java
+└── com/example/ai
+    ├── controller
+    │   └── PromptTemplateController.java
+    │
+    └── SpringAiOllamaApplication.java
+2. What is a Prompt Template?
+
+Suppose we write a fixed prompt:
+
+Explain Java Streams for beginners in English.
+
+This works only for one topic and one type of student.
+
+Instead, create a reusable template:
+
+Explain {topic} for a {level} student.
+
+
+Use {language} language.
+
+
+Return the answer in {format} format.
+
+The placeholders are:
+
+{topic}
+{level}
+{language}
+{format}
+
+At runtime:
+
+{topic}    → Java Streams
+{level}    → Beginner
+{language} → English
+{format}   → Step by Step
+
+The final prompt becomes:
+
+Explain Java Streams for a Beginner student.
+
+
+Use English language.
+
+
+Return the answer in Step by Step format.
+3. Create PromptTemplateController
+package com.example.ai.controller;
+            @RequestParam(defaultValue = "step-by-step")
+            String format) {
+
+
+        return chatClient
+                .prompt()
+                .system("""
+                        You are an experienced technical trainer.
+
+
+                        Your responsibility is to explain concepts clearly.
+
+
+                        Follow the user's requested:
+                        - level
+                        - language
+                        - response format
+                        """)
+                .user(user -> user
+                        .text("""
+                                Explain {topic} for a {level} student.
+
+
+                                Response language: {language}
+
+
+                                Response format: {format}
+
+
+                                Follow these rules:
+
+
+                                1. Start with a simple definition.
+                                2. Explain why the concept is used.
+                                3. Give a simple example.
+                                4. Explain the example clearly.
+                                5. Give one real-time use case.
+                                """)
+                        .param("topic", topic)
+                        .param("level", level)
+                        .param("language", language)
+                        .param("format", format))
+                .call()
+                .content();
+    }
+}
+
+This follows Spring AI's ChatClient fluent API, where template variables can be supplied to user prompt specifications. Spring AI ChatClient documentation
+
+4. Understand the Code Step by Step
+Step A: Create ChatClient
+private final ChatClient chatClient;
+
+
+public PromptTemplateController(ChatClient.Builder builder) {
+    this.chatClient = builder.build();
+}
+
+Spring Boot injects the configured ChatClient.Builder.
+
+Then:
+
+ChatClient.Builder
+        ↓
+      build()
+        ↓
+     ChatClient
+
+Our ChatClient is already connected to the configured Ollama chat model.
+
+Step B: Receive Dynamic Parameters
+@RequestParam String topic
+
+Example:
+
+topic = Java Streams
+
+For level:
+
+@RequestParam(defaultValue = "beginner")
+String level
+
+If the user doesn't send level, the application automatically uses:
+
+beginner
+
+The same applies to:
+
+language = English
+format   = step-by-step
+5. The Prompt Template
+
+This is the most important part:
+
+.user(user -> user
+        .text("""
+                Explain {topic} for a {level} student.
+
+
+                Response language: {language}
+
+
+                Response format: {format}
+                """)
+
+The template contains variables:
+
+{topic}
+{level}
+{language}
+{format}
+
+Then we provide values:
+
+.param("topic", topic)
+.param("level", level)
+.param("language", language)
+.param("format", format)
+
+Think of it like this:
+
+Prompt Template
+──────────────────────────────
+
+
+Explain {topic}
+for a {level} student
+in {language}
+using {format}
+
+
+            ↓
+
+
+Parameters
+──────────────────────────────
+
+
+topic    = Java Streams
+level    = beginner
+language = English
+format   = step-by-step
+
+
+            ↓
+
+
+Final Prompt
+──────────────────────────────
+
+
+Explain Java Streams
+for a beginner student
+in English
+using step-by-step
+6. Test the API
+
+Start your Spring Boot application.
+
+Example 1: Only Topic
+http://localhost:8080/explain?topic=Java%20Streams
+
+Because the other parameters have default values:
+
+topic    = Java Streams
+level    = beginner
+language = English
+format   = step-by-step
+Example 2: Topic + Level
+http://localhost:8080/explain?topic=Java%20Streams&level=advanced
+
+Result:
+
+Explain Java Streams
+for an advanced student.
+Example 3: Different Language
+http://localhost:8080/explain?topic=Java%20Inheritance&language=Telugu
+
+Conceptually, the prompt becomes:
+
+Explain Java Inheritance.
+
+
+Response language: Telugu.
+Example 4: All Parameters
+http://localhost:8080/explain?topic=Spring%20Boot&level=beginner&language=English&format=bullet%20points
+
+The generated prompt will contain:
+
+Topic: Spring Boot
+Level: beginner
+Language: English
+Format: bullet points
+7. Better Version: Return JSON
+
+Instead of returning only the answer as text, let's return a structured REST response.
+
+Create:
+
+package com.example.ai.dto;
+
+
+public record AIResponse(
+        String topic,
+        String level,
+        String language,
+        String format,
+        String answer
+) {
+}
+
+Now update the controller:
+
+package com.example.ai.controller;
+
+
+import com.example.ai.dto.AIResponse;
+
+
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+
+@RestController
+public class PromptTemplateController {
+
+
+    private final ChatClient chatClient;
+
+
+    public PromptTemplateController(ChatClient.Builder builder) {
+        this.chatClient = builder.build();
+    }
+
+
+    @GetMapping("/explain")
+    public AIResponse explainTopic(
+
+
+            @RequestParam String topic,
+
+
+            @RequestParam(defaultValue = "beginner")
+            String level,
+
+
+            @RequestParam(defaultValue = "English")
+            String language,
+
+
+            @RequestParam(defaultValue = "step-by-step")
+            String format) {
+
+
+        String answer = chatClient
+                .prompt()
+                .system("""
+                        You are an experienced technical trainer.
+
+Now the API response may look like:
+
+{
+  "topic": "Java Streams",
+  "level": "beginner",
+  "language": "English",
+  "format": "step-by-step",
+  "answer": "Java Streams are used to process collections..."
+}
+8. A More Realistic Prompt Template
+
+For an AI learning application, we can create a richer template:
+
+String prompt = """
+        You are teaching {topic}.
+
+
+        Student level: {level}
+
+
+        Response language: {language}
+
+
+        Response format: {format}
+
+
+        Follow this structure:
+
+
+        1. Definition
+        2. Why do we need it?
+        3. Important concepts
+        4. Simple example
+        5. Code explanation
+        6. Real-time use case
+        7. Common mistakes
+        8. Interview question
+
+
+        Adapt the complexity of the answer
+        based on the student's level.
+        """;
+
+Then use:
+
+.user(user -> user
+        .text(prompt)
+        .param("topic", topic)
+        .param("level", level)
+        .param("language", language)
+        .param("format", format))
+
+This is a reusable prompt template.
+
+9. Separate Service Layer
+
+For a real Spring Boot project, avoid putting all AI logic inside the controller.
+
+Use:
+
+Client
+   ↓
+Controller
+   ↓
+Service
+   ↓
+ChatClient
+   ↓
+Ollama
+PromptService.java
+package com.example.ai.service;
+
+
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.stereotype.Service;
+
+
+@Service
+public class PromptService {
+
+
+    private final ChatClient chatClient;
+
+
+    public PromptService(ChatClient.Builder builder) {
+        this.chatClient = builder.build();
+    }
+
+
+    public String explain(
+            String topic,
+            String level,
+            String language,
+            String format) {
+
+
+        return chatClient
+                .prompt()
+                .system("""
+                        You are an experienced Java,
+                        Spring Boot, and technical trainer.
+
+
+                        Teach concepts clearly.
+                        Adjust the explanation based
+                        on the student's level.
+                        """)
+                .user(user -> user
+                        .text("""
+                                Explain {topic}.
+
+
+                                Student level: {level}
+
+
+Updated Controller
+package com.example.ai.controller;
+
+
+import com.example.ai.dto.AIResponse;
+import com.example.ai.service.PromptService;
+
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+
+@RestController
+public class PromptTemplateController {
+
+
+    private final PromptService promptService;
+
+
+    public PromptTemplateController(
+            PromptService promptService) {
+
+
+        this.promptService = promptService;
+    }
+
+
+    @GetMapping("/explain")
+    public AIResponse explain(
+
+
+            @RequestParam String topic,
+
+
+            @RequestParam(defaultValue = "beginner")
+            String level,
+
+
+            @RequestParam(defaultValue = "English")
+            String language,
+
+
+            @RequestParam(defaultValue = "step-by-step")
+            String format) {
+
+
+        String answer = promptService.explain(
+                topic,
+
+Now the architecture is cleaner:
+
+Browser / Postman
+       │
+       ▼
+PromptTemplateController
+       │
+       ▼
+PromptService
+       │
+       ▼
+ChatClient
+       │
+       ▼
+Ollama
+       │
+       ▼
+LLM
+10. Important Learning Point
+
+There are two related ideas here:
+
+Prompt Template
+Explain {topic}
+Parameter Values
+{topic} = Java Streams
+
+Together:
+
+Template + Parameters = Dynamic Prompt
+
+The complete flow is:
+
+HTTP Request
+      │
+      ▼
+topic = Java Streams
+level = beginner
+language = English
+format = step-by-step
+      │
+      ▼
+Prompt Template
+      │
+      ▼
+Replace Variables
+      │
+      ▼
+Final Prompt
+      │
+      ▼
+ChatClient
+      │
+      ▼
+Ollama
+      │
+      ▼
+AI Response
+What you learned in this step
+✓ Dynamic prompt creation
+✓ Template placeholders
+✓ .param()
+✓ System message
+✓ User message
+✓ Default request parameters
+✓ DTO response
+✓ Controller → Service architecture
+Next lesson: Step 2 — Chat Options
+
+We will implement dynamic AI controls such as:
+
+Model Selection
+Temperature
+Top-P
+Maximum response tokens
+
+Then build an endpoint conceptually like:
+
+/ask?question=Explain Java Streams&temperature=0.2
+
+and compare how changing the options affects the AI response.
+
+
