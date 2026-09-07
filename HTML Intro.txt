@@ -31,7 +31,9 @@ HTML5
 ├── 17. HTML Entities
 ├── 18. Global Attributes
 └── 19. HTML5 APIs
+
 1. HTML5 Basic Structure
+
 Every HTML page begins like this.
 
 <!DOCTYPE html>
@@ -51,6 +53,8 @@ Explanation
 <head>           → Page Information
 <title>          → Browser Tab Name
 <body>           → Visible Content
+
+
 Diagram
 
 HTML
@@ -65,7 +69,9 @@ HTML
        ├── Paragraph
        ├── Image
        └── Form
+
 2. Heading Tags
+
 There are six heading tags.
 
 <h1>Main Heading</h1>
@@ -74,36 +80,50 @@ There are six heading tags.
 <h4>Heading</h4>
 <h5>Heading</h5>
 <h6>Small Heading</h6>
+
 Output
 
 Largest
    ↓
 Smallest
+
+
 Use
 
 h1 → Website Title
 h2 → Chapter
 h3 → Topic
 h4 → Subtopic
+
 3. Paragraph Tag
 <p>
 Welcome to HTML5 Tutorial.
 </p>
+
 4. Line Break
 HTML<br>
 CSS<br>
+
+
 JavaScript
+
 Output
 
 HTML
 CSS
 JavaScript
+
+
 5. Horizontal Line
 <hr>
+
 Output
 
 ----------------------------
+
+
 6. Text Formatting Tags
+
 Bold
 <b>Java</b>
 Strong
@@ -122,8 +142,11 @@ Mark
 <mark>Highlighted</mark>
 Small
 <small>Small Text</small>
+
 Deleted
+
 <del>Old Price</del>
+
 Output
 
 ~~Old Price~~
