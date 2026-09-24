@@ -1,0 +1,1800 @@
+Lesson 3 — Amazon EC2: Your First AWS Virtual Server
+
+Since you already know Java/Spring Boot, think of EC2 as your cloud-based Linux server where you can install Java, Maven, Docker, Nginx and run your Spring Boot applications.
+
+1. What is EC2?
+
+EC2 = Elastic Compute Cloud
+
+EC2 provides virtual servers in AWS.
+
+Instead of buying:
+
+Physical Server
+     ↓
+CPU + RAM + Disk
+     ↓
+Operating System
+     ↓
+Java
+     ↓
+Spring Boot
+
+you create a virtual server in AWS:
+
+AWS
+ ↓
+EC2 Instance
+ ↓
+Linux
+ ↓
+Java
+ ↓
+Spring Boot
+
+An EC2 virtual server is called an EC2 instance.
+
+2. EC2 Architecture
+
+The basic architecture is:
+
+                    AWS Region
+                        |
+                       VPC
+                        |
+                 ┌──────┴──────┐
+                 |              |
+             Subnet          Subnet
+                 |
+              EC2 Instance
+                 |
+        ┌────────┼────────┐
+        ↓        ↓        ↓
+      CPU       RAM     Storage
+                 |
+                 ↓
+              Linux
+                 |
+                 ↓
+           Spring Boot
+
+Later, we'll add Load Balancer, RDS and S3.
+
+3. What Do We Need to Create an EC2 Instance?
+
+When launching EC2, you'll encounter these major concepts:
+
+EC2 Instance
+ |
+ ├── Region
+ ├── AMI
+ ├── Instance Type
+ ├── Key Pair
+ ├── Network / Subnet
+ ├── Security Group
+ ├── Storage
+ └── IAM Role
+
+Let's understand each one.
+
+4. AMI
+
+AMI = Amazon Machine Image
+
+An AMI is a template used to create an EC2 instance.
+
+It can contain:
+
+Operating system
+Software configuration
+Application configuration
+
+For example:
+
+AMI
+ |
+ └── Ubuntu Linux
+
+When you launch an EC2 instance:
+
+Ubuntu AMI
+     ↓
+EC2 Instance
+Common choices
+
+You may see options such as:
+
+Amazon Linux
+Ubuntu
+Windows Server
+Red Hat
+SUSE
+
+For our Java/Spring Boot learning, Ubuntu or Amazon Linux is a good choice.
+
+5. Instance Type
+
+Instance type determines the computing capacity of the EC2 instance.
+
+It determines resources such as:
+
+CPU
+Memory
+Network performance
+
+Conceptually:
+
+Small Instance
+   ↓
+Less CPU + RAM
+
+Large Instance
+   ↓
+More CPU + RAM
+
+AWS instance families are designed for different workloads.
+
+Examples include:
+
+General purpose
+Compute optimized
+Memory optimized
+Storage optimized
+Accelerated computing
+
+For learning, choose a small eligible instance type rather than a large production instance.
+
+AWS frequently changes which instance types and free/trial offers are available, so check the current pricing/eligibility before launching.
+
+6. Key Pair
+
+To securely connect to a Linux EC2 instance, you commonly use an SSH key pair.
+
+Key Pair
+ |
+ ├── Public Key
+ └── Private Key
+
+The public key is associated with the instance.
+
+You keep the private key securely.
+
+Example:
+
+my-aws-key.pem
+Very important
+
+Never:
+
+Upload .pem to GitHub
+Email it publicly
+Share it with others
+Commit it into your project
+
+Treat the private key like a password.
+
+7. Security Group
+
+A Security Group acts as a virtual firewall for your EC2 instance.
+
+Suppose your Spring Boot application runs on:
+
+Port 8080
+
+You need a suitable inbound rule if you want to access it externally.
+
+Example:
+
+Internet
+    |
+    ↓
+Security Group
+    |
+    ↓
+EC2
+    |
+    ↓
+8080
+    |
+Spring Boot
+
+Typical ports:
+
+Port	Purpose
+22	SSH
+80	HTTP
+443	HTTPS
+8080	Common Spring Boot application port
+
+Security note: For production, don't blindly expose 8080 to the entire internet. Later we'll put a load balancer/reverse proxy in front and restrict access appropriately.
+
+8. Storage
+
+An EC2 instance normally uses EBS (Elastic Block Store) for persistent block storage.
+
+Think:
+
+EC2
+ |
+ └── EBS Volume
+       |
+       └── Disk
+
+You can install:
+
+Java
+Maven
+Git
+Docker
+Application
+
+on the instance's disk.
+
+9. IAM Role
+
+An EC2 instance can have an IAM role attached.
+
+For example:
+
+EC2
+ |
+ IAM Role
+ |
+ └── S3 permissions
+
+Then your application can access S3 using the role rather than embedding long-term AWS credentials in your source code.
+
+We'll use this later.
+
+10. Hands-On — Launch Your First EC2 Instance
+
+Now let's go through the AWS Console flow.
+
+Step 1 — Open AWS Console
+
+Sign in to your AWS account.
+
+Search for:
+
+EC2
+
+Then open the EC2 service.
+
+You should see something similar to:
+
+EC2 Dashboard
+ |
+ ├── Instances
+ ├── AMIs
+ ├── Instance Types
+ ├── Key Pairs
+ ├── Security Groups
+ └── Volumes
+11. Step 2 — Choose Your Region
+
+At the top-right of the AWS Console, select the Region.
+
+For India, a common choice is:
+
+Asia Pacific (Mumbai)
+ap-south-1
+
+Your resources are generally region-specific, so always check which region you're working in.
+
+12. Step 3 — Launch Instance
+
+Go to:
+
+EC2
+ ↓
+Instances
+ ↓
+Launch instance
+
+You'll see the instance configuration page.
+
+13. Step 4 — Give the Instance a Name
+
+For example:
+
+java-training-server
+
+This is just a friendly identifier to help you recognize the instance.
+
+14. Step 5 — Choose AMI
+
+For example:
+
+Ubuntu
+
+or an appropriate Amazon Linux image.
+
+For our training:
+
+Ubuntu
+     ↓
+EC2
+15. Step 6 — Choose Instance Type
+
+Choose a small instance appropriate for learning.
+
+For example, the console may show an eligible small general-purpose instance.
+
+Don't choose a large instance simply because it has more CPU/RAM.
+
+Important
+
+AWS pricing and free-tier/trial eligibility can change. Always verify the current pricing shown in your AWS account before launching resources.
+
+16. Step 7 — Create Key Pair
+
+Under Key Pair:
+
+Create new key pair
+
+Example:
+
+Name:
+java-training-key
+
+Download the private key.
+
+For Linux/macOS, you may need:
+
+chmod 400 java-training-key.pem
+
+On Windows, SSH clients such as OpenSSH can use the key as well, although Windows permissions may be handled differently.
+
+17. Step 8 — Configure Network
+
+You will see options such as:
+
+VPC
+Subnet
+Auto-assign Public IP
+Security Group
+
+For a basic learning server, you'll generally use:
+
+VPC
+ ↓
+Public subnet
+ ↓
+Public IP
+
+so that you can connect to the instance from your computer.
+
+18. Step 9 — Configure Security Group
+
+Create a new security group.
+
+For example:
+
+Security Group:
+java-training-sg
+SSH
+
+Allow:
+
+SSH
+Port 22
+Source: My IP
+
+Use "My IP" rather than 0.0.0.0/0 for SSH whenever possible.
+
+Why?
+
+0.0.0.0/0
+     ↓
+Everyone on the internet
+
+Whereas:
+
+Your IP
+     ↓
+Only your current public IP
+
+For training, this is a very important security habit.
+
+19. Step 10 — Storage
+
+You will see the root volume configuration.
+
+For example:
+
+Root Volume
+   |
+   └── EBS
+       └── 8 GB / 10 GB / etc.
+
+The exact default depends on the selected AMI and AWS console.
+
+For basic Java training, you don't need a huge disk.
+
+20. Step 11 — Launch
+
+Review the configuration.
+
+Then:
+
+Launch instance
+
+AWS creates your EC2 instance.
+
+You'll see something like:
+
+Instance ID
+i-xxxxxxxxxxxxxxxxx
+21. Understand the EC2 Status
+
+After launching:
+
+Instance State
+      ↓
+Pending
+      ↓
+Running
+
+You may also see:
+
+Status checks
+2/2 checks passed
+
+Once it's running, you can connect.
+
+22. Important EC2 Information
+
+Click your instance.
+
+You'll see information such as:
+
+Instance ID
+Public IPv4 address
+Private IPv4 address
+Instance type
+Availability Zone
+Security Group
+Subnet
+VPC
+
+The Public IPv4 address is important for connecting from the internet.
+
+Example:
+
+Public IP:
+13.xxx.xxx.xxx
+
+Don't rely on a public IP remaining unchanged after stopping/starting an instance unless you configure an appropriate static addressing solution such as an Elastic IP.
+
+23. Connect to Linux
+
+Click:
+
+Connect
+
+AWS provides several connection methods depending on your setup.
+
+One common method is SSH.
+
+Example:
+
+ssh -i "java-training-key.pem" ubuntu@<PUBLIC-IP>
+
+For Amazon Linux, the default username can differ, often:
+
+ec2-user
+
+For Ubuntu:
+
+ubuntu
+
+The correct username depends on the AMI.
+
+24. After Successful Login
+
+You are now inside your AWS server.
+
+You'll see something similar to:
+
+ubuntu@ip-10-0-1-25:~$
+
+This means:
+
+Your Computer
+      |
+      | SSH
+      ↓
+AWS EC2
+      |
+      ↓
+Linux Shell
+
+Congratulations — you have your first cloud server.
+
+25. Explore Linux
+
+Run:
+
+pwd
+
+Shows your current directory.
+
+ls
+
+Lists files.
+
+whoami
+
+Shows the current user.
+
+uname -a
+
+Shows system information.
+
+df -h
+
+Shows disk usage.
+
+free -h
+
+Shows memory information.
+
+top
+
+Shows running processes and resource usage.
+
+26. Update the Server
+
+For Ubuntu:
+
+sudo apt update
+
+Then:
+
+sudo apt upgrade
+
+Be careful with upgrades on production servers; for a fresh training instance, this is generally fine.
+
+27. Install Java
+
+Since you're a Java trainer, this is where EC2 becomes interesting.
+
+For example, on Ubuntu you can install an appropriate OpenJDK version:
+
+sudo apt install openjdk-21-jdk
+
+Check:
+
+java -version
+
+You should get output showing your installed Java version.
+
+28. Install Git
+sudo apt install git
+
+Check:
+
+git --version
+
+Now your EC2 server can retrieve your application source code.
+
+29. Run a Spring Boot Application
+
+Suppose you build:
+
+employee-service.jar
+
+Upload it to EC2.
+
+Then:
+
+java -jar employee-service.jar
+
+Spring Boot might start on:
+
+8080
+
+Architecture:
+
+Your Computer
+      |
+   Internet
+      |
+      ↓
+Public IP
+      |
+Security Group
+      |
+      ↓
+EC2
+      |
+      ↓
+Java
+      |
+      ↓
+Spring Boot
+      |
+     8080
+30. Access Spring Boot
+
+If your application is configured to listen on the appropriate network interface and your security group allows the port, you can access:
+
+http://<PUBLIC-IP>:8080
+
+For example:
+
+http://13.xxx.xxx.xxx:8080
+
+Later we'll replace this basic approach with:
+
+HTTPS
+ +
+Domain
+ +
+Load Balancer
+31. Very Important: Don't Leave Resources Running
+
+AWS resources can incur charges.
+
+After practicing, check your resources.
+
+For an EC2 training instance:
+
+EC2
+ ↓
+Instance
+ ↓
+Stop instance
+
+Stopping an instance generally stops the instance compute charges, but attached resources such as EBS volumes can still incur charges. Public IPv4 addressing can also have charges under current AWS pricing.
+
+So don't assume:
+
+"I stopped EC2, therefore everything is free."
+
+We'll learn AWS cost management later.
+
+32. EC2 Lifecycle
+
+Remember this lifecycle:
+
+Launch
+   ↓
+Pending
+   ↓
+Running
+   ↓
+Stop
+   ↓
+Stopped
+   ↓
+Start
+   ↓
+Running
+
+You can also:
+
+Terminate
+
+Termination permanently removes the instance, subject to the storage/deletion configuration.
+
+Think carefully before terminating a production instance.
+
+33. Stop vs Terminate
+
+Very important interview question.
+
+Stop
+Running
+   ↓
+Stopped
+
+The instance can generally be started again.
+
+Terminate
+Running
+   ↓
+Terminated
+
+The instance is deleted.
+
+Simplified:
+
+STOP
+→ temporarily shut down
+
+TERMINATE
+→ delete the instance
+34. Public IP vs Private IP
+
+An EC2 instance can have:
+
+Private IP
+
+Used inside the AWS networking environment.
+
+10.x.x.x
+172.16.x.x
+192.168.x.x
+Public IP
+
+Used to communicate over the public internet when configured.
+
+13.x.x.x
+
+Conceptually:
+
+Internet
+   |
+Public IP
+   |
+EC2
+   |
+Private IP
+35. EC2 + IAM Role + S3
+
+Connect today's lesson with Lesson 2.
+
+Eventually:
+
+                   AWS
+                    |
+              ┌─────┴─────┐
+              ↓           ↓
+             EC2          S3
+              |
+          IAM Role
+              |
+        S3 Permissions
+
+Your Spring Boot application:
+
+Spring Boot
+     ↓
+EC2
+     ↓
+IAM Role
+     ↓
+S3
+
+No AWS access key should be hard-coded into your application.
+
+36. Real-Time Java Architecture
+
+We're gradually building toward this:
+
+                         Internet
+                            |
+                            ↓
+                      AWS Load Balancer
+                            |
+                 ┌──────────┴──────────┐
+                 ↓                     ↓
+               EC2-1                 EC2-2
+                 |                     |
+                 └──────────┬──────────┘
+                            ↓
+                      Spring Boot
+                            |
+                 ┌──────────┼──────────┐
+                 ↓          ↓          ↓
+                RDS        S3         SQS
+              MySQL      Files      Messages
+
+You'll learn each component step-by-step.
+
+37. EC2 Interview Questions
+Q1. What is EC2?
+
+EC2 is an AWS service that provides resizable virtual compute capacity in the cloud.
+
+Q2. What is an EC2 instance?
+
+An EC2 instance is a virtual server running in AWS.
+
+Q3. What is an AMI?
+
+An AMI is a template used to launch EC2 instances, including an operating-system image and associated configuration.
+
+Q4. What is a Security Group?
+
+A Security Group is a virtual firewall controlling inbound and outbound traffic for resources such as EC2 instances.
+
+Q5. What is a Key Pair?
+
+A key pair consists of a public key and private key and can be used to securely authenticate to an EC2 instance.
+
+Q6. What is the difference between Stop and Terminate?
+
+Stop shuts down the instance so it can generally be started again. Terminate removes the EC2 instance.
+
+Q7. Why use IAM Role with EC2?
+
+An IAM role allows applications running on EC2 to obtain temporary AWS permissions without embedding long-term AWS credentials in application code.
+
+Q8. What is EBS?
+
+EBS is AWS block storage that provides persistent storage volumes for EC2.
+
+38. Lesson 3 — Complete Mental Model
+
+Remember this diagram:
+
+                         AWS
+                          |
+                       Region
+                          |
+                         VPC
+                          |
+                       Subnet
+                          |
+                    EC2 Instance
+                          |
+       ┌──────────────────┼──────────────────┐
+       ↓                  ↓                  ↓
+      AMI             Instance Type        EBS
+       |                  |                  |
+    Ubuntu             CPU/RAM             Disk
+                          |
+                          ↓
+                        Linux
+                          |
+                    ┌─────┴─────┐
+                    ↓           ↓
+                   Java        Git
+                    |
+                    ↓
+               Spring Boot
+                    |
+                  :8080
+                    ↑
+                    |
+              Security Group
+What you should remember after Lesson 3
+EC2       → Virtual Server
+AMI       → Server template
+Instance  → Running virtual machine
+Key Pair  → Secure login
+Security Group → Virtual firewall
+EBS       → Block storage
+Public IP → Internet connectivity
+IAM Role  → AWS permissions for the workload
+Next: Lesson 4 — EC2 Networking, SSH & Deploying Spring Boot
+
+We'll go one level deeper:
+
+EC2
+ ↓
+Public IP
+ ↓
+Security Group
+ ↓
+SSH (22)
+ ↓
+Linux
+ ↓
+Install Java 21
+ ↓
+Build Spring Boot JAR
+ ↓
+Upload JAR
+ ↓
+Run Spring Boot :8080
+ ↓
+Access from Browser
+
+This will be your first complete AWS + Java hands-on deployment.
+
+
+Lesson 4 — EC2 Networking, SSH & Deploying Spring Boot
+
+This is an important lesson because we'll connect everything you've learned so far:
+
+AWS
+ ↓
+VPC
+ ↓
+Subnet
+ ↓
+EC2
+ ↓
+Security Group
+ ↓
+SSH
+ ↓
+Linux
+ ↓
+Java 21
+ ↓
+Spring Boot
+ ↓
+Browser
+
+By the end, you should understand how a Spring Boot application can run on an AWS EC2 server and be accessed from your browser.
+
+1. EC2 Networking — Big Picture
+
+When you launch an EC2 instance, it doesn't simply exist "on the internet."
+
+It is placed inside an AWS networking environment.
+
+                         AWS
+                          |
+                         VPC
+                          |
+                    ┌─────┴─────┐
+                    |           |
+                Public        Private
+                Subnet        Subnet
+                    |
+                   EC2
+                    |
+              Public IPv4
+                    |
+                 Internet
+
+For today's simple deployment, we'll use an EC2 instance in a public subnet with appropriate routing and security-group rules.
+
+2. What is a VPC?
+
+VPC = Virtual Private Cloud
+
+Think of a VPC as your private network inside AWS.
+
+AWS
+ |
+ └── VPC
+      |
+      ├── Subnet
+      ├── Route Table
+      ├── Internet Gateway
+      └── Security Groups
+
+Later, we'll study VPC properly.
+
+For now, remember:
+
+VPC = Your logical network in AWS
+
+3. What is a Subnet?
+
+A subnet is a smaller network inside a VPC.
+
+VPC
+ |
+ ├── Public Subnet
+ |
+ └── Private Subnet
+
+A public subnet is associated with routing that can provide internet connectivity through an Internet Gateway.
+
+For today's EC2 application:
+
+Internet
+   ↓
+Internet Gateway
+   ↓
+Public Subnet
+   ↓
+EC2
+4. What is an Internet Gateway?
+
+An Internet Gateway (IGW) provides a path between a VPC and the internet.
+
+Conceptually:
+
+Internet
+   ↕
+Internet Gateway
+   ↕
+VPC
+   ↓
+Subnet
+   ↓
+EC2
+
+A route table needs an appropriate route for internet-bound traffic.
+
+We'll cover this in detail in the VPC lesson.
+
+5. Public IP Address
+
+Your EC2 instance can have a public IPv4 address.
+
+For example:
+
+13.xxx.xxx.xxx
+
+Then:
+
+Your Browser
+      |
+      ↓
+13.xxx.xxx.xxx
+      |
+      ↓
+AWS EC2
+
+But a public IP alone does not mean that every connection will work.
+
+The network route and security group must allow the traffic.
+
+6. Security Group
+
+Remember from Lesson 3:
+
+A Security Group acts as a virtual firewall associated with your EC2 network interface.
+
+For our Spring Boot application:
+
+Internet
+   |
+   ↓
+Security Group
+   |
+   ↓
+EC2
+
+We need to allow appropriate inbound traffic.
+
+7. Required Ports
+
+For today's exercise:
+
+Port	Protocol	Purpose
+22	TCP	SSH
+8080	TCP	Spring Boot
+
+Later:
+
+Port	Purpose
+80	HTTP
+443	HTTPS
+8. SSH — What Is It?
+
+SSH = Secure Shell
+
+SSH allows you to remotely connect to a Linux server.
+
+Your Windows PC
+      |
+      | SSH
+      ↓
+AWS EC2 Linux
+
+After connecting, you get a Linux command prompt.
+
+For example:
+
+ubuntu@ip-10-0-1-25:~$
+
+Now you're controlling the EC2 server remotely.
+
+9. SSH Authentication
+
+For EC2, you'll commonly authenticate using the private key corresponding to the key pair associated with the instance.
+
+Your Computer
+     |
+ private key
+     |
+     ↓
+EC2
+     |
+ public key
+
+Example:
+
+java-training-key.pem
+
+Never share this private key.
+
+10. Windows — Check SSH
+
+Since you're likely using Windows for your development machine, open:
+
+PowerShell
+
+Run:
+
+ssh -V
+
+If OpenSSH is available, you'll see something like:
+
+OpenSSH_for_Windows...
+
+If not, Windows can be configured to use OpenSSH through its optional features.
+
+11. Connect to EC2
+
+Suppose:
+
+Private key:
+java-training-key.pem
+
+Public IP:
+13.xxx.xxx.xxx
+
+Username:
+ubuntu
+
+Command:
+
+ssh -i "java-training-key.pem" ubuntu@13.xxx.xxx.xxx
+
+For an Amazon Linux AMI, the username is commonly:
+
+ec2-user
+
+So the command may be:
+
+ssh -i "java-training-key.pem" ec2-user@13.xxx.xxx.xxx
+
+The username depends on the AMI.
+
+12. First SSH Connection
+
+You may see a message asking whether you trust the host.
+
+You can verify the host information and then accept it if appropriate.
+
+After successful authentication:
+
+ubuntu@ip-10-0-1-25:~$
+
+You are now inside your AWS EC2 server.
+
+13. Test the Server
+
+Run:
+
+whoami
+
+Then:
+
+hostname
+
+Then:
+
+pwd
+
+Then:
+
+ls
+
+You are now working with your remote Linux server.
+
+14. Update Ubuntu
+
+If you're using Ubuntu:
+
+sudo apt update
+
+Then, if appropriate for your fresh training instance:
+
+sudo apt upgrade
+15. Install Java 21
+
+Since you're a Java trainer, let's install Java.
+
+sudo apt install openjdk-21-jdk
+
+Verify:
+
+java -version
+
+You should see Java 21 information.
+
+Also check:
+
+javac -version
+16. Set JAVA_HOME
+
+Find Java:
+
+readlink -f $(which java)
+
+You may see something similar to:
+
+/usr/lib/jvm/java-21-openjdk-amd64/bin/java
+
+Then configure JAVA_HOME if required by your tools.
+
+For example:
+
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+
+Check:
+
+echo $JAVA_HOME
+
+For persistence, you can add the appropriate configuration to your shell profile.
+
+17. Install Git
+sudo apt install git
+
+Verify:
+
+git --version
+
+Now the server can retrieve your Spring Boot project from a Git repository.
+
+18. Prepare Spring Boot Application
+
+On your development machine, you might have:
+
+employee-management/
+ |
+ ├── src/
+ ├── pom.xml
+ └── README.md
+
+Build it:
+
+mvn clean package
+
+You'll get:
+
+target/
+   |
+   └── employee-management-0.0.1-SNAPSHOT.jar
+19. How Do We Get the JAR to EC2?
+
+There are several ways.
+
+Option 1 — Git
+Git Repository
+      ↓
+EC2
+      ↓
+git clone
+Option 2 — SCP
+Your Computer
+      ↓
+     SCP
+      ↓
+EC2
+Option 3 — S3
+Your Computer
+      ↓
+     S3
+      ↓
+EC2
+
+For today's lesson, let's understand SCP and Git.
+
+20. SCP
+
+SCP = Secure Copy Protocol
+
+It can transfer files over SSH.
+
+From PowerShell:
+
+scp -i "java-training-key.pem" target\employee-management-0.0.1-SNAPSHOT.jar ubuntu@13.xxx.xxx.xxx:/home/ubuntu/
+
+Conceptually:
+
+Windows
+ |
+ | SCP
+ ↓
+EC2
+ |
+ └── employee-management.jar
+
+The exact local path depends on where your JAR is located.
+
+21. Verify the JAR on EC2
+
+SSH into the server:
+
+ssh -i "java-training-key.pem" ubuntu@13.xxx.xxx.xxx
+
+Then:
+
+ls
+
+You should see your JAR.
+
+For example:
+
+employee-management-0.0.1-SNAPSHOT.jar
+22. Run Spring Boot
+
+Run:
+
+java -jar employee-management-0.0.1-SNAPSHOT.jar
+
+You should see Spring Boot startup logs.
+
+Something similar to:
+
+Started EmployeeApplication
+Tomcat started on port 8080
+
+Your application is now running on EC2.
+
+23. The Important Networking Problem
+
+You might try:
+
+http://13.xxx.xxx.xxx:8080
+
+and it may not work.
+
+Why?
+
+Because your EC2 Security Group might not allow inbound TCP traffic on port 8080.
+
+24. Add Port 8080 to Security Group
+
+Go to:
+
+AWS Console
+ ↓
+EC2
+ ↓
+Instances
+ ↓
+Your instance
+ ↓
+Security
+ ↓
+Security Groups
+ ↓
+Inbound rules
+
+Add:
+
+Type: Custom TCP
+Port: 8080
+Source: My IP
+
+For a temporary demonstration where the service must be reachable from anywhere, you could use:
+
+0.0.0.0/0
+
+but do not use that casually for production.
+
+For a personal training environment, restricting the source to your IP is safer where practical.
+
+25. Test From Browser
+
+Now try:
+
+http://<EC2-PUBLIC-IP>:8080
+
+For example:
+
+http://13.xxx.xxx.xxx:8080
+
+Architecture:
+
+Browser
+   |
+   ↓
+Internet
+   |
+   ↓
+Public IP
+   |
+   ↓
+Security Group
+   |
+   ↓
+EC2
+   |
+   ↓
+Port 8080
+   |
+   ↓
+Spring Boot
+
+🎉 Your Spring Boot application is now running on AWS EC2.
+
+26. Very Important: Spring Boot Binding
+
+Spring Boot applications normally need to listen on an interface reachable from outside the machine.
+
+For a basic EC2 deployment, you can configure:
+
+server.address=0.0.0.0
+server.port=8080
+
+For example:
+
+server.port=8080
+server.address=0.0.0.0
+
+This tells the application to listen on the server's network interfaces rather than only localhost.
+
+27. Why localhost Can Cause Problems
+
+Suppose Spring Boot listens only on:
+
+127.0.0.1:8080
+
+Then:
+
+EC2 itself
+   ↓
+localhost:8080
+   ↓
+Works
+
+But:
+
+Internet
+   ↓
+EC2
+   ↓
+localhost:8080
+
+doesn't mean an external client can reach it.
+
+You need the application to listen appropriately and the AWS/network firewall rules to allow the traffic.
+
+28. Test From Inside EC2
+
+While your Spring Boot application is running, open another SSH session and run:
+
+curl http://localhost:8080
+
+If your application has an endpoint:
+
+GET /api/employees
+
+try:
+
+curl http://localhost:8080/api/employees
+
+If this works but your browser doesn't, investigate:
+
+Application
+     ↓
+Security Group
+     ↓
+Route Table
+     ↓
+Internet Gateway
+     ↓
+Public IP
+29. Three Layers You Should Debug
+
+When your Spring Boot application isn't reachable, check these three areas.
+
+Layer 1 — Application
+
+Is Spring Boot running?
+
+ps aux | grep java
+
+Can EC2 access it?
+
+curl http://localhost:8080
+Layer 2 — EC2 Security Group
+
+Is port 8080 allowed?
+
+Inbound Rules
+ ↓
+TCP 8080
+Layer 3 — AWS Networking
+
+Check:
+
+VPC
+ ↓
+Subnet
+ ↓
+Route Table
+ ↓
+Internet Gateway
+ ↓
+Public IP
+
+This troubleshooting model is very useful in interviews and real projects.
+
+30. Background Execution
+
+If you start:
+
+java -jar employee.jar
+
+and close the SSH session, the application may stop depending on how it's launched.
+
+For a temporary demonstration, you can use:
+
+nohup java -jar employee.jar > app.log 2>&1 &
+
+Then:
+
+tail -f app.log
+
+However, this is not a proper production process-management solution.
+
+Later we'll use:
+
+systemd
+Docker
+ECS
+Kubernetes
+
+depending on the deployment architecture.
+
+31. Better Production Architecture
+
+Today's architecture:
+
+Browser
+   ↓
+Public IP
+   ↓
+EC2
+   ↓
+Spring Boot :8080
+
+This is good for learning.
+
+A more production-oriented architecture is:
+
+Browser
+   ↓
+HTTPS
+   ↓
+Domain
+   ↓
+Load Balancer
+   ↓
+EC2
+   ↓
+Spring Boot
+
+Later:
+
+                    Route 53
+                       ↓
+                 Load Balancer
+                       ↓
+                ┌──────┴──────┐
+                ↓             ↓
+              EC2-1         EC2-2
+                |             |
+                └──────┬──────┘
+                       ↓
+                 Spring Boot
+                       ↓
+                      RDS
+32. Don't Use Public IP as Your Permanent Application URL
+
+For training:
+
+http://13.xxx.xxx.xxx:8080
+
+is fine.
+
+For a real application, you normally want:
+
+https://api.example.com
+
+with:
+
+Route 53
++
+Load Balancer
++
+HTTPS certificate
+
+We'll learn this later.
+
+33. EC2 Networking — Key Concepts
+
+Remember:
+
+AWS
+ |
+ VPC
+ |
+ Subnet
+ |
+ Route Table
+ |
+ Internet Gateway
+ |
+ EC2
+ |
+ Public IP
+
+And:
+
+Internet
+    |
+    ↓
+Security Group
+    |
+    ↓
+EC2
+
+And:
+
+EC2
+ |
+Private IP
+ |
+Public IP
+34. Common Ports for Java Applications
+Port	Application
+22	SSH
+80	HTTP
+443	HTTPS
+8080	Spring Boot
+3306	MySQL
+5432	PostgreSQL
+6379	Redis
+9092	Kafka
+
+Don't open database ports such as 3306 to the entire internet. Later, when we deploy MySQL using RDS, we'll keep the database private and allow access only from the application layer.
+
+35. Common Problems and Solutions
+Problem 1 — SSH timeout
+
+Check:
+
+Port 22
+Security Group
+Public IP
+Route Table
+Internet Gateway
+Problem 2 — Permission denied
+
+Check:
+
+Private key
+Username
+Key pair
+
+For Ubuntu:
+
+ssh -i key.pem ubuntu@PUBLIC_IP
+
+For Amazon Linux:
+
+ssh -i key.pem ec2-user@PUBLIC_IP
+Problem 3 — Browser cannot access port 8080
+
+Check:
+
+Spring Boot running?
+       ↓
+localhost:8080 works?
+       ↓
+Security Group allows 8080?
+       ↓
+Application listening on correct interface?
+       ↓
+Network route/public IP correct?
+Problem 4 — Application stops after logout
+
+Don't rely on a foreground process.
+
+Use a proper process manager such as systemd, or later package the application into a container.
+
+36. Your First AWS Deployment Architecture
+
+You've now reached an important milestone:
+
+                     AWS
+                      |
+                    Region
+                      |
+                     VPC
+                      |
+                 Public Subnet
+                      |
+                     EC2
+                      |
+            ┌─────────┴─────────┐
+            ↓                   ↓
+        Security Group       IAM Role
+            |
+            ↓
+         Port 8080
+            |
+            ↓
+       Spring Boot
+            |
+         Java 21
+            ↑
+            |
+      employee.jar
+
+External access:
+
+Your Browser
+     |
+     ↓
+Internet
+     |
+     ↓
+EC2 Public IP
+     |
+     ↓
+Security Group :8080
+     |
+     ↓
+Spring Boot
+37. Interview Questions
+Q1. What is SSH?
+
+SSH is a secure protocol used to remotely access and administer servers.
+
+Q2. Why is port 22 used?
+
+Port 22 is the standard port for SSH.
+
+Q3. What is a Security Group?
+
+A Security Group is a stateful virtual firewall that controls network traffic to and from AWS resources such as EC2.
+
+Q4. Why can't I access Spring Boot from the internet?
+
+Check:
+
+Spring Boot is running.
+Application is listening on the appropriate interface.
+Security Group allows port 8080.
+EC2 has suitable network connectivity/public addressing.
+VPC route table and Internet Gateway are configured correctly.
+Q5. What is the difference between public and private IP?
+
+A private IP is used within the private AWS network, while a public IP can provide internet-facing connectivity when the network configuration permits it.
+
+Q6. Why shouldn't we expose port 8080 in production?
+
+A production architecture normally places the application behind a controlled entry point such as a load balancer or reverse proxy, uses HTTPS, and restricts direct application-port access.
+
+38. Lesson 4 — What You Should Practice
+
+Try to complete this sequence yourself:
+
+1. Create EC2
+      ↓
+2. Choose Ubuntu/Amazon Linux
+      ↓
+3. Create Key Pair
+      ↓
+4. Configure Security Group
+      ↓
+5. Launch EC2
+      ↓
+6. Get Public IP
+      ↓
+7. SSH into EC2
+      ↓
+8. Install Java 21
+      ↓
+9. Install Git
+      ↓
+10. Build Spring Boot JAR
+      ↓
+11. Copy JAR to EC2
+      ↓
+12. Run JAR
+      ↓
+13. Open port 8080
+      ↓
+14. Test from browser
+One important cost/safety step
+
+After your practice session, stop or terminate resources you no longer need, and check your AWS billing/cost dashboard. Stopping EC2 does not necessarily eliminate every associated charge.
+
+Next: Lesson 5 — Amazon S3
+
+We'll learn:
+
+S3
+ ↓
+Bucket
+ ↓
+Objects

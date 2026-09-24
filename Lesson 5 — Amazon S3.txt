@@ -1,0 +1,958 @@
+Lesson 5 — Amazon S3
+
+Since you are learning AWS for Java Full Stack training, we'll learn S3 from fundamentals → AWS Console → CLI → Spring Boot integration → real-time project.
+
+1. What is Amazon S3?
+
+S3 = Simple Storage Service
+
+Amazon S3 is AWS's object storage service used to store files such as:
+
+PDF files
+Images
+Videos
+Documents
+Excel files
+Backups
+Application logs
+Static website files
+Simple example
+
+Suppose your application allows users to upload employee documents.
+
+Instead of storing:
+
+employee.pdf
+profile.jpg
+resume.pdf
+
+inside your Spring Boot server, we can store them in Amazon S3.
+
+React Application
+       |
+       | Upload File
+       ↓
+Spring Boot REST API
+       |
+       | AWS SDK
+       ↓
+Amazon S3
+       |
+       ├── employee-101.pdf
+       ├── employee-102.pdf
+       ├── profile-101.jpg
+       └── resume-101.pdf
+2. Why S3 instead of EC2 Storage?
+
+This is an important AWS concept.
+
+Suppose you have:
+
+EC2
+ |
+ └── /home/ubuntu/uploads
+       ├── a.pdf
+       ├── b.pdf
+       └── c.jpg
+
+This creates problems when you have multiple EC2 instances.
+
+             Load Balancer
+              /         \
+             /           \
+         EC2-1           EC2-2
+          |                |
+       files             files
+
+A file uploaded to EC2-1 may not exist on EC2-2.
+
+Instead:
+
+             Load Balancer
+              /         \
+             /           \
+         EC2-1           EC2-2
+             \           /
+              \         /
+                Amazon S3
+
+Both application servers can access the same S3 storage.
+
+3. S3 Object Storage
+
+S3 is object storage.
+
+The basic hierarchy is:
+
+S3
+ |
+ └── Bucket
+       |
+       ├── Object
+       ├── Object
+       └── Object
+
+For example:
+
+Bucket: company-documents
+
+company-documents
+│
+├── employees/
+│   ├── 101/
+│   │   ├── resume.pdf
+│   │   └── photo.jpg
+│   │
+│   └── 102/
+│       └── resume.pdf
+│
+└── invoices/
+    ├── invoice-001.pdf
+    └── invoice-002.pdf
+4. Important S3 Terminology
+Term	Meaning
+S3	AWS object storage service
+Bucket	Container for objects
+Object	File stored in S3
+Key	Unique name/path of an object
+Region	AWS location where bucket is created
+Version	Different version of an object
+Metadata	Information associated with an object
+Bucket Policy	Resource-based permissions for a bucket
+Presigned URL	Temporary URL for accessing an object
+5. Bucket
+
+A bucket is the main container in S3.
+
+Example:
+
+my-company-documents
+
+Inside it:
+
+my-company-documents
+│
+├── resumes/
+├── invoices/
+├── images/
+└── reports/
+Important
+
+Bucket names must be globally unique.
+
+For example:
+
+my-company-documents
+
+may already be taken.
+
+You could use something like:
+
+srinivas-java-training-documents
+6. Object
+
+An object is the actual file stored in S3.
+
+For example:
+
+resume.pdf
+employee.jpg
+invoice.pdf
+training-notes.docx
+
+An object consists conceptually of:
+
+Object
+ ├── Data
+ ├── Key
+ ├── Metadata
+ └── Other properties
+7. What is an S3 Key?
+
+Suppose we upload:
+
+resume.pdf
+
+with this key:
+
+employees/101/resume.pdf
+
+The key is:
+
+employees/101/resume.pdf
+
+It looks like folders, but S3 is fundamentally a flat object store; the / convention is used to organize keys into a folder-like structure.
+
+Example:
+
+employees/101/resume.pdf
+employees/102/resume.pdf
+employees/103/resume.pdf
+8. S3 Bucket Creation — Hands-on
+
+Go to the AWS Console and open:
+
+S3
+
+Then:
+
+S3
+ → General purpose buckets
+ → Create bucket
+
+Choose your AWS Region.
+
+Example:
+
+Asia Pacific (Mumbai)
+
+or another region appropriate for your application.
+
+Give the bucket a unique name:
+
+srinivas-java-training-2026
+9. Block Public Access
+
+You will see settings related to:
+
+Block all public access
+
+For a normal application, keep public access blocked unless you have a specific reason to make objects public.
+
+Recommended beginner architecture:
+
+User
+  |
+  ↓
+Spring Boot
+  |
+  ↓
+Private S3 Bucket
+
+Not:
+
+Internet
+   |
+   ↓
+Public S3 Bucket
+
+Your Spring Boot application can authenticate to S3 using IAM permissions.
+
+10. Upload an Object
+
+After creating the bucket:
+
+Bucket
+   ↓
+Upload
+   ↓
+Add files
+   ↓
+Upload
+
+Upload:
+
+sample.pdf
+
+You will see something like:
+
+srinivas-java-training-2026
+│
+└── sample.pdf
+
+You can select the object and view its properties.
+
+11. Download an Object
+
+S3 allows authorized users/applications to download objects.
+
+Conceptually:
+
+Spring Boot
+     |
+     | GetObject
+     ↓
+    S3
+     |
+     | File
+     ↓
+Spring Boot
+     |
+     ↓
+Client
+12. S3 is Highly Durable
+
+One of the major reasons organizations use S3 is its very high durability.
+
+For training purposes, remember:
+
+S3 is designed for extremely durable object storage.
+
+It is intended for long-term storage of data and files rather than acting like the local disk of your EC2 server.
+
+13. S3 Storage Classes
+
+S3 provides different storage classes for different access patterns.
+
+Common examples include:
+
+Storage Class	Typical use
+S3 Standard	Frequently accessed data
+S3 Intelligent-Tiering	Unknown/changing access patterns
+S3 Standard-IA	Infrequently accessed data
+S3 One Zone-IA	Infrequent data where one AZ is acceptable
+S3 Glacier Instant Retrieval	Archive data needing fast retrieval
+S3 Glacier Flexible Retrieval	Long-term archive
+S3 Glacier Deep Archive	Very long-term archival
+
+The basic idea:
+
+Frequently accessed
+        ↓
+S3 Standard
+
+Occasionally accessed
+        ↓
+IA
+
+Archive
+        ↓
+Glacier
+14. S3 Versioning
+
+Versioning allows multiple versions of an object to be retained.
+
+Suppose:
+
+employee.pdf
+
+is uploaded.
+
+Later it is replaced.
+
+Without versioning:
+
+employee.pdf
+    ↓
+old version replaced
+
+With versioning:
+
+employee.pdf
+   |
+   ├── Version 1
+   ├── Version 2
+   └── Version 3
+
+This can help recover accidentally overwritten or deleted objects.
+
+15. Enable Versioning
+
+Inside the bucket:
+
+Properties
+    ↓
+Bucket Versioning
+    ↓
+Enable
+
+This is particularly useful for:
+
+Documents
+Configuration files
+Important business files
+Backup data
+16. S3 Lifecycle Rules
+
+Imagine your company stores:
+
+application logs
+
+After 30 days, they are rarely accessed.
+
+Instead of keeping everything in a frequently accessed storage class forever, you can create lifecycle rules.
+
+Example:
+
+Day 0
+  ↓
+S3 Standard
+
+After 30 days
+  ↓
+Infrequent Access
+
+After 90 days
+  ↓
+Glacier
+
+After 365 days
+  ↓
+Delete
+
+This is called an S3 Lifecycle configuration.
+
+17. S3 Security
+
+S3 security is extremely important.
+
+There are several concepts you need to understand:
+
+IAM User
+IAM Role
+IAM Policy
+Bucket Policy
+Block Public Access
+Encryption
+Presigned URL
+18. IAM Policy vs Bucket Policy
+
+This is a common interview question.
+
+IAM Policy
+
+Permissions attached to identities such as:
+
+IAM User
+IAM Group
+IAM Role
+
+Example:
+
+Role → Allow → s3:GetObject
+Bucket Policy
+
+A resource-based policy attached directly to an S3 bucket.
+
+Conceptually:
+
+Bucket
+  |
+  └── Bucket Policy
+
+A bucket policy can control who can access resources in that bucket.
+
+19. EC2 + S3 Using IAM Role
+
+This is particularly important for your Java/Spring Boot applications.
+
+Suppose:
+
+Spring Boot
+running on EC2
+
+needs to upload files to S3.
+
+Don't do this:
+String accessKey = "AKIA...";
+String secretKey = "....";
+
+Never hard-code AWS credentials into your application.
+
+Instead:
+
+EC2
+ |
+ └── IAM Role
+       |
+       └── S3 Permissions
+
+Then:
+
+Spring Boot
+      |
+      ↓
+AWS SDK
+      |
+      ↓
+EC2 IAM Role credentials
+      |
+      ↓
+Amazon S3
+
+This is the preferred architecture.
+
+20. Example IAM Permission
+
+A role might have permissions conceptually like:
+
+s3:PutObject
+s3:GetObject
+s3:DeleteObject
+
+on a specific bucket/path.
+
+For example:
+
+arn:aws:s3:::company-documents/employees/*
+
+This follows the least privilege principle.
+
+21. S3 Presigned URL
+
+A very useful concept.
+
+Suppose the bucket is private:
+
+Private S3
+    |
+    └── employee.pdf
+
+You don't want to make the entire bucket public just so a user can download one file.
+
+Instead, Spring Boot can generate a presigned URL.
+
+User
+ |
+ | Request document
+ ↓
+Spring Boot
+ |
+ | Generate temporary URL
+ ↓
+S3
+ |
+ | Presigned URL
+ ↓
+User
+ |
+ ↓
+Download
+
+The URL can be valid for a limited amount of time.
+
+For example:
+
+Valid for 10 minutes
+
+This is a common production pattern.
+
+22. S3 Encryption
+
+S3 supports encryption for stored objects.
+
+At a high level:
+
+Application
+    |
+    ↓
+S3
+    |
+    ↓
+Encrypted Object
+
+Common concepts include:
+
+Server-side encryption
+AWS-managed keys
+Customer-managed KMS keys
+
+For your initial AWS training, remember:
+
+Data stored in S3 can be encrypted at rest.
+
+23. AWS CLI with S3
+
+Once AWS CLI is configured, you can work with S3 from the command line.
+
+List buckets
+aws s3 ls
+List objects
+aws s3 ls s3://my-bucket
+Upload
+aws s3 cp resume.pdf s3://my-bucket/
+Download
+aws s3 cp s3://my-bucket/resume.pdf .
+Copy a directory
+aws s3 cp ./documents s3://my-bucket/documents/ --recursive
+Sync
+aws s3 sync ./documents s3://my-bucket/documents/
+24. Real-Time Java Full Stack Architecture
+
+This is where S3 becomes particularly relevant to your training.
+
+Imagine an Employee Document Management System.
+
+                 React
+                   |
+                   | POST /employees/101/documents
+                   ↓
+             Spring Boot
+                   |
+          ┌────────┴────────┐
+          ↓                 ↓
+        MySQL              S3
+          |                 |
+ Employee metadata       PDF/Image
+
+MySQL might store:
+
+employee_id
+document_id
+file_name
+file_type
+s3_key
+uploaded_date
+
+S3 stores:
+
+employees/101/resume.pdf
+employees/101/photo.jpg
+employees/102/resume.pdf
+
+This separation is important.
+
+Database
+
+Stores:
+
+Metadata
+S3
+
+Stores:
+
+Actual files
+25. Spring Boot + S3
+
+For a Java application, you can use the AWS SDK for Java 2.x.
+
+Maven dependency:
+
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>s3</artifactId>
+</dependency>
+
+Conceptually:
+
+React
+   |
+   | MultipartFile
+   ↓
+Spring Boot Controller
+   |
+   ↓
+Service
+   |
+   ↓
+S3Client
+   |
+   ↓
+Amazon S3
+26. Basic Spring Boot S3 Service
+
+Conceptually:
+
+@Service
+public class S3Service {
+
+    private final S3Client s3Client;
+
+    public S3Service(S3Client s3Client) {
+        this.s3Client = s3Client;
+    }
+
+    public void uploadFile(
+            String bucketName,
+            String key,
+            MultipartFile file) throws IOException {
+
+        PutObjectRequest request =
+                PutObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(key)
+                        .contentType(file.getContentType())
+                        .build();
+
+        PutObjectRequest.builder();
+
+        s3Client.putObject(
+                request,
+                RequestBody.fromInputStream(
+                        file.getInputStream(),
+                        file.getSize()
+                )
+        );
+    }
+}
+
+The important AWS SDK operation is:
+
+s3Client.putObject(...)
+
+which uploads the object.
+
+27. REST API
+
+Your controller could expose:
+
+POST /api/files/upload
+
+Example:
+
+@PostMapping("/upload")
+public ResponseEntity<String> upload(
+        @RequestParam MultipartFile file) throws IOException {
+
+    String key = "documents/" + file.getOriginalFilename();
+
+    s3Service.uploadFile(
+            bucketName,
+            key,
+            file
+    );
+
+    return ResponseEntity.ok("File uploaded successfully");
+}
+
+Architecture:
+
+POST /api/files/upload
+          |
+          ↓
+     Controller
+          |
+          ↓
+      Service
+          |
+          ↓
+       S3Client
+          |
+          ↓
+       S3 Bucket
+28. Recommended Production Architecture
+
+For your Java Full Stack training, remember this architecture:
+
+                 ┌───────────────┐
+                 │ React Frontend│
+                 └───────┬───────┘
+                         |
+                         ↓
+                 ┌───────────────┐
+                 │ Load Balancer │
+                 └───────┬───────┘
+                         |
+              ┌──────────┴──────────┐
+              ↓                     ↓
+        ┌───────────┐         ┌───────────┐
+        │   EC2     │         │   EC2     │
+        │ SpringBoot│         │ SpringBoot│
+        └─────┬─────┘         └─────┬─────┘
+              │                     │
+              └──────────┬──────────┘
+                         |
+              ┌──────────┴──────────┐
+              ↓                     ↓
+           Amazon RDS          Amazon S3
+           MySQL/Postgres      Documents
+
+This is a very useful architecture to explain in interviews.
+
+29. S3 vs EBS vs EFS
+
+Another important interview topic.
+
+Feature	S3	EBS	EFS
+Type	Object storage	Block storage	File storage
+Attached to	Applications	EC2	Multiple compute resources
+Example	PDF/images	EC2 disk	Shared filesystem
+Access	API/HTTP	Block device	File system
+Best for	Files/objects	OS/application disk	Shared files
+
+Think:
+
+S3  → Objects
+EBS → EC2 Disk
+EFS → Shared File System
+30. S3 vs Database
+
+Don't store large documents directly in MySQL unnecessarily.
+
+Instead:
+
+MySQL
+   |
+   └── file metadata
+          |
+          ├── fileName
+          ├── contentType
+          └── s3Key
+
+and:
+
+S3
+ |
+ └── actual file
+
+For example:
+
+MySQL
+
+101 | resume.pdf | application/pdf |
+employees/101/resume.pdf
+
+S3:
+
+employees/101/resume.pdf
+31. S3 Interview Questions
+Beginner
+
+1. What is Amazon S3?
+
+Object storage service provided by AWS.
+
+2. What is a bucket?
+
+A container used to store S3 objects.
+
+3. What is an object?
+
+A file and its associated metadata stored in S3.
+
+4. What is an S3 key?
+
+The unique name identifying an object within a bucket.
+
+5. Is S3 a file system?
+
+No. S3 is fundamentally object storage.
+
+Intermediate
+
+6. What is S3 versioning?
+
+It maintains multiple versions of an object.
+
+7. What is an S3 lifecycle rule?
+
+A rule that automatically transitions or deletes objects based on conditions such as age.
+
+8. What is a presigned URL?
+
+A temporary URL that provides authorized access to an S3 object.
+
+9. IAM policy vs bucket policy?
+
+IAM policies are associated with identities; bucket policies are resource-based policies attached to an S3 bucket.
+
+10. Why should an EC2 application use an IAM role?
+
+It avoids embedding long-term AWS credentials in application code.
+
+32. Your Hands-on Exercise
+
+For your AWS training, practice this sequence:
+
+Step 1
+
+Create an S3 bucket.
+
+AWS Console
+ → S3
+ → Create bucket
+Step 2
+
+Keep the bucket private.
+
+Step 3
+
+Upload:
+
+sample.pdf
+sample.jpg
+Step 4
+
+Enable versioning.
+
+Step 5
+
+Upload another version of the same file.
+
+Step 6
+
+Create a folder-like key:
+
+employees/101/
+
+and upload:
+
+employees/101/resume.pdf
+Step 7
+
+Practice AWS CLI:
+
+aws s3 ls
+aws s3 ls s3://YOUR-BUCKET
+aws s3 cp resume.pdf s3://YOUR-BUCKET/
+Step 8
+
+Build a Spring Boot API:
+
+POST /api/files/upload
+GET  /api/files/{key}
+DELETE /api/files/{key}
+
+and connect it to S3.
+
+33. The Big Picture So Far
+
+You have now covered:
+
+Lesson 1
+Cloud + AWS Fundamentals
+        ↓
+Lesson 2
+IAM
+        ↓
+Lesson 3
+EC2
+        ↓
+Lesson 4
+EC2 Networking + SSH + Spring Boot Deployment
+        ↓
+Lesson 5
+S3
+
+Your Java Full Stack AWS architecture is starting to look like:
+
+                    AWS
+                     |
+       ┌─────────────┼─────────────┐
+       ↓             ↓             ↓
+     EC2            S3            IAM
+       |             |             |
+ Spring Boot      Files        Security
+       |
+       ↓
+     RDS
+       |
+     MySQL
+Next: Lesson 6 — Amazon VPC
+
+We'll go deeper into:
+
+VPC
+ ↓
+CIDR
+ ↓
+Public Subnet
+ ↓
+Private Subnet
+ ↓
+Route Table
+ ↓
+Internet Gateway
+ ↓
+NAT Gateway
+ ↓
+Security Group
+ ↓
+Network ACL
+
+and build the networking architecture needed for a production-style Spring Boot + React + RDS + S3 application.
+
+You're on the free plan
+ChatGPT gets less accurate and may forget details in long conversations. Upgrade to chat longer with better memory.
+Try Plus free
+New chat
